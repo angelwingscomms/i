@@ -1,7 +1,3 @@
-Of course. Here is the edited codebase guide. It now includes the new "Dreamwave Design System" section, with its name and aesthetic updated to be "dreamy and soft" while retaining the specified colors. The subsequent sections have been renumbered accordingly.
-
-***
-
 # Codebase Guide
 
 This document serves as the definitive guide for understanding and contributing to the codebase. It provides patterns, conventions, and architectural decisions that ensure consistency across the project.
@@ -17,7 +13,6 @@ This section details the unique aspects of the "i" application. The rest of this
 ### Key Features & Data Flow
 
 1.  **User Onboarding & Profile**:
-    *   Users sign in via Google OAuth, managed by **Lucia**.
     *   Users provide a detailed text description of themselves (interests, personality, what they're looking for, etc.). This description is the foundation for matching.
 
 2.  **Matching Flow**:
@@ -58,7 +53,7 @@ The application follows a **SvelteKit Full-Stack Architecture** with:
 - **Frontend**: SvelteKit with TypeScript and Tailwind CSS
 - **Backend**: SvelteKit server-side functions and API routes
 - **Database**: Qdrant vector database
-- **Authentication**: Lucia
+- **Authentication**: Lucia pattern
 - **State Management**: Svelte stores for client-side state
 
 ### Data Flow
@@ -278,7 +273,7 @@ src/
 │   ├── stores/            # Svelte stores for state management
 │   ├── types/             # TypeScript type definitions
 │   ├── db.ts              # Database operations layer
-│   ├── auth.ts            # Authentication (Lucia) setup
+│   ├── auth.ts            # Authentication setup
 │   ├── constants.ts       # Application constants
 │   └── utils.ts           # Utility functions
 ├── routes/                # SvelteKit file-based routing
@@ -665,7 +660,7 @@ npm run qdrant:stop
 
 ### Authentication Strategy
 
-- **Lucia**: Provides robust session management and OAuth integration. Configuration is centralized in `src/lib/auth.ts`. All session validation occurs on the server.
+- Follows Lucia pattern. Configuration is centralized in `src/lib/auth.ts`. All session validation occurs on the server.
 
 ### State Management
 
