@@ -1,4 +1,4 @@
-Of course. Here is the edited codebase guide. It now includes a new "Project Specifics" section at the top for "i" and has been generalized by removing all mentions of the previous project (school management) and specific CSS variables, while retaining all the architectural patterns and conventions.
+Of course. Here is the edited codebase guide. It now includes the new "Dreamwave Design System" section, with its name and aesthetic updated to be "dreamy and soft" while retaining the specified colors. The subsequent sections have been renumbered accordingly.
 
 ***
 
@@ -75,7 +75,197 @@ All primary data is stored in a single Qdrant collection `'i'` with data type is
 
 - `s: 'usr'` - Users
 
-## 3. Directory Structure & File Organization
+## 3. Dreamwave Design System
+*A design language for dreamy, soft, and connected experiences.*
+
+## Philosophy
+
+> "Good design is felt, not just seen. It’s the gentle flow that connects an idea to a person."
+
+This design system is built on the principle that digital interfaces should be soft, approachable, and calming. We prioritize clarity and serenity, using ethereal color and soft, rounded forms to create an experience that is both intuitive and delightful.
+
+### Core Principles
+
+1.  **Approachably Rounded** - Every element, from buttons to containers, uses a full radius to feel friendly and modern.
+2.  **Ethereal, Solid Color** - We use a curated palette of solid colors. No gradients.
+3.  **Soft Shadows** - Depth is created with subtle, clean shadows that make elements feel light.
+4.  **Generous Whitespace** - Content is given ample space to breathe, ensuring focus and reducing clutter.
+5.  **Gentle Animations** - Movements are responsive and smooth, making interactions feel natural.
+
+## Color Palette
+
+Our colors are soft and expressive, chosen to create a calm and engaging user experience.
+
+### Primary Colors
+
+```css
+/* CSS Custom Properties */
+--dreamwave-violet: #B637FA;
+--dreamwave-pink: #FA378B;
+--dreamwave-magenta: #F737FA;
+--dreamwave-indigo: #7837FA;
+--dreamwave-error: #FA3A2F;      /* Reserved for errors/danger */
+--dreamwave-light-mauve: #F889FA;
+
+/* Foundational Colors (assumed for a complete system) */
+--background-primary: #FFFFFF;
+--text-primary: #1A1A2E;     /* A very dark, near-black for readability */
+--text-on-color: #FFFFFF;    /* Text used on top of vibrant backgrounds */
+```
+
+### Semantic Mapping
+
+- **Primary Actions**: Dreamwave Indigo (`#7837FA`) - Calm, stable, and inviting.
+- **Secondary Actions**: Dreamwave Violet (`#B637FA`) - Inviting and gentle.
+- **Accent & Highlight**: Dreamwave Pink (`#FA378B`) - Draws attention and adds a touch of warmth.
+- **Critical/Danger**: Dreamwave Error (`#FA3A2F`) - Exclusively for warnings, errors, and destructive actions.
+- **Text**: Text Primary (`#1A1A2E`) - High-contrast and easy to read.
+- **Subtle Backgrounds**: Dreamwave Light Mauve (`#F889FA`) - For gentle highlights or disabled states.
+
+## Typography
+
+### Scale
+```css
+--text-whisper: 0.75rem    /* 12px - Subtle annotations */
+--text-breath: 0.875rem    /* 14px - Supporting text */
+--text-flow: 1rem          /* 16px - Body text */
+--text-wave: 1.125rem      /* 18px - Emphasized text */
+--text-tide: 1.25rem       /* 20px - Small headings */
+--text-horizon: 1.5rem     /* 24px - Section headings */
+--text-sky: 2rem           /* 32px - Page headings */
+--text-cosmos: 3rem        /* 48px - Hero text */
+```
+
+### Font Stack
+```css
+font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+```
+
+## Spacing System
+
+Our spacing follows a consistent and predictable 4px-based scale.
+
+```css
+--space-atom: 0.125rem     /* 2px */
+--space-whisper: 0.25rem   /* 4px */
+--space-breath: 0.5rem     /* 8px */
+--space-pulse: 0.75rem     /* 12px */
+--space-flow: 1rem         /* 16px */
+--space-wave: 1.5rem       /* 24px */
+--space-tide: 2rem         /* 32px */
+--space-horizon: 3rem      /* 48px */
+--space-sky: 4rem          /* 64px */
+--space-cosmos: 6rem       /* 96px */
+```
+
+## Border Radius
+
+Soft, rounded corners are fundamental to our visual identity.
+
+```css
+--radius-medium: 0.75rem;    /* 12px - For cards and larger containers */
+--radius-large: 1.25rem;     /* 20px - For modals and page-level containers */
+--radius-full: 9999px;       /* For pill-shaped buttons and tags */
+```
+
+## Shadows
+
+Shadows that are clean and soft, providing depth without heaviness.
+
+```css
+--shadow-whisper: 0 1px 3px 0 rgba(26, 26, 46, 0.05);
+--shadow-breath: 0 2px 8px 0 rgba(26, 26, 46, 0.06);
+--shadow-float: 0 4px 16px 0 rgba(26, 26, 46, 0.08);
+--shadow-dream: 0 8px 32px 0 rgba(26, 26, 46, 0.10);
+--shadow-transcend: 0 16px 64px 0 rgba(26, 26, 46, 0.12);
+```
+
+## Animation
+
+### Timing
+```css
+--timing-instant: 0ms
+--timing-breath: 150ms     /* Quick responses */
+--timing-heartbeat: 300ms  /* Standard interactions */
+--timing-wave: 500ms       /* Gentle transitions */
+--timing-tide: 800ms       /* Thoughtful changes */
+```
+
+### Easing
+```css
+--ease-breath: cubic-bezier(0.4, 0, 0.2, 1)      /* Natural acceleration */
+--ease-float: cubic-bezier(0.25, 0.46, 0.45, 0.94) /* Gentle floating */
+--ease-dream: cubic-bezier(0.23, 1, 0.32, 1)     /* Smooth in/out */
+```
+
+## Components
+
+### Cards
+```css
+.card-primary   /* Base cards with a medium radius and soft shadow */
+.card-float     /* Elevated cards with a deeper shadow */
+```
+
+### Buttons
+```css
+.btn-primary    /* Primary actions - dreamwave indigo */
+.btn-secondary  /* Secondary actions - dreamwave violet */
+.btn-accent     /* Highlight actions - dreamwave pink */
+.btn-danger     /* Destructive actions - dreamwave error */
+.btn-ghost      /* Tertiary actions - transparent background */
+```
+*Note: All buttons use `border-radius: var(--radius-full)` to achieve a pill shape.*
+
+### Inputs
+```css
+.input-primary  /* Standard form inputs, fully rounded */
+```
+
+### Layout
+```css
+.container-main    /* Main content container (1200px) */
+.container-narrow  /* Narrow content container (800px) */
+.section-primary   /* Major page sections */
+```
+
+## Usage Guidelines
+
+### Do's
+- **Embrace rounded corners.** Use `--radius-full` for buttons and `--radius-medium` for cards.
+- Apply consistent spacing from our scale to create rhythm.
+- Use our ethereal color palette intentionally and semantically.
+- Animate with natural timing and easing.
+- Layer shadows subtly to create a clean sense of elevation.
+
+### Don'ts
+- **Never use sharp corners (0 border-radius).**
+- Avoid gradients. Our identity is in solid, soft color.
+- Don't use the `--dreamwave-error` color for anything other than warnings or destructive actions.
+- Never use linear easing for animations.
+- Avoid cluttered layouts; let whitespace guide the user's eye.
+
+## Dark Mode
+
+Dark mode in the Dreamwave system swaps light for dark, creating a high-contrast, focused experience.
+
+- Background becomes a deep, dark blue (`#1A1A2E`).
+- Text becomes a soft, off-white (`rgba(255, 255, 255, 0.9)`).
+- Ethereal colors remain the same, popping against the dark background.
+- Shadows are replaced by subtle glows or lighter surface colors to imply elevation.
+
+## Accessibility
+
+- All primary color combinations meet WCAG AA contrast standards.
+- Focus states are highly visible, using distinct outlines or rings.
+- Animations respect `prefers-reduced-motion`.
+- Touch targets have a minimum size of 44x44px.
+- Text is designed to scale appropriately with user-agent settings.
+
+---
+
+*"In the end, we believe that design is about creating a feeling. Our goal is to make every interaction feel responsive, joyful, and effortlessly simple."*
+
+## 4. Directory Structure & File Organization
 
 ### Core Structure
 
@@ -108,7 +298,7 @@ src/
 - **Types**: `types.ts` or `*.d.ts`
 - **Tests**: `*.test.ts` (unit), `*.spec.ts` (e2e)
 
-## 4. Coding Style & Conventions
+## 5. Coding Style & Conventions
 
 ### Naming Conventions
 
@@ -125,7 +315,7 @@ src/
 - Define all entities in `src/lib/types.ts`
 - Prefer interfaces over types for object shapes
 
-## 5. Key Design & Implementation Patterns
+## 6. Key Design & Implementation Patterns
 
 ### Server Load Pattern
 
@@ -421,7 +611,7 @@ test.describe('User Matching Flow', () => {
 });
 ```
 
-## 6. Development Workflow
+## 7. Development Workflow
 
 ### Package Management
 
@@ -464,7 +654,7 @@ npm run qdrant:start
 npm run qdrant:stop
 ```
 
-## 7. Architecture Decisions
+## 8. Architecture Decisions
 
 ### Database Design
 
@@ -490,7 +680,7 @@ npm run qdrant:stop
 - **Minimal JavaScript**: SSR-first approach with selective client-side hydration.
 - **Caching**: Standard browser caching for static assets is enabled by default.
 
-## 8. Common Pitfalls to Avoid
+## 9. Common Pitfalls to Avoid
 
 1.  **Database Queries**: Always include the `s` field in queries to ensure you are targeting the correct data type.
 2.  **Authentication**: Never rely on client-side checks for security. All sensitive operations must be validated on the server using the `locals.auth` object.
