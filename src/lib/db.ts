@@ -4,6 +4,8 @@ import { QDRANT_KEY, QDRANT_URL } from '$env/static/private';
 import { QdrantClient } from '@qdrant/js-client-rest';
 import { v7 as uuidv7 } from 'uuid';
 import { collection } from '$lib/constants';
+const { GoogleGenAI } = await import("@google/genai");
+
 
 // Qdrant client configuration
 export const qdrant = new QdrantClient({
@@ -16,7 +18,7 @@ export function generateId(): string {
 	return uuidv7();
 }
 
-export const updateById = async (id: string, payload: object) => {
+export const updateById = async (id: string, payload: { [key: string]: unknown; }) => {
   await qdrant.setPayload('i', {
     wait: true,
     payload,
@@ -27,7 +29,7 @@ export const updateById = async (id: string, payload: object) => {
 // Database operations wrapper
 export async function upsertPoint<
 	T extends { i?: string; id?: string; s: string }
->(data: T): Promise<T & { id: string; i: string }> {
+>(data: T): Promise<T & {i: string }> {
 	const id = data.id || data.i || generateId();
 
 	const vector = new Array(768).fill(0);
@@ -36,14 +38,39 @@ export async function upsertPoint<
 		points: [
 			{
 				id,
-				payload: { ...data, id, i: id },
+				payload: { ...data, i: id },
 				vector
 			}
 		],
 		wait: true
 	});
 
-	return { ...data, ...(data.id ? { id } : { i: id }) };
+  return { ...data, i: id };
+}
+
+export async function create<
+	T extends { i?: string; id?: string; s: string }
+>(payload: T, string_to_embed: string): Promise<string> {
+	const id = generateId();
+
+	let vector: number[] = new Array(768).fill(0);
+
+	if (string_to_embed) {
+		vector = embed
+	}
+
+	await qdrant.upsert(collection, {
+		points: [
+			{
+				id,
+				payload,
+				vector
+			}
+		],
+		wait: true
+	});
+
+  return id;
 }
 
 export const get = async <T>(id: string): Promise<T> => {

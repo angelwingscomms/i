@@ -34,7 +34,7 @@ This section details the unique aspects of the "i" application. The rest of this
 
 All user data is stored in a single Qdrant collection named `'i'`.
 
-*   **Payload Field `s`**: A tenant identifier, always set to `'usr'` for users.
+*   **Payload Field `s`**: A tenant identifier, always set to `'u'` for users.
 *   **Payload Field `u`**: The user's public username (`string`).
 *   **Payload Field `t`**: The user's detailed text description (`string`).
 *   **Payload Field `g`**: The user's unique Google ID, used for authentication linkage (`string`).
@@ -68,7 +68,7 @@ The application follows a **SvelteKit Full-Stack Architecture** with:
 
 All primary data is stored in a single Qdrant collection `'i'` with data type isolation via the `s` field:
 
-- `s: 'usr'` - Users
+- `s: 'u'` - Users
 
 ## 3. Dreamwave Design System
 *A design language for dreamy, soft, and connected experiences.*
@@ -378,7 +378,7 @@ export const actions = {
 ```typescript
 // Always use type-aware queries
 const users = await searchByPayload<User>({
-	s: 'usr', // Type identifier
+	s: 'u', // Type identifier
 	u: 'some_user' // Additional filters
 });
 
@@ -387,7 +387,7 @@ const user = await getById<User>(userId);
 
 // For creating records
 const newRecord = await upsertPoint({
-	s: 'usr',
+	s: 'u',
 	u: 'new_user',
 	t: 'A long description about myself...',
 	g: 'google-user-id-123'
@@ -497,9 +497,10 @@ toast.add({
 // Server-side auth requirement in a load function or action
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import {requireAuth} from '$lib/auth'
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const { user } = await locals.auth.validateUser();
+	const { user } = await requireAuth(locals);
 	if (!user) {
 		throw error(401, 'You must be logged in to access this page.');
 	}
@@ -518,7 +519,7 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
 	const query = url.searchParams.get('q');
-	const results = await searchByPayload({ s: 'usr', u: query }); // Example: find user by username
+	const results = await searchByPayload({ s: 'u', u: query }); // Example: find user by username
 	return json({ results });
 };
 
@@ -654,7 +655,7 @@ npm run qdrant:stop
 ### Database Design
 
 - **Single Collection**: All primary data resides in the Qdrant collection `'i'` for operational simplicity.
-- **Type Isolation**: Using the `s` payload field to distinguish between different types of data (e.g., `'usr'`).
+- **Type Isolation**: Using the `s` payload field to distinguish between different types of data (e.g., `'u'`).
 - **Short Field Names**: Optimized for storage and reduced payload size (`u` for username, `t` for text, `g` for googleId).
 - **UUID v7**: Time-ordered UUIDs are used for point IDs for better indexing performance and natural sorting by creation time.
 
@@ -678,7 +679,7 @@ npm run qdrant:stop
 ## 9. Common Pitfalls to Avoid
 
 1.  **Database Queries**: Always include the `s` field in queries to ensure you are targeting the correct data type.
-2.  **Authentication**: Never rely on client-side checks for security. All sensitive operations must be validated on the server using the `locals.auth` object.
+2.  **Authentication**: Never rely on client-side checks for security. All sensitive operations must be done on the server using the user object in `locals.user`.
 3.  **Form Validation**: Validate all user input on both the client (for UX) and the server (for security).
 4.  **Error Handling**: Always provide user-friendly error messages via `fail` in actions or the `toast` store for client-side operations.
 5.  **Type Safety**: Leverage SvelteKit's generated types (`./$types`) and define shared interfaces in `src/lib/types.ts`.

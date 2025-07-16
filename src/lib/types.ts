@@ -2,9 +2,8 @@ import type { PushSubscription } from "web-push";
 
 export interface User {
 	s: 'u';
-	u: string; // usertag
 	g: string; // google id
-	id?: string;
+  n: string; // google name
 }
 
 export interface NotificationSubscription {

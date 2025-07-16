@@ -1,9 +1,9 @@
 edit GEMINI.md
-    user can have multiple profiles they manage
-    a profile has a tag, a text description, age, gender, lat, lon
+    a user has a tag, a text description, age, gender, lat, lon, whatsapp link
+    always use axios
 
 edit lib/types.ts
-    type profile
+    type User
         t: string // tag
         d: string // description
         a: number // age
@@ -12,6 +12,30 @@ edit lib/types.ts
         n: number // longitude
     
 navbar
-style search page
-edit profile page /edit_profile/[username]
-    edit username
+user search page @ /
+    page load
+        if user not logged in, redirect to /google
+    page
+        filter by gender - male/female
+        age range number input filter - lower limit/upper limit
+        search button -> api request
+        
+        list of results. each link to user detail page
+    
+    api @ /
+        embedding created w logged in user
+        qdrant db vector search
+        
+edit user page /edit_user/[username]
+    +page.server.ts
+        load function finds user
+    edit tag, description (text input), age, gender (radio button), button to update location (uses location webapi to get users current location)
+    
+user detail page /user/:i
+    page.server load
+        if logged in user, gemini api is used to compare logged in user's descripton w/ queried user's description
+        user object and comparison result text returned to client
+    
+        
+
+user chat page /user/:i/chat
