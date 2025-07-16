@@ -93,6 +93,13 @@ export async function searchByPayload<T>(
 	}
 }
 
+export async function getByPayload<T>(
+	filters: Record<string, any>
+): Promise<T | null> {
+	const results = await searchByPayload<T>(filters, 1);
+	return results[0] || null;
+}
+
 export async function getById<T>(id: string): Promise<T | null> {
 	try {
 		const result = await qdrant.retrieve(collection, {
