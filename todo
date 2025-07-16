@@ -1,0 +1,17 @@
+edit GEMINI.md
+    user can have multiple profiles they manage
+    a profile has a tag, a text description, age, gender, lat, lon
+
+edit lib/types.ts
+    type profile
+        t: string // tag
+        d: string // description
+        a: number // age
+        g: number // gender, 0 is male, 1 is female
+        l: number // latitude
+        n: number // longitude
+    
+navbar
+style search page
+edit profile page /edit_profile/[username]
+    edit username
