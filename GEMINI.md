@@ -8,17 +8,17 @@ This section details the unique aspects of the "i" application. The rest of this
 
 ### Core Concept
 
-"i" is an application designed to create meaningful connections between users. Its primary feature is a matching system that pairs users for one-on-one audio/video chats based on shared interests and personality traits, rather than random chance.
+"i" is an application designed to create meaningful connections between users. Its primary feature is a matching system that pairs users for one-on-one chats based on shared interests, personality traits, location, age, and gender preferences, rather than random chance.
 
 ### Key Features & Data Flow
 
 1.  **User Onboarding & Profile**:
-    *   Users provide a detailed text description of themselves (interests, personality, what they're looking for, etc.). This description is the foundation for matching.
+    *   Users provide a tag/username, detailed text description of themselves (interests, personality, what they're looking for, etc.), age, gender, location coordinates, and WhatsApp link. The description is the foundation for matching.
 
 2.  **Matching Flow**:
-    *   When a user initiates a search, their text description is sent to the **Gemini API** to generate a vector embedding.
-    *   This embedding is used to perform a vector search in the **Qdrant** database to find the most similar user.
-    *   The top-matching user is selected as a potential connection.
+    *   When a user initiates a search with filters (gender, age range), their text description is sent to the **Gemini API** to generate a vector embedding.
+    *   This embedding is used to perform a vector search in the **Qdrant** database to find the most similar users matching the specified filters.
+    *   The top-matching users are returned as potential connections.
 
 3.  **Connection & Chat**:
     *   Once a match is found, the two users are connected in a private audio/video chat room facilitated by **PeerJS**.
@@ -35,10 +35,14 @@ This section details the unique aspects of the "i" application. The rest of this
 All user data is stored in a single Qdrant collection named `'i'`.
 
 *   **Payload Field `s`**: A tenant identifier, always set to `'u'` for users.
-*   **Payload Field `u`**: The user's public username (`string`).
-*   **Payload Field `t`**: The user's detailed text description (`string`).
-*   **Payload Field `g`**: The user's unique Google ID, used for authentication linkage (`string`).
-*   **Vector**: The embedding generated from the user's text description (`t`).
+*   **Payload Field `t`**: The user's tag/username (`string`).
+*   **Payload Field `d`**: The user's detailed text description (`string`).
+*   **Payload Field `a`**: The user's age (`number`).
+*   **Payload Field `g`**: The user's gender (`number`) - 0 is male, 1 is female.
+*   **Payload Field `l`**: The user's latitude (`number`).
+*   **Payload Field `n`**: The user's longitude (`number`).
+*   **Payload Field `w`**: The user's WhatsApp link (`string`).
+*   **Vector**: The embedding generated from the user's text description (`d`).
 
 ---
 

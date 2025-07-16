@@ -4,8 +4,6 @@ import { QDRANT_KEY, QDRANT_URL } from '$env/static/private';
 import { QdrantClient } from '@qdrant/js-client-rest';
 import { v7 as uuidv7 } from 'uuid';
 import { collection } from '$lib/constants';
-const { GoogleGenAI } = await import("@google/genai");
-
 
 // Qdrant client configuration
 export const qdrant = new QdrantClient({
@@ -18,18 +16,18 @@ export function generateId(): string {
 	return uuidv7();
 }
 
-export const updateById = async (id: string, payload: { [key: string]: unknown; }) => {
-  await qdrant.setPayload('i', {
-    wait: true,
-    payload,
-    points: [id]
-  })
-}
+export const updateById = async (id: string, payload: Record<string, unknown>) => {
+	await qdrant.setPayload('i', {
+		wait: true,
+		payload,
+		points: [id]
+	});
+};
 
 // Database operations wrapper
-export async function upsertPoint<
-	T extends { i?: string; id?: string; s: string }
->(data: T): Promise<T & {i: string }> {
+export async function upsertPoint<T extends { i?: string; id?: string; s: string }>(
+	data: T
+): Promise<T & { i: string }> {
 	const id = data.id || data.i || generateId();
 
 	const vector = new Array(768).fill(0);
@@ -45,18 +43,20 @@ export async function upsertPoint<
 		wait: true
 	});
 
-  return { ...data, i: id };
+	return { ...data, i: id };
 }
 
-export async function create<
-	T extends { i?: string; id?: string; s: string }
->(payload: T, string_to_embed: string): Promise<string> {
+export async function create<T extends { i?: string; id?: string; s: string }>(
+	payload: T,
+	string_to_embed: string
+): Promise<string> {
 	const id = generateId();
 
 	let vector: number[] = new Array(768).fill(0);
 
 	if (string_to_embed) {
-		vector = embed
+		// TODO: Implement proper embedding generation
+		vector = new Array(768).fill(0);
 	}
 
 	await qdrant.upsert(collection, {
@@ -70,25 +70,22 @@ export async function create<
 		wait: true
 	});
 
-  return id;
+	return id;
 }
 
 export const get = async <T>(id: string): Promise<T> => {
-  const response = await qdrant.retrieve(collection, {
-    ids: [id]
-  });
-  return response[0].payload as T;
+	const response = await qdrant.retrieve(collection, {
+		ids: [id]
+	});
+	return response[0].payload as T;
 };
 
 export async function searchByPayload<T>(
-	filters: Record<string, any>,
+	filters: Record<string, unknown>,
 	limit: number = 144
 ): Promise<T[]> {
 	const mustFilters = Object.entries(filters)
-		.filter(
-			([, value]) =>
-				value !== undefined && value !== null && value !== ''
-		)
+		.filter(([, value]) => value !== undefined && value !== null && value !== '')
 		.map(([key, value]) => ({
 			key,
 			match: { value }
@@ -120,6 +117,34 @@ export async function searchByPayload<T>(
 	}
 }
 
+export async function searchByVector<T>(
+	vector: number[],
+	limit: number = 20,
+	filter?: Record<string, unknown>
+): Promise<T[]> {
+	try {
+		const searchParams: Record<string, unknown> = {
+			vector,
+			limit,
+			with_payload: true,
+			with_vector: false
+		};
+
+		if (filter) {
+			searchParams.filter = filter;
+		}
+
+		const results = await qdrant.search(collection, searchParams);
+
+		return results.map((point) => point.payload as T);
+	} catch (error) {
+		console.error('Error in searchByVector:', error);
+		console.error('Vector length:', vector.length);
+		console.error('Filter:', filter);
+		throw error;
+	}
+}
+
 export async function getById<T>(id: string): Promise<T | null> {
 	try {
 		const result = await qdrant.retrieve(collection, {
@@ -137,9 +162,7 @@ export async function getById<T>(id: string): Promise<T | null> {
 	}
 }
 
-export async function deleteById(
-	id: string
-): Promise<void> {
+export async function deleteById(id: string): Promise<void> {
 	await qdrant.delete(collection, {
 		points: [id],
 		wait: true
@@ -159,19 +182,16 @@ export async function updatePoint<T extends { id: string; s: string }>(
 }
 
 // Get username from their ID
-export async function getUsernameFromId(
-	userId: string
-): Promise<string> {
-	const user = await getById(userId);
+export async function getUsernameFromId(userId: string): Promise<string> {
+	const user = await getById<{ u?: string }>(userId);
 
-	if (user && (user as any).u) {
-		return (user as any).u;
+	if (user && user.u) {
+		return user.u;
 	}
 
 	// If user not found, return Unknown User
 	return 'Unknown User';
 }
-
 
 export const delete_ = async (id: string): Promise<void> => {
 	await qdrant.delete(collection, {

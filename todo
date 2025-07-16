@@ -22,20 +22,26 @@ user search page @ /
         
         list of results. each link to user detail page
     
-    api @ /
-        embedding created w logged in user
-        qdrant db vector search
+    api POST @ /
+        embedding created w logged in user's description
+        qdrant db vector search users w embedding
+        return user list 
         
 edit user page /edit_user/[username]
     +page.server.ts
         load function finds user
-    edit tag, description (text input), age, gender (radio button), button to update location (uses location webapi to get users current location)
+    page
+        if logged in user, redirect to /google
+    edit tag (text input), description (text area), age, gender (radio button), button to update location (uses location webapi to get users current location), text descripion also has voice input button (mic button) whcich uses grok api on the server to transcribe voice to text, at a route /transcribe
+        button to save changes, which sends a PUT request to the api
     
-user detail page /user/:i
+user detail page /user/:i 
     page.server load
         if logged in user, gemini api is used to compare logged in user's descripton w/ queried user's description
-        user object and comparison result text returned to client
-    
+        user tag, age and gender, and comparison result text returned to client
+    page
+        show user tag, age and gender
+        show comparison result text, if available
+        button to chat with user, which links to chat page
         
-
 user chat page /user/:i/chat
