@@ -49,7 +49,7 @@
 <div class="container">
 	<header class="header">
 		<h1>Find Your Match</h1>
-		<p>Welcome back, {data.user.t}!</p>
+		<p>Welcome back, {data.user?.t}!</p>
 	</header>
 
 	<div class="search-form">
