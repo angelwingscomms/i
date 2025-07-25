@@ -1,24 +1,2 @@
-edit GEMINI.md
-    chat rooms
-    tenant id `c`
-    description text
-    
-updates to codebase
-    type Chat
-        s: 'c',
-        n: string //name
-        t: string //search
-        
-    type Message
-        s: 'm',
-        r: string //room id
-        t: string //text
-        u: string //user id
-        d: Date //date sent
-        f: string[] //file url array (optional)
-    
-search chat /c
-    page    
-        text area input
-        search on enter press if text area input is focused, allow if input is empty
-        s
+homepage search
+    textarea input, make request to api on blur edit user description with input text

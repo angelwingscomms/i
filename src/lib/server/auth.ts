@@ -110,7 +110,7 @@ export function setSessionTokenCookie(event: RequestEvent, token: string, expire
 		httpOnly: true,
 		secure: process.env.NODE_ENV === 'production',
 		sameSite: 'lax',
-		expires: expiresAt
+		// expires: expiresAt
 	});
 }
 

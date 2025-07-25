@@ -1,45 +1,14 @@
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { searchByPayload, upsertPoint } from '$lib/db';
+import { getById, searchByPayload, upsertPoint } from '$lib/db';
 import type { User } from '$lib/types';
-import axios from 'axios';
-import { GEMINI_API_KEY } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
 	if (!locals.user) {
 		redirect(302, '/google');
 	}
-
-	const { username } = params;
-
-	try {
-		// Find user by tag (username)
-		const users = await searchByPayload<User>(
-			{
-				s: 'u',
-				t: username
-			},
-			1
-		);
-
-		if (users.length === 0) {
-			throw error(404, 'User not found');
-		}
-
-		const user = users[0];
-
-		// Check if this is the logged-in user
-		if (user.i !== locals.user.i) {
-			throw error(403, 'You can only edit your own profile');
-		}
-
-		return {
-			user: user
-		};
-	} catch (err) {
-		console.error('Error loading user:', err);
-		throw error(500, 'Failed to load user');
-	}
+	
+	return
 };
 
 export const actions: Actions = {
