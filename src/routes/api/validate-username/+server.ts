@@ -37,7 +37,7 @@ export const POST: RequestHandler = async ({ request }) => {
     if (existingUser) {
       return json({
         valid: false,
-        error: 'This username is already taken'
+        error: 'This usertag is already taken'
       }, { status: 400 });
     }
 
