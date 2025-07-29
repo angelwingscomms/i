@@ -117,7 +117,7 @@
 			</div>
 
 			<div class="form-group">
-				<label for="description" class="form-label">Description</label>
+				<label for="description" class="form-label">type or record a description of yourself</label>
 				<DescriptionInput
 					bind:value={description}
 					maxLength={500}

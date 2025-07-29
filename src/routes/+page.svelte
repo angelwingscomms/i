@@ -149,7 +149,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 <main class="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4">
     <h1 class="mb-6 text-center text-3xl font-bold">quickly find what you have in common with other people</h1>
 	<p class="mb-8 max-w-md text-center text-lg">
-		describe yourself w a text or a voice note. Our AI compares profiles privately, showing only
+		describe yourself, your beliefs, your passions, and stuff you like to do or talk about, with a text or a voice note. Our AI compares profiles privately, showing only
 		what you have in common with other. Feel free to be open—your full details stay private
 	</p>
 
