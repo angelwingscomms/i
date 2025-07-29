@@ -158,40 +158,6 @@ export function deleteSessionTokenCookie(event: RequestEvent): void {
 	});
 }
 
-export const find_user = async() => {
-  
-}
-
-export async function findOrCreateUser(googleUser: { id: string; email: string }): Promise<User> {
-	// Search for existing user by Google ID
-	const existingUsers = await searchByPayload<User>(
-		{
-			s: 'u',
-			gid: googleUser.id
-		},
-		1
-	);
-
-	if (existingUsers.length > 0) {
-		return existingUsers[0];
-	}
-
-	// Create new user if not found
-	const newUser: User = {
-		s: 'u',
-		t: googleUser.email.replace("@gmail.com", ''), // generate tag from email
-		d: '', // empty description initially
-		a: 18, // default age
-		g: 0, // default male
-		l: 0, // default latitude
-		n: 0, // default longitude
-		w: '', // empty whatsapp link initially
-		gid: googleUser.id // store google id
-	};
-
-	return await upsertPoint(newUser);
-}
-
 // Helper functions
 function generateSecureRandomString(): string {
 	const alphabet = 'abcdefghijklmnpqrstuvwxyz23456789';

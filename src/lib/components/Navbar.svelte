@@ -53,7 +53,7 @@
 					</a>
 				</div>
 			{:else}
-				<a href="/login" class="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5">
+				<a href="/google" class="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
 						<path
 							d="M23,11H21V9H19V11H17V13H19V15H21V13H23M8,5V7H12V5M10,2A8,8 0 0,1 18,10A8,8 0 0,1 10,18A8,8 0 0,1 2,10A8,8 0 0,1 10,2M10,4A6,6 0 0,0 4,10A6,6 0 0,0 10,16A6,6 0 0,0 16,10A6,6 0 0,0 10,4Z"

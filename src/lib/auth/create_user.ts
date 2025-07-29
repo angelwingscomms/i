@@ -1,7 +1,7 @@
 import { upsertPoint } from "$lib/db";
 import type { User } from "$lib/types";
 
-export const create_user = async (tag: string, other: {p?: string}) => {
+export const create_user = async (tag: string, other: {p?: string, gid?: string}) => {
   return await upsertPoint<User>({
     s: 'u',
     t: tag,

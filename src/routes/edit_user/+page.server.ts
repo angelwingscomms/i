@@ -5,7 +5,7 @@ import type { User } from '$lib/types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user?.i) {
-		redirect(302, '/login');
+		redirect(302, '/google');
 	}
 	return { u: await get<User>(locals.user.i) };
 };

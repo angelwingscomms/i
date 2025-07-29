@@ -1,7 +1,7 @@
 import type { PushSubscription } from 'web-push';
 
 export interface User {
-	s?: 'u';
+	s?: string;
 	t: string; // tag
 	d?: string; // description
 	a?: number; // age

@@ -1,48 +1,13 @@
-import {
-	delete_,
-	get,
-	searchByPayload,
-	upsertPoint
-} from '$lib/db';
-import type { User } from './types';
+import { delete_, get, searchByPayload, upsertPoint } from '$lib/db';
+import type { User } from '$lib/types';
 
-export {create_user} from './create_user'
+export { create_user } from './create_user';
 
 import { Google } from 'arctic';
-import {
-	GOOGLE_ID,
-	GOOGLE_REDIRECT_URL,
-	GOOGLE_SECRET
-} from '$env/static/private';
+import { GOOGLE_ID, GOOGLE_REDIRECT_URL, GOOGLE_SECRET } from '$env/static/private';
 import { v7 } from 'uuid';
-import { create_user } from './create_user';
 
-export const google = new Google(
-	GOOGLE_ID,
-	GOOGLE_SECRET,
-	GOOGLE_REDIRECT_URL
-);
-
-export async function find_or_create_user(googleUser: {
-	id: string;
-	name: string;
-}): Promise<User> {
-	// Check if user exists
-	const existingUsers = await searchByPayload<User>(
-		{
-			g: googleUser.id,
-			s: 'u'
-		},
-		1
-	);
-
-	if (existingUsers.length > 0) {
-		return existingUsers[0];
-	}
-
-	// Create new user
-  return create_user(googleUser.name, {gid: googleUser.id})
-}
+export const google = new Google(GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URL);
 
 export async function requireAuth(locals: App.Locals) {
 	if (!locals.user) {
@@ -95,9 +60,7 @@ function base64ToUint8(str: string): Uint8Array {
 	return arr;
 }
 
-export const createSession = async (
-	u: string
-): Promise<SessionWithToken> => {
+export const createSession = async (u: string): Promise<SessionWithToken> => {
 	const now = Date.now();
 
 	const i = v7();
@@ -122,10 +85,7 @@ export const createSession = async (
 
 async function hashSecret(secret: string): Promise<Uint8Array> {
 	const secretBytes = new TextEncoder().encode(secret);
-	const secretHashBuffer = await crypto.subtle.digest(
-		'SHA-256',
-		secretBytes
-	);
+	const secretHashBuffer = await crypto.subtle.digest('SHA-256', secretBytes);
 	return new Uint8Array(secretHashBuffer);
 }
 
@@ -145,9 +105,7 @@ interface Session {
 const activityCheckInterval = 1440;
 const inactivityTimeoutSeconds = 777600;
 
-export async function validateSessionToken(
-	token: string
-): Promise<Session | null> {
+export async function validateSessionToken(token: string): Promise<Session | null> {
 	const now = Date.now();
 	const tokenParts = token.split('.');
 	if (tokenParts.length !== 2) return null;
@@ -169,9 +127,7 @@ export async function validateSessionToken(
 	return session;
 }
 
-export async function getSession(
-	sessionId: string
-): Promise<Session | null> {
+export async function getSession(sessionId: string): Promise<Session | null> {
 	const now = Date.now();
 	const session = await get<Session>(sessionId);
 

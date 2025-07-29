@@ -1,8 +1,12 @@
-import { createSession, findOrCreateUser, google, setSessionTokenCookie } from '$lib/server/auth';
+import { createSession, google, setSessionTokenCookie } from '$lib/server/auth';
 import { decodeIdToken } from 'arctic';
+
 
 import { redirect, type RequestEvent } from '@sveltejs/kit';
 import type { OAuth2Tokens } from 'arctic';
+import { create_user } from '$lib/auth';
+import { deleteById, searchByPayload } from '$lib/db';
+import type { User } from '$lib/types';
 
 export async function GET(event: RequestEvent): Promise<Response> {
 	const code = event.url.searchParams.get('code');
@@ -35,19 +39,44 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		});
 	}
 	const res = decodeIdToken(tokens.idToken()) as {
-		sub: string;
+		id: string;
 		email: string;
 	};
-	
-	// console.log('r', res)
 
-	const user = await findOrCreateUser(res);
-	// console.log('u', user)
+	console.log('decoded user', res)
+	let user: User | null = null;
+
+	const existingUsers = await searchByPayload<User>(
+		{
+			gid: res.id,
+			s: 'u'
+		},
+		1
+	);
+
+	if (existingUsers.length > 0) {
+		user = existingUsers[0];
+		console.log(user)
+		// await deleteById(user.i)
+		// redirect(302, '/google')
+		const allUsersToDelete = await searchByPayload<User>({ s: 'u' }, 1_000_000); // Fetch up to 1 million users
+		console.log(`Found ${allUsersToDelete.length} users to delete.`);
+		for (const userToDelete of allUsersToDelete) {
+						console.log(`Deleting user ID: ${userToDelete.i}`);
+						await deleteById(userToDelete.i);
+		}
+		console.log('All users deleted.');
+	} else {
+		user = await create_user(res.email.replace('@gmail.com', ''), { gid: res.id });
+		console.log('xu', user)
+	}
+
+	// Create new user
 
 	if (!user) return new Response(null, { status: 500 });
 
 	const sessionToken = await createSession((user as any).i as string);
 
-	setSessionTokenCookie(event, sessionToken, new Date(Date.now() + 777600 * 1000));
+	setSessionTokenCookie(event, sessionToken);
 	redirect(302, '/');
 }
