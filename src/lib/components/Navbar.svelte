@@ -23,14 +23,14 @@
 
 		<div class="flex items-center gap-4 md:flex hidden">
 			{#if user}
-				<a href="/" class="{isActive('/') ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50'} flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+				<!-- <a href="/" class="{isActive('/') ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50'} flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
 						<path
 							d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
 						/>
 					</svg>
 					Search
-				</a>
+				</a> -->
 
 				<a href="/edit_user" class="{isActive('/edit_user') ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50'} flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -38,7 +38,7 @@
 							d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
 						/>
 					</svg>
-					Profile
+					edit profile
 				</a>
 
 				<div class="flex items-center gap-4 ml-4 pl-4 border-l border-gray-200">
@@ -49,7 +49,7 @@
 								d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"
 							/>
 						</svg>
-						Logout
+						logout
 					</a>
 				</div>
 			{:else}
@@ -59,7 +59,7 @@
 							d="M23,11H21V9H19V11H17V13H19V15H21V13H23M8,5V7H12V5M10,2A8,8 0 0,1 18,10A8,8 0 0,1 10,18A8,8 0 0,1 2,10A8,8 0 0,1 10,2M10,4A6,6 0 0,0 4,10A6,6 0 0,0 10,16A6,6 0 0,0 16,10A6,6 0 0,0 10,4Z"
 						/>
 					</svg>
-					Login w Google
+					login w Google
 				</a>
 			{/if}
 		</div>
