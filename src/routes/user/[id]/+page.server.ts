@@ -42,7 +42,7 @@ ${auth_user.t}: "${auth_user.d}"
 
 ${user.t}: "${user.d}"
 
-Please detail what these users have in common, or overlaps between them, or patterns they share, formatted as a friendly paragraph. Refer to ${auth_user.t} as 'you'`
+Please detail what these users have in common, or overlaps between them, or patterns they share, formatted as a friendly paragraph. Refer to ${auth_user.t} as 'you'. Don't greet at the beginnning of your response. be casual and concise, yet detailed`
 									}
 								]
 							}

@@ -137,7 +137,6 @@
 			{disabled}
 			{required}
 			on:input={handleLocalNumberInput}
-			on:blur={handleBlur}
 		/>
 	</div>
 

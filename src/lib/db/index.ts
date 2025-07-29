@@ -4,7 +4,7 @@ import { QDRANT_KEY, QDRANT_URL } from '$env/static/private';
 import { QdrantClient } from '@qdrant/js-client-rest';
 import { v7 as uuidv7 } from 'uuid';
 import { collection } from '$lib/constants';
-import type { User } from './types';
+import type { User } from '$lib/types';
 
 // Qdrant client configuration
 export const qdrant = new QdrantClient({

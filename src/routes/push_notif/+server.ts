@@ -42,11 +42,10 @@ export const POST: RequestHandler = async ({ request }) => {
 		const pushPromises = subscriptions.map(async (subscription) => {
 			;
 			try {
-				// console.log(
+				console.log(
 					'Sending push notification to:',
 					subscription.sub.endpoint
 				);
-				;
 
 				send_push_notif(subscription.sub, notificationPayload);
 
