@@ -67,5 +67,5 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	const sessionToken = await createSession(user.i as string);
 
 	setSessionTokenCookie(event, sessionToken);
-	redirect(302, '/');
+	redirect(302, '/edit_user');
 }
