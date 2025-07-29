@@ -1,78 +1,30 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
+	// import UsernameInput from '$lib/components/ui/UsernameInput.svelte';
+	import PhoneInput from '$lib/components/ui/PhoneInput.svelte';
 	import axios from 'axios';
 
 	export let data;
-	export let form;
+	let form: { error?: string; success?: boolean; message?: string } | null = null;
 
-	let tag = data.user.t || '';
-	let description = data.user.d || '';
-	let age = data.user.a || 18;
-	let gender = data.user.g || 0;
-	let latitude = data.user.l || 0;
-	let longitude = data.user.n || 0;
-	let whatsappLink = data.user.w || '';
+	let tag = data.u!.t || '';
+	let description = data.u!.d || '';
+	let age = data.u!.a || 18;
+	let gender = !!data.u!.g;
+	let latitude = data.u!.l || 0;
+	let longitude = data.u!.n || 0;
+	let whatsappLink = data.u!.w || '';
+	let usernameValid = true;
 
-	let isRecording = false;
-	let isTranscribing = false;
 	let isGettingLocation = false;
 	let isSubmitting = false;
 
-	let mediaRecorder: MediaRecorder | null = null;
-	let audioChunks: Blob[] = [];
-
-	async function startRecording() {
-		try {
-			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-			mediaRecorder = new MediaRecorder(stream);
-			audioChunks = [];
-
-			mediaRecorder.ondataavailable = (event) => {
-				audioChunks.push(event.data);
-			};
-
-			mediaRecorder.onstop = async () => {
-				const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-				await transcribeAudio(audioBlob);
-				stream.getTracks().forEach((track) => track.stop());
-			};
-
-			mediaRecorder.start();
-			isRecording = true;
-		} catch (error) {
-			console.error('Error starting recording:', error);
-			alert('Could not access microphone');
-		}
+	function handleDescriptionUpdate(event: CustomEvent) {
+		description = event.detail.value;
 	}
 
-	function stopRecording() {
-		if (mediaRecorder && isRecording) {
-			mediaRecorder.stop();
-			isRecording = false;
-		}
-	}
-
-	async function transcribeAudio(audioBlob: Blob) {
-		isTranscribing = true;
-		try {
-			const formData = new FormData();
-			formData.append('audio', audioBlob);
-
-			const response = await axios.post('/api/transcribe', formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}
-			});
-
-			if (response.data.text) {
-				description = response.data.text;
-			}
-		} catch (error) {
-			console.error('Transcription error:', error);
-			alert('Failed to transcribe audio');
-		} finally {
-			isTranscribing = false;
-		}
+	function handleUsernameValidation(event: CustomEvent) {
+		usernameValid = event.detail.isValid;
 	}
 
 	async function getCurrentLocation() {
@@ -102,12 +54,43 @@
 		);
 	}
 
-	function handleSubmit() {
+	async function handleSubmit(event: Event) {
+		event.preventDefault(); // Prevent default form submission
+
+		if (!usernameValid) {
+			form = { error: 'Username is not valid' };
+			return;
+		}
+
 		isSubmitting = true;
-		return async ({ update }) => {
-			await update();
+		form = null; // Clear previous messages
+
+		try {
+			const response = await axios.post('/edit_user', {
+				tag,
+				description,
+				age,
+				gender: +gender,
+				latitude,
+				longitude,
+				whatsapp: whatsappLink
+			});
+
+			if (response.data.success) {
+				form = { success: true, message: response.data.message };
+			} else {
+				form = { error: response.data.error || 'Failed to update profile' };
+			}
+		} catch (error) {
+			console.error('Submission error:', error);
+			if (axios.isAxiosError(error)) {
+				form = { error: error.response?.data?.error || 'An unexpected error occurred.' };
+			} else {
+				form = { error: 'An unexpected error occurred.' };
+			}
+		} finally {
 			isSubmitting = false;
-		};
+		}
 	}
 </script>
 
@@ -118,62 +101,31 @@
 	</header>
 
 	<div class="edit-form">
-		<form method="POST" use:enhance={handleSubmit}>
+		<form on:submit={handleSubmit}>
 			<div class="form-group">
-				<label for="tag" class="form-label">Tag/Username</label>
-				<input
-					id="tag"
-					name="tag"
-					type="text"
+				<label for="tag" class="form-label">user tag</label>
+				<div class="username-input-container">
+					<div class="input-wrapper">
+						<input type="text" name={tag} bind:value={tag} autocomplete="username" />
+						<!-- <UsernameInput
 					bind:value={tag}
-					class="form-input"
-					placeholder="Enter your unique tag"
-					required
-				/>
+					initiallyValid={true}
+					on:validation={handleUsernameValidation}
+				/> -->
+					</div>
+				</div>
 			</div>
 
 			<div class="form-group">
 				<label for="description" class="form-label">Description</label>
-				<div class="description-container">
-					<textarea
-						id="description"
-						name="description"
-						bind:value={description}
-						class="form-textarea"
-						placeholder="Tell us about yourself, your interests, what you're looking for..."
-						rows="6"
-						required
-					></textarea>
-					<div class="voice-controls">
-						{#if !isRecording && !isTranscribing}
-							<button type="button" class="voice-btn" on:click={startRecording}>
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-									<path
-										d="M12 2C13.1 2 14 2.9 14 4V12C14 13.1 13.1 14 12 14C10.9 14 10 13.1 10 12V4C10 2.9 10.9 2 12 2M19 12C19 16.2 15.8 19.2 12 19.2S5 16.2 5 12H7C7 15.1 9.5 17.6 12 17.6S17 15.1 17 12H19Z"
-									/>
-								</svg>
-								Start Recording
-							</button>
-						{:else if isRecording}
-							<button type="button" class="voice-btn recording" on:click={stopRecording}>
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-									<path d="M6 6H18V18H6V6Z" />
-								</svg>
-								Stop Recording
-							</button>
-						{:else}
-							<button type="button" class="voice-btn transcribing" disabled>
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-									<path
-										d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
-										style="animation: spin 1s linear infinite;"
-									/>
-								</svg>
-								Transcribing...
-							</button>
-						{/if}
-					</div>
-				</div>
+				<DescriptionInput
+					bind:value={description}
+					maxLength={500}
+					autoUpdate={true}
+					endpoint="/api/update-description"
+					on:update={handleDescriptionUpdate}
+				/>
+				<input type="hidden" name="description" value={description} />
 			</div>
 
 			<div class="form-group">
@@ -190,42 +142,23 @@
 				/>
 			</div>
 
-			<div class="form-group">
-				<label class="form-label">Gender</label>
-				<div class="radio-group">
-					<label class="radio-label">
-						<input type="radio" name="gender" value="0" bind:group={gender} />
-						Male
-					</label>
-					<label class="radio-label">
-						<input type="radio" name="gender" value="1" bind:group={gender} />
-						Female
-					</label>
-				</div>
-			</div>
+			<fieldset class="form-group">
+				<input type="checkbox" bind:checked={gender}>
+			</fieldset>
 
-			<div class="form-group">
-				<label class="form-label">Location</label>
+			<fieldset class="form-group">
+				<legend class="form-label">Location</legend>
 				<div class="location-container">
-					<div class="location-inputs">
-						<input
-							name="latitude"
-							type="number"
-							bind:value={latitude}
-							class="form-input"
-							placeholder="Latitude"
-							step="any"
-							readonly
-						/>
-						<input
-							name="longitude"
-							type="number"
-							bind:value={longitude}
-							class="form-input"
-							placeholder="Longitude"
-							step="any"
-							readonly
-						/>
+					<div class="location-display">
+						{#if latitude && longitude}
+							<span class="current-location"
+								>{latitude.toFixed(6)}, {longitude.toFixed(6)}</span
+							>
+						{:else}
+							<span class="no-location">No location set</span>
+						{/if}
+						<input type="hidden" name="latitude" value={latitude} />
+						<input type="hidden" name="longitude" value={longitude} />
 					</div>
 					<button
 						type="button"
@@ -251,19 +184,19 @@
 						{/if}
 					</button>
 				</div>
-			</div>
+			</fieldset>
 
 			<div class="form-group">
-				<label for="whatsapp" class="form-label">WhatsApp Link (Optional)</label>
-				<input
+				<label for="whatsapp" class="form-label">WhatsApp number (Optional)</label>
+				<PhoneInput
+					bind:value={whatsappLink}
 					id="whatsapp"
 					name="whatsapp"
-					type="url"
-					bind:value={whatsappLink}
-					class="form-input"
-					placeholder="https://wa.me/your-number"
+					required={false}
+					formatAsWhatsAppLink={true}
+					placeholder="Enter your WhatsApp number"
 				/>
-				<small class="form-help">Enter your WhatsApp contact link for easy communication</small>
+				<!-- <small class="form-help">Enter your WhatsApp number for easy communication</small> -->
 			</div>
 
 			{#if form?.error}
@@ -332,8 +265,7 @@
 		letter-spacing: 0.05em;
 	}
 
-	.form-input,
-	.form-textarea {
+	.form-input {
 		width: 100%;
 		padding: 0.75rem;
 		border: 2px solid #d1d5db;
@@ -349,54 +281,10 @@
 		color: #6b7280;
 	}
 
-	.form-input:focus,
-	.form-textarea:focus {
+	.form-input:focus {
 		outline: none;
 		border-color: #2563eb;
 		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-	}
-
-	.form-textarea {
-		resize: vertical;
-		min-height: 120px;
-	}
-
-	.description-container {
-		position: relative;
-	}
-
-	.voice-controls {
-		position: absolute;
-		bottom: 0.5rem;
-		right: 0.5rem;
-	}
-
-	.voice-btn {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem 1rem;
-		border: none;
-		border-radius: 6px;
-		font-size: 0.875rem;
-		cursor: pointer;
-		transition: all 0.2s;
-		background: #2563eb;
-		color: white;
-	}
-
-	.voice-btn:hover:not(:disabled) {
-		background: #1d4ed8;
-	}
-
-	.voice-btn.recording {
-		background: #dc2626;
-		animation: pulse 1s infinite;
-	}
-
-	.voice-btn.transcribing {
-		background: #6b7280;
-		cursor: not-allowed;
 	}
 
 	.radio-group {
@@ -423,9 +311,22 @@
 		gap: 1rem;
 	}
 
-	.location-inputs {
-		display: flex;
-		gap: 1rem;
+	.location-display {
+		padding: 0.75rem;
+		background: #f8fafc;
+		border-radius: 8px;
+		border: 2px solid #d1d5db;
+		margin-bottom: 1rem;
+	}
+
+	.current-location {
+		font-family: monospace;
+		color: #374151;
+	}
+
+	.no-location {
+		color: #6b7280;
+		font-style: italic;
 	}
 
 	.location-btn {
@@ -542,10 +443,6 @@
 
 		.edit-form {
 			padding: 1.5rem;
-		}
-
-		.location-inputs {
-			flex-direction: column;
 		}
 
 		.form-actions {

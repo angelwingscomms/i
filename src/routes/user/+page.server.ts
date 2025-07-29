@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { getById, searchByPayload } from '$lib/db';
+import { get, searchByPayload } from '$lib/db';
 import type { User } from '$lib/types';
 import { error } from '@sveltejs/kit';
 

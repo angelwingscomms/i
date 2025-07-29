@@ -1,2 +1,9 @@
-homepage search
-    textarea input, make request to api on blur edit user description with input text
+* Refactor edit description input into reusable component
+* Use component in HomeGroup search
+* Send API update on blur and post-transcription
+* Display location as plain text beside “Update Location” button
+* Format phone input with country code dropdown
+* Validate username server-side, show errors
+* Remove "i" link from navbar header
+* Change WhatsApp input formatting
+* Prepare everything as notes for AI agent

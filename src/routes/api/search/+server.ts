@@ -57,12 +57,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					}
 				}
 			],
-			must_not: [
-				{
-					key: 'i',
-					match: { value: locals.user.i }
-				}
-			]
+			// must_not: [
+			// 	{
+			// 		key: 'i',
+			// 		match: { value: locals.user.i }
+			// 	}
+			// ]
 		};
 
 		// Add gender filter if specified
@@ -74,6 +74,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		}
 
 		// Search for similar users using vector search
+		// console.log('--filters', filters)
 		const searchResults = await searchByVector<User>(embedding, 20, filters);
 
 		return json({

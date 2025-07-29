@@ -9,10 +9,10 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	const state = event.url.searchParams.get('state');
 	const storedState = event.cookies.get('google_oauth_state') ?? null;
 	const codeVerifier = event.cookies.get('google_code_verifier') ?? null;
-	console.log('code:', code);
-	console.log('state:', state);
-	console.log('storedState:', storedState);
-	console.log('codeVerifier:', codeVerifier);
+	// console.log('code:', code);
+	// console.log('state:', state);
+	// console.log('storedState:', storedState);
+	// console.log('codeVerifier:', codeVerifier);
 	if (code === null || state === null || storedState === null || codeVerifier === null) {
 		return new Response(null, {
 			status: 400
@@ -34,13 +34,15 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			status: 400
 		});
 	}
-	const { sub: id, name } = decodeIdToken(tokens.idToken()) as {
+	const res = decodeIdToken(tokens.idToken()) as {
 		sub: string;
-		name: string;
+		email: string;
 	};
+	
+	// console.log('r', res)
 
-	const user = await findOrCreateUser({ id, name });
-	console.log(user)
+	const user = await findOrCreateUser(res);
+	// console.log('u', user)
 
 	if (!user) return new Response(null, { status: 500 });
 

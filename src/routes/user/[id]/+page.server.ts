@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getById } from '$lib/db';
+import { get } from '$lib/db';
 import type { User } from '$lib/types';
 import axios from 'axios';
 import { GEMINI_API_KEY } from '$env/static/private';
@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 	try {
 		// Get the user by ID
-		const user = await getById<User>(id);
+		const user = await get<User>(id);
 
 		if (!user) {
 			throw error(404, 'User not found');
@@ -26,10 +26,11 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 		// If current user is logged in, compare descriptions
 		let comparisonResult = null;
-		if (locals.user && locals.user.i !== user.i) {
+		if (locals.user?.i && locals.user.i !== user.i) {
+		const auth_user = await get(locals.user.i, ['d', 't']) as {d: string, t: string}
 			try {
 				const response = await axios.post(
-					'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
+					'https://generativelanguage.googleapis.com/v1beta/models/gemma-3n-e4b-it:generateContent',
 					{
 						contents: [
 							{
@@ -37,11 +38,11 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 									{
 										text: `Compare these two user descriptions and identify their commonalities. Focus on shared interests, values, personality traits, and goals. Return only the commonalities in a concise, friendly format.
 
-User 1: "${locals.user.d}"
+${auth_user.t}: "${auth_user.d}"
 
-User 2: "${user.d}"
+${user.t}: "${user.d}"
 
-Please provide a brief summary of what these users have in common, formatted as a friendly paragraph.`
+Please detail what these users have in common, or overlaps between them, or patterns they share, formatted as a friendly paragraph. Refer to ${auth_user.t} as 'you'`
 									}
 								]
 							}
@@ -63,6 +64,8 @@ Please provide a brief summary of what these users have in common, formatted as 
 				// Continue without comparison if it fails
 			}
 		}
+		
+		// console.log('comparisonResult', comparisonResult)
 
 		return {
 			user: userInfo,

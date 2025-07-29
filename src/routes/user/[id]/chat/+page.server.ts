@@ -1,6 +1,6 @@
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getById } from '$lib/db';
+import { get } from '$lib/db';
 import type { User } from '$lib/types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 	try {
 		// Get the other user by ID
-		const otherUser = await getById<User>(id);
+		const otherUser = await get<User>(id);
 
 		if (!otherUser) {
 			throw error(404, 'User not found');

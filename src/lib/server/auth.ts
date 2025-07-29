@@ -1,6 +1,6 @@
 import { Google } from 'arctic';
 import { GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URL } from '$env/static/private';
-import { getById, searchByPayload, upsertPoint, delete_ } from '$lib/db';
+import { get, searchByPayload, upsertPoint, delete_ } from '$lib/db';
 import type { User } from '$lib/types';
 import { v7 } from 'uuid';
 import type { RequestEvent } from '@sveltejs/kit';
@@ -28,53 +28,88 @@ const ACTIVITY_CHECK_INTERVAL = 1440; // milliseconds
 const INACTIVITY_TIMEOUT = 777600 * 1000; // milliseconds
 
 export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
+	// console.log('[validateSessionToken] - Function started.');
+	// console.log(`[validateSessionToken] - Received token: ${token ? 'present' : 'null/undefined'}`);
+
 	const now = Date.now();
 	const tokenParts = token.split('.');
+	// console.log(`[validateSessionToken] - Token parts: ${tokenParts.length} parts found.`);
 
 	if (tokenParts.length !== 2) {
+		// console.log(`[validateSessionToken] - Token parts length is not 2. Found: ${tokenParts.length}. Returning null session/user.`);
 		return { session: null, user: null };
 	}
 
 	const [sessionId, sessionSecret] = tokenParts;
+	// console.log(`[validateSessionToken] - Extracted sessionId: ${sessionId}, sessionSecret: ${sessionSecret ? 'present' : 'null/undefined'}.`);
 
 	try {
-		const session = await getById<Session>(sessionId);
+		// console.log(`[validateSessionToken] - Attempting to get session by ID: ${sessionId}.`);
+		const session = await get<Session>(sessionId);
+		// console.log(`[validateSessionToken] - Session retrieved: ${session ? 'found' : 'not found'}.`);
 
 		if (!session) {
+			// console.log(`[validateSessionToken] - No session found for ID: ${sessionId}. Returning null session/user.`);
 			return { session: null, user: null };
 		}
+		// console.log(`[validateSessionToken] - Session details (partial): id=${session.i}, userId=${session.u}, lastActivity=${session.l}, createdAt=${session.c}`);
 
 		// Check if session expired
-		if (now - session.l >= INACTIVITY_TIMEOUT) {
+		const inactivityDuration = now - session.l;
+		// console.log(`[validateSessionToken] - Checking session expiry. Current inactivity: ${inactivityDuration}ms. Timeout: ${INACTIVITY_TIMEOUT}ms.`);
+		if (inactivityDuration >= INACTIVITY_TIMEOUT) {
+			// console.log(`[validateSessionToken] - Session ${sessionId} has expired due to inactivity. Deleting session.`);
 			await delete_(sessionId);
+			// console.log(`[validateSessionToken] - Session ${sessionId} deleted. Returning null session/user.`);
 			return { session: null, user: null };
 		}
+		// console.log(`[validateSessionToken] - Session ${sessionId} is not expired.`);
 
 		// Verify session secret
+		// console.log(`[validateSessionToken] - Hashing provided session secret.`);
 		const tokenSecretHash = await hashSecret(sessionSecret);
+		// console.log(`[validateSessionToken] - Converting stored hash from Base64.`);
 		const storedHash = base64ToUint8(session.h);
+		// console.log(`[validateSessionToken] - Comparing hashes using constantTimeEqual.`);
 		const isValid = constantTimeEqual(tokenSecretHash, storedHash);
+		// console.log(`[validateSessionToken] - Session secret validation result: ${isValid}.`);
 
 		if (!isValid) {
+			// console.log(`[validateSessionToken] - Session secret is invalid for session ID: ${sessionId}. Returning null session/user.`);
 			return { session: null, user: null };
 		}
+		// console.log(`[validateSessionToken] - Session secret is valid.`);
 
 		// Update activity if enough time has passed
-		if (now - session.l >= ACTIVITY_CHECK_INTERVAL) {
+		const timeSinceLastActivityUpdate = now - session.l;
+		// console.log(`[validateSessionToken] - Checking activity update interval. Time since last update: ${timeSinceLastActivityUpdate}ms. Check interval: ${ACTIVITY_CHECK_INTERVAL}ms.`);
+		if (timeSinceLastActivityUpdate >= ACTIVITY_CHECK_INTERVAL) {
+			// console.log(`[validateSessionToken] - Enough time has passed, updating session ${sessionId} last activity.`);
 			session.l = now;
+			// console.log(`[validateSessionToken] - Upserting session ${sessionId} to update last activity to ${session.l}.`);
 			await upsertPoint(session);
+			// console.log(`[validateSessionToken] - Session ${sessionId} activity updated successfully.`);
+		} else {
+			// console.log(`[validateSessionToken] - Not enough time has passed to update session ${sessionId} activity.`);
 		}
 
 		// Get user
-		const user = await getById<User>(session.u);
+		// console.log(`[validateSessionToken] - Attempting to get user by ID: ${session.u}.`);
+		const user = await get<User>(session.u);
+		// console.log('session--', session)
+		// console.log(`[validateSessionToken] - User retrieved: ${user ? 'found' : 'not found'}.`);
 		if (!user) {
+			// console.log(`[validateSessionToken] - No user found for user ID: ${session.u} linked to session ${sessionId}. Deleting session.`);
 			await delete_(sessionId);
+			// console.log(`[validateSessionToken] - Session ${sessionId} deleted. Returning null session/user.`);
 			return { session: null, user: null };
 		}
+		// console.log(`[validateSessionToken] - User found: ${user.t} (tag).`);
 
-		return { session, user };
+		// console.log(`[validateSessionToken] - Session and user successfully validated. Returning results.`);
+		return { session, user: {...user, i: session.u} };
 	} catch (error) {
-		console.error('Session validation error:', error);
+		console.error(`[validateSessionToken] - Session validation error for session ID ${sessionId || 'unknown'}:`, error);
 		return { session: null, user: null };
 	}
 }
@@ -104,7 +139,7 @@ export async function invalidateSession(sessionId: string): Promise<void> {
 	await delete_(sessionId);
 }
 
-export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date): void {
+export function setSessionTokenCookie(event: RequestEvent, token: string): void {
 	event.cookies.set(sessionCookieName, token, {
 		path: '/',
 		httpOnly: true,
@@ -123,7 +158,11 @@ export function deleteSessionTokenCookie(event: RequestEvent): void {
 	});
 }
 
-export async function findOrCreateUser(googleUser: { id: string; name: string }): Promise<User> {
+export const find_user = async() => {
+  
+}
+
+export async function findOrCreateUser(googleUser: { id: string; email: string }): Promise<User> {
 	// Search for existing user by Google ID
 	const existingUsers = await searchByPayload<User>(
 		{
@@ -140,7 +179,7 @@ export async function findOrCreateUser(googleUser: { id: string; name: string })
 	// Create new user if not found
 	const newUser: User = {
 		s: 'u',
-		t: googleUser.name.toLowerCase().replace(/\s+/g, ''), // generate tag from name
+		t: googleUser.email.replace("@gmail.com", ''), // generate tag from email
 		d: '', // empty description initially
 		a: 18, // default age
 		g: 0, // default male

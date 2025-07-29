@@ -1,10 +1,12 @@
 import {
 	delete_,
-	getById,
+	get,
 	searchByPayload,
 	upsertPoint
 } from '$lib/db';
 import type { User } from './types';
+
+export {create_user} from './create_user'
 
 import { Google } from 'arctic';
 import {
@@ -13,6 +15,7 @@ import {
 	GOOGLE_SECRET
 } from '$env/static/private';
 import { v7 } from 'uuid';
+import { create_user } from './create_user';
 
 export const google = new Google(
 	GOOGLE_ID,
@@ -38,13 +41,7 @@ export async function find_or_create_user(googleUser: {
 	}
 
 	// Create new user
-	const newUser: User = {
-		s: 'u',
-		n: googleUser.name,
-		g: googleUser.id
-	};
-
-	return await upsertPoint(newUser);
+  return create_user(googleUser.name, {gid: googleUser.id})
 }
 
 export async function requireAuth(locals: App.Locals) {
@@ -176,7 +173,7 @@ export async function getSession(
 	sessionId: string
 ): Promise<Session | null> {
 	const now = Date.now();
-	const session = await getById<Session>(sessionId);
+	const session = await get<Session>(sessionId);
 
 	if (!session) {
 		console.error('Session not found:', sessionId);

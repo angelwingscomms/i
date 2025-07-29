@@ -1,100 +1,80 @@
 # Codebase Guide
 
-This document serves as the definitive guide for understanding and contributing to the codebase. It provides patterns, conventions, and architectural decisions that ensure consistency across the project.
+Codebase guide: patterns, conventions, architecture for project consistency.
 
 ## 1. Project Specifics: "i"
 
-This section details the unique aspects of the "i" application. The rest of this guide provides general patterns and conventions applicable to any project built with this stack.
+"i" application unique aspects. Rest: general stack patterns/conventions.
 
 ### Core Concept
 
-"i" is an application designed to create meaningful connections between users. Its primary feature is a matching system that pairs users for one-on-one chats based on shared interests, personality traits, location, age, and gender preferences, rather than random chance.
+"i": connect users. Matches for 1:1 chats based on shared interests, traits, location, age, gender. Not random.
 
 ### Key Features & Data Flow
 
 1.  **User Onboarding & Profile**:
-    *   Users provide a tag/username, detailed text description of themselves (interests, personality, what they're looking for, etc.), age, gender, location coordinates, and WhatsApp link. The description is the foundation for matching.
+				*   Users provide: tag/username, detailed text description (interests, personality, looking for), age, gender, location coords, WhatsApp link. Description: matching foundation.
 
 2.  **Matching Flow**:
-    *   When a user initiates a search with filters (gender, age range), their text description is sent to the **Gemini API** to generate a vector embedding.
-    *   This embedding is used to perform a vector search in the **Qdrant** database to find the most similar users matching the specified filters.
-    *   The top-matching users are returned as potential connections.
+				*   User search (filters: gender, age range) → text description to **Gemini API** for vector embedding.
+				*   Embedding → vector search in **Qdrant** for similar users matching filters.
+				*   Top-matching users returned as connections.
 
 3.  **Connection & Chat**:
-    *   Once a match is found, the two users are connected in a private audio/video chat room facilitated by **PeerJS**.
-    *   Simultaneously, both users' original text descriptions are sent to the **Gemini API (specifically, `gemini-1.5-flash`)**.
-    *   Gemini compares the two texts and generates a concise list of commonalities. This list is displayed to both users in the chat interface.
-    *   **Crucially, this is the *only* information revealed from the descriptions.** This privacy-centric design allows users to be open in their profiles, knowing that only shared traits will be visible to a match.
+				*   Match found → users connected in private audio/video chat via **PeerJS**.
+				*   Simultaneously: both users' text descriptions to **Gemini API (`gemini-1.5-flash`)**.
+				*   Gemini compares texts, generates concise commonalities list. List displayed in chat.
+				*   **Crucial: Only commonalities revealed from descriptions.** Privacy-centric: users open in profiles, knowing only shared traits visible to match.
 
 4.  **Compare Page**:
-    *   A secondary feature allows a user to search for another user by their username.
-    *   This page uses the same Gemini comparison function to show the commonalities between the current user and the searched user, without initiating a chat.
+				*   Secondary feature: search user by username.
+				*   Uses same Gemini comparison: shows commonalities between current user and searched user, no chat initiation.
 
 ### Data Model (Qdrant)
 
-All user data is stored in a single Qdrant collection named `'i'`.
+All user data in single Qdrant collection: `'i'`.
 
-*   **Payload Field `s`**: A tenant identifier, always set to `'u'` for users.
-*   **Payload Field `t`**: The user's tag/username (`string`).
-*   **Payload Field `d`**: The user's detailed text description (`string`).
-*   **Payload Field `a`**: The user's age (`number`).
-*   **Payload Field `g`**: The user's gender (`number`) - 0 is male, 1 is female.
-*   **Payload Field `l`**: The user's latitude (`number`).
-*   **Payload Field `n`**: The user's longitude (`number`).
-*   **Payload Field `w`**: The user's WhatsApp link (`string`).
-*   **Vector**: The embedding generated from the user's text description (`d`).
+*   **Payload Field `s`**: Tenant ID. Always `'u'` for users.
+*   **Payload Field `t`**: User tag/username (`string`).
+*   **Payload Field `d`**: User detailed text description (`string`).
+*   **Payload Field `a`**: User age (`number`).
+*   **Payload Field `g`**: User gender (`number`) - 0: male, 1: female.
+*   **Payload Field `l`**: User latitude (`number`).
+*   **Payload Field `n`**: User longitude (`number`).
+*   **Payload Field `w`**: User WhatsApp link (`string`).
+*   **Vector**: Embedding from user text description (`d`).
 
 ---
 
-> **Qdrant Rule:** Always use `wait: true` for all Qdrant mutation operations (such as `upsert`, `delete`, etc.) to ensure consistency and durability. Do **not** use `wait: true` for read operations (`scroll`, `retrieve`).
+> **Qdrant Rule:** `wait: true` for Qdrant mutation operations (`upsert`, `delete`) for consistency/durability. `wait: false` (or omit) for read operations (`scroll`, `retrieve`).
 
 ## 2. Architectural Overview
 
 ### High-Level Architecture
 
-The application follows a **SvelteKit Full-Stack Architecture** with:
+**SvelteKit Full-Stack Architecture**:
 
-- **Frontend**: SvelteKit with TypeScript and Tailwind CSS
-- **Backend**: SvelteKit server-side functions and API routes
-- **Database**: Qdrant vector database
-- **Authentication**: Lucia pattern
-- **State Management**: Svelte stores for client-side state
+-   **Frontend**: SvelteKit, TypeScript, Tailwind CSS
+-   **Backend**: SvelteKit server-side functions/API routes
+-   **Database**: Qdrant vector database
+-   **Authentication**: Lucia pattern
+-   **State Management**: Svelte stores (client-side)
 
 ### Data Flow
 
 1.  **Client Request** → SvelteKit Router
-2.  **Server Load Functions** → Database queries via `src/lib/db.ts`
-3.  **Component Rendering** → Data passed via PageData types
+2.  **Server Load Functions** → Database queries (`src/lib/db.ts`)
+3.  **Component Rendering** → Data via PageData types
 4.  **Form Submissions** → Server Actions → Database operations
-5.  **Client State** → Svelte stores (toast notifications, auth state)
+5.  **Client State** → Svelte stores (toast, auth)
 
-### Data Partitioning Pattern
+### Data Partitioning Pattern - Multitenancy
 
-All primary data is stored in a single Qdrant collection `'i'` with data type isolation via the `s` field:
+All data stored in single Qdrant collection `'i'`, isolated by `s` field:
 
-- `s: 'u'` - Users
+-   `s: 'u'` - Users
 
-## 3. Dreamwave Design System
-*A design language for dreamy, soft, and connected experiences.*
-
-## Philosophy
-
-> "Good design is felt, not just seen. It’s the gentle flow that connects an idea to a person."
-
-This design system is built on the principle that digital interfaces should be soft, approachable, and calming. We prioritize clarity and serenity, using ethereal color and soft, rounded forms to create an experience that is both intuitive and delightful.
-
-### Core Principles
-
-1.  **Approachably Rounded** - Every element, from buttons to containers, uses a full radius to feel friendly and modern.
-2.  **Ethereal, Solid Color** - We use a curated palette of solid colors. No gradients.
-3.  **Soft Shadows** - Depth is created with subtle, clean shadows that make elements feel light.
-4.  **Generous Whitespace** - Content is given ample space to breathe, ensuring focus and reducing clutter.
-5.  **Gentle Animations** - Movements are responsive and smooth, making interactions feel natural.
-
-## Color Palette
-
-Our colors are soft and expressive, chosen to create a calm and engaging user experience.
-
+## 3. Design System
 ### Primary Colors
 
 ```css
@@ -103,36 +83,36 @@ Our colors are soft and expressive, chosen to create a calm and engaging user ex
 --dreamwave-pink: #FA378B;
 --dreamwave-magenta: #F737FA;
 --dreamwave-indigo: #7837FA;
---dreamwave-error: #FA3A2F;      /* Reserved for errors/danger */
+--dreamwave-error: #FA3A2F;      /* Errors/danger */
 --dreamwave-light-mauve: #F889FA;
 
-/* Foundational Colors (assumed for a complete system) */
+/* Foundational Colors */
 --background-primary: #FFFFFF;
---text-primary: #1A1A2E;     /* A very dark, near-black for readability */
---text-on-color: #FFFFFF;    /* Text used on top of vibrant backgrounds */
+--text-primary: #1A1A2E;     /* Dark, readable */
+--text-on-color: #FFFFFF;    /* On vibrant backgrounds */
 ```
 
 ### Semantic Mapping
 
-- **Primary Actions**: Dreamwave Indigo (`#7837FA`) - Calm, stable, and inviting.
-- **Secondary Actions**: Dreamwave Violet (`#B637FA`) - Inviting and gentle.
-- **Accent & Highlight**: Dreamwave Pink (`#FA378B`) - Draws attention and adds a touch of warmth.
-- **Critical/Danger**: Dreamwave Error (`#FA3A2F`) - Exclusively for warnings, errors, and destructive actions.
-- **Text**: Text Primary (`#1A1A2E`) - High-contrast and easy to read.
-- **Subtle Backgrounds**: Dreamwave Light Mauve (`#F889FA`) - For gentle highlights or disabled states.
+-   **Primary Actions**: Dreamwave Indigo (`#7837FA`).
+-   **Secondary Actions**: Dreamwave Violet (`#B637FA`).
+-   **Accent & Highlight**: Dreamwave Pink (`#FA378B`).
+-   **Critical/Danger**: Dreamwave Error (`#FA3A2F`). Only for warnings, errors, destructive actions.
+-   **Text**: Text Primary (`#1A1A2E`). High-contrast.
+-   **Subtle Backgrounds**: Dreamwave Light Mauve (`#F889FA`). For gentle highlights/disabled states.
 
 ## Typography
 
 ### Scale
 ```css
---text-whisper: 0.75rem    /* 12px - Subtle annotations */
---text-breath: 0.875rem    /* 14px - Supporting text */
---text-flow: 1rem          /* 16px - Body text */
---text-wave: 1.125rem      /* 18px - Emphasized text */
---text-tide: 1.25rem       /* 20px - Small headings */
---text-horizon: 1.5rem     /* 24px - Section headings */
---text-sky: 2rem           /* 32px - Page headings */
---text-cosmos: 3rem        /* 48px - Hero text */
+--text-whisper: 0.75rem    /* 12px */
+--text-breath: 0.875rem    /* 14px */
+--text-flow: 1rem          /* 16px */
+--text-wave: 1.125rem      /* 18px */
+--text-tide: 1.25rem       /* 20px */
+--text-horizon: 1.5rem     /* 24px */
+--text-sky: 2rem           /* 32px */
+--text-cosmos: 3rem        /* 48px */
 ```
 
 ### Font Stack
@@ -142,7 +122,7 @@ font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Ro
 
 ## Spacing System
 
-Our spacing follows a consistent and predictable 4px-based scale.
+Consistent 4px-based scale.
 
 ```css
 --space-atom: 0.125rem     /* 2px */
@@ -159,17 +139,17 @@ Our spacing follows a consistent and predictable 4px-based scale.
 
 ## Border Radius
 
-Soft, rounded corners are fundamental to our visual identity.
+Soft, rounded corners: core visual identity.
 
 ```css
---radius-medium: 0.75rem;    /* 12px - For cards and larger containers */
---radius-large: 1.25rem;     /* 20px - For modals and page-level containers */
---radius-full: 9999px;       /* For pill-shaped buttons and tags */
+--radius-medium: 0.75rem;    /* 12px - Cards, larger containers */
+--radius-large: 1.25rem;     /* 20px - Modals, page containers */
+--radius-full: 9999px;       /* Pill buttons, tags */
 ```
 
 ## Shadows
 
-Shadows that are clean and soft, providing depth without heaviness.
+Clean, soft shadows; depth without heaviness.
 
 ```css
 --shadow-whisper: 0 1px 3px 0 rgba(26, 26, 46, 0.05);
@@ -184,16 +164,16 @@ Shadows that are clean and soft, providing depth without heaviness.
 ### Timing
 ```css
 --timing-instant: 0ms
---timing-breath: 150ms     /* Quick responses */
---timing-heartbeat: 300ms  /* Standard interactions */
---timing-wave: 500ms       /* Gentle transitions */
---timing-tide: 800ms       /* Thoughtful changes */
+--timing-breath: 150ms     /* Quick */
+--timing-heartbeat: 300ms  /* Standard */
+--timing-wave: 500ms       /* Gentle */
+--timing-tide: 800ms       /* Thoughtful */
 ```
 
 ### Easing
 ```css
---ease-breath: cubic-bezier(0.4, 0, 0.2, 1)      /* Natural acceleration */
---ease-float: cubic-bezier(0.25, 0.46, 0.45, 0.94) /* Gentle floating */
+--ease-breath: cubic-bezier(0.4, 0, 0.2, 1)      /* Natural accel */
+--ease-float: cubic-bezier(0.25, 0.46, 0.45, 0.94) /* Gentle float */
 --ease-dream: cubic-bezier(0.23, 1, 0.32, 1)     /* Smooth in/out */
 ```
 
@@ -201,68 +181,66 @@ Shadows that are clean and soft, providing depth without heaviness.
 
 ### Cards
 ```css
-.card-primary   /* Base cards with a medium radius and soft shadow */
-.card-float     /* Elevated cards with a deeper shadow */
+.card-primary   /* Base: medium radius, soft shadow */
+.card-float     /* Elevated: deeper shadow */
 ```
 
 ### Buttons
 ```css
-.btn-primary    /* Primary actions - dreamwave indigo */
-.btn-secondary  /* Secondary actions - dreamwave violet */
-.btn-accent     /* Highlight actions - dreamwave pink */
-.btn-danger     /* Destructive actions - dreamwave error */
-.btn-ghost      /* Tertiary actions - transparent background */
+.btn-primary    /* Primary: dreamwave indigo */
+.btn-secondary  /* Secondary: dreamwave violet */
+.btn-accent     /* Highlight: dreamwave pink */
+.btn-danger     /* Destructive: dreamwave error */
+.btn-ghost      /* Tertiary: transparent */
 ```
-*Note: All buttons use `border-radius: var(--radius-full)` to achieve a pill shape.*
+*Note: All buttons use `border-radius: var(--radius-full)` (pill shape).*
 
 ### Inputs
 ```css
-.input-primary  /* Standard form inputs, fully rounded */
+.input-primary  /* Standard: fully rounded */
 ```
 
 ### Layout
 ```css
-.container-main    /* Main content container (1200px) */
-.container-narrow  /* Narrow content container (800px) */
+.container-main    /* Main content (1200px) */
+.container-narrow  /* Narrow content (800px) */
 .section-primary   /* Major page sections */
 ```
 
 ## Usage Guidelines
 
 ### Do's
-- **Embrace rounded corners.** Use `--radius-full` for buttons and `--radius-medium` for cards.
-- Apply consistent spacing from our scale to create rhythm.
-- Use our ethereal color palette intentionally and semantically.
-- Animate with natural timing and easing.
-- Layer shadows subtly to create a clean sense of elevation.
+-   **Embrace rounded corners.** `--radius-full` for buttons, `--radius-medium` for cards.
+-   Apply consistent spacing from scale (rhythm).
+-   Use ethereal color palette intentionally, semantically.
+-   Animate with natural timing, easing.
+-   Layer shadows subtly for clean elevation.
 
 ### Don'ts
-- **Never use sharp corners (0 border-radius).**
-- Avoid gradients. Our identity is in solid, soft color.
-- Don't use the `--dreamwave-error` color for anything other than warnings or destructive actions.
-- Never use linear easing for animations.
-- Avoid cluttered layouts; let whitespace guide the user's eye.
+-   **Never use sharp corners (0 border-radius).**
+-   Avoid gradients. Identity is solid, soft color.
+-   Don't use `--dreamwave-error` for non-warnings/destructive actions.
+-   Never use linear easing for animations.
+-   Avoid cluttered layouts; whitespace guides user.
 
 ## Dark Mode
 
-Dark mode in the Dreamwave system swaps light for dark, creating a high-contrast, focused experience.
+Light-to-dark swap: high-contrast, focused experience.
 
-- Background becomes a deep, dark blue (`#1A1A2E`).
-- Text becomes a soft, off-white (`rgba(255, 255, 255, 0.9)`).
-- Ethereal colors remain the same, popping against the dark background.
-- Shadows are replaced by subtle glows or lighter surface colors to imply elevation.
+-   Background: deep, dark blue (`#1A1A2E`).
+-   Text: soft, off-white (`rgba(255, 255, 255, 0.9)`).
+-   Ethereal colors: unchanged, pop on dark.
+-   Shadows: subtle glows or lighter surfaces for elevation.
 
 ## Accessibility
 
-- All primary color combinations meet WCAG AA contrast standards.
-- Focus states are highly visible, using distinct outlines or rings.
-- Animations respect `prefers-reduced-motion`.
-- Touch targets have a minimum size of 44x44px.
-- Text is designed to scale appropriately with user-agent settings.
+-   Primary color combos: WCAG AA contrast.
+-   Focus states: highly visible (outlines/rings).
+-   Animations: respect `prefers-reduced-motion`.
+-   Touch targets: min 44x44px.
+-   Text: scales with user-agent settings.
 
 ---
-
-*"In the end, we believe that design is about creating a feeling. Our goal is to make every interaction feel responsive, joyful, and effortlessly simple."*
 
 ## 4. Directory Structure & File Organization
 
@@ -270,55 +248,52 @@ Dark mode in the Dreamwave system swaps light for dark, creating a high-contrast
 
 ```
 src/
-├── lib/                    # Reusable modules and utilities
+├── lib/                    # Reusable modules, utils
 │   ├── components/         # Shared Svelte components
 │   │   ├── ui/            # Design system components
-│   │   └── *.svelte       # Feature-specific components
-│   ├── stores/            # Svelte stores for state management
-│   ├── types/             # TypeScript type definitions
-│   ├── db.ts              # Database operations layer
-│   ├── auth.ts            # Authentication setup
-│   ├── constants.ts       # Application constants
+│   │   └── *.svelte       # Feature components
+│   ├── stores/            # Svelte stores
+│   ├── types/             # TS type defs
+│   ├── db.ts              # DB operations
+│   ├── auth.ts            # Auth setup
+│   ├── constants.ts       # App constants
 │   └── utils.ts           # Utility functions
-├── routes/                # SvelteKit file-based routing
-│   ├── +layout.svelte     # Root layout component
-│   ├── +page.server.ts    # Server-side page logic
+├── routes/                # SvelteKit routing
+│   ├── +layout.svelte     # Root layout
+│   ├── +page.server.ts    # Server page logic
 │   ├── +page.svelte       # Page components
-│   └── [dynamic]/         # Dynamic route segments
-└── (styles)/              # Global styles directory
+│   └── [dynamic]/         # Dynamic routes
+└── (styles)/              # Global styles
 ```
 
 ### File Naming Conventions
 
-- **Pages**: `+page.svelte`, `+page.server.ts`
-- **Layouts**: `+layout.svelte`, `+layout.server.ts`
-- **API Routes**: `+server.ts`
-- **Components**: `PascalCase.svelte` (e.g., `ChatWindow.svelte`)
-- **Types**: `types.ts` or `*.d.ts`
-- **Tests**: `*.test.ts` (unit), `*.spec.ts` (e2e)
+-   **Components**: `PascalCase.svelte` (e.g., `ChatWindow.svelte`)
+-   **Types**: `types.ts` or `*.d.ts`
+-   **Tests**: `*.test.ts` (unit), `*.spec.ts` (e2e)
 
 ## 5. Coding Style & Conventions
 
 ### Naming Conventions
 
-- **Variables/Functions**: `snake_case`
-- **Classes/Components**: `PascalCase`
-- **Constants**: `UPPER_SNAKE_CASE`
-- **Database Fields**: Single or double letter abbreviations (`t` for text, `g` for googleId, `u` for username, `s` for tenant)
-- **Types/Interfaces**: `PascalCase` with descriptive names
+-   **Variables/Functions**: `snake_case`
+-   **Classes/Components**: `PascalCase`
+-   **Constants**: `UPPER_SNAKE_CASE`
+-   **Database Fields**: Single/double letter (`t` text, `g` googleId, `u` username, `s` tenant)
+-   **Types/Interfaces**: `PascalCase` (descriptive)
 
 ### TypeScript Standards
 
-- Strict null checks enabled
-- Use SvelteKit generated types (`import type { PageData } from './$types'`)
-- Define all entities in `src/lib/types.ts`
-- Prefer interfaces over types for object shapes
+-   Strict null checks enabled.
+-   Use SvelteKit generated types (`import type { PageData } from './$types'`).
+-   Define all entities in `src/lib/types.ts`.
+-   Prefer interfaces for object shapes.
 
 ## 6. Key Design & Implementation Patterns
 
 ### Server Load Pattern
 
-**Purpose**: Fetch initial data for pages from the database
+Fetch initial page data from DB.
 
 ```typescript
 // +page.server.ts
@@ -344,7 +319,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
 ### Form Action Pattern
 
-**Purpose**: Handle form submissions with server-side processing
+Handle form submissions, server-side processing.
 
 ```typescript
 // +page.server.ts
@@ -377,7 +352,7 @@ export const actions = {
 
 ### Database Access Pattern
 
-**Purpose**: Consistent database operations with type isolation
+Consistent DB operations with type isolation.
 
 ```typescript
 // Always use type-aware queries
@@ -409,11 +384,11 @@ await qdrant.setPayload('i', {
 
 ### Component State Pattern
 
-**Purpose**: Manage component lifecycle and reactivity
+Manage component lifecycle, reactivity.
 
 ```svelte
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount } => 'svelte';
 	import { fade } from 'svelte/transition';
 
 	export let data: PageData;
@@ -437,7 +412,7 @@ await qdrant.setPayload('i', {
 
 ### Error Handling Pattern
 
-**Purpose**: Consistent error handling with user feedback
+Consistent error handling, user feedback.
 
 ```typescript
 // Server-side error handling
@@ -473,7 +448,7 @@ if (!validInput) {
 
 ### Toast Notification Pattern
 
-**Purpose**: User feedback for actions and errors
+User feedback for actions, errors.
 
 ```typescript
 // Using the toast store
@@ -495,7 +470,7 @@ toast.add({
 
 ### Authentication Pattern (Lucia)
 
-**Purpose**: Protect routes and access user context
+Protect routes, access user context.
 
 ```typescript
 // Server-side auth requirement in a load function or action
@@ -514,7 +489,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 ### API Route Pattern
 
-**Purpose**: RESTful API endpoints for client-side fetches or external integrations
+RESTful API endpoints for client-side fetches/external integrations.
 
 ```typescript
 // +server.ts
@@ -536,7 +511,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 ### UI Component Pattern
 
-**Purpose**: Consistent component structure
+Consistent component structure.
 
 ```svelte
 <!-- Component structure -->
@@ -569,9 +544,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
 <style>
 	/*
-	  Component-scoped styles go here.
-	  Prefer using Tailwind CSS classes in the template
-	  for consistency with the design system.
+			Component-scoped styles go here.
+			Prefer using Tailwind CSS classes in the template
+			for consistency with the design system.
 	*/
 </style>
 ```
@@ -615,21 +590,21 @@ test.describe('User Matching Flow', () => {
 
 ### Package Management
 
-- **Always use package managers** instead of manually editing `package.json`.
-- Use `npm i <package>` for dependencies.
-- Use `npm i -D <package>` for dev dependencies.
+-   Always use package managers.
+-   `npm i <package>` for deps.
+-   `npm i -D <package>` for dev deps.
 
 ### Code Quality
 
-- **Linting**: ESLint with TypeScript and Svelte plugins.
-- **Formatting**: Prettier with Svelte and Tailwind plugins.
-- **Type Checking**: `npm run check` before commits.
+-   **Linting**: ESLint (TS, Svelte plugins).
+-   **Formatting**: Prettier (Svelte, Tailwind plugins).
+-   **Type Checking**: `npm run check` pre-commits.
 
 ### Testing Strategy
 
-- **Unit Tests**: Focus on utility functions, business logic, and database helpers.
-- **E2E Tests**: Cover critical user journeys like authentication, profile editing, and the matching flow.
-- **Minimum Coverage**: Strive for 80% coverage on core logic.
+-   **Unit Tests**: Focus: utility, business logic, DB helpers.
+-   **E2E Tests**: Cover critical user journeys (auth, profile edit, matching).
+-   **Minimum Coverage**: Strive 80% on core logic.
 
 ### Development Commands
 
@@ -658,36 +633,36 @@ npm run qdrant:stop
 
 ### Database Design
 
-- **Single Collection**: All primary data resides in the Qdrant collection `'i'` for operational simplicity.
-- **Type Isolation**: Using the `s` payload field to distinguish between different types of data (e.g., `'u'`).
-- **Short Field Names**: Optimized for storage and reduced payload size (`u` for username, `t` for text, `g` for googleId).
-- **UUID v7**: Time-ordered UUIDs are used for point IDs for better indexing performance and natural sorting by creation time.
+-   **Single Collection**: All primary data in Qdrant `'i'` (operational simplicity).
+-   **Type Isolation**: `s` payload field distinguishes data types (e.g., `'u'`).
+-   **Short Field Names**: Optimized for storage, reduced payload (`u` for username, `t` for text, `g` for googleId).
+-   **UUID v7**: Time-ordered UUIDs for point IDs (better indexing, natural sorting by creation).
 
 ### Authentication Strategy
 
-- Follows Lucia pattern. Configuration is centralized in `src/lib/auth.ts`. All session validation occurs on the server.
+-   Follows Lucia pattern. Config in `src/lib/auth.ts`. All session validation server-side.
 
 ### State Management
 
-- **Server State**: Handled primarily by SvelteKit's `load` functions, ensuring data is fetched server-side before page render.
-- **Client State**: Limited to UI-specific concerns (e.g., auth status, toast notifications) and managed with Svelte stores.
-- **Form State**: Handled via native HTML forms and SvelteKit Actions, embracing progressive enhancement.
+-   **Server State**: SvelteKit `load` functions (server-side data fetch pre-render).
+-   **Client State**: Limited to UI (auth status, toasts); Svelte stores.
+-   **Form State**: Native HTML forms, SvelteKit Actions (progressive enhancement).
 
 ### Performance Considerations
 
-- **Lazy Loading**: SvelteKit's file-based routing naturally lazy-loads code for each page.
-- **Efficient Queries**: Database queries are designed to be specific, leveraging Qdrant's filtering capabilities alongside vector search.
-- **Minimal JavaScript**: SSR-first approach with selective client-side hydration.
-- **Caching**: Standard browser caching for static assets is enabled by default.
+-   **Lazy Loading**: SvelteKit routing lazy-loads page code.
+-   **Efficient Queries**: Specific DB queries, Qdrant filtering, vector search.
+-   **Minimal JavaScript**: SSR-first, selective hydration.
+-   **Caching**: Standard browser caching for static assets.
 
 ## 9. Common Pitfalls to Avoid
 
-1.  **Database Queries**: Always include the `s` field in queries to ensure you are targeting the correct data type.
-2.  **Authentication**: Never rely on client-side checks for security. All sensitive operations must be done on the server using the user object in `locals.user`.
-3.  **Form Validation**: Validate all user input on both the client (for UX) and the server (for security).
-4.  **Error Handling**: Always provide user-friendly error messages via `fail` in actions or the `toast` store for client-side operations.
-5.  **Type Safety**: Leverage SvelteKit's generated types (`./$types`) and define shared interfaces in `src/lib/types.ts`.
-6.  **Styling**: Use the established design system (e.g., Tailwind classes) instead of hardcoding values or one-off styles.
-7.  **Testing**: Ensure tests cover both the "happy path" and potential error scenarios or edge cases.
+1.  **Database Queries**: Always include `s` field for correct data type.
+2.  **Authentication**: Never rely on client-side security checks. Sensitive ops: server-side with `locals.user`.
+3.  **Form Validation**: Validate input client-side (UX) and server-side (security).
+4.  **Error Handling**: Provide user-friendly errors via `fail` (actions) or `toast` store (client-side).
+5.  **Type Safety**: Leverage SvelteKit generated types (`./$types`), define shared interfaces in `src/lib/types.ts`.
+6.  **Styling**: Use design system (Tailwind classes) over hardcoding/one-off styles.
+7.  **Testing**: Cover "happy path" and error scenarios/edge cases.
 
-This guide should be updated as the codebase evolves to maintain accuracy and usefulness for all contributors.
+Guide update as codebase evolves.
