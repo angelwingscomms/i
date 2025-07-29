@@ -7,7 +7,7 @@
 	export let editable = true;
 	export let autoUpdate = false;
 	export let endpoint = '/api/update-description';
-	export let placeholder = `Tell us about yourself, your interests, what you're looking for...`;
+	export let placeholder = `Tell us about yourself, your beliefs, your interests, stuff you could talk about for hours...`;
 	export let rows = 6;
 
 	let originalValue = value;
@@ -120,7 +120,7 @@
 			});
 
 			if (response.data.text) {
-				value = response.data.text;
+				value += ' ' + response.data.text;
 				dispatch('input', { value });
 
 				// if (autoUpdate) {
