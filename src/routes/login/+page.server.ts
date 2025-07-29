@@ -5,8 +5,8 @@ import type { Actions, PageServerLoad } from './$types';
 import { find_user_by_tag } from '$lib/db';
 import { create_user } from '$lib/auth';
 
-export const load: PageServerLoad = async (event) => {
-	if (event.locals.user) {
+export const load: PageServerLoad = async ({locals}) => {
+	if (locals.user) {
 		return redirect(302, '/');
 	}
 	return {};
@@ -33,13 +33,11 @@ export const actions: Actions = {
 		if (!existingUser) {
 			return fail(400, { message: 'user does not exist' });
 		}
+		if (!existingUser.p) {
+			return fail(500);
+		}
 
-		const validPassword = await verify(existingUser.p, password, {
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
+		const validPassword = await verify(existingUser.p, password);
 		if (!validPassword) {
 			return fail(400, { message: 'Incorrect password' });
 		}
@@ -69,13 +67,7 @@ export const actions: Actions = {
 		// 
 		// console.log('--login')
 
-		const passwordHash = await hash(password, {
-			// recommended minimum parameters
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
+		const passwordHash = await hash(password);
 
 		try {
 			const user = await create_user(username, {p: passwordHash})
