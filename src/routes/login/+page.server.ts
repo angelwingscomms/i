@@ -1,4 +1,4 @@
- import { hash, verify } from '@node-rs/argon2';
+import { hash, verify } from 'argon2';
 import { fail, redirect } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth';
 import type { Actions, PageServerLoad } from './$types';
