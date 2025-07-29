@@ -2,9 +2,11 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { qdrant, searchByPayload } from '$lib/db';
 import type { User } from '$lib/types';
+import { GoogleGenAI } from '@google/genai/node';
+import { collection } from '$lib/constants';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
-  // console.log('eu--')
+	// console.log('eu--')
 	if (!locals.user) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
@@ -54,6 +56,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		// }
 
 		// Update user data
+		//
+
 		const updatedUser: Partial<User> = {
 			t: tag.trim(),
 			d: description.trim(),
@@ -63,18 +67,43 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			n: longitude,
 			w: whatsappLink.trim()
 		};
-		
+
 		// console.log('eu lu', locals.user)
 
 		if (!locals.user.i) {
 			console.error(`!locals.user.i -edit_user server route`);
-			return error(500)
+			return error(500);
 		}
 
 		await qdrant.setPayload('i', {
 			wait: true,
 			payload: updatedUser, // example: updating a username
 			points: [locals.user.i]
+		});
+
+		const ai = new GoogleGenAI({});
+		const embeddings = (
+			await ai.models.embedContent({
+				model: 'gemini-embedding-001',
+				contents: updatedUser.t || ''
+			})
+		).embeddings;
+		if (!embeddings) return error(500);
+
+		const vector = embeddings[0].values;
+
+		if (!vector) {
+			console.error('error creating embedding for user', locals.user, updatedUser);
+			return error(500, 'error creating embedding');
+		}
+
+		await qdrant.updateVectors(collection, {
+			points: [
+				{
+					id: locals.user.i,
+					vector
+				}
+			]
 		});
 
 		return json({

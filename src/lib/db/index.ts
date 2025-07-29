@@ -102,7 +102,7 @@ export async function searchByPayload<T>(
 
 		// console.debug('searchByPayload results', results);
 
-		return results.points.map((point) => ({...point.payload as T, i: point.id}));
+		return results.points.map((point) => ({ ...(point.payload as T), i: point.id }));
 	} catch (error) {
 		console.error('Error in searchByPayload:', error);
 		console.error('Filters:', filters);
@@ -139,16 +139,24 @@ export async function searchByVector<T>(
 	}
 }
 
-export async function get<T>(id: string, payload?: string[]): Promise<T | null> {
+export async function get<T>(
+	id: string,
+	payload?: string[],
+	with_vector?: boolean
+): Promise<T | null> {
 	try {
 		const result = await qdrant.retrieve(collection, {
 			ids: [id],
-			with_payload: payload ? payload: true,
-			with_vector: false
+			with_payload: payload ? payload : true,
+			with_vector
 		});
 
 		if (result.length > 0) {
-			return result[0].payload as T;
+			const res = result[0].payload as T & {vector: number[]};
+			if (with_vector) {
+				res.vector = result[0].vector;
+			}
+			return res;
 		}
 		return null;
 	} catch {
@@ -188,8 +196,8 @@ export async function getUsernameFromId(userId: string): Promise<string> {
 }
 
 export const find_user_by_tag = async (t: string) => {
-  return (await searchByPayload<User>({s: 'u', t}))[0]
-}
+	return (await searchByPayload<User>({ s: 'u', t }))[0];
+};
 
 export const delete_ = async (id: string): Promise<void> => {
 	await qdrant.delete(collection, {
