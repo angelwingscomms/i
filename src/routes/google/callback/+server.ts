@@ -39,7 +39,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		});
 	}
 	const res = decodeIdToken(tokens.idToken()) as {
-		id: string;
+		sub: string;
 		email: string;
 	};
 
@@ -48,26 +48,28 @@ export async function GET(event: RequestEvent): Promise<Response> {
 
 	const existingUsers = await searchByPayload<User>(
 		{
-			gid: res.id,
+			gid: res.sub,
 			s: 'u'
 		},
 		1
 	);
+	
+	console.log(existingUsers)
 
 	if (existingUsers.length > 0) {
 		user = existingUsers[0];
-		console.log(user)
-		// await deleteById(user.i)
-		// redirect(302, '/google')
-		const allUsersToDelete = await searchByPayload<User>({ s: 'u' }, 1_000_000); // Fetch up to 1 million users
-		console.log(`Found ${allUsersToDelete.length} users to delete.`);
-		for (const userToDelete of allUsersToDelete) {
-						console.log(`Deleting user ID: ${userToDelete.i}`);
-						await deleteById(userToDelete.i);
-		}
-		console.log('All users deleted.');
+		// console.log(user)
+		// // await deleteById(user.i)
+		// // redirect(302, '/google')
+		// const allUsersToDelete = await searchByPayload<User>({ s: 'u' }, 1_000_000); // Fetch up to 1 million users
+		// console.log(`Found ${allUsersToDelete.length} users to delete.`);
+		// for (const userToDelete of allUsersToDelete) {
+		// 				console.log(`Deleting user ID: ${userToDelete.i}`);
+		// 				await deleteById(userToDelete.i);
+		// }
+		// console.log('All users deleted.');
 	} else {
-		user = await create_user(res.email.replace('@gmail.com', ''), { gid: res.id });
+		user = await create_user(res.email.replace('@gmail.com', ''), { gid: res.sub });
 		console.log('xu', user)
 	}
 
@@ -75,7 +77,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 
 	if (!user) return new Response(null, { status: 500 });
 
-	const sessionToken = await createSession((user as any).i as string);
+	const sessionToken = await createSession(user.i as string);
 
 	setSessionTokenCookie(event, sessionToken);
 	redirect(302, '/');

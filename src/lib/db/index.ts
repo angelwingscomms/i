@@ -31,7 +31,7 @@ export async function upsertPoint<T extends { i?: string; s: string }>(
 ): Promise<T & { i: string }> {
 	const i = data.i || generateId();
 
-	const vector = new Array(768).fill(0);
+	const vector = new Array(3072).fill(0);
 
 	await qdrant.upsert(collection, {
 		points: [
