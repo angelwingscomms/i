@@ -30,7 +30,7 @@
 		{/if}
 
 		{#if isLoggedIn && !isOwnProfile}
-			<div class="actions">
+			<!-- <div class="actions">
 				<a href="/user/{user.tag}/chat" class="chat-btn">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
 						<path
@@ -39,7 +39,7 @@
 					</svg>
 					Start Chat
 				</a>
-			</div>
+			</div> -->
 		{:else if isOwnProfile}
 			<div class="actions">
 				<a href="/edit_user/{user.tag}" class="edit-btn">
@@ -57,22 +57,22 @@
 			</div>
 		{/if}
 
-		<div class="description-section">
+		<!-- <div class="description-section">
 			<h3 class="description-title">About {user.tag}</h3>
 			<div class="description-content">
 				<p>{user.description}</p>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
-	<div class="navigation">
+	<!-- <div class="navigation">
 		<a href="/" class="back-btn">
 			<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
 				<path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
 			</svg>
 			Back to Search
 		</a>
-	</div>
+	</div> -->
 </div>
 
 <style>

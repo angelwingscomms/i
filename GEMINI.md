@@ -432,7 +432,7 @@ if (!validInput) {
 ```svelte
 <!-- Client-side error handling -->
 <script lang="ts">
-	import { toast } from '$lib/stores/toast';
+	import { toast } from '$lib/toast';
 
 	async function handleSubmit() {
 		try {
@@ -452,7 +452,7 @@ User feedback for actions, errors.
 
 ```typescript
 // Using the toast store
-import { toast } from '$lib/stores/toast';
+import { toast } from '$lib/toast';
 
 // Success notification
 toast.success('Record saved successfully');

@@ -122,6 +122,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	export let data: PageData;
 	import { type PageData } from './$types';
 	import { browser } from '$app/environment';
+	import { toast, toasts } from '$lib/util/toast';
 
 	async function copyProfileLink() {
 		if (!browser) return; // Ensure client-side environment
@@ -132,10 +133,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		try {
 			await navigator.clipboard.writeText(profileLink);
-			copyMessage = 'Profile link copied!';
+			// Assuming `toast` is imported from a common utility, e.g., '$lib/toast'
+			// If not, this import would need to be added to the script block:
+			// import { toast } from '$lib/toast'; // or similar path
+			// toast.success('Profile link copied!');
+			alert('profile link copied')
 		} catch (err) {
 			console.error('Failed to copy profile link:', err);
-			copyMessage = 'Failed to copy link.';
+			alert('Failed to copy link.');
+			// toast.error('Failed to copy link.');
 		}
 	}
 </script>
@@ -154,10 +160,26 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		Edit Your Profile
 	</a>
 
-	<button
-		on:click={copyProfileLink}
-		class="w-full max-w-md rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-	>
-		Share Your Profile
-	</button>
+	<!-- New section to display the profile link with a copy button -->
+	<p class="mt-8 mb-4 text-center text-base text-gray-600 max-w-md">
+		Share your profile with others so they can see what they have in common with you.
+	</p>
+	<div class="w-full max-w-md">
+		<label for="profile-link" class="mb-2 block text-sm font-medium text-gray-700">Your Profile Link:</label>
+		<div class="flex items-center space-x-2">
+			<input
+				id="profile-link"
+				type="text"
+				readonly
+				value={browser ? `${window.location.origin}/user/${data.user.i}` : 'Loading link...'}
+				class="flex-1 rounded-md border border-gray-300 p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+			/>
+			<button
+				on:click={copyProfileLink}
+				class="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600 flex-shrink-0"
+			>
+				Copy
+			</button>
+		</div>
+	</div>
 </main>
