@@ -7,7 +7,7 @@
 	export let editable = true;
 	export let autoUpdate = false;
 	export let endpoint = '/api/update-description';
-	export let placeholder = `Tell us about yourself, your beliefs, your interests, stuff you could talk about for hours...`;
+	export let placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`;
 	export let rows = 6;
 
 	let originalValue = value;
@@ -186,7 +186,7 @@
 				{/if}
 			</div>
 
-			{#if !autoUpdate}
+			<!-- {#if !autoUpdate}
 				<button
 					type="button"
 					class="update-btn"
@@ -195,7 +195,7 @@
 				>
 					{isSaving ? 'Saving...' : 'Update'}
 				</button>
-			{/if}
+			{/if} -->
 		{/if}
 	</div>
 

@@ -3,6 +3,7 @@ import { get, searchByVector } from '$lib/db';
 import type { User } from '$lib/types';
 import axios from 'axios';
 import { GoogleGenAI } from '@google/genai';
+import { embed } from '$lib/util/embed';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	if (!locals.user?.i) {
@@ -13,7 +14,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		const {
 			g: genderFilter,
 			n: ageMin,
-			x: ageMax
+			x: ageMax,
+			d: description
 		} = (await request.json()) as { g: number; n: number; x: number };
 
 		// Validate inputs
@@ -25,7 +27,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			return json({ error: 'Invalid gender filter' }, { status: 400 });
 		}
 
-		const { vector } = (await get(locals.user.i, undefined, true)) as { vector: number[] };
+		let vector: number[];
+
+		if (description) {
+			vector = await embed(description);
+		} else {
+			({ vector } = (await get(locals.user.i, undefined, true)) as { vector: number[] });
+		}
 
 		// Build filters for Qdrant search
 		const filter: Record<string, unknown> = {
@@ -60,7 +68,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		// Search for similar users using vector search
 		// console.log('--filters', filters)
-		const searchResults = await searchByVector<User>({vector, filter, with_payload: ['t', 'a', 'g']});
+		const searchResults = await searchByVector<User>({
+			vector,
+			filter,
+			with_payload: ['t', 'a', 'g']
+		});
 
 		return json(searchResults);
 	} catch (error) {

@@ -24,7 +24,7 @@
 			</a>
 		</div>
 
-		<div class="flex items-center gap-4 md:flex hidden">
+		<div class="flex items-center gap-4">
 			{#if user}
 				<!-- The original isActive check here was commented out already. -->
 				<a href="/search" class="{false ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50'} flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
@@ -66,15 +66,6 @@
 					login w Google
 				</a>
 			{/if}
-		</div>
-
-		<!-- Mobile menu button -->
-		<div class="md:hidden block">
-			<button class="p-2 rounded-md text-gray-500 hover:text-blue-600 hover:bg-gray-50 transition-all duration-200" aria-label="Toggle menu">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-					<path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
-				</svg>
-			</button>
 		</div>
 	</div>
 </nav>
