@@ -178,7 +178,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		>
 		<div class="flex items-center gap-2">
 			<p class="flex-1 bg-white border border-gray-300 rounded-md px-3 py-2 text-gray-800 truncate">
-				{window.location.origin}/user/${data.user.i}
+				{window.location.origin}/user/{data.user.i}
 			</p>
 			<button
 				on:click={copyProfileLink}
