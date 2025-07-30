@@ -21,13 +21,14 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 			tag: user.t,
 			age: user.a,
 			gender: user.g,
-			description: user.d
+			description: user.d,
+			socialLinks: user.x || []
 		};
 
 		// If current user is logged in, compare descriptions
 		let comparisonResult = null;
 		if (locals.user?.i && locals.user.i !== user.i) {
-		const auth_user = await get(locals.user.i, ['d', 't']) as {d: string, t: string}
+			const auth_user = (await get(locals.user.i, ['d', 't'])) as { d: string; t: string };
 			try {
 				const response = await axios.post(
 					'https://generativelanguage.googleapis.com/v1beta/models/gemma-3n-e4b-it:generateContent',
@@ -64,7 +65,7 @@ Please detail what these users have in common, or overlaps between them, or patt
 				// Continue without comparison if it fails
 			}
 		}
-		
+
 		// console.log('comparisonResult', comparisonResult)
 
 		return {

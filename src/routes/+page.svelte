@@ -176,17 +176,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		<label for="profile-link" class="mb-2 block text-sm font-medium text-gray-700"
 			>Your Profile Link:</label
 		>
-		<div class="flex items-center space-x-2">
-			<input
-				id="profile-link"
-				type="text"
-				readonly
-				value="{window.location.origin}/user/${data.user.i}"
-				class="flex-1 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-			/>
+		<div class="flex items-center gap-2">
+			<p class="flex-1 bg-white border border-gray-300 rounded-md px-3 py-2 text-gray-800 truncate">
+				{window.location.origin}/user/${data.user.i}
+			</p>
 			<button
 				on:click={copyProfileLink}
-				class="flex-shrink-0 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
+				class="flex-shrink-0 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-colors duration-200"
 			>
 				Copy
 			</button>

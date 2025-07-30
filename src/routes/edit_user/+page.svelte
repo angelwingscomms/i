@@ -14,6 +14,7 @@
 	let latitude = data.u!.l || 0;
 	let longitude = data.u!.n || 0;
 	let whatsappLink = data.u!.w || '';
+	let socialLinks: string[] = data.u!.x || [];
 	let usernameValid = true;
 
 	let isGettingLocation = false;
@@ -73,7 +74,8 @@
 				gender: +gender,
 				latitude,
 				longitude,
-				whatsapp: whatsappLink
+				whatsapp: whatsappLink,
+				socialLinks
 			});
 
 			if (response.data.success) {
@@ -143,7 +145,7 @@
 			</div>
 
 			<fieldset class="form-group">
-				<input type="checkbox" bind:checked={gender}>
+				<input type="checkbox" bind:checked={gender} />
 			</fieldset>
 
 			<fieldset class="form-group">
@@ -151,9 +153,7 @@
 				<div class="location-container">
 					<div class="location-display">
 						{#if latitude && longitude}
-							<span class="current-location"
-								>{latitude.toFixed(6)}, {longitude.toFixed(6)}</span
-							>
+							<span class="current-location">{latitude.toFixed(6)}, {longitude.toFixed(6)}</span>
 						{:else}
 							<span class="no-location">No location set</span>
 						{/if}
@@ -197,6 +197,35 @@
 					placeholder="Enter your WhatsApp number"
 				/>
 				<!-- <small class="form-help">Enter your WhatsApp number for easy communication</small> -->
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">Social Media Links (Optional)</label>
+				{#each socialLinks as link, index (index)}
+					<div class="social-link-item">
+						<input
+							type="url"
+							bind:value={socialLinks[index]}
+							placeholder="Enter social media link"
+							class="form-input"
+						/>
+						<button
+							type="button"
+							on:click={() => (socialLinks = socialLinks.filter((_, i) => i !== index))}
+							class="remove-link-btn"
+						>
+							Remove
+						</button>
+					</div>
+				{/each}
+				<button
+					type="button"
+					on:click={() => (socialLinks = [...socialLinks, ''])}
+					class="add-link-btn"
+				>
+					Add Link
+				</button>
+				<small class="form-help">Add links to your social media profiles.</small>
 			</div>
 
 			{#if form?.error}
@@ -415,6 +444,46 @@
 
 	.cancel-btn:hover {
 		background: #e5e7eb;
+	}
+
+	.social-link-item {
+		display: flex;
+		gap: 0.5rem;
+		margin-bottom: 0.75rem;
+		align-items: center;
+	}
+
+	.social-link-item .form-input {
+		flex-grow: 1;
+	}
+
+	.remove-link-btn {
+		background: #ef4444;
+		color: white;
+		border: none;
+		padding: 0.5rem 0.75rem;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: background 0.2s;
+	}
+
+	.remove-link-btn:hover {
+		background: #dc2626;
+	}
+
+	.add-link-btn {
+		background: #22c55e;
+		color: white;
+		border: none;
+		padding: 0.75rem 1rem;
+		border-radius: 8px;
+		cursor: pointer;
+		transition: background 0.2s;
+		margin-top: 0.5rem;
+	}
+
+	.add-link-btn:hover {
+		background: #16a34a;
 	}
 
 	@keyframes pulse {

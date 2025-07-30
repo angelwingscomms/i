@@ -12,7 +12,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	try {
-		const { tag, description, age, gender, latitude, longitude, whatsapp } = await request.json();
+		const { tag, description, age, gender, latitude, longitude, whatsapp, socialLinks } =
+			await request.json();
 
 		const whatsappLink = whatsapp || '';
 
@@ -42,6 +43,14 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			return json({ error: 'Invalid location coordinates' }, { status: 400 });
 		}
 
+		// Validate social links
+		if (
+			socialLinks !== undefined &&
+			(!Array.isArray(socialLinks) || socialLinks.some((link) => typeof link !== 'string'))
+		) {
+			return json({ error: 'Social links must be an array of strings' }, { status: 400 });
+		}
+
 		// Check if tag is already taken by another user
 		const existingUsers = await searchByPayload<User>(
 			{
@@ -65,7 +74,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			g: gender,
 			l: latitude,
 			n: longitude,
-			w: whatsappLink.trim()
+			w: whatsappLink.trim(),
+			x: socialLinks
+				? socialLinks
+						.filter((link: string) => link.trim() !== '')
+						.map((link: string) => link.trim())
+				: []
 		};
 
 		// console.log('eu lu', locals.user)

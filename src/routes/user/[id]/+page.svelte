@@ -2,6 +2,30 @@
 	export let data;
 
 	$: ({ user, comparison, isLoggedIn, isOwnProfile } = data);
+
+	function getSocialMediaName(url: string): string {
+		try {
+			const hostname = new URL(url).hostname;
+			if (hostname.includes('facebook.com')) return 'Facebook';
+			if (hostname.includes('twitter.com') || hostname.includes('x.com')) return 'Twitter/X';
+			if (hostname.includes('instagram.com')) return 'Instagram';
+			if (hostname.includes('linkedin.com')) return 'LinkedIn';
+			if (hostname.includes('github.com')) return 'GitHub';
+			if (hostname.includes('youtube.com')) return 'YouTube';
+			if (hostname.includes('tiktok.com')) return 'TikTok';
+			if (hostname.includes('discord.gg')) return 'Discord';
+			if (hostname.includes('pinterest.com')) return 'Pinterest';
+			if (hostname.includes('reddit.com')) return 'Reddit';
+			if (hostname.includes('spotify.com')) return 'Spotify';
+			if (hostname.includes('twitch.tv')) return 'Twitch';
+			if (hostname.includes('medium.com')) return 'Medium';
+			if (hostname.includes('snapchat.com')) return 'Snapchat';
+			if (hostname.includes('telegram.org')) return 'Telegram';
+			return new URL(url).hostname.replace('www.', '').split('.')[0]; // Generic name from hostname
+		} catch (e) {
+			return url; // Fallback to raw URL if parsing fails
+		}
+	}
 </script>
 
 <svelte:head>
@@ -54,6 +78,19 @@
 		{:else}
 			<div class="login-prompt">
 				<p>Please <a href="/google">log in</a> to see compatibility and start chatting.</p>
+			</div>
+		{/if}
+
+		{#if user.socialLinks && user.socialLinks.length > 0}
+			<div class="social-links-section">
+				<h3 class="social-links-title">Connect with {user.tag}</h3>
+				<div class="social-links-grid">
+					{#each user.socialLinks as link}
+						<a href={link} target="_blank" rel="noopener noreferrer" class="social-link">
+							{getSocialMediaName(link)}
+						</a>
+					{/each}
+				</div>
 			</div>
 		{/if}
 
@@ -265,6 +302,47 @@
 		transform: translateX(-2px);
 	}
 
+	.social-links-section {
+		margin-top: 2rem;
+		padding-top: 2rem;
+		border-top: 2px solid #f1f5f9;
+		text-align: center;
+	}
+
+	.social-links-title {
+		color: #374151;
+		font-size: 1.25rem;
+		font-weight: 600;
+		margin-bottom: 1.5rem;
+	}
+
+	.social-links-grid {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1rem;
+	}
+
+	.social-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.75rem 1.25rem;
+		background: #e0f2f7; /* Light blue background */
+		color: #0c4a6e; /* Darker blue text */
+		border: 1px solid #a7d9ee;
+		border-radius: 8px;
+		text-decoration: none;
+		font-weight: 500;
+		transition: all 0.2s;
+	}
+
+	.social-link:hover {
+		background: #bae6fd; /* Slightly darker blue on hover */
+		transform: translateY(-2px);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
 	@media (max-width: 640px) {
 		.container {
 			padding: 1rem 0.5rem;
@@ -292,6 +370,21 @@
 		.edit-btn {
 			padding: 0.875rem 1.5rem;
 			font-size: 1rem;
+		}
+
+		.social-links-section {
+			padding-top: 1.5rem;
+		}
+
+		.social-links-grid {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.social-link {
+			width: 100%; /* Make links full width on small screens */
+			max-width: 250px; /* Limit max width for better appearance */
+			justify-content: center;
 		}
 	}
 </style>
