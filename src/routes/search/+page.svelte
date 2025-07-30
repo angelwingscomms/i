@@ -34,13 +34,13 @@
 
 		try {
 			if (searchType === 'users') {
-				const response = await axios.post('/api/search', {
-					genderFilter,
-					ageMin,
-					ageMax
+				const response = await axios.post('/search', {
+					g: genderFilter,
+					n: ageMin,
+					x: ageMax
 				});
 
-				searchResults = response.data.users || [];
+				searchResults = response.data || [];
 				groupResults = [];
 			} else {
 				const response = await axios.post('/api/search/groups', {
@@ -209,9 +209,6 @@
 									{user.g === 0 ? 'Male' : 'Female'}
 								</span>
 							</div>
-							<p class="text-gray-600 leading-relaxed m-0">
-								{user.d.slice(0, 150)}{user.d.length > 150 ? '...' : ''}
-							</p>
 						</div>
 						<div class="ml-4 flex gap-3 mt-4">
 							<a href="/user/{user.i}" class="inline-block py-2 px-4 bg-blue-600 text-white no-underline rounded-md text-sm font-medium transition-colors duration-200 hover:bg-blue-700 border-none cursor-pointer"> 

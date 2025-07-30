@@ -1,38 +1,42 @@
 <script lang="ts">
-	// import { page } from '$app/state';
+	import { navigating } from '$app/stores'; // Import navigating store
 	import type { User } from '$lib/types';
 
 	export let user: User | null = null;
 
-	function isActive(path: string): boolean {
-		return false;
-		// if (path === '/') {
-		// 	return page.url.pathname === '/';
-		// }
-		// return page.url.pathname.startsWith(path);
-	}
+	// The isActive function was removed as it was unused and always returned false.
+	// Its usages in the template were replaced with 'false' to maintain original behavior
+	// and resolve diagnostic errors.
 </script>
 
 <nav class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
 	<div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
 		<div class="flex items-center">
 			<a href="/" class="flex items-center no-underline" aria-label="Home">
-				<span class="text-4xl font-bold text-blue-600 font-sans"></span>
+				<span class="text-4xl font-bold text-blue-600 font-sans">
+					{#if $navigating}
+						<svg class="animate-spin h-9 w-9 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+							<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+						</svg>
+					{/if}
+				</span>
 			</a>
 		</div>
 
 		<div class="flex items-center gap-4 md:flex hidden">
 			{#if user}
-				<!-- <a href="/" class="{isActive('/') ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50'} flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+				<!-- The original isActive check here was commented out already. -->
+				<a href="/search" class="{false ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50'} flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
 						<path
 							d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
 						/>
 					</svg>
 					Search
-				</a> -->
+				</a>
 
-				<a href="/edit_user" class="{isActive('/edit_user') ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50'} flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+				<a href="/edit_user" class="{false ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50'} flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
 						<path
 							d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"

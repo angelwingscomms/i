@@ -111,16 +111,22 @@ export async function searchByPayload<T>(
 	}
 }
 
-export async function searchByVector<T>(
-	vector: number[],
-	limit: number = 20,
-	filter?: Record<string, unknown>
-): Promise<T[]> {
+export async function searchByVector<T>({
+	vector,
+	limit = 54,
+	with_payload,
+	filter
+}: {
+	vector: number[];
+	with_payload?: string[],
+	limit?: number;
+	filter?: Record<string, unknown>;
+}): Promise<T[]> {
 	try {
 		const searchParams: Record<string, unknown> = {
 			vector,
 			limit,
-			with_payload: true,
+			with_payload,
 			with_vector: false
 		};
 
@@ -130,7 +136,7 @@ export async function searchByVector<T>(
 
 		const results = await qdrant.search(collection, searchParams);
 
-		return results.map((point) => point.payload as T);
+		return results.map((point) => ({...point.payload as T, i: point.id}));
 	} catch (error) {
 		console.error('Error in searchByVector:', error);
 		console.error('Vector length:', vector.length);
@@ -152,7 +158,7 @@ export async function get<T>(
 		});
 
 		if (result.length > 0) {
-			const res = result[0].payload as T & {vector: number[]};
+			const res = result[0].payload as T & { vector: number[] };
 			if (with_vector) {
 				res.vector = result[0].vector;
 			}

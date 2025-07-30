@@ -10,7 +10,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	try {
-		const { genderFilter, ageMin, ageMax } = await request.json();
+		const {
+			g: genderFilter,
+			n: ageMin,
+			x: ageMax
+		} = (await request.json()) as { g: number; n: number; x: number };
 
 		// Validate inputs
 		if (typeof ageMin !== 'number' || typeof ageMax !== 'number' || ageMin > ageMax) {
@@ -20,11 +24,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		if (genderFilter !== null && genderFilter !== 0 && genderFilter !== 1) {
 			return json({ error: 'Invalid gender filter' }, { status: 400 });
 		}
-		
-		const {vector} = await get(locals.user.i, undefined, true)
+
+		const { vector } = (await get(locals.user.i, undefined, true)) as { vector: number[] };
 
 		// Build filters for Qdrant search
-		const filters: Record<string, unknown> = {
+		const filter: Record<string, unknown> = {
 			must: [
 				{
 					key: 's',
@@ -48,7 +52,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		// Add gender filter if specified
 		if (genderFilter !== null) {
-			filters.must.push({
+			filter.must.push({
 				key: 'g',
 				match: { value: genderFilter }
 			});
@@ -56,12 +60,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		// Search for similar users using vector search
 		// console.log('--filters', filters)
-		const searchResults = await searchByVector<User>(vector, 20, filters);
+		const searchResults = await searchByVector<User>({vector, filter, with_payload: ['t', 'a', 'g']});
 
-		return json({
-			users: searchResults,
-			count: searchResults.length
-		});
+		return json(searchResults);
 	} catch (error) {
 		console.error('Search API error:', error);
 

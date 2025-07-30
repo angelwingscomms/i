@@ -121,11 +121,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 <script lang="ts">
 	export let data: PageData;
 	import { type PageData } from './$types';
-	import { browser } from '$app/environment';
-	import { toast, toasts } from '$lib/util/toast';
 
 	async function copyProfileLink() {
-		if (!browser) return; // Ensure client-side environment
+		if (!data.user?.i) return;
 
 		// In a real application, 'your-user-id' would be replaced by the actual user's ID,
 		// typically passed as a prop, fetched from a store, or available in the session.
@@ -137,7 +135,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			// If not, this import would need to be added to the script block:
 			// import { toast } from '$lib/toast'; // or similar path
 			// toast.success('Profile link copied!');
-			alert('profile link copied')
+			alert('profile link copied');
 		} catch (err) {
 			console.error('Failed to copy profile link:', err);
 			alert('Failed to copy link.');
@@ -147,39 +145,52 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 </script>
 
 <main class="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4">
-    <h1 class="mb-6 text-center text-3xl font-bold">quickly find what you have in common with other people</h1>
+	<h1 class="mb-6 text-center text-3xl font-bold">
+		quickly find what you have in common with other people
+	</h1>
 	<p class="mb-8 max-w-md text-center text-lg">
-		describe yourself, your beliefs, your passions, and stuff you like to do or talk about, with a text or a voice note. Our AI compares profiles privately, showing only
-		what you have in common with other. Feel free to be open—your full details stay private
+		describe yourself, your beliefs, your passions, and stuff you like to do or talk about, with a
+		text or a voice note. Our AI compares profiles privately, showing only what you have in common
+		with other. Feel free to be open—your full details stay private
 	</p>
 
 	<a
-	href='/edit_user'
-		class="mb-4 w-full text-center max-w-md rounded-md bg-green-500 p-2 text-white hover:bg-green-600"
+		href="/edit_user"
+		class="mb-4 w-full max-w-md rounded-md bg-green-500 p-2 text-center text-white hover:bg-green-600"
 	>
-		Edit Your Profile
+		{data.user ? 'edit your profile' : 'login w Google'}
+	</a>
+	
+	<a
+		href="/search"
+		class="mb-4 w-full max-w-md rounded-md bg-green-500 p-2 text-center text-white hover:bg-green-600"
+	>
+	    search users
 	</a>
 
-	<!-- New section to display the profile link with a copy button -->
-	<p class="mt-8 mb-4 text-center text-base text-gray-600 max-w-md">
+	{#if data.user}
+	<p class="mt-8 mb-4 max-w-md text-center text-base text-gray-600">
 		Share your profile with others so they can see what they have in common with you.
 	</p>
 	<div class="w-full max-w-md">
-		<label for="profile-link" class="mb-2 block text-sm font-medium text-gray-700">Your Profile Link:</label>
+		<label for="profile-link" class="mb-2 block text-sm font-medium text-gray-700"
+			>Your Profile Link:</label
+		>
 		<div class="flex items-center space-x-2">
 			<input
 				id="profile-link"
 				type="text"
 				readonly
-				value={browser ? `${window.location.origin}/user/${data.user.i}` : 'Loading link...'}
-				class="flex-1 rounded-md border border-gray-300 p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+				value="{window.location.origin}/user/${data.user.i}"
+				class="flex-1 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 			/>
 			<button
 				on:click={copyProfileLink}
-				class="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600 flex-shrink-0"
+				class="flex-shrink-0 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
 			>
 				Copy
 			</button>
 		</div>
 	</div>
+{/if}
 </main>
