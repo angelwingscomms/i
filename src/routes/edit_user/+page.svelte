@@ -96,426 +96,170 @@
 	}
 </script>
 
-<div class="container">
-	<header class="header">
-		<h1>Edit Profile</h1>
-		<p>Update your information to improve matching</p>
-	</header>
+<main>
+	<!-- Background elements -->
+	<div class="bg-orb bg-orb-1"></div>
+	<div class="bg-orb bg-orb-2"></div>
+	<div class="bg-orb bg-orb-3"></div>
 
-	<div class="edit-form">
-		<form on:submit={handleSubmit}>
-			<div class="form-group">
-				<label for="tag" class="form-label">user tag</label>
-				<div class="username-input-container">
-					<div class="input-wrapper">
-						<input type="text" name={tag} bind:value={tag} autocomplete="username" />
-						<!-- <UsernameInput
-					bind:value={tag}
-					initiallyValid={true}
-					on:validation={handleUsernameValidation}
-				/> -->
-					</div>
+	<div class="container-narrow min-h-screen py-8">
+		<header class="mb-8 text-center">
+			<h1 class="hero-title mb-4">Edit Profile</h1>
+			<p class="hero-subtitle">Update your information to improve matching</p>
+		</header>
+
+		<div class="card-normal">
+			<form on:submit={handleSubmit} class="section-spacing">
+				<div class="form-group">
+					<label for="tag" class="form-label">user tag</label>
+					<input
+						type="text"
+						name="tag"
+						bind:value={tag}
+						autocomplete="username"
+						class="input-rect w-full border-0"
+					/>
 				</div>
-			</div>
 
-			<div class="form-group">
-				<label for="description" class="form-label">type or record a description of yourself</label>
-				<DescriptionInput
-					bind:value={description}
-					maxLength={500}
-					autoUpdate={true}
-					endpoint="/api/update-description"
-					on:update={handleDescriptionUpdate}
-				/>
-				<input type="hidden" name="description" value={description} />
-			</div>
-
-			<div class="form-group">
-				<label for="age" class="form-label">Age</label>
-				<input
-					id="age"
-					name="age"
-					type="number"
-					bind:value={age}
-					class="form-input"
-					min="18"
-					max="120"
-					required
-				/>
-			</div>
-
-			<fieldset class="form-group">
-				<input type="checkbox" bind:checked={gender} />
-			</fieldset>
-
-			<fieldset class="form-group">
-				<legend class="form-label">Location</legend>
-				<div class="location-container">
-					<div class="location-display">
-						{#if latitude && longitude}
-							<span class="current-location">{latitude.toFixed(6)}, {longitude.toFixed(6)}</span>
-						{:else}
-							<span class="no-location">No location set</span>
-						{/if}
-						<input type="hidden" name="latitude" value={latitude} />
-						<input type="hidden" name="longitude" value={longitude} />
-					</div>
-					<button
-						type="button"
-						class="location-btn"
-						on:click={getCurrentLocation}
-						disabled={isGettingLocation}
+				<div class="form-group">
+					<label for="description" class="form-label"
+						>type or record a description of yourself</label
 					>
-						{#if isGettingLocation}
-							<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-								<path
-									d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
-									style="animation: spin 1s linear infinite;"
-								/>
-							</svg>
-							Getting Location...
-						{:else}
-							<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-								<path
-									d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M3.05,13H1V11H3.05C3.5,6.83 6.83,3.5 11,3.05V1H13V3.05C17.17,3.5 20.5,6.83 20.95,11H23V13H20.95C20.5,17.17 17.17,20.5 13,20.95V23H11V20.95C6.83,20.5 3.5,17.17 3.05,13M12,5A7,7 0 0,0 5,12A7,7 0 0,0 12,19A7,7 0 0,0 19,12A7,7 0 0,0 12,5Z"
-								/>
-							</svg>
-							Update Location
-						{/if}
-					</button>
-				</div>
-			</fieldset>
-
-			<div class="form-group">
-				<label for="whatsapp" class="form-label">WhatsApp number (Optional)</label>
-				<PhoneInput
-					bind:value={whatsappLink}
-					id="whatsapp"
-					name="whatsapp"
-					required={false}
-					formatAsWhatsAppLink={true}
-					placeholder="Enter your WhatsApp number"
-				/>
-				<!-- <small class="form-help">Enter your WhatsApp number for easy communication</small> -->
-			</div>
-
-			<div class="form-group">
-				<label class="form-label">Social Media Links (Optional)</label>
-				{#each socialLinks as link, index (index)}
-					<div class="social-link-item">
-						<input
-							type="url"
-							bind:value={socialLinks[index]}
-							placeholder="Enter social media link"
-							class="form-input"
+					<div class="glass rounded-lg p-1">
+						<DescriptionInput
+							bind:value={description}
+							maxLength={500}
+							autoUpdate={true}
+							endpoint="/api/update-description"
+							on:update={handleDescriptionUpdate}
 						/>
+					</div>
+					<input type="hidden" name="description" value={description} />
+				</div>
+
+				<div class="form-group">
+					<label for="age" class="form-label">Age</label>
+					<input
+						id="age"
+						name="age"
+						type="number"
+						bind:value={age}
+						class="input-rect w-full border-0"
+						min="18"
+						max="120"
+						required
+					/>
+				</div>
+
+				<div class="form-group">
+					<label class="form-label">
+						<input type="checkbox" bind:checked={gender} class="mr-2" />
+						Female
+					</label>
+				</div>
+
+				<div class="form-group">
+					<label class="form-label">Location</label>
+					<div class="location-container">
+						<div class="location-display">
+							{#if latitude && longitude}
+								<span class="current-location">{latitude.toFixed(6)}, {longitude.toFixed(6)}</span>
+							{:else}
+								<span class="no-location">No location set</span>
+							{/if}
+							<input type="hidden" name="latitude" value={latitude} />
+							<input type="hidden" name="longitude" value={longitude} />
+						</div>
 						<button
 							type="button"
-							on:click={() => (socialLinks = socialLinks.filter((_, i) => i !== index))}
-							class="remove-link-btn"
+							class="location-btn rounded-full"
+							on:click={getCurrentLocation}
+							disabled={isGettingLocation}
 						>
-							Remove
+							{#if isGettingLocation}
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+									<path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" class="animate-spin" />
+								</svg>
+								Getting Location...
+							{:else}
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+									<path
+										d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M3.05,13H1V11H3.05C3.5,6.83 6.83,3.5 11,3.05V1H13V3.05C17.17,3.5 20.5,6.83 20.95,11H23V13H20.95C20.5,17.17 17.17,20.5 13,20.95V23H11V20.95C6.83,20.5 3.5,17.17 3.05,13M12,5A7,7 0 0,0 5,12A7,7 0 0,0 12,19A7,7 0 0,0 19,12A7,7 0 0,0 12,5Z"
+									/>
+								</svg>
+								Update Location
+							{/if}
 						</button>
 					</div>
-				{/each}
-				<button
-					type="button"
-					on:click={() => (socialLinks = [...socialLinks, ''])}
-					class="add-link-btn"
-				>
-					Add Link
-				</button>
-				<small class="form-help">Add links to your social media profiles.</small>
-			</div>
-
-			{#if form?.error}
-				<div class="error-message">
-					{form.error}
 				</div>
-			{/if}
 
-			{#if form?.success}
-				<div class="success-message">
-					{form.message}
+				<div class="form-group">
+					<label for="whatsapp" class="form-label">WhatsApp number (Optional)</label>
+					<PhoneInput
+						bind:value={whatsappLink}
+						id="whatsapp"
+						name="whatsapp"
+						required={false}
+						formatAsWhatsAppLink={true}
+						placeholder="Enter your WhatsApp number"
+					/>
 				</div>
-			{/if}
 
-			<div class="form-actions">
-				<button type="submit" class="save-btn" disabled={isSubmitting}>
-					{isSubmitting ? 'Saving...' : 'Save Changes'}
-				</button>
-				<a href="/" class="cancel-btn">Cancel</a>
-			</div>
-		</form>
+				<div class="form-group">
+					<label class="form-label">Social Media Links (Optional)</label>
+					<div class="mb-3 flex items-center gap-2">
+						<button
+							type="button"
+							on:click={() => (socialLinks = [...socialLinks, ''])}
+							class="add-link-btn flex h-8 w-8 items-center justify-center rounded-full"
+						>
+							+
+						</button>
+						<small class="form-help">Add links to your social media profiles.</small>
+					</div>
+					{#each socialLinks as link, index (index)}
+						<div class="social-link-item">
+							<input
+								type="url"
+								bind:value={socialLinks[index]}
+								placeholder="Enter social media link"
+								class="input-rect flex-1 border-0"
+							/>
+							<button
+								type="button"
+								on:click={() => (socialLinks = socialLinks.filter((_, i) => i !== index))}
+								class="remove-link-btn flex h-8 w-8 items-center justify-center rounded-full"
+							>
+								×
+							</button>
+						</div>
+					{/each}
+				</div>
+
+				{#if form?.error}
+					<div class="error-card rounded-full">
+						{form.error}
+					</div>
+				{/if}
+
+				{#if form?.success}
+					<div class="success-card rounded-full">
+						{form.message}
+					</div>
+				{/if}
+
+				<div class="flex justify-center gap-4 pt-4">
+					<button type="submit" class="btn-primary btn-lg rounded-full" disabled={isSubmitting}>
+						{#if isSubmitting}
+							<div class="loading-spinner"></div>
+							Saving...
+						{:else}
+							Save Changes
+						{/if}
+					</button>
+					<a href="/" class="btn-ghost btn-lg rounded-full">Cancel</a>
+				</div>
+			</form>
+		</div>
 	</div>
-</div>
-
-<style>
-	.container {
-		max-width: 600px;
-		margin: 0 auto;
-		padding: 2rem 1rem;
-	}
-
-	.header {
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
-	.header h1 {
-		font-size: 2.5rem;
-		color: #2563eb;
-		margin-bottom: 0.5rem;
-	}
-
-	.header p {
-		color: #6b7280;
-		font-size: 1.1rem;
-	}
-
-	.edit-form {
-		background: #f8fafc;
-		border-radius: 12px;
-		padding: 2rem;
-		border: 1px solid #e2e8f0;
-	}
-
-	.form-group {
-		margin-bottom: 1.5rem;
-	}
-
-	.form-label {
-		display: block;
-		font-weight: 600;
-		color: #374151;
-		margin-bottom: 0.5rem;
-		font-size: 0.9rem;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-	}
-
-	.form-input {
-		width: 100%;
-		padding: 0.75rem;
-		border: 2px solid #d1d5db;
-		border-radius: 8px;
-		font-size: 1rem;
-		transition: border-color 0.2s;
-	}
-
-	.form-help {
-		display: block;
-		margin-top: 0.25rem;
-		font-size: 0.8rem;
-		color: #6b7280;
-	}
-
-	.form-input:focus {
-		outline: none;
-		border-color: #2563eb;
-		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-	}
-
-	.radio-group {
-		display: flex;
-		gap: 1rem;
-		flex-wrap: wrap;
-	}
-
-	.radio-label {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		cursor: pointer;
-		font-size: 0.95rem;
-	}
-
-	.radio-label input[type='radio'] {
-		margin: 0;
-	}
-
-	.location-container {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.location-display {
-		padding: 0.75rem;
-		background: #f8fafc;
-		border-radius: 8px;
-		border: 2px solid #d1d5db;
-		margin-bottom: 1rem;
-	}
-
-	.current-location {
-		font-family: monospace;
-		color: #374151;
-	}
-
-	.no-location {
-		color: #6b7280;
-		font-style: italic;
-	}
-
-	.location-btn {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.75rem 1rem;
-		border: 2px solid #d1d5db;
-		border-radius: 8px;
-		background: white;
-		cursor: pointer;
-		transition: all 0.2s;
-		align-self: flex-start;
-	}
-
-	.location-btn:hover:not(:disabled) {
-		border-color: #2563eb;
-		background: #f8fafc;
-	}
-
-	.location-btn:disabled {
-		background: #f3f4f6;
-		cursor: not-allowed;
-	}
-
-	.error-message {
-		background: #fef2f2;
-		color: #dc2626;
-		padding: 1rem;
-		border-radius: 8px;
-		border: 1px solid #fecaca;
-		margin-bottom: 1rem;
-	}
-
-	.success-message {
-		background: #f0fdf4;
-		color: #16a34a;
-		padding: 1rem;
-		border-radius: 8px;
-		border: 1px solid #bbf7d0;
-		margin-bottom: 1rem;
-	}
-
-	.form-actions {
-		display: flex;
-		gap: 1rem;
-		justify-content: center;
-	}
-
-	.save-btn,
-	.cancel-btn {
-		padding: 0.75rem 2rem;
-		border-radius: 8px;
-		font-size: 1rem;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.2s;
-		text-decoration: none;
-		text-align: center;
-	}
-
-	.save-btn {
-		background: #2563eb;
-		color: white;
-		border: none;
-	}
-
-	.save-btn:hover:not(:disabled) {
-		background: #1d4ed8;
-		transform: translateY(-1px);
-	}
-
-	.save-btn:disabled {
-		background: #9ca3af;
-		cursor: not-allowed;
-	}
-
-	.cancel-btn {
-		background: #f3f4f6;
-		color: #374151;
-		border: 2px solid #d1d5db;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.cancel-btn:hover {
-		background: #e5e7eb;
-	}
-
-	.social-link-item {
-		display: flex;
-		gap: 0.5rem;
-		margin-bottom: 0.75rem;
-		align-items: center;
-	}
-
-	.social-link-item .form-input {
-		flex-grow: 1;
-	}
-
-	.remove-link-btn {
-		background: #ef4444;
-		color: white;
-		border: none;
-		padding: 0.5rem 0.75rem;
-		border-radius: 6px;
-		cursor: pointer;
-		transition: background 0.2s;
-	}
-
-	.remove-link-btn:hover {
-		background: #dc2626;
-	}
-
-	.add-link-btn {
-		background: #22c55e;
-		color: white;
-		border: none;
-		padding: 0.75rem 1rem;
-		border-radius: 8px;
-		cursor: pointer;
-		transition: background 0.2s;
-		margin-top: 0.5rem;
-	}
-
-	.add-link-btn:hover {
-		background: #16a34a;
-	}
-
-	@keyframes pulse {
-		0%,
-		100% {
-			opacity: 1;
-		}
-		50% {
-			opacity: 0.5;
-		}
-	}
-
-	@keyframes spin {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(360deg);
-		}
-	}
-
-	@media (max-width: 640px) {
-		.container {
-			padding: 1rem 0.5rem;
-		}
-
-		.edit-form {
-			padding: 1.5rem;
-		}
-
-		.form-actions {
-			flex-direction: column;
-		}
-	}
-</style>
+</main>

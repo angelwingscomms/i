@@ -91,14 +91,19 @@
 <svelte:window on:click={handleClickOutside} />
 
 <div class="phone-input-container">
-	<div class="input-group">
-		<div class="country-code-dropdown" bind:this={dropdownRef}>
-			<button type="button" class="dropdown-toggle" on:click={toggleDropdown}>
-				<span class="country-flag"
+	<div class="flex w-full">
+		<div class="relative" bind:this={dropdownRef}>
+			<button
+				type="button"
+				class="hover:bg-glass flex h-full items-center rounded-l-lg border-r-0 px-3 py-3 transition-all duration-200"
+				style="border: 2px solid var(--border-secondary); background: var(--bg-input);"
+				on:click={toggleDropdown}
+			>
+				<span class="mr-2 text-lg"
 					>{countries.find((c) => c.code === selectedCountryCode)?.flag || '🌐'}</span
 				>
-				<span class="country-code">{selectedCountryCode}</span>
-				<svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
+				<span class="text-primary mr-2 font-semibold">{selectedCountryCode}</span>
+				<svg class="opacity-60" width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
 					<path
 						d="M1 1L5 5L9 1"
 						stroke="currentColor"
@@ -110,16 +115,22 @@
 			</button>
 
 			{#if isDropdownOpen}
-				<div class="dropdown-menu">
+				<div
+					class="absolute top-full left-0 z-50 mt-1 max-h-80 w-80 overflow-y-auto rounded-lg backdrop-blur-lg"
+					style="background: var(--bg-card); border: 2px solid var(--border-secondary); box-shadow: var(--shadow-lg);"
+				>
 					{#each countries as country}
 						<button
 							type="button"
-							class="country-option {selectedCountryCode === country.code ? 'selected' : ''}"
+							class="hover:bg-glass flex w-full items-center border-none bg-transparent p-3 text-left transition-all duration-200 {selectedCountryCode ===
+							country.code
+								? 'bg-glass-hover'
+								: ''}"
 							on:click={() => selectCountry(country.code)}
 						>
-							<span class="country-flag">{country.flag}</span>
-							<span class="country-name">{country.name}</span>
-							<span class="country-code">{country.code}</span>
+							<span class="mr-3 text-lg">{country.flag}</span>
+							<span class="text-primary flex-1 text-sm">{country.name}</span>
+							<span class="text-secondary text-sm font-semibold">{country.code}</span>
 						</button>
 					{/each}
 				</div>
@@ -132,7 +143,10 @@
 			{name}
 			bind:value={localNumber}
 			bind:this={inputRef}
-			class="phone-number-input {error ? 'error' : ''}"
+			class="flex-1 rounded-r-lg px-3 py-3 transition-all duration-300 focus:outline-none {error
+				? 'border-error'
+				: ''}"
+			style="border: 2px solid var(--border-secondary); background: var(--bg-input); color: var(--text-primary); border-left: none;"
 			{placeholder}
 			{disabled}
 			{required}
@@ -141,17 +155,22 @@
 	</div>
 
 	{#if error}
-		<div class="error-message">{error}</div>
+		<div class="error-card mt-2">{error}</div>
 	{/if}
 
 	{#if success}
-		<div class="success-message">{success}</div>
+		<div class="success-card mt-2">{success}</div>
 	{/if}
 
 	{#if formatAsWhatsAppLink && value}
-		<div class="format-preview">
+		<div class="text-tertiary mt-2 text-xs">
 			<small
-				>WhatsApp Link: <a href={value} target="_blank" rel="noopener noreferrer">{value}</a></small
+				>WhatsApp Link: <a
+					href={value}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-accent hover:underline">{value}</a
+				></small
 			>
 		</div>
 	{/if}
@@ -160,142 +179,17 @@
 </div>
 
 <style>
-	.phone-input-container {
-		width: 100%;
-	}
-
-	.input-group {
-		display: flex;
-		align-items: stretch;
-		width: 100%;
-	}
-
-	.country-code-dropdown {
-		position: relative;
-	}
-
-	.dropdown-toggle {
-		display: flex;
-		align-items: center;
-		padding: 0.75rem;
-		border: 2px solid #d1d5db;
-		border-right: none;
-		border-radius: 8px 0 0 8px;
-		background: white;
-		cursor: pointer;
-		transition: border-color 0.2s;
-		height: 100%;
-	}
-
-	.dropdown-toggle:hover {
-		background: #f8fafc;
-	}
-
-	.country-flag {
-		margin-right: 6px;
-		font-size: 1.2rem;
-	}
-
-	.country-code {
-		font-weight: 600;
-		margin-right: 6px;
-	}
-
-	.dropdown-arrow {
-		opacity: 0.6;
-	}
-
-	.dropdown-menu {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		z-index: 50;
-		width: 300px;
-		max-height: 300px;
-		overflow-y: auto;
-		background: white;
-		border: 2px solid #d1d5db;
-		border-radius: 8px;
-		margin-top: 4px;
-		box-shadow:
-			0 4px 6px -1px rgba(0, 0, 0, 0.1),
-			0 2px 4px -1px rgba(0, 0, 0, 0.06);
-	}
-
-	.country-option {
-		display: flex;
-		align-items: center;
-		width: 100%;
-		padding: 0.75rem;
-		border: none;
-		background: transparent;
-		text-align: left;
-		cursor: pointer;
-		transition: background 0.2s;
-	}
-
-	.country-option:hover {
-		background: #f8fafc;
-	}
-
-	.country-option.selected {
-		background: #dbeafe;
-	}
-
-	.country-name {
-		flex: 1;
-		margin: 0 10px;
-		font-size: 0.9rem;
-	}
-
-	.phone-number-input {
-		flex: 1;
-		padding: 0.75rem;
-		border: 2px solid #d1d5db;
-		border-radius: 0 8px 8px 0;
-		font-size: 1rem;
-		transition: border-color 0.2s;
-	}
-
 	.phone-number-input:focus {
-		outline: none;
-		border-color: #2563eb;
-		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+		border-color: var(--border-focus) !important;
+		box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent);
 	}
 
-	.phone-number-input.error {
-		border-color: #dc2626;
-	}
-
-	.error-message {
-		color: #dc2626;
-		font-size: 0.85rem;
-		margin-top: 0.5rem;
-	}
-
-	.success-message {
-		color: #16a34a;
-		font-size: 0.85rem;
-		margin-top: 0.5rem;
-	}
-
-	.format-preview {
-		margin-top: 0.5rem;
-		font-size: 0.85rem;
-		color: #6b7280;
-	}
-
-	.format-preview a {
-		color: #2563eb;
-		text-decoration: none;
-	}
-
-	.format-preview a:hover {
-		text-decoration: underline;
+	.border-error {
+		border-color: var(--text-error) !important;
 	}
 
 	@media (max-width: 640px) {
-		.dropdown-menu {
+		.w-80 {
 			width: 250px;
 		}
 	}

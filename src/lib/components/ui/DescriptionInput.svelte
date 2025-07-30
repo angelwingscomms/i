@@ -26,7 +26,7 @@
 		// Update char count when value changes
 		charCount = value?.length || 0;
 	}
-	
+
 	// async function handleBlur() {
 	// 	if (autoUpdate && value !== originalValue) {
 	// 		await updateDescription();
@@ -141,9 +141,9 @@
 		id="description"
 		name="description"
 		bind:value
-		class="form-textarea {!editable ? 'readonly' : ''}"
-		placeholder={placeholder}
-		rows={rows}
+		class="description-textarea border-0"
+		{placeholder}
+		{rows}
 		required
 		on:input
 		disabled={!editable || isSaving || isTranscribing}
@@ -151,14 +151,14 @@
 	></textarea>
 
 	<div class="description-controls">
-		<div class="char-count {charCount > maxLength ? 'text-red-500' : ''}">
+		<div class={charCount > maxLength ? 'char-count-over' : 'char-count'}>
 			{charCount}/{maxLength}
 		</div>
 
 		{#if editable}
 			<div class="voice-controls">
 				{#if !isRecording && !isTranscribing}
-					<button type="button" class="voice-btn" on:click={startRecording}>
+					<button type="button" class="voice-btn rounded-full" on:click={startRecording}>
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
 							<path
 								d="M12 2C13.1 2 14 2.9 14 4V12C14 13.1 13.1 14 12 14C10.9 14 10 13.1 10 12V4C10 2.9 10.9 2 12 2M19 12C19 16.2 15.8 19.2 12 19.2S5 16.2 5 12H7C7 15.1 9.5 17.6 12 17.6S17 15.1 17 12H19Z"
@@ -167,14 +167,14 @@
 						Start Recording
 					</button>
 				{:else if isRecording}
-					<button type="button" class="voice-btn recording" on:click={stopRecording}>
+					<button type="button" class="voice-btn-recording rounded-full" on:click={stopRecording}>
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
 							<path d="M6 6H18V18H6V6Z" />
 						</svg>
 						Stop Recording
 					</button>
 				{:else}
-					<button type="button" class="voice-btn transcribing" disabled>
+					<button type="button" class="voice-btn-transcribing rounded-full" disabled>
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
 							<path
 								d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
@@ -200,150 +200,14 @@
 	</div>
 
 	{#if error}
-		<div class="error-message">
+		<div class="error-card mt-3 rounded-full">
 			{error}
 		</div>
 	{/if}
 
 	{#if success}
-		<div class="success-message">
+		<div class="success-card mt-3 rounded-full">
 			{success}
 		</div>
 	{/if}
 </div>
-
-<style>
-	.description-container {
-		position: relative;
-		width: 100%;
-	}
-
-	.form-textarea {
-		width: 100%;
-		padding: 0.75rem;
-		border: 2px solid #d1d5db;
-		border-radius: 8px;
-		font-size: 1rem;
-		transition: border-color 0.2s;
-		resize: vertical;
-		min-height: 120px;
-	}
-
-	.form-textarea:focus {
-		outline: none;
-		border-color: #2563eb;
-		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-	}
-
-	.form-textarea.readonly {
-		background: #f8fafc;
-		cursor: not-allowed;
-	}
-
-	.description-controls {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-top: 0.5rem;
-	}
-
-	.char-count {
-		font-size: 0.8rem;
-		color: #6b7280;
-	}
-
-	.voice-controls {
-		display: flex;
-		gap: 0.5rem;
-	}
-
-	.voice-btn {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem 1rem;
-		border: none;
-		border-radius: 6px;
-		font-size: 0.875rem;
-		cursor: pointer;
-		transition: all 0.2s;
-		background: #2563eb;
-		color: white;
-	}
-
-	.voice-btn:hover:not(:disabled) {
-		background: #1d4ed8;
-	}
-
-	.voice-btn.recording {
-		background: #dc2626;
-		animation: pulse 1s infinite;
-	}
-
-	.voice-btn.transcribing {
-		background: #6b7280;
-		cursor: not-allowed;
-	}
-
-	.update-btn {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem 1rem;
-		border: none;
-		border-radius: 6px;
-		font-size: 0.875rem;
-		cursor: pointer;
-		transition: all 0.2s;
-		background: #16a34a;
-		color: white;
-	}
-
-	.update-btn:hover:not(:disabled) {
-		background: #15803d;
-	}
-
-	.update-btn:disabled {
-		background: #9ca3af;
-		cursor: not-allowed;
-	}
-
-	.error-message {
-		background: #fef2f2;
-		color: #dc2626;
-		padding: 0.75rem;
-		border-radius: 6px;
-		border: 1px solid #fecaca;
-		margin-top: 0.75rem;
-		font-size: 0.9rem;
-	}
-
-	.success-message {
-		background: #f0fdf4;
-		color: #16a34a;
-		padding: 0.75rem;
-		border-radius: 6px;
-		border: 1px solid #bbf7d0;
-		margin-top: 0.75rem;
-		font-size: 0.9rem;
-	}
-
-	@keyframes pulse {
-		0%,
-		100% {
-			opacity: 1;
-		}
-		50% {
-			opacity: 0.5;
-		}
-	}
-
-	@keyframes spin {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(360deg);
-		}
-	}
-</style>
