@@ -11,7 +11,7 @@
 
 	// User search params
 	let genderFilter: number | null = null;
-	let ageMin = 18;
+	let ageMin = 13;
 	let ageMax = 99;
 	let searchResults: User[] = [];
 
@@ -20,11 +20,12 @@
 	let groupResults: Group[] = [];
 
 	// Description search params
-	let descriptionMode: 'custom' | 'profile' = 'custom';
+	let descriptionMode: 'custom' | 'profile' = 'profile';
 	let customDescription = '';
 
 	let isLoading = false;
 	let errorMessage = '';
+	let hasSearched = false;
 
 	async function handleSearch() {
 		if (searchType === 'users' && ageMin > ageMax) {
@@ -72,17 +73,18 @@
 			errorMessage = 'An error occurred while searching. Please try again.';
 		} finally {
 			isLoading = false;
+			hasSearched = true;
 		}
 	}
 
 	function resetFilters() {
 		if (searchType === 'users') {
 			genderFilter = null;
-			ageMin = 18;
+			ageMin = 13;
 			ageMax = 99;
 			searchResults = [];
 			customDescription = '';
-			descriptionMode = 'custom';
+			descriptionMode = 'profile';
 		} else {
 			groupNameFilter = '';
 			groupResults = [];
@@ -123,13 +125,12 @@
 	<div class="bg-orb bg-orb-3"></div>
 
 	<div class="container-main min-h-screen py-8">
-		<!-- Hero Section -->
+		<!-- Intro Section -->
 		<div class="mb-8 text-center">
-			<h1 class="hero-title mb-4">quickly find what you have in common with other people</h1>
+			<h1 class="hero-title mb-4">Find common ground. Connect deeply.</h1>
 			<p class="hero-subtitle">
-				describe yourself, your beliefs, your passions, and stuff you like to do or talk about, with
-				a text or a voice note. Our AI compares profiles privately, showing only what you have in
-				common with other. Feel free to be open—your full details stay private
+				Share your interests, find meaningful matches, and build connections based on what truly
+				matters.
 			</p>
 		</div>
 
@@ -140,61 +141,6 @@
 			{:else}
 				<a href="/edit_user" class="btn-primary btn-md"> login w Google </a>
 			{/if}
-		</div>
-
-		<!-- Profile Share Section -->
-		{#if data.user && browser}
-			<div class="container-narrow mb-8">
-				<div class="card-normal">
-					<p class="text-secondary mb-4 text-center">
-						Share your profile with others so they can see what they have in common with you.
-					</p>
-					<div class="flex items-center gap-3">
-						<div class="glass text-primary flex-1 truncate rounded-lg px-4 py-3 font-mono text-sm">
-							{window.location.origin}/user/{data.user.i}
-						</div>
-						<button on:click={copyProfileLink} class="btn-accent btn-sm"> Copy </button>
-					</div>
-				</div>
-			</div>
-		{/if}
-
-		<!-- Welcome Header -->
-		<div class="mb-6 text-center">
-			<h2 class="text-accent mb-2 text-3xl font-light">Find Your Match</h2>
-			{#if data.user}
-				<p class="text-secondary text-lg">Welcome back, {data.user?.t}!</p>
-			{/if}
-		</div>
-
-		<!-- Search Type Toggle -->
-		<div class="mb-6 flex justify-center">
-			<div class="toggle-group">
-				<button
-					class={searchType === 'users' ? 'toggle-btn-active' : 'toggle-btn-inactive'}
-					style={searchType === 'users' ? 'background: var(--accent-blue);' : ''}
-					on:click={() => toggleSearchType('users')}
-				>
-					<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-						<path
-							d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
-						/>
-					</svg>
-					Users
-				</button>
-				<button
-					class={searchType === 'groups' ? 'toggle-btn-active' : 'toggle-btn-inactive'}
-					style={searchType === 'groups' ? 'background: var(--accent-purple);' : ''}
-					on:click={() => toggleSearchType('groups')}
-				>
-					<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-						<path
-							d="M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16.18 8.41,14.5 12,14.5C15.59,14.5 18.5,16.18 18.5,18.25V20H5.5V18.25M0,20V18.5C0,17.11 1.89,15.94 4.45,15.6C3.86,16.28 3.5,17.22 3.5,18.25V20H0M24,20H20.5V18.25C20.5,17.22 20.14,16.28 19.55,15.6C22.11,15.94 24,17.11 24,18.5V20Z"
-						/>
-					</svg>
-					Groups
-				</button>
-			</div>
 		</div>
 
 		<!-- Search Form -->
@@ -215,8 +161,15 @@
 									/>
 									<div
 										class={genderFilter === option.value
-											? 'choice-btn-active'
+											? option.value === null
+												? 'choice-btn-active'
+												: option.value === 0
+													? 'choice-btn-active bg-blue-500 text-white'
+													: 'choice-btn-active bg-red-500 text-white'
 											: 'choice-btn-inactive'}
+										style={genderFilter === option.value && option.value === null
+											? 'background: var(--accent-purple); color: white;'
+											: ''}
 									>
 										{option.label}
 									</div>
@@ -232,7 +185,7 @@
 							<input
 								type="number"
 								bind:value={ageMin}
-								min="18"
+								min="13"
 								max="99"
 								placeholder="Min"
 								class="age-input"
@@ -241,7 +194,7 @@
 							<input
 								type="number"
 								bind:value={ageMax}
-								min="18"
+								min="13"
 								max="99"
 								placeholder="Max"
 								class="age-input"
@@ -254,7 +207,7 @@
 						<div class="form-group">
 							<label class="form-label">Description Search Mode</label>
 							<div class="choice-group">
-								{#each [{ mode: 'custom', label: 'Custom description' }, { mode: 'profile', label: 'My profile description' }] as option}
+								{#each [{ mode: 'profile', label: 'My profile description' }, { mode: 'custom', label: 'Custom description' }] as option}
 									<button
 										class={descriptionMode === option.mode
 											? 'choice-btn-active'
@@ -321,6 +274,23 @@
 			{/if}
 		</div>
 
+		<!-- Profile Share Section -->
+		{#if data.user && browser}
+			<div class="container-narrow mb-8">
+				<div class="card-normal">
+					<p class="text-secondary mb-4 text-center">
+						Share your profile with others so they can see what they have in common with you.
+					</p>
+					<div class="flex items-center gap-3">
+						<div class="glass text-primary flex-1 truncate rounded-lg px-4 py-3 font-mono text-sm">
+							{window.location.origin}/user/{data.user.i}
+						</div>
+						<button on:click={copyProfileLink} class="btn-accent btn-sm"> Copy </button>
+					</div>
+				</div>
+			</div>
+		{/if}
+
 		<!-- Results Section -->
 		{#if searchType === 'users' && searchResults.length > 0}
 			<div class="section-spacing-lg">
@@ -386,7 +356,8 @@
 					{/each}
 				</div>
 			</div>
-		{:else if !isLoading && ((searchType === 'users' && searchResults.length === 0 && (genderFilter !== null || ageMin !== 18 || ageMax !== 99 || customDescription !== '')) || (searchType === 'groups' && groupResults.length === 0 && groupNameFilter))}
+			} else if (!isLoading && hasSearched && ((searchType === 'users' && searchResults.length === 0)
+			|| (searchType === 'groups' && groupResults.length === 0)))
 			<div class="empty-state">
 				<p class="text-secondary text-lg font-light">
 					No {searchType} found matching your criteria. Try adjusting your filters.

@@ -372,7 +372,6 @@ input[type='number'] {
 
 @utility choice-btn-active {
 	@apply choice-btn text-white;
-	border-color: var(--accent-rose);
 	background: var(--accent-rose);
 	box-shadow: var(--shadow-lg);
 }
