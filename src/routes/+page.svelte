@@ -4,6 +4,7 @@
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import { type PageData } from './$types';
 	import { browser } from '$app/environment';
+	import AuthButton from '$lib/components/ui/AuthButton.svelte';
 
 	export let data: PageData;
 
@@ -58,7 +59,7 @@
 					searchPayload.D = descriptionPayload;
 				}
 
-				const response = await axios.post('/search', searchPayload);
+				const response = await axios.post('/', searchPayload);
 				searchResults = response.data || [];
 				groupResults = [];
 			} else {
@@ -130,18 +131,13 @@
 			<h1 class="hero-title mb-4">Find common ground. Connect deeply.</h1>
 			<p class="hero-subtitle">
 				Share your interests, find meaningful matches, and build connections based on what truly
-				matters.
+				matters. Describe yourself as much as you want, even sensitive stuff, with the assurance
+				that other users will only see what you have in common with them.
 			</p>
 		</div>
 
 		<!-- Authentication -->
-		<div class="mb-8 text-center">
-			{#if data.user}
-				<a href="/edit_user" class="btn-secondary btn-md"> edit your profile </a>
-			{:else}
-				<a href="/edit_user" class="btn-primary btn-md"> login w Google </a>
-			{/if}
-		</div>
+		<AuthButton user={data.user} />
 
 		<!-- Search Form -->
 		<div class="card-normal mb-6">
@@ -260,9 +256,6 @@
 					{:else}
 						Search
 					{/if}
-				</button>
-				<button class="btn-ghost btn-md" on:click={resetFilters} disabled={isLoading}>
-					Reset
 				</button>
 			</div>
 

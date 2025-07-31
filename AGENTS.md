@@ -1,3 +1,0 @@
-For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary
-
-start every task by creating a task.md file, in the file, detail the task into many small sub-tasks. then for each sub-task, create a file called sub-task.md, and detail the sub-task into many micro-tasks. then do each micro-task. when done with all the micro-tasks in a sub-task, move to the next sub-task, overwrite the sub-task.md file with the new micro-tasks for the next sub-task. continue till you are done with all sub-tasks. then delete tasks.md and sub-tasks.md.

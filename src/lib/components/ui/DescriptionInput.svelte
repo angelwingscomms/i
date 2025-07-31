@@ -151,9 +151,9 @@
 	></textarea>
 
 	<div class="description-controls">
-		<div class={charCount > maxLength ? 'char-count-over' : 'char-count'}>
+		<!-- <div class={charCount > maxLength ? 'char-count-over' : 'char-count'}>
 			{charCount}/{maxLength}
-		</div>
+		</div> -->
 
 		{#if editable}
 			<div class="voice-controls">

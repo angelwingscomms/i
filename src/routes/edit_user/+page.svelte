@@ -13,7 +13,6 @@
 	let gender = !!data.u!.g;
 	let latitude = data.u!.l || 0;
 	let longitude = data.u!.n || 0;
-	let whatsappLink = data.u!.w || '';
 	let socialLinks: string[] = data.u!.x || [];
 	let usernameValid = true;
 
@@ -74,7 +73,6 @@
 				gender: +gender,
 				latitude,
 				longitude,
-				whatsapp: whatsappLink,
 				socialLinks
 			});
 
@@ -152,10 +150,13 @@
 				</div>
 
 				<div class="form-group">
-					<label class="form-label">
-						<input type="checkbox" bind:checked={gender} class="mr-2" />
-						Female
-					</label>
+					<label class="form-label">Gender</label>
+					<div class="choice-group">
+						<label>
+							<input type="checkbox" bind:checked={gender} class="sr-only" />
+							<div class={gender ? 'choice-btn-active' : 'choice-btn-inactive'}>Female</div>
+						</label>
+					</div>
 				</div>
 
 				<div class="form-group">
@@ -191,18 +192,6 @@
 							{/if}
 						</button>
 					</div>
-				</div>
-
-				<div class="form-group">
-					<label for="whatsapp" class="form-label">WhatsApp number (Optional)</label>
-					<PhoneInput
-						bind:value={whatsappLink}
-						id="whatsapp"
-						name="whatsapp"
-						required={false}
-						formatAsWhatsAppLink={true}
-						placeholder="Enter your WhatsApp number"
-					/>
 				</div>
 
 				<div class="form-group">
