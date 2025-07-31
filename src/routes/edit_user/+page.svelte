@@ -1,7 +1,6 @@
 <script lang="ts">
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	// import UsernameInput from '$lib/components/ui/UsernameInput.svelte';
-	import PhoneInput from '$lib/components/ui/PhoneInput.svelte';
 	import axios from 'axios';
 
 	export let data;
@@ -21,10 +20,6 @@
 
 	function handleDescriptionUpdate(event: CustomEvent) {
 		description = event.detail.value;
-	}
-
-	function handleUsernameValidation(event: CustomEvent) {
-		usernameValid = event.detail.isValid;
 	}
 
 	async function getCurrentLocation() {

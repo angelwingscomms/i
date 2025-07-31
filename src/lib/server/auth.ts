@@ -16,7 +16,6 @@ interface Session {
 	h: string; // hash (base64)
 	c: number; // created at
 	l: number; // last activity
-	expiresAt: Date;
 }
 
 export interface SessionValidationResult {
@@ -25,7 +24,7 @@ export interface SessionValidationResult {
 }
 
 const ACTIVITY_CHECK_INTERVAL = 1440; // milliseconds
-const INACTIVITY_TIMEOUT = 777600 * 1000; // milliseconds
+const INACTIVITY_TIMEOUT = 31536000 * 1000; // milliseconds (1 year)
 
 export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
 	// console.log('[validateSessionToken] - Function started.');
@@ -107,9 +106,12 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 		// console.log(`[validateSessionToken] - User found: ${user.t} (tag).`);
 
 		// console.log(`[validateSessionToken] - Session and user successfully validated. Returning results.`);
-		return { session, user: {...user, i: session.u} };
+		return { session, user: { ...user, i: session.u } };
 	} catch (error) {
-		console.error(`[validateSessionToken] - Session validation error for session ID ${sessionId || 'unknown'}:`, error);
+		console.error(
+			`[validateSessionToken] - Session validation error for session ID ${sessionId || 'unknown'}:`,
+			error
+		);
 		return { session: null, user: null };
 	}
 }
@@ -127,8 +129,7 @@ export async function createSession(userId: string): Promise<string> {
 		u: userId,
 		h: hashBase64,
 		c: now,
-		l: now,
-		expiresAt: new Date(now + INACTIVITY_TIMEOUT)
+		l: now
 	};
 
 	await upsertPoint(session);
@@ -145,7 +146,7 @@ export function setSessionTokenCookie(event: RequestEvent, token: string): void 
 		httpOnly: true,
 		secure: process.env.NODE_ENV === 'production',
 		sameSite: 'lax',
-		// expires: expiresAt
+		maxAge: INACTIVITY_TIMEOUT / 1000 // Convert milliseconds to seconds
 	});
 }
 

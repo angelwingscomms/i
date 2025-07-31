@@ -32,7 +32,7 @@
 	<title>{user.tag} - User Profile</title>
 </svelte:head>
 
-<div class="container">
+<div class="  container">
 	<div class="profile-card">
 		<header class="profile-header">
 			<h1 class="user-tag">{user.tag}</h1>
@@ -77,7 +77,9 @@
 			</div>
 		{:else}
 			<div class="login-prompt">
-				<p>Please <a href="/google">log in</a> to see compatibility and start chatting.</p>
+				<p>
+					Please <a href="/google">log in</a> to see compatibility and start chatting.
+				</p>
 			</div>
 		{/if}
 
@@ -86,7 +88,12 @@
 				<h3 class="social-links-title">Connect with {user.tag}</h3>
 				<div class="social-links-grid">
 					{#each user.socialLinks as link}
-						<a href={link} target="_blank" rel="noopener noreferrer" class="social-link">
+						<a
+							href={link}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="social-link"
+						>
 							{getSocialMediaName(link)}
 						</a>
 					{/each}
@@ -388,3 +395,7 @@
 		}
 	}
 </style>
+
+
+
+
