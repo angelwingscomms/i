@@ -131,7 +131,7 @@
 			<h1 class="hero-title mb-4">Meet Your People</h1>
 			<p class="hero-subtitle">
 				Share your passions, find real connections, vibe with folks who get you. Spill as much as
-				you want—others only see what you both share, not your full story.
+				you want in your profile, others only see what you both share, not your full story.
 			</p>
 		</div>
 
