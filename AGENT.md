@@ -1,3 +1,3 @@
 For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary
 
-start every task by craeting a telegraphic-text list that details the task into many small micro-tasks, then do each micro-task.
+start every task by craeting a telegraphic speech list that details the task into many small micro-tasks, then do each micro-task.

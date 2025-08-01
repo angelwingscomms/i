@@ -4,43 +4,16 @@ import { browser } from '$app/environment';
 export type Theme = 'light' | 'dark';
 
 function createThemeStore() {
-	const { subscribe, set, update } = writable<Theme>('light');
+	const { subscribe, set } = writable<Theme>('dark'); // Default to dark
 
 	return {
 		subscribe,
 		init: () => {
 			if (!browser) return;
 
-			// Check for saved theme preference
-			const savedTheme = localStorage.getItem('theme') as Theme | null;
-			if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-				set(savedTheme);
-				applyTheme(savedTheme);
-				return;
-			}
-
-			// Check system preference
-			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			const systemTheme: Theme = prefersDark ? 'dark' : 'light';
-			set(systemTheme);
-			applyTheme(systemTheme);
-		},
-		toggle: () => {
-			update((currentTheme) => {
-				const newTheme: Theme = currentTheme === 'light' ? 'dark' : 'light';
-				if (browser) {
-					localStorage.setItem('theme', newTheme);
-					applyTheme(newTheme);
-				}
-				return newTheme;
-			});
-		},
-		setTheme: (theme: Theme) => {
-			set(theme);
-			if (browser) {
-				localStorage.setItem('theme', theme);
-				applyTheme(theme);
-			}
+			// Always set to dark theme
+			set('dark');
+			applyTheme('dark');
 		}
 	};
 }
@@ -51,6 +24,8 @@ function applyTheme(theme: Theme) {
 	if (theme === 'dark') {
 		document.documentElement.setAttribute('data-theme', 'dark');
 	} else {
+		// Even if the initial theme is dark, ensure no data-theme is set for 'light'
+		// This branch will effectively not be hit if we always default to 'dark'
 		document.documentElement.removeAttribute('data-theme');
 	}
 }

@@ -1,3 +1,4 @@
+@import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
@@ -654,6 +655,121 @@ input[type='number'] {
 @utility no-location {
 	@apply italic;
 	color: var(--text-tertiary);
+}
+
+/* Social Media Icons */
+@utility icon-social {
+	@apply relative pl-8; /* Add padding for the icon */
+}
+
+.icon-social::before {
+	@apply absolute top-1/2 left-0 -translate-y-1/2 text-xl;
+	font-family: 'Font Awesome 6 Brands';
+}
+
+@utility icon-facebook {
+	@apply icon-social;
+}
+.icon-facebook::before {
+	content: '\f39e'; /* Facebook icon */
+}
+
+@utility icon-twitter {
+	@apply icon-social;
+}
+.icon-twitter::before {
+	content: '\f099'; /* Twitter icon */
+}
+
+@utility icon-instagram {
+	@apply icon-social;
+}
+.icon-instagram::before {
+	content: '\f16d'; /* Instagram icon */
+}
+
+@utility icon-linkedin {
+	@apply icon-social;
+}
+.icon-linkedin::before {
+	content: '\f08c'; /* LinkedIn icon */
+}
+
+@utility icon-github {
+	@apply icon-social;
+}
+.icon-github::before {
+	content: '\f09b'; /* GitHub icon */
+}
+
+@utility icon-youtube {
+	@apply icon-social;
+}
+.icon-youtube::before {
+	content: '\f167'; /* YouTube icon */
+}
+
+@utility icon-tiktok {
+	@apply icon-social;
+}
+.icon-tiktok::before {
+	content: '\e07b'; /* TikTok icon */
+}
+
+@utility icon-discord {
+	@apply icon-social;
+}
+.icon-discord::before {
+	content: '\f392'; /* Discord icon */
+}
+
+@utility icon-pinterest {
+	@apply icon-social;
+}
+.icon-pinterest::before {
+	content: '\f0d2'; /* Pinterest icon */
+}
+
+@utility icon-reddit {
+	@apply icon-social;
+}
+.icon-reddit::before {
+	content: '\f1a1'; /* Reddit icon */
+}
+
+@utility icon-spotify {
+	@apply icon-social;
+}
+.icon-spotify::before {
+	content: '\f1bc'; /* Spotify icon */
+}
+
+@utility icon-twitch {
+	@apply icon-social;
+}
+.icon-twitch::before {
+	content: '\f1e8'; /* Twitch icon */
+}
+
+@utility icon-medium {
+	@apply icon-social;
+}
+.icon-medium::before {
+	content: '\f23a'; /* Medium icon */
+}
+
+@utility icon-snapchat {
+	@apply icon-social;
+}
+.icon-snapchat::before {
+	content: '\f2ab'; /* Snapchat icon */
+}
+
+@utility icon-telegram {
+	@apply icon-social;
+}
+.icon-telegram::before {
+	content: '\f2c6'; /* Telegram icon */
 }
 
 /* Responsive Design */

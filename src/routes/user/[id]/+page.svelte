@@ -3,27 +3,34 @@
 
 	$: ({ user, comparison, isLoggedIn, isOwnProfile } = data);
 
-	function getSocialMediaName(url: string): string {
+	function getSocialMediaInfo(url: string): { name: string; iconClass: string | null } {
 		try {
 			const hostname = new URL(url).hostname;
-			if (hostname.includes('facebook.com')) return 'Facebook';
-			if (hostname.includes('twitter.com') || hostname.includes('x.com')) return 'Twitter/X';
-			if (hostname.includes('instagram.com')) return 'Instagram';
-			if (hostname.includes('linkedin.com')) return 'LinkedIn';
-			if (hostname.includes('github.com')) return 'GitHub';
-			if (hostname.includes('youtube.com')) return 'YouTube';
-			if (hostname.includes('tiktok.com')) return 'TikTok';
-			if (hostname.includes('discord.gg')) return 'Discord';
-			if (hostname.includes('pinterest.com')) return 'Pinterest';
-			if (hostname.includes('reddit.com')) return 'Reddit';
-			if (hostname.includes('spotify.com')) return 'Spotify';
-			if (hostname.includes('twitch.tv')) return 'Twitch';
-			if (hostname.includes('medium.com')) return 'Medium';
-			if (hostname.includes('snapchat.com')) return 'Snapchat';
-			if (hostname.includes('telegram.org')) return 'Telegram';
-			return new URL(url).hostname.replace('www.', '').split('.')[0]; // Generic name from hostname
+			if (hostname.includes('facebook.com'))
+				return { name: 'Facebook', iconClass: 'icon-facebook' };
+			if (hostname.includes('twitter.com') || hostname.includes('x.com'))
+				return { name: 'X', iconClass: 'icon-x' };
+			if (hostname.includes('instagram.com'))
+				return { name: 'Instagram', iconClass: 'icon-instagram' };
+			if (hostname.includes('linkedin.com'))
+				return { name: 'LinkedIn', iconClass: 'icon-linkedin' };
+			if (hostname.includes('github.com')) return { name: 'GitHub', iconClass: 'icon-github' };
+			if (hostname.includes('youtube.com')) return { name: 'YouTube', iconClass: 'icon-youtube' };
+			if (hostname.includes('tiktok.com')) return { name: 'TikTok', iconClass: 'icon-tiktok' };
+			if (hostname.includes('discord.gg')) return { name: 'Discord', iconClass: 'icon-discord' };
+			if (hostname.includes('pinterest.com'))
+				return { name: 'Pinterest', iconClass: 'icon-pinterest' };
+			if (hostname.includes('reddit.com')) return { name: 'Reddit', iconClass: 'icon-reddit' };
+			if (hostname.includes('spotify.com')) return { name: 'Spotify', iconClass: 'icon-spotify' };
+			if (hostname.includes('twitch.tv')) return { name: 'Twitch', iconClass: 'icon-twitch' };
+			if (hostname.includes('medium.com')) return { name: 'Medium', iconClass: 'icon-medium' };
+			if (hostname.includes('snapchat.com'))
+				return { name: 'Snapchat', iconClass: 'icon-snapchat' };
+			if (hostname.includes('telegram.org'))
+				return { name: 'Telegram', iconClass: 'icon-telegram' };
+			return { name: new URL(url).hostname.replace('www.', '').split('.')[0], iconClass: null }; // Generic name, no specific icon
 		} catch (e) {
-			return url; // Fallback to raw URL if parsing fails
+			return { name: url, iconClass: null }; // Fallback to raw URL, no specific icon
 		}
 	}
 </script>
@@ -100,13 +107,15 @@
 				<h3 class="text-accent mb-6 text-xl font-semibold">Connect with {user.tag}</h3>
 				<div class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center">
 					{#each user.socialLinks as link (link)}
+						{@const { name, iconClass } = getSocialMediaInfo(link)}
 						<a
 							href={link}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="inline-flex items-center gap-2 rounded-lg border border-cyan-300 bg-cyan-100 px-5 py-3 font-medium text-cyan-800 no-underline transition-all hover:-translate-y-0.5 hover:bg-cyan-200 hover:shadow-md sm:w-full sm:max-w-xs sm:justify-center"
+							class="inline-flex items-center gap-2 rounded-lg border border-cyan-300 bg-cyan-100 px-5 py-3 font-medium text-cyan-800 no-underline transition-all hover:-translate-y-0.5 hover:bg-cyan-200 hover:shadow-md sm:w-full sm:max-w-xs sm:justify-center {iconClass ||
+								''}"
 						>
-							{getSocialMediaName(link)}
+							{name}
 						</a>
 					{/each}
 				</div>
