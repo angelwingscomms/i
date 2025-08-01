@@ -1,0 +1,28 @@
+/* Text Styles */
+@utility text-primary {
+	color: var(--text-primary);
+}
+
+@utility text-secondary {
+	color: var(--text-secondary);
+}
+
+@utility text-tertiary {
+	color: var(--text-tertiary);
+}
+
+@utility text-accent {
+	color: var(--text-accent);
+}
+
+@utility text-success {
+	color: var(--text-success);
+}
+
+@utility text-error {
+	color: var(--text-error);
+}
+
+@utility text-warning {
+	color: var(--text-warning);
+}

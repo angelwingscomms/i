@@ -1,0 +1,52 @@
+/* Utility Classes */
+@utility glass {
+	background: var(--bg-glass);
+	backdrop-filter: blur(12px);
+}
+
+@utility glass-hover {
+	background: var(--bg-glass-hover);
+	backdrop-filter: blur(12px);
+}
+
+@utility divider {
+	@apply h-px;
+	background: linear-gradient(to right, transparent, var(--border-secondary), transparent);
+}
+
+/* Loading States */
+@utility loading-spinner {
+	@apply h-4 w-4 animate-spin rounded-full border-2;
+	border-color: var(--border-secondary);
+	border-top-color: currentColor;
+}
+
+/* Animations */
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+}
+
+@utility animate-float {
+	animation: float 6s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@utility animate-fade-in {
+	animation: fadeIn 0.5s ease-out forwards;
+}

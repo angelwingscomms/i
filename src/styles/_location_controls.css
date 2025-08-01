@@ -1,0 +1,24 @@
+/* Location Controls */
+@utility location-container {
+	@apply flex flex-col gap-4;
+}
+
+@utility location-display {
+	@apply rounded-lg p-3 backdrop-blur-lg;
+	background: var(--bg-glass);
+	border: 2px solid var(--border-secondary);
+}
+
+@utility location-btn {
+	@apply btn-ghost btn-sm self-start;
+}
+
+@utility current-location {
+	@apply font-mono;
+	color: var(--text-primary);
+}
+
+@utility no-location {
+	@apply italic;
+	color: var(--text-tertiary);
+}

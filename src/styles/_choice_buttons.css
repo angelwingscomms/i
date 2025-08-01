@@ -1,0 +1,31 @@
+/* Radio/Choice Buttons */
+@utility choice-group {
+	@apply flex flex-wrap gap-3;
+}
+
+@utility choice-btn {
+	@apply transform cursor-pointer rounded-full px-4 py-2 text-sm transition-all duration-300 hover:scale-105;
+	border: 2px solid var(--border-secondary);
+	background: var(--bg-glass);
+	color: var(--text-secondary);
+}
+
+.choice-btn:hover {
+	border-color: var(--accent-rose);
+	background: var(--bg-glass-hover);
+}
+
+@utility choice-btn-active {
+	@apply choice-btn choice-btn-glow text-white;
+	background: var(--accent-rose);
+}
+
+@utility choice-btn-inactive {
+	@apply choice-btn;
+}
+
+@utility choice-btn-glow {
+	border-color: var(--border-focus);
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent);
+	outline: none;
+}

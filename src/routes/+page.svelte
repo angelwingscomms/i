@@ -128,11 +128,10 @@
 	<div class="container-main min-h-screen py-8">
 		<!-- Intro Section -->
 		<div class="mb-8 text-center">
-			<h1 class="hero-title mb-4">Find common ground. Connect deeply.</h1>
+			<h1 class="hero-title mb-4">Meet Your People</h1>
 			<p class="hero-subtitle">
-				Share your interests, find meaningful matches, and build connections based on what truly
-				matters. Describe yourself as much as you want, even sensitive stuff, with the assurance
-				that other users will only see what you have in common with them.
+				Share your passions, find real connections, vibe with folks who get you. Spill as much as
+				you want—others only see what you both share, not your full story.
 			</p>
 		</div>
 

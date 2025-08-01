@@ -1,0 +1,26 @@
+/* Toggle Buttons */
+@utility toggle-group {
+	@apply rounded-full p-1 backdrop-blur-lg;
+	background: var(--bg-card);
+	border: 1px solid var(--border-glass);
+	box-shadow: var(--shadow-lg);
+}
+
+@utility toggle-btn {
+	@apply flex transform cursor-pointer items-center gap-2 rounded-full px-6 py-3 font-medium transition-all duration-500;
+}
+
+@utility toggle-btn-active {
+	@apply toggle-btn scale-105 text-white;
+	box-shadow: var(--shadow-lg);
+}
+
+@utility toggle-btn-inactive {
+	@apply toggle-btn;
+	color: var(--text-secondary);
+}
+
+.toggle-btn-inactive:hover {
+	color: var(--text-accent);
+	background: var(--bg-glass);
+}
