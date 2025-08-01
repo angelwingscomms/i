@@ -154,7 +154,8 @@
 					</div>
 				</div>
 
-				<div class="form-group">
+				<!-- Location -->
+				<!-- <div class="form-group">
 					<label class="form-label">Location</label>
 					<div class="location-container">
 						<div class="location-display">
@@ -187,7 +188,7 @@
 							{/if}
 						</button>
 					</div>
-				</div>
+				</div> -->
 
 				<div class="form-group">
 					<label class="form-label">Social Media Links (Optional)</label>

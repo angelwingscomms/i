@@ -2,8 +2,8 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { qdrant, searchByPayload } from '$lib/db';
 import type { User } from '$lib/types';
-import { GoogleGenAI } from '@google/genai/node';
 import { collection } from '$lib/constants';
+import { embed } from '$lib/util/embed';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	// console.log('eu--')
@@ -95,16 +95,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			points: [locals.user.i]
 		});
 
-		const ai = new GoogleGenAI({});
-		const embeddings = (
-			await ai.models.embedContent({
-				model: 'gemini-embedding-001',
-				contents: updatedUser.t || ''
-			})
-		).embeddings;
-		if (!embeddings) return error(500);
-
-		const vector = embeddings[0].values;
+		const vector = await embed(updatedUser.t as string)
 
 		if (!vector) {
 			console.error('error creating embedding for user', locals.user, updatedUser);
