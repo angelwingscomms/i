@@ -59,7 +59,7 @@
 		{#if comparison && isLoggedIn && !isOwnProfile}
 			<div class="mb-8 rounded-xl border border-blue-200 bg-blue-50 p-6 sm:p-4">
 				<h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-sky-700">
-					🤝 What You Have in Common
+					What You Have in Common
 				</h2>
 				<div class="leading-relaxed text-blue-800">
 					<p class="m-0">{comparison}</p>
