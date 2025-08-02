@@ -5,7 +5,7 @@ All db data stored in single Qdrant collection `'i'`, `s` payload field isolates
 ## 3. Design System
 defined in src/app.css
 
--   **Variables/Functions**: `snake_case`
+always use `snake_case` for variable/function names
 
 
 ## other styles
