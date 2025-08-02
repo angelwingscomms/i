@@ -20,6 +20,13 @@
 	background: var(--accent-rose);
 }
 
+@utility choice-btn-active-blue {
+	@apply choice-btn choice-btn-glow text-white;
+	background: var(--accent-blue);
+	border-color: var(--border-focus); /* Ensure blue border */
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent); /* Ensure blue glow */
+}
+
 @utility choice-btn-inactive {
 	@apply choice-btn;
 }

@@ -1,7 +1,8 @@
 For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary
 
-start every task by craeting a telegraphic speech list that details the task into many small micro-tasks, then do each micro-task.
+start every task by creating a telegraphic speech list that details the task into many small micro-tasks, then do each micro-task.
 
+- for each task, extremely use as little code as possible to fittingly and satisfyingly complete the task
 - all db data stored in single Qdrant collection `'i'`, `s` payload field isolates data types (e.g., 'u` for user id).
 - always use single/double letter field names for db (`t` user tag, `u` user id, `s` tenant id)
 - always use `snake_case` for variable/function names

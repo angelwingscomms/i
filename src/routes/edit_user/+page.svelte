@@ -9,7 +9,7 @@
 	let tag = data.u!.t || '';
 	let description = data.u!.d || '';
 	let age = data.u!.a || 18;
-	let gender = !!data.u!.g;
+	let gender = data.u!.g;
 	let latitude = data.u!.l || 0;
 	let longitude = data.u!.n || 0;
 	let socialLinks: string[] = data.u!.x || [];
@@ -148,8 +148,14 @@
 					<label class="form-label">Gender</label>
 					<div class="choice-group">
 						<label>
-							<input type="checkbox" bind:checked={gender} class="sr-only" />
-							<div class={gender ? 'choice-btn-active' : 'choice-btn-inactive'}>Female</div>
+							<input type="radio" name="gender" value={0} bind:group={gender} class="sr-only" />
+							<div class={gender === 0 ? 'choice-btn-active-blue' : 'choice-btn-inactive'}>
+								Male
+							</div>
+						</label>
+						<label>
+							<input type="radio" name="gender" value={1} bind:group={gender} class="sr-only" />
+							<div class={gender === 1 ? 'choice-btn-active' : 'choice-btn-inactive'}>Female</div>
 						</label>
 					</div>
 				</div>
@@ -200,7 +206,7 @@
 						>
 							+
 						</button>
-						<small class="form-help">Add links to your social media profiles.</small>
+						<small class="form-help">WhatsApp, Telegram or Social media links</small>
 					</div>
 					{#each socialLinks as link, index (index)}
 						<div class="social-link-item">
