@@ -130,8 +130,8 @@
 		<div class="mb-8 text-center">
 			<h1 class="hero-title mb-4">Meet Your People</h1>
 			<p class="hero-subtitle">
-				Share your passions, find real connections, vibe with folks who get you. Spill as much as
-				you want in your profile, others only see what you both share, not your full story.
+				Find people like you. See what you have in common with other users. Describe yourself as much as
+				you'd like in your profile, other users only see what they have in common with you
 			</p>
 		</div>
 
