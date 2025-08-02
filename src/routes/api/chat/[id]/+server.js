@@ -7,12 +7,11 @@ export async function GET({ request, params, platform, locals }) {
 
 	// Get logged in user from locals.user
 	const user = locals.user;
-	if (!user || !user.u || !user.s) {
-		throw error(401, 'Unauthorized: User not logged in or missing user ID/tenant ID.');
+	if (!user || !user.u) {
+		throw error(401, 'Unauthorized: User not logged in or missing user ID.');
 	}
 
 	const user_id = user.u; // Use 'u' for user ID as per convention
-	const tenant_id = user.s; // Use 's' for tenant ID as per convention
 
 	// Basic validation for room_id
 	if (!room_id) {
@@ -29,7 +28,6 @@ export async function GET({ request, params, platform, locals }) {
 		// These parameters will be used by the Durable Object to identify the user and categorize messages.
 		const url = new URL(request.url);
 		url.searchParams.set('userId', user_id);
-		url.searchParams.set('tenantId', tenant_id); // Pass tenantId to the DO
 
 		// Recreate the request with modified URL to pass search params to DO
 		const new_request = new Request(url.toString(), {

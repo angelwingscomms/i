@@ -10,9 +10,9 @@ export interface User {
 	n?: number; // longitude
 	w?: string; // whatsapp link
 	gid?: string; // google id
-  p?: string; // password hash
+	p?: string; // password hash
 	i?: string; // user id
-  x?: string[]; // contact links
+	x?: string[]; // contact links
 	isAdmin?: boolean; // whether user is an admin
 }
 
@@ -30,4 +30,12 @@ export interface NotificationSubscription {
 	s: 'n'; // tenant id for notification subscriptions
 	u: string; // user uuid
 	sub: PushSubscription;
+}
+
+export interface ChatMessage {
+	s: 'm'; // tenant id for messages
+	u: string; // user ID
+	t: string; // message text
+	ts: string; // timestamp
+	r: string; // room ID
 }

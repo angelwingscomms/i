@@ -1,0 +1,18 @@
+name = "i"
+main = ".svelte-kit/cloudflare/_worker.js" # SvelteKit adapter-cloudflare output
+compatibility_date = "2025-01-01" # Inherited from existing wrangler.jsonc
+compatibility_flags = ["nodejs_compat"]
+
+[site]
+bucket = ".svelte-kit/cloudflare" # Matches the assets.directory from wrangler.jsonc
+
+[build]
+command = "npm run build"
+
+[[durable_objects.bindings]]
+name = "CHAT_ROOMS"
+class_name = "ChatRoom"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["ChatRoom"]

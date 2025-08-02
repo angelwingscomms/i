@@ -2,9 +2,9 @@
 
 import { QDRANT_KEY, QDRANT_URL } from '$env/static/private';
 import { QdrantClient } from '@qdrant/js-client-rest';
-import { v7  } from 'uuid';
+import { v7 } from 'uuid';
 import { collection } from '$lib/constants';
-import type { User } from '$lib/types';
+import type { ChatMessage, User } from '$lib/types';
 
 // Qdrant client configuration
 export const qdrant = new QdrantClient({
@@ -12,7 +12,7 @@ export const qdrant = new QdrantClient({
 	apiKey: QDRANT_KEY
 });
 
-export const updateById = async (id: string, payload: Record<string, unknown>) => {
+export const edit_point = async (id: string, payload: Record<string, unknown>) => {
 	await qdrant.setPayload('i', {
 		wait: true,
 		payload,
@@ -24,7 +24,7 @@ export const updateById = async (id: string, payload: Record<string, unknown>) =
 export async function upsertPoint<T extends { i?: string; s: string }>(
 	data: T
 ): Promise<T & { i: string }> {
-	const i = data.i || generateId();
+	const i = data.i || v7();
 
 	const vector = new Array(3072).fill(0);
 
@@ -113,7 +113,7 @@ export async function searchByVector<T>({
 	filter
 }: {
 	vector: number[];
-	with_payload?: string[],
+	with_payload?: string[];
 	limit?: number;
 	filter?: Record<string, unknown>;
 }): Promise<T[]> {
@@ -131,7 +131,7 @@ export async function searchByVector<T>({
 
 		const results = await qdrant.search(collection, searchParams);
 
-		return results.map((point) => ({...point.payload as T, i: point.id}));
+		return results.map((point) => ({ ...(point.payload as T), i: point.id }));
 	} catch (error) {
 		console.error('Error in searchByVector:', error);
 		console.error('Vector length:', vector.length);
@@ -206,3 +206,33 @@ export const delete_ = async (id: string): Promise<void> => {
 		points: [id]
 	});
 };
+
+/**
+ * Saves a message to the database.
+ * @param {string} r - The ID of the chat room.
+ * @param {object} message - The message object to save.
+ * @param {string} message.u - The user ID.
+ * @param {string} message.t - The message text.
+ * @param {string} message.ts - The timestamp in ISO string format.
+ */
+export async function save_message(r: string, message: { u: string; t: string; ts: string }) {
+	const chat_message: ChatMessage = {
+		s: 'm', // tenant id for messages
+		r, // room ID
+		u: message.u, // user ID
+		t: message.t, // text
+		ts: message.ts // timestamp
+	};
+	await upsertPoint(chat_message);
+}
+
+/**
+ * Retrieves the chat history for a room.
+ * @param {string} r - The ID of the chat room.
+ * @returns {Promise<ChatMessage[]>} - A promise that resolves to an array of message objects, sorted by timestamp.
+ */
+export async function get_chat_history(r: string): Promise<ChatMessage[]> {
+	const messages = await searchByPayload<ChatMessage>({ s: 'm', r });
+	// Sort messages by timestamp, as Qdrant scroll doesn't guarantee order
+	return messages.sort((a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime());
+}

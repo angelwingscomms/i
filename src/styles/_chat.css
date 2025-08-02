@@ -1,0 +1,43 @@
+/* i/src/styles/_chat.css */
+
+/* Custom utility classes for the chat application */
+
+.chat-layout {
+    @apply max-w-2xl mx-auto p-5 font-sans;
+}
+
+.chat-title {
+    @apply text-2xl font-bold mb-4;
+}
+
+.messages-container {
+    @apply h-96 border border-gray-300 p-3 overflow-y-auto mb-3 bg-white shadow-inner rounded-md;
+}
+
+.message-item {
+    @apply mb-1.5;
+}
+
+.message-system {
+    @apply italic text-gray-500 text-sm;
+}
+
+.message-user {
+    @apply font-bold text-blue-700;
+}
+
+.message-text {
+    @apply text-gray-800;
+}
+
+.input-area {
+    @apply flex gap-2;
+}
+
+.message-input {
+    @apply flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.send-button {
+    @apply px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
