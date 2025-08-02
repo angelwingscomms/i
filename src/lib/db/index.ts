@@ -24,7 +24,7 @@ export const updateById = async (id: string, payload: Record<string, unknown>) =
 export async function upsertPoint<T extends { i?: string; s: string }>(
 	data: T
 ): Promise<T & { i: string }> {
-	const i = data.i || generateId();
+	const i = data.i || v7();
 
 	const vector = new Array(3072).fill(0);
 
