@@ -2,7 +2,7 @@
 
 import { QDRANT_KEY, QDRANT_URL } from '$env/static/private';
 import { QdrantClient } from '@qdrant/js-client-rest';
-import { v7 as uuidv7 } from 'uuid';
+import { v7  } from 'uuid';
 import { collection } from '$lib/constants';
 import type { User } from '$lib/types';
 
@@ -11,11 +11,6 @@ export const qdrant = new QdrantClient({
 	url: QDRANT_URL || 'http://localhost:6333',
 	apiKey: QDRANT_KEY
 });
-
-// Utility functions
-export function generateId(): string {
-	return uuidv7();
-}
 
 export const updateById = async (id: string, payload: Record<string, unknown>) => {
 	await qdrant.setPayload('i', {
@@ -51,7 +46,7 @@ export async function create<T extends { i?: string; id?: string; s: string }>(
 	payload: T,
 	string_to_embed: string
 ): Promise<string> {
-	const id = generateId();
+	const id = v7();
 
 	let vector: number[] = new Array(768).fill(0);
 
