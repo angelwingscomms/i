@@ -128,10 +128,10 @@
 	<div class="container-main min-h-screen py-8">
 		<!-- Intro Section -->
 		<div class="mb-8 text-center">
-			<h1 class="hero-title mb-4">Meet Your People</h1>
+			<h1 class="hero-title mb-4">Find people like you</h1>
 			<p class="hero-subtitle">
-				Share your passions, find real connections, vibe with folks who get you. Spill as much as
-				you want in your profile, others only see what you both share, not your full story.
+				Find people that share your passions and beliefs, and see what you have in common with them. Describe yourself as much as
+				you wish in your profile, other users only see what they have in common with you
 			</p>
 		</div>
 
