@@ -19,5 +19,3 @@ start every task by craeting a telegraphic speech list that details the task int
 - always validate input client-side and server-side
 - always provide user-friendly errors
 - always Cover "happy path", error scenarios/edge cases.
-
-Guide update as codebase evolves.
