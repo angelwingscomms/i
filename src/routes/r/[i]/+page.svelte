@@ -4,6 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import { toasts } from '$lib/toast'; // Assuming these exist for notifications
 	import type { ChatMessage } from '$lib/types'; // Import the new type
+	import { toast } from '$lib/util/toast';
 
 	let chat_messages: ChatMessage[] = [];
 	let message_text = '';
@@ -49,13 +50,8 @@
 		web_socket = new WebSocket(ws_url);
 
 		// Connection opened
-		web_socket.addEventListener('open', (event) => {
+		web_socket.addEventListener('open', () => {
 			console.log('WebSocket connection opened.');
-			chat_messages = [
-				...chat_messages,
-				{ u: 'system', t: 'Connected to chat!', ts: new Date().toISOString(), r: chat_id, s: 'm' }
-			];
-			toasts.success('Connected to chat!');
 		});
 
 		// Listen for messages
@@ -65,7 +61,7 @@
 				chat_messages = [...chat_messages, message];
 			} catch (e) {
 				console.error('Error parsing message data', e);
-				toast_error('Error receiving message.');
+				toast.error('Error receiving message.');
 			}
 		});
 
@@ -82,23 +78,13 @@
 					s: 'm'
 				}
 			];
-			toast_error('Chat connection lost.');
+			toast.error('Chat connection lost.');
 		});
 
 		// Connection error
 		web_socket.addEventListener('error', (err) => {
 			console.error('WebSocket error:', err);
-			chat_messages = [
-				...chat_messages,
-				{
-					u: 'system',
-					t: 'WebSocket error occurred.',
-					ts: new Date().toISOString(),
-					r: chat_id,
-					s: 'm'
-				}
-			];
-			toast_error('WebSocket error.');
+			toast.error('WebSocket error.');
 		});
 
 		return () => {
@@ -114,7 +100,7 @@
 			web_socket.send(message_text);
 			message_text = '';
 		} else if (web_socket && web_socket.readyState !== WebSocket.OPEN) {
-			toast_error('Cannot send message: WebSocket is not open.');
+			toast.error('Cannot send message: WebSocket is not open.');
 		}
 	}
 </script>
