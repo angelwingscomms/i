@@ -1,4 +1,9 @@
-export const get_user = async () => {
+import { GEMINI as key } from "$env/static/private";
+import type { User } from "$lib/types";
+import axios from "axios";
+
+export const compare_users = async (self: Partial<User>, user: Partial<User>) => {
+  if (!self.d || ! user.d) return
   try {
 				const response = await axios.post(
 					'https://generativelanguage.googleapis.com/v1beta/models/gemma-3n-e4b-it:generateContent',
@@ -9,11 +14,11 @@ export const get_user = async () => {
 									{
 										text: `Compare these two user descriptions and identify their commonalities. Focus on shared interests, values, personality traits, and goals. Return only the commonalities in a concise, friendly format.
 
-${auth_user.t}: "${auth_user.d}"
+${self.t}: "${self.d}"
 
 ${user.t}: "${user.d}"
 
-Please detail what these users have in common, or overlaps between them, or patterns they share, formatted as a friendly paragraph. Refer to ${auth_user.t} as 'you'. Don't greet at the beginnning of your response. be casual and concise, yet detailed`
+concisely detail what these users have in common, or overlaps between them, or patterns they share, formatted as points. Refer to ${auth_user.t} as 'you'. Don't greet at the beginnning of your response. be casual and concise, yet detailed`
 									}
 								]
 							}
@@ -24,7 +29,7 @@ Please detail what these users have in common, or overlaps between them, or patt
 							'Content-Type': 'application/json'
 						},
 						params: {
-							key: GEMINI_API_KEY
+							key
 						}
 					}
 				);

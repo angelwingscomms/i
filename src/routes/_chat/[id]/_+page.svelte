@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { onMount, onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { toast_success, toast_error } from '$lib/toast'; // Assuming these exist for notifications
+	import { toasts } from '$lib/toast'; // Assuming these exist for notifications
 	import type { ChatMessage } from '$lib/types'; // Import the new type
 
 	let chat_messages: ChatMessage[] = [];
@@ -55,7 +55,7 @@
 				...chat_messages,
 				{ u: 'system', t: 'Connected to chat!', ts: new Date().toISOString(), r: chat_id, s: 'm' }
 			];
-			toast_success('Connected to chat!');
+			toasts.success('Connected to chat!');
 		});
 
 		// Listen for messages
