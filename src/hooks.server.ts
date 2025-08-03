@@ -19,7 +19,8 @@ if (dev) {
 		modules: true,
 		durableObjects: { R: 'R' },
 		durableObjectsPersist: '.wrangler/state/v3/do',
-		scriptPath: 'chatroom/.wrangler/tmp/dev-HSRH83/index.js',
+		scriptPath: '',
+		// scriptPath: 'chatroom/.wrangler/tmp/dev-HSRH83/index.js',
 		log: new Log(LogLevel.DEBUG)
 	});
 
