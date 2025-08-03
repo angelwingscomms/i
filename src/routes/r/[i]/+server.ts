@@ -5,7 +5,7 @@ export const GET: RequestHandler = async ({ request, locals, platform, params })
 	console.log('r i', i);
 	const o = platform?.env.R.get(i);
 	console.log('r o', o);
-	console.log('lwss', event.locals.ws)
+	console.log('lwss', locals.ws)
 	locals.ws = await o.fetch(new Request(request.url, request));
 	return new Response()
 };
