@@ -7,6 +7,7 @@ export const GET: RequestHandler = async ({ request, platform, params }) => {
 	console.log('r o', o);
 	const res = await o.fetch(new Request(request.url, request));
 	console.log('platform.env', platform.env, Object.entries(platform.env));
-	console.log('r res', res);
-	return { body: res };
+	console.log('r res, res.status', res, res.status);
+	res.status = 200
+	console.log('r res, res.status', res, res.status);
 };
