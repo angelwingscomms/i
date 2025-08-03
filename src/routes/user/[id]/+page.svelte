@@ -1,7 +1,8 @@
 <script lang="ts">
 	export let data;
+	
+	const { u: user, c: comparison, s: is_own_profile } = data
 
-	$: ({ user, comparison, isLoggedIn, isOwnProfile } = data);
 
 	function getSocialMediaInfo(url: string): { name: string; iconClass: string | null } {
 		try {
@@ -56,7 +57,7 @@
 			</div>
 		</header>
 
-		{#if comparison && isLoggedIn && !isOwnProfile}
+		{#if comparison && data.user && !is_own_profile}
 			<div class="mb-8 rounded-xl border border-blue-200 bg-blue-50 p-6 sm:p-4">
 				<h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-sky-700">
 					What You Have in Common
@@ -67,7 +68,7 @@
 			</div>
 		{/if}
 
-		{#if isLoggedIn && !isOwnProfile}
+		{#if data.user && !is_own_profile}
 			<!-- <div class="flex justify-center mb-8">
 				<a href="/user/{user.tag}/chat" class="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white no-underline rounded-xl font-semibold text-lg transition-all shadow-md hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-lg sm:px-6 sm:py-3.5 sm:text-base">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -78,7 +79,7 @@
 					Start Chat
 				</a>
 			</div> -->
-		{:else if isOwnProfile}
+		{:else if is_own_profile}
 			<div class="mb-8 flex justify-center">
 				<a
 					href="/edit_user/{user.tag}"

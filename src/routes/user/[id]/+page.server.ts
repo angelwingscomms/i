@@ -2,8 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { get } from '$lib/db';
 import type { User } from '$lib/types';
-import axios from 'axios';
-import { GEMINI_API_KEY } from '$env/static/private';
+import { compare_users } from '$lib/util/users/compare_users';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
 	const { id } = params;
@@ -35,10 +34,9 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		// console.log('comparisonResult', comparisonResult)
 
 		return {
-			user: userInfo,
-			comparison: comparisonResult,
-			isLoggedIn: !!locals.user,
-			isOwnProfile: locals.user?.i === user.i
+			u: userInfo,
+			c: comparisonResult,
+			s: locals.user?.i === user.i
 		};
 	} catch (err) {
 		console.error('Error loading user:', err);
