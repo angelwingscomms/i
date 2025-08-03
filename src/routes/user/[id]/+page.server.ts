@@ -28,6 +28,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		let comparisonResult = null;
 		if (locals.user?.i && locals.user.i !== user.i) {
 			const self = (await get(locals.user.i, ['d', 't'])) as { d: string; t: string };
+			if (!self) return
 			comparisonResult = await compare_users(self, user)
 		}
 

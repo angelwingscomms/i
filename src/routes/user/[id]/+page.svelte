@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { marked } from 'marked';
+
 	export let data;
 	
 	const { u: user, c: comparison, s: is_own_profile } = data
@@ -63,7 +65,7 @@
 					What You Have in Common
 				</h2>
 				<div class="leading-relaxed text-blue-800">
-					<p class="m-0">{comparison}</p>
+					{@html marked.parse(comparison)}
 				</div>
 			</div>
 		{/if}
