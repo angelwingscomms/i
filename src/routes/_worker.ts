@@ -1,1 +1,1 @@
-import { ChatRoom } from "$lib/server/ChatRoom"
+export { ChatRoom } from "$lib/server/ChatRoom"
