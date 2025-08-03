@@ -12,19 +12,19 @@
 	},
 	"build": {
 		"command": "npm run build"
-	},
-	"durable_objects": {
-		"bindings": [
-			{
-				"name": "R",
-				"class_name": "R"
-			}
-		]
-	},
+	}
+	// ,"durable_objects": {
+	// 	"bindings": [
+	// 		{
+	// 			"name": "R",
+	// 			"class_name": "ChatRoom"
+	// 		}
+	// 	]
+	// },
 	// "migrations": [
 	// 	{
 	// 		"tag": "v1",
-	// 		"new_classes": ["ChatRoom"]
+	// 		"new_classes": ["R"]
 	// 	}
 	// ]
 }
