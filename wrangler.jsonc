@@ -12,19 +12,19 @@
 	},
 	"build": {
 		"command": "npm run build"
-	},
-	"durable_objects": {
-		"bindings": [
-			{
-				"name": "CHAT_ROOMS",
-				"class_name": "ChatRoom"
-			}
-		]
-	},
-	"migrations": [
-		{
-			"tag": "v1",
-			"new_classes": ["ChatRoom"]
-		}
-	]
+	}
+	// "durable_objects": {
+	// 	"bindings": [
+	// 		{
+	// 			"name": "CHAT_ROOMS",
+	// 			"class_name": "ChatRoom"
+	// 		}
+	// 	]
+	// },
+	// "migrations": [
+	// 	{
+	// 		"tag": "v1",
+	// 		"new_classes": ["ChatRoom"]
+	// 	}
+	// ]
 }
