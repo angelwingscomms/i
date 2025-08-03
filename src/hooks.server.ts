@@ -2,7 +2,7 @@ import type { Handle } from '@sveltejs/kit';
 import { dev } from '$app/environment';
 import { validateSessionToken, sessionCookieName } from '$lib/server/auth';
 
-let env = {};
+// let env = {};
 
 if (dev) {
 	/*
@@ -13,24 +13,24 @@ if (dev) {
   - https://github.com/sveltejs/kit/issues/10732
   - https://github.com/sveltejs/kit/pull/10544
 */
-	const { Miniflare } = await import('miniflare');
-	const mf = new Miniflare({
-		modules: true,
-		durableObjects: { COUNTER: 'Counter' },
-		durableObjectsPersist: '.wrangler/state/v3/do',
-		scriptPath: 'durable-objects/counter/index.js'
-	});
+	// const { Miniflare } = await import('miniflare');
+	// const mf = new Miniflare({
+	// 	modules: true,
+	// 	durableObjects: { COUNTER: 'Counter' },
+	// 	durableObjectsPersist: '.wrangler/state/v3/do',
+	// 	scriptPath: 'durable-objects/counter/index.js'
+	// });
 
-	env = await mf.getBindings();
+	// env = await mf.getBindings();
 }
 
 const handleAuth: Handle = async ({ event, resolve }) => {
-	if (dev) {
-		event.platform = {
-			...event.platform,
-			env
-		};
-	}
+	// if (dev) {
+	// 	event.platform = {
+	// 		...event.platform,
+	// 		env
+	// 	};
+	// }
 
 	const sessionToken = event.cookies.get(sessionCookieName);
 	// console.log('st', sessionToken)
