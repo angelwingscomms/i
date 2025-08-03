@@ -1,45 +1,64 @@
-import { GEMINI as key } from "$env/static/private";
-import type { User } from "$lib/types";
-import axios from "axios";
+import { GEMINI as key } from '$env/static/private';
+import type { User } from '$lib/types';
+import axios from 'axios';
 
 export const compare_users = async (self: Partial<User>, user: Partial<User>) => {
-		if (!self.d || ! user.d) return
-		try {
-				const response = await axios.post(
-					'https://generativelanguage.googleapis.com/v1beta/models/gemma-3n-e4b-it:generateContent',
+	if (!self.d || !user.d) return;
+	try {
+		const response = await axios.post(
+			'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+			{
+				contents: [
 					{
-						contents: [
+						parts: [
 							{
-								parts: [
-									{
-										text: `Compare these two user descriptions and identify their commonalities. Focus on shared interests, values, personality traits, and goals. Return only the commonalities in a concise, friendly format.
+								text: `<context>
+											You are an AI assistant designed to compare two user profiles and identify their precise commonalities.
+									</context>
 
-${self.t}: "${self.d}"
+									<task>
+											Identify shared interests, values, personality traits, and goals between the two users provided.
+											Return ONLY these commonalities.
+									</task>
 
-${user.t}: "${user.d}"
+									<input>
+											<user_self_name>${self.t}</user_self_name>
+											<user_self_description>${self.d}</user_self_description>
 
-Say everything these users exactly share, as simple bullet points with a newline between each, keep everything else private. Be exact. Refer to ${self.t} as 'you'. Don't greet at the beginnning of your response. be casual and concise, yet detailed. Sound casual, extremely concise and straight to the point.`
-									}
-								]
+											<user_other_name>${user.t}</user_other_name>
+											<user_other_description>${user.d}</user_other_description>
+									</input>
+
+									<output_format>
+											- Present commonalities as simple bullet points.
+											- Be extremely concise and straight to the point.
+											- Refer to <user_self_name> as 'you'.
+											- Do not include any greetings or introductory phrases.
+											- Maintain a casual and friendly tone.
+											- Be exact: only list what is explicitly shared.
+											- Keep all other information private.
+									</output_format>`
 							}
-						],
-						generationConfig: {
-							temperature: 0
-						}
-					},
-					{
-						headers: {
-							'Content-Type': 'application/json'
-						},
-						params: {
-							key
-						}
+						]
 					}
-				);
-
-				return response.data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-			} catch (comparisonError) {
-				console.error('Comparison error:', comparisonError);
-				// Continue without comparison if it fails
+				],
+				generationConfig: {
+					temperature: 0
+				}
+			},
+			{
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				params: {
+					key
+				}
 			}
-}
+		);
+
+		return response.data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+	} catch (comparisonError) {
+		console.error('Comparison error:', comparisonError);
+		// Continue without comparison if it fails
+	}
+};

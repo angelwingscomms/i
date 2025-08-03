@@ -43,16 +43,16 @@
 
 <div class="mx-auto max-w-3xl px-4 py-8 sm:px-2 sm:py-4">
 	{#if user}
-		<div class="card-large mb-8 sm:p-6">
-			<header class="mb-8 border-b-2 border-gray-100 pb-6 text-center dark:border-gray-700">
+		<div class="mb-8 sm:p-6">
+			<header class="mb-8 border-b-2 border-gray-100 pb-6 text-center dark:border-gray-900">
 				<h1 class="text-primary mb-4 text-4xl font-bold sm:text-3xl">{user.tag}</h1>
 				<div class="flex flex-wrap justify-center gap-8 sm:flex-col sm:items-center sm:gap-4">
 					<span
-						class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 font-medium text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
+						class="rounded-lg border border-gray-200 px-4 py-2 font-medium text-gray-700 dark:border-gray-900 dark:bg-transparent dark:text-gray-300"
 						>Age: {user.age}</span
 					>
 					<span
-						class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 font-medium text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
+						class="rounded-lg border border-gray-200 px-4 py-2 font-medium text-gray-700 dark:border-gray-900 dark:bg-transparent dark:text-gray-300"
 					>
 						{user.gender === 0 ? 'Male' : 'Female'}
 					</span>
@@ -61,7 +61,7 @@
 
 			{#if comparison && data.user && !is_own_profile}
 				<div
-					class="mb-8 rounded-xl border border-blue-200 bg-blue-50 p-6 sm:p-4 dark:border-blue-700 dark:bg-blue-900"
+					class="mb-8 rounded-xl border border-blue-200 p-6 sm:p-4 dark:border-gray-900 dark:bg-transparent"
 				>
 					<h2
 						class="mb-4 flex items-center gap-2 text-xl font-semibold text-sky-700 dark:text-sky-400"
@@ -101,7 +101,7 @@
 				</div>
 			{:else}
 				<div
-					class="mb-8 rounded-lg border border-amber-400 bg-amber-100 p-8 text-center dark:border-amber-600 dark:bg-amber-900"
+					class="mb-8 rounded-lg border border-amber-400 p-8 text-center dark:border-gray-900 dark:bg-transparent"
 				>
 					<p class="m-0 text-amber-900 dark:text-amber-100">
 						Please <a
@@ -114,7 +114,7 @@
 			{/if}
 
 			{#if user.socialLinks && user.socialLinks.length > 0}
-				<div class="mt-8 border-t-2 border-gray-100 pt-8 text-center sm:pt-6 dark:border-gray-700">
+				<div class="mt-8 border-t-2 border-gray-100 pt-8 text-center sm:pt-6 dark:border-gray-900">
 					<h3 class="text-accent mb-6 text-xl font-semibold">Connect with {user.tag}</h3>
 					<div class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center">
 						{#each user.socialLinks as link (link)}
@@ -123,7 +123,7 @@
 								href={link}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="inline-flex items-center gap-2 rounded-lg border border-cyan-300 bg-cyan-100 px-5 py-3 font-medium text-cyan-800 no-underline transition-all hover:-translate-y-0.5 hover:bg-cyan-200 hover:shadow-md sm:w-full sm:max-w-xs sm:justify-center dark:border-cyan-600 dark:bg-cyan-900 dark:text-cyan-200 dark:hover:bg-cyan-800 {iconClass ||
+								class="inline-flex items-center gap-2 rounded-lg border border-cyan-300 px-5 py-3 font-medium text-cyan-800 no-underline transition-all hover:-translate-y-0.5 sm:w-full sm:max-w-xs sm:justify-center dark:border-gray-900 dark:bg-transparent dark:text-cyan-400 dark:hover:bg-gray-900 {iconClass ||
 									''}"
 							>
 								{name}
@@ -143,7 +143,7 @@
 	{:else}
 		<!-- Fallback for when user is not found -->
 		<div
-			class="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center dark:border-gray-700 dark:bg-gray-800"
+			class="mb-8 rounded-lg border border-gray-200 p-8 text-center dark:border-gray-900 dark:bg-transparent"
 		>
 			<h2 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-300">User Not Found</h2>
 			<p class="text-gray-600 dark:text-gray-400">The requested user profile could not be found.</p>
@@ -152,6 +152,7 @@
 			>
 		</div>
 	{/if}
+
 	<!-- <div class="flex justify-center">
 		<a href="/" class="flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 no-underline rounded-lg font-medium transition-all border border-gray-300 hover:bg-gray-200 hover:-translate-x-0.5">
 			<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
