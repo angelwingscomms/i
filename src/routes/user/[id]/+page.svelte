@@ -2,9 +2,8 @@
 	import { marked } from 'marked';
 
 	export let data;
-	
-	const { u: user, c: comparison, s: is_own_profile } = data
 
+	const { u: user, c: comparison, s: is_own_profile } = data;
 
 	function getSocialMediaInfo(url: string): { name: string; iconClass: string | null } {
 		try {
@@ -39,100 +38,120 @@
 </script>
 
 <svelte:head>
-	<title>{user.tag} - User Profile</title>
+	<title>{user?.tag || 'User'} - User Profile</title>
 </svelte:head>
 
 <div class="mx-auto max-w-3xl px-4 py-8 sm:px-2 sm:py-4">
-	<div class="card-large mb-8 sm:p-6">
-		<header class="mb-8 border-b-2 border-gray-100 pb-6 text-center">
-			<h1 class="text-primary mb-4 text-4xl font-bold sm:text-3xl">{user.tag}</h1>
-			<div class="flex flex-wrap justify-center gap-8 sm:flex-col sm:items-center sm:gap-4">
-				<span
-					class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 font-medium text-gray-700"
-					>Age: {user.age}</span
-				>
-				<span
-					class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 font-medium text-gray-700"
-				>
-					{user.gender === 0 ? 'Male' : 'Female'}
-				</span>
-			</div>
-		</header>
-
-		{#if comparison && data.user && !is_own_profile}
-			<div class="mb-8 rounded-xl border border-blue-200 bg-blue-50 p-6 sm:p-4">
-				<h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-sky-700">
-					What You Have in Common
-				</h2>
-				<div class="leading-relaxed text-blue-800">
-					{@html marked.parse(comparison)}
+	{#if user}
+		<div class="card-large mb-8 sm:p-6">
+			<header class="mb-8 border-b-2 border-gray-100 pb-6 text-center dark:border-gray-700">
+				<h1 class="text-primary mb-4 text-4xl font-bold sm:text-3xl">{user.tag}</h1>
+				<div class="flex flex-wrap justify-center gap-8 sm:flex-col sm:items-center sm:gap-4">
+					<span
+						class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 font-medium text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
+						>Age: {user.age}</span
+					>
+					<span
+						class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 font-medium text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
+					>
+						{user.gender === 0 ? 'Male' : 'Female'}
+					</span>
 				</div>
-			</div>
-		{/if}
+			</header>
 
-		{#if data.user && !is_own_profile}
-			<!-- <div class="flex justify-center mb-8">
-				<a href="/user/{user.tag}/chat" class="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white no-underline rounded-xl font-semibold text-lg transition-all shadow-md hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-lg sm:px-6 sm:py-3.5 sm:text-base">
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-						<path
-							d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2M6,9H18V11H6V9M14,14H6V12H14V14M18,8H6V6H18V8Z"
-						/>
-					</svg>
-					Start Chat
-				</a>
+			{#if comparison && data.user && !is_own_profile}
+				<div
+					class="mb-8 rounded-xl border border-blue-200 bg-blue-50 p-6 sm:p-4 dark:border-blue-700 dark:bg-blue-900"
+				>
+					<h2
+						class="mb-4 flex items-center gap-2 text-xl font-semibold text-sky-700 dark:text-sky-400"
+					>
+						What You Have in Common
+					</h2>
+					<div class="leading-relaxed text-blue-800 dark:text-blue-200">
+						{@html marked.parse(comparison)}
+					</div>
+				</div>
+			{/if}
+
+			{#if data.user && !is_own_profile}
+				<!-- <div class="flex justify-center mb-8">
+					<a href="/user/{user.tag}/chat" class="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white no-underline rounded-xl font-semibold text-lg transition-all shadow-md hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-lg sm:px-6 sm:py-3.5 sm:text-base">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+							<path
+								d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2M6,9H18V11H6V9M14,14H6V12H14V14M18,8H6V6H18V8Z"
+							/>
+						</svg>
+						Start Chat
+					</a>
+				</div> -->
+			{:else if is_own_profile}
+				<div class="mb-8 flex justify-center">
+					<a
+						href="/edit_user/{user.tag}"
+						class="flex items-center gap-2 rounded-xl bg-emerald-600 px-8 py-4 text-lg font-semibold text-white no-underline shadow-md transition-all hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg sm:px-6 sm:py-3.5 sm:text-base"
+					>
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+							<path
+								d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
+							/>
+						</svg>
+						Edit Profile
+					</a>
+				</div>
+			{:else}
+				<div
+					class="mb-8 rounded-lg border border-amber-400 bg-amber-100 p-8 text-center dark:border-amber-600 dark:bg-amber-900"
+				>
+					<p class="m-0 text-amber-900 dark:text-amber-100">
+						Please <a
+							href="/google"
+							class="font-semibold text-blue-700 no-underline hover:underline dark:text-blue-400"
+							>log in</a
+						> to see compatibility and start chatting.
+					</p>
+				</div>
+			{/if}
+
+			{#if user.socialLinks && user.socialLinks.length > 0}
+				<div class="mt-8 border-t-2 border-gray-100 pt-8 text-center sm:pt-6 dark:border-gray-700">
+					<h3 class="text-accent mb-6 text-xl font-semibold">Connect with {user.tag}</h3>
+					<div class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center">
+						{#each user.socialLinks as link (link)}
+							{@const { name, iconClass } = getSocialMediaInfo(link)}
+							<a
+								href={link}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex items-center gap-2 rounded-lg border border-cyan-300 bg-cyan-100 px-5 py-3 font-medium text-cyan-800 no-underline transition-all hover:-translate-y-0.5 hover:bg-cyan-200 hover:shadow-md sm:w-full sm:max-w-xs sm:justify-center dark:border-cyan-600 dark:bg-cyan-900 dark:text-cyan-200 dark:hover:bg-cyan-800 {iconClass ||
+									''}"
+							>
+								{name}
+							</a>
+						{/each}
+					</div>
+				</div>
+			{/if}
+
+			<!-- <div class="mt-8">
+				<h3 class="text-gray-700 text-xl font-semibold mb-4">About {user.tag}</h3>
+				<div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+					<p class="text-gray-600 leading-relaxed">{user.description}</p>
+				</div>
 			</div> -->
-		{:else if is_own_profile}
-			<div class="mb-8 flex justify-center">
-				<a
-					href="/edit_user/{user.tag}"
-					class="flex items-center gap-2 rounded-xl bg-emerald-600 px-8 py-4 text-lg font-semibold text-white no-underline shadow-md transition-all hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg sm:px-6 sm:py-3.5 sm:text-base"
-				>
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-						<path
-							d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-						/>
-					</svg>
-					Edit Profile
-				</a>
-			</div>
-		{:else}
-			<div class="mb-8 rounded-lg border border-amber-400 bg-amber-100 p-8 text-center">
-				<p class="m-0 text-amber-900">
-					Please <a href="/google" class="font-semibold text-blue-700 no-underline hover:underline"
-						>log in</a
-					> to see compatibility and start chatting.
-				</p>
-			</div>
-		{/if}
-
-		{#if user.socialLinks && user.socialLinks.length > 0}
-			<div class="mt-8 border-t-2 border-gray-100 pt-8 text-center sm:pt-6">
-				<h3 class="text-accent mb-6 text-xl font-semibold">Connect with {user.tag}</h3>
-				<div class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center">
-					{#each user.socialLinks as link (link)}
-						{@const { name, iconClass } = getSocialMediaInfo(link)}
-						<a
-							href={link}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="inline-flex items-center gap-2 rounded-lg border border-cyan-300 bg-cyan-100 px-5 py-3 font-medium text-cyan-800 no-underline transition-all hover:-translate-y-0.5 hover:bg-cyan-200 hover:shadow-md sm:w-full sm:max-w-xs sm:justify-center {iconClass ||
-								''}"
-						>
-							{name}
-						</a>
-					{/each}
-				</div>
-			</div>
-		{/if}
-
-		<!-- <div class="mt-8">
-			<h3 class="text-gray-700 text-xl font-semibold mb-4">About {user.tag}</h3>
-			<div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-				<p class="text-gray-600 leading-relaxed">{user.description}</p>
-			</div>
-		</div> -->
-	</div>
-
+		</div>
+	{:else}
+		<!-- Fallback for when user is not found -->
+		<div
+			class="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center dark:border-gray-700 dark:bg-gray-800"
+		>
+			<h2 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-300">User Not Found</h2>
+			<p class="text-gray-600 dark:text-gray-400">The requested user profile could not be found.</p>
+			<a href="/" class="mt-4 inline-block text-blue-600 hover:underline dark:text-blue-400"
+				>Go back to search</a
+			>
+		</div>
+	{/if}
 	<!-- <div class="flex justify-center">
 		<a href="/" class="flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 no-underline rounded-lg font-medium transition-all border border-gray-300 hover:bg-gray-200 hover:-translate-x-0.5">
 			<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
