@@ -18,7 +18,7 @@ ${self.t}: "${self.d}"
 
 ${user.t}: "${user.d}"
 
-Say everything these users share, be exact, as simple bullet points with a newline between each. Refer to ${self.t} as 'you'. Don't greet at the beginnning of your response. be casual and concise, yet detailed. Sound casual, extremely concise and straight to the point.`
+Say everything these users exactly share, as simple bullet points with a newline between each, keep everything else private. Be exact. Refer to ${self.t} as 'you'. Don't greet at the beginnning of your response. be casual and concise, yet detailed. Sound casual, extremely concise and straight to the point.`
 									}
 								]
 							}
