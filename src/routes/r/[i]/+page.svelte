@@ -12,32 +12,10 @@
 	// For this example, we'll use a random one, but the +server.js uses the authenticated user's ID.
 	let user_id = 'user_' + Math.random().toString(16).slice(2);
 
-	const chat_id = $page.params.id;
-
-	// Function to fetch chat history (will be called onMount)
-	async function fetch_chat_history() {
-		try {
-			// In a real SvelteKit app, you'd use a `+page.server.ts` load function
-			// or a +server.ts API endpoint to fetch history.
-			// For this example, we'll simulate it by calling a server endpoint.
-			// However, since `get_chat_history` is a server-side DB function,
-			// we need a +server.js endpoint to expose it.
-			const response = await fetch(`/api/chat-history/${chat_id}`);
-			if (!response.ok) {
-				throw new Error('Failed to fetch chat history');
-			}
-			const history: ChatMessage[] = await response.json();
-			chat_messages = history;
-			toast.success('Chat history loaded.');
-		} catch (error) {
-			console.error('Error fetching chat history:', error);
-			toast.error('Failed to load chat history.');
-		}
-	}
+	const chat_id = $page.params.i;
 
 	onMount(() => {
 		// Fetch chat history when the component mounts
-		fetch_chat_history();
 
 		// Determine the WebSocket protocol
 		const ws_protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -49,12 +27,12 @@
 		web_socket = new WebSocket(ws_url);
 
 		// Connection opened
-		web_socket.addEventListener('open', () => {
+		web_socket.onopen = () => {
 			console.log('WebSocket connection opened.');
-		});
+		};
 
 		// Listen for messages
-		web_socket.addEventListener('message', (event) => {
+		web_socket.onmessage = (event) => {
 			try {
 				const message: ChatMessage = JSON.parse(event.data);
 				chat_messages = [...chat_messages, message];
@@ -62,7 +40,7 @@
 				console.error('Error parsing message data', e);
 				toast.error('Error receiving message.');
 			}
-		});
+		};
 
 		// Connection closed
 		web_socket.addEventListener('close', (event) => {

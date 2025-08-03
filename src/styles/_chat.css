@@ -3,41 +3,64 @@
 /* Custom utility classes for the chat application */
 
 .chat-layout {
-    @apply max-w-2xl mx-auto p-5 font-sans;
+	@apply mx-auto max-w-2xl p-5 font-sans;
 }
 
 .chat-title {
-    @apply text-2xl font-bold mb-4;
+	@apply mb-4 text-2xl font-bold;
 }
 
 .messages-container {
-    @apply h-96 border border-gray-300 p-3 overflow-y-auto mb-3 bg-white shadow-inner rounded-md;
+	@apply mb-3 h-96 overflow-y-auto rounded-md p-3;
+	background: var(--bg-card);
+	border: 1px solid var(--border-secondary);
 }
 
 .message-item {
-    @apply mb-1.5;
+	@apply mb-1.5;
 }
 
 .message-system {
-    @apply italic text-gray-500 text-sm;
+	@apply text-sm italic;
+	color: var(--text-tertiary);
 }
 
 .message-user {
-    @apply font-bold text-blue-700;
+	@apply font-bold;
+	color: var(--text-accent);
 }
 
 .message-text {
-    @apply text-gray-800;
+	color: var(--text-primary);
 }
 
 .input-area {
-    @apply flex gap-2;
+	@apply flex gap-2;
 }
 
 .message-input {
-    @apply flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+	@apply flex-grow rounded-md p-2 focus:outline-none;
+	background: var(--bg-input);
+	border: 1px solid var(--border-secondary);
+	color: var(--text-primary);
+}
+
+.message-input:focus {
+	border-color: var(--border-focus);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--border-focus) 20%, transparent);
 }
 
 .send-button {
-    @apply px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+	@apply rounded-md px-4 py-2 font-medium focus:outline-none;
+	background: var(--accent-blue);
+	color: white;
+	transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+	background: var(--accent-indigo);
+}
+
+.send-button:focus {
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--border-focus) 20%, transparent);
 }

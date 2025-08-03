@@ -1,6 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 import { dev } from '$app/environment';
 import { validateSessionToken, sessionCookieName } from '$lib/server/auth';
+import { Log, LogLevel } from 'miniflare';
 
 let env = {};
 
@@ -18,7 +19,8 @@ if (dev) {
 		modules: true,
 		durableObjects: { R: 'R' },
 		durableObjectsPersist: '.wrangler/state/v3/do',
-		scriptPath: 'chatroom/.wrangler/tmp/dev-HSRH83/index.js'
+		scriptPath: 'chatroom/.wrangler/tmp/dev-HSRH83/index.js',
+		log: new Log(LogLevel.DEBUG)
 	});
 
 	env = await mf.getBindings();
