@@ -43,7 +43,7 @@
 		const ws_protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
 		// The +server.js will get the user_id from locals.user, so passing it here might be redundant
 		// but useful for local testing or if authentication is not fully set up yet.
-		const ws_url = `${ws_protocol}//${location.host}/api/chat/${chat_id}`;
+		const ws_url = `${ws_protocol}//${location.host}/r/${chat_id}`;
 
 		// Create WebSocket connection.
 		web_socket = new WebSocket(ws_url);

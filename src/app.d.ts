@@ -2,18 +2,14 @@
 // for information about these interfaces
 declare global {
 	namespace App {
+		interface Platform {
+			env: {
+				R: DurableObjectNamespace;
+			};
+		}
 		interface Locals {
 			user: import('$lib/server/auth').SessionValidationResult['user'];
 			session: import('$lib/server/auth').SessionValidationResult['session'];
 		}
-	} // interface Error {}
-	// interface Locals {}
-} // interface PageData {}
-// interface PageState {}
-
-interface Platform {
-  env: {
-				COUNTER: DurableObjectNamespace;
-			};
+	}
 }
-export {};
