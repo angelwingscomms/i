@@ -28,10 +28,10 @@
 			}
 			const history: ChatMessage[] = await response.json();
 			chat_messages = history;
-			toast_success('Chat history loaded.');
+			toast.success('Chat history loaded.');
 		} catch (error) {
 			console.error('Error fetching chat history:', error);
-			toast_error('Failed to load chat history.');
+			toast.error('Failed to load chat history.');
 		}
 	}
 
