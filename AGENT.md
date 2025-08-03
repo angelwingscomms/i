@@ -24,3 +24,4 @@ start every task by creating a telegraphic speech list that details the task int
 - always use Typescript in components and files
 - always use embed src/lib/embed.ts for embedding
 - always use wrangler.jsonc instead of wrangler.toml
+- always code with extreme minimalism, complete tasks with as little code as possible, style pages really well, while still coding minimally, always opt for the option that fulfills the task but uses less code, golf coding.

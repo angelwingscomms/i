@@ -39,3 +39,12 @@ export interface ChatMessage {
 	ts: string; // timestamp
 	r: string; // room ID
 }
+
+export interface Room {
+	i: string; // room id
+	t: string; // room tag/name
+	d?: string; // room description
+	c: string; // creator user id
+	a?: string; // creation timestamp
+	m?: number; // number of members
+}

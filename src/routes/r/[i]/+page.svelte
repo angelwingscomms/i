@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { toasts } from '$lib/toast'; // Assuming these exist for notifications
 	import type { ChatMessage } from '$lib/types'; // Import the new type
 	import { toast } from '$lib/util/toast';
 

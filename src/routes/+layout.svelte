@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import Navbar from '$lib/components/Navbar.svelte';
-	import { toasts } from '$lib/toast';
+	import { toasts } from '$lib/util/toast';
 	import { fade } from 'svelte/transition';
 	import { themeStore } from '$lib/stores/theme';
 	import { onMount } from 'svelte';
