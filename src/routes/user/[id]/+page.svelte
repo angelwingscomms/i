@@ -31,7 +31,7 @@
 			if (hostname.includes('telegram.org'))
 				return { name: 'Telegram', iconClass: 'icon-telegram' };
 			return { name: new URL(url).hostname.replace('www.', '').split('.')[0], iconClass: null }; // Generic name, no specific icon
-		} catch (e) {
+		} catch {
 			return { name: url, iconClass: null }; // Fallback to raw URL, no specific icon
 		}
 	}
