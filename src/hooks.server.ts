@@ -1,7 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import { dev } from '$app/environment';
 import { validateSessionToken, sessionCookieName } from '$lib/server/auth';
-import { Log, LogLevel } from 'miniflare';
 
 let env = {};
 
@@ -14,7 +13,7 @@ if (dev) {
   - https://github.com/sveltejs/kit/issues/10732
   - https://github.com/sveltejs/kit/pull/10544
 */
-	const { Miniflare } = await import('miniflare');
+	const { Log, LogLevel, Miniflare } = await import('miniflare');
 	const mf = new Miniflare({
 		modules: true,
 		durableObjects: { R: 'R' },
