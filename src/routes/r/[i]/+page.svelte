@@ -15,8 +15,6 @@
 	const chat_id = $page.params.i;
 
 	onMount(() => {
-		// Fetch chat history when the component mounts
-
 		// Determine the WebSocket protocol
 		const ws_protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
 		// The +server.js will get the user_id from locals.user, so passing it here might be redundant
@@ -25,6 +23,7 @@
 
 		// Create WebSocket connection.
 		web_socket = new WebSocket(ws_url);
+		console.log('wss', web_socket)
 
 		// Connection opened
 		web_socket.onopen = () => {

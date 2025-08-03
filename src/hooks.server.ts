@@ -18,15 +18,15 @@ if (dev) {
 		modules: true,
 		durableObjects: { R: 'R' },
 		durableObjectsPersist: '.wrangler/state/v3/do',
-		scriptPath: '',
-		// scriptPath: 'chatroom/.wrangler/tmp/dev-HSRH83/index.js',
+		// scriptPath: '',
+		scriptPath: 'chatroom/.wrangler/tmp/dev-HSRH83/index.js',
 		log: new Log(LogLevel.DEBUG)
 	});
 
 	env = await mf.getBindings();
 }
 
-const handleAuth: Handle = async ({ event, resolve }) => {
+const handleAuth: Handle = async ({ event, resolve, locals }) => {
 	if (dev) {
 		event.platform = {
 			...event.platform,
@@ -54,6 +54,8 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 
 	event.locals.user = { i: user.i, t: user.t };
 	event.locals.session = session;
+	if (event.locals.ws) return event.locals.ws
+	console.log('lws', event.locals.ws)
 	return resolve(event);
 };
 
