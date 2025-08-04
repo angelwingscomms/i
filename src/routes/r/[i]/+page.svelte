@@ -4,37 +4,25 @@
 	import { fade } from 'svelte/transition';
 	import type { ChatMessage } from '$lib/types'; // Import the new type
 	import { toast } from '$lib/util/toast';
+	import { PUBLIC_WS_WORKER } from '$env/static/public';
 
 	let chat_messages: ChatMessage[] = [];
 	let message_text = '';
-	let web_socket: WebSocket | undefined;
-	// Simple random user ID. In a real app, this would come from user authentication (e.g., locals.user.u)
-	// For this example, we'll use a random one, but the +server.js uses the authenticated user's ID.
-	let user_id = 'user_' + Math.random().toString(16).slice(2);
+	let websocket: WebSocket | undefined;
+	$effect(() => {
+		websocket = new WebSocket(PUBLIC_WS_WORKER);
 
-	const chat_id = $page.params.i;
-
-	onMount(() => {
-		// Determine the WebSocket protocol
-		const ws_protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-		// The +server.js will get the user_id from locals.user, so passing it here might be redundant
-		// but useful for local testing or if authentication is not fully set up yet.
-		const ws_url = `${ws_protocol}//${location.host}/r/${chat_id}`;
-
-		// Create WebSocket connection.
-		web_socket = new WebSocket(ws_url);
-		console.log('wss', web_socket)
-
-		// Connection opened
-		web_socket.onopen = () => {
+		websocket.onopen = () => {
 			console.log('WebSocket connection opened.');
 		};
 
 		// Listen for messages
-		web_socket.onmessage = (event) => {
+		websocket.onmessage = (event) => {
+			console.log('event', event);
 			try {
-				const message: ChatMessage = JSON.parse(event.data);
-				chat_messages = [...chat_messages, message];
+				// const message: ChatMessage = JSON.parse(event.data);
+				chat_messages = [...chat_messages, {t: event.data}];
+				console.log(chat_messages)
 			} catch (e) {
 				console.error('Error parsing message data', e);
 				toast.error('Error receiving message.');
@@ -42,7 +30,7 @@
 		};
 
 		// Connection closed
-		web_socket.addEventListener('close', (event) => {
+		websocket.addEventListener('close', (event) => {
 			console.log('WebSocket connection closed.', event.code, event.reason);
 			chat_messages = [
 				...chat_messages,
@@ -58,24 +46,33 @@
 		});
 
 		// Connection error
-		web_socket.addEventListener('error', (err) => {
+		websocket.addEventListener('error', (err) => {
 			console.error('WebSocket error:', err);
 			toast.error('WebSocket error.');
 		});
-
-		return () => {
-			if (web_socket) {
-				web_socket.close();
-				web_socket = undefined; // Clear the socket reference
-			}
-		};
+		
+		// return () => {
+		// 	if (websocket) {
+		// 		websocket.close();
+		// 		websocket = undefined; // Clear the socket reference
+		// 	}
+		// };
 	});
+	// Simple random user ID. In a real app, this would come from user authentication (e.g., locals.user.u)
+	// For this example, we'll use a random one, but the +server.js uses the authenticated user's ID.
+
+	const chat_id = $page.params.i;
 
 	function send_message() {
-		if (message_text && web_socket && web_socket.readyState === WebSocket.OPEN) {
-			web_socket.send(message_text);
+		console.log('to send');
+		websocket.send(message_text);
+		return;
+		if (message_text && websocket) {
+			console.log('..send');
+			websocket.send(message_text);
+			console.log('sent');
 			message_text = '';
-		} else if (web_socket && web_socket.readyState !== WebSocket.OPEN) {
+		} else if (websocket && websocket.readyState !== WebSocket.OPEN) {
 			toast.error('Cannot send message: WebSocket is not open.');
 		}
 	}

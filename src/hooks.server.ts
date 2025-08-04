@@ -2,37 +2,8 @@ import type { Handle } from '@sveltejs/kit';
 import { dev } from '$app/environment';
 import { validateSessionToken, sessionCookieName } from '$lib/server/auth';
 
-let env = {};
-
-if (dev) {
-	/*
-  We need to import miniflare here conditionally in dev since the esbuild which runs during
-  `npm run build` won't be able to resolve `node:*` imports since they aren't marked as external.
-
-  See the following for more info:
-  - https://github.com/sveltejs/kit/issues/10732
-  - https://github.com/sveltejs/kit/pull/10544
-*/
-	const { Log, LogLevel, Miniflare } = await import('miniflare');
-	const mf = new Miniflare({
-		modules: true,
-		durableObjects: { R: 'R' },
-		durableObjectsPersist: '.wrangler/state/v3/do',
-		// scriptPath: '',
-		scriptPath: 'chatroom/.wrangler/tmp/dev-HSRH83/index.js',
-		log: new Log(LogLevel.DEBUG)
-	});
-
-	env = await mf.getBindings();
-}
-
-const handleAuth: Handle = async ({ event, resolve, locals }) => {
-	if (dev) {
-		event.platform = {
-			...event.platform,
-			env
-		};
-	}
+export const handle: Handle = async ({ event, resolve }) => {
+	console.log(event.request.url);
 
 	const sessionToken = event.cookies.get(sessionCookieName);
 	// console.log('st', sessionToken)
@@ -54,9 +25,5 @@ const handleAuth: Handle = async ({ event, resolve, locals }) => {
 
 	event.locals.user = { i: user.i, t: user.t };
 	event.locals.session = session;
-	if (event.locals.ws) return event.locals.ws
-	console.log('lws', event.locals.ws)
 	return resolve(event);
 };
-
-export const handle: Handle = handleAuth;

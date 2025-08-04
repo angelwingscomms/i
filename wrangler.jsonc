@@ -17,14 +17,14 @@
 	// 	"bindings": [
 	// 		{
 	// 			"name": "R",
-	// 			"class_name": "ChatRoom"
+	// 			"class_name": "R"
 	// 		}
 	// 	]
 	// },
 	// "migrations": [
 	// 	{
 	// 		"tag": "v1",
-	// 		"new_classes": ["R"]
+	// 		"new_sqlite_classes": ["R"]
 	// 	}
 	// ]
 }

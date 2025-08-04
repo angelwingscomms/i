@@ -22,7 +22,7 @@
 
 .message-system {
 	@apply text-sm italic;
-	color: var(--text-tertiary);
+	color: var(--text-accent);
 }
 
 .message-user {
