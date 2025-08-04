@@ -6,7 +6,7 @@
 	import { toast } from '$lib/util/toast';
 	import { PUBLIC_WS_WORKER } from '$env/static/public';
 
-	let chat_messages: ChatMessage[] = [];
+	let chat_messages: ChatMessage[] = $state([]);
 	let message_text = '';
 	let websocket: WebSocket | undefined;
 	$effect(() => {
@@ -51,12 +51,12 @@
 			toast.error('WebSocket error.');
 		});
 		
-		// return () => {
-		// 	if (websocket) {
-		// 		websocket.close();
-		// 		websocket = undefined; // Clear the socket reference
-		// 	}
-		// };
+		return () => {
+			if (websocket) {
+				websocket.close();
+				websocket = undefined; // Clear the socket reference
+			}
+		};
 	});
 	// Simple random user ID. In a real app, this would come from user authentication (e.g., locals.user.u)
 	// For this example, we'll use a random one, but the +server.js uses the authenticated user's ID.
@@ -81,12 +81,12 @@
 <div class="chat-layout">
 	<h1 class="chat-title">Chat Room: {chat_id}</h1>
 	<div class="messages-container">
-		{#each chat_messages as msg (msg.ts + msg.u)}
+		{#each chat_messages as msg (Math.random())}
 			<div class="message-item" in:fade={{ duration: 150, delay: 0 }} out:fade={{ duration: 150 }}>
 				{#if msg.u === 'system'}
-					<em class="message-system">{msg.t}</em>
+					<em class="message-system text-white">{msg.t}</em>
 				{:else}
-					<strong class="message-user">{msg.u}:</strong> <span class="message-text">{msg.t}</span>
+					<strong class="message-user text-blue-300">{msg.u}:</strong> <span class="message-text">{msg.t}</span>
 				{/if}
 			</div>
 		{/each}
