@@ -1,10 +1,8 @@
-import { error, json, type RequestHandler } from '@sveltejs/kit';
-import { get, qdrant, search_by_payload, search_by_vector } from '$lib/db';
+import { json, type RequestHandler } from '@sveltejs/kit';
+import { get, search_by_vector } from '$lib/db';
 import type { User } from '$lib/types';
 import axios from 'axios';
-import { GoogleGenAI } from '@google/genai';
 import { embed } from '$lib/util/embed';
-import { collection } from '$lib/constants';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	// const utd = await qdrant.scroll(collection, { filter: { must: { is_null: { key: 'p' } } } });
