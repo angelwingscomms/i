@@ -8,11 +8,48 @@
 	import { PUBLIC_WORKER } from '$env/static/public';
 	import axios from 'axios';
 	import type { PageProps } from './$types';
+	import anime from 'animejs/lib/anime.es.js';
 	let { data }: PageProps = $props();
 
 	let chat_messages: ChatMessage[] = $state(data.m);
 	let message_text = $state('');
 	let websocket: WebSocket | undefined;
+	let messagesEl: HTMLElement | null = null;
+
+	function animate_in(el: HTMLElement) {
+		anime({
+			targets: el,
+			opacity: [0, 1],
+			translateY: [8, 0],
+			scale: [0.98, 1],
+			easing: 'easeOutQuad',
+			duration: 420
+		});
+	}
+
+	function animate_in_list(container: HTMLElement) {
+		const items = Array.from(container.querySelectorAll('.chat_item')).filter(
+			(el) => !el.hasAttribute('data-animated')
+		);
+		if (!items.length) return;
+		anime({
+			targets: items,
+			opacity: [0, 1],
+			translateY: [8, 0],
+			scale: [0.98, 1],
+			easing: 'easeOutQuad',
+			duration: 380,
+			delay: anime.stagger(35)
+		});
+		items.forEach((el) => el.setAttribute('data-animated', '1'));
+	}
+
+	function observe_list(container: HTMLElement) {
+		const mo = new MutationObserver(() => animate_in_list(container));
+		mo.observe(container, { childList: true, subtree: true });
+		return () => mo.disconnect();
+	}
+
 	$effect(() => {
 		websocket = new WebSocket('ws' + PUBLIC_WORKER + '/' + $page.params.i);
 
@@ -57,6 +94,14 @@
 		};
 	});
 
+	$effect(() => {
+		if (messagesEl) {
+			animate_in_list(messagesEl);
+			const stop = observe_list(messagesEl);
+			return () => stop();
+		}
+	});
+
 	function send_message() {
 		let m: SendChatMessage = {
 			t: message_text,
@@ -73,11 +118,26 @@
 
 <div class="chat-layout">
 	<h1 class="chat-title">{data.t}</h1>
-	<div class="messages-container">
+	<div class="messages-container" bind:this={messagesEl}>
 		{#each chat_messages as msg (msg.i)}
-			<div class="message-item" in:fade={{ duration: 150, delay: 0 }} out:fade={{ duration: 150 }}>
-				<strong class="message-user text-blue-300">{msg.u}:</strong>
-				<span class="message-text">{msg.t}</span>
+			<div
+				class="chat_item"
+				in:fade={{ duration: 150, delay: 0 }}
+				out:fade={{ duration: 150 }}
+				data-msg-id={msg.i}
+			>
+				<div class="chat_meta">
+					{#if msg.u}
+						<div class="chat_username">{msg.u}</div>
+					{:else}
+						<div class="chat_username chat_username--anon">Anonymous</div>
+					{/if}
+				</div>
+				<div
+					class={`chat_bubble ${msg.u ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
+				>
+					<span class="message-text">{msg.t}</span>
+				</div>
 			</div>
 		{/each}
 	</div>

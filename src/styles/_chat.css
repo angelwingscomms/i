@@ -64,3 +64,52 @@
 .send-button:focus {
 	box-shadow: 0 0 0 3px color-mix(in srgb, var(--border-focus) 20%, transparent);
 }
+
+/* Chat bubble utilities */
+.chat_item {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+.chat_meta {
+	display: flex;
+	align-items: center;
+}
+.chat_username {
+	font-size: 0.625rem;
+	opacity: 0.7;
+	letter-spacing: 0.02em;
+}
+.chat_username--anon {
+	opacity: 0.6;
+}
+.chat_bubble {
+	border: 1px solid currentColor;
+	border-radius: 9999px;
+	padding: 0.5rem 0.75rem;
+	color: inherit;
+}
+.chat_bubble--anon {
+	border-style: dashed;
+	opacity: 0.9;
+}
+.chat_bubble--pending {
+	color: #9ca3af;
+	position: relative;
+}
+
+/* soft glow for pending messages */
+@keyframes chat_pending_glow {
+	0% {
+		box-shadow: 0 0 0 rgba(147, 197, 253, 0);
+	}
+	50% {
+		box-shadow: 0 0 12px rgba(147, 197, 253, 0.35);
+	}
+	100% {
+		box-shadow: 0 0 0 rgba(147, 197, 253, 0);
+	}
+}
+.chat_bubble--pending {
+	animation: chat_pending_glow 1.6s ease-in-out infinite;
+}
