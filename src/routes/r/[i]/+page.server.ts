@@ -10,10 +10,12 @@ export const load: PageServerLoad = async ({ params }) => {
 	if (!r) error(404, 'room not found');
 
 	const msgs: ChatMessage[] = await Promise.all(
-		(await search_by_payload<ChatMessage>({ s: 'm', r: params.i }, ['t', 'u'], 72)).map(async (m) => ({
-			...m,
-			u: (await get<string>(m.u, 't')) as string
-		}))
+		(await search_by_payload<ChatMessage>({ s: 'm', r: params.i }, ['t', 'u'], 72)).map(
+			async (m) => ({
+				...m,
+				u: (await get<string>(m.u, 't')) as string
+			})
+		)
 	);
 
 	return { m: msgs, t: r.t };

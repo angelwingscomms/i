@@ -3,7 +3,6 @@ import { create } from '$lib/db';
 import type { Room } from '$lib/types';
 
 export async function POST({ request, locals }) {
-
 	if (!locals.user || !locals.user.i) {
 		throw error(401, 'Unauthorized');
 	}

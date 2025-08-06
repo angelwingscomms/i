@@ -7,6 +7,22 @@
 	backdrop-filter: blur(12px);
 }
 
+/* Bottom-border-only input style: consistent grey underline across the app */
+@utility input-underline {
+	@apply font-light transition-all duration-300 focus:outline-none;
+	background: transparent;
+	color: var(--text-primary);
+	border: none;
+	border-bottom: 1px solid var(--border-secondary);
+	border-radius: 0;
+	padding: 8px 0;
+}
+
+.input-underline:focus {
+	border-bottom-color: var(--border-focus);
+	box-shadow: none;
+}
+
 .input:focus {
 	border-color: var(--border-focus);
 	box-shadow: 0 0 0 4px var(--border-focus);

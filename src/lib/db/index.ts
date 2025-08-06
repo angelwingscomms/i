@@ -16,7 +16,7 @@ export const qdrant = new QdrantClient({
 });
 
 export async function getfirst<T>(filters: PayloadFilter): Promise<T | null> {
-	const results = await search_by_payload<T>(filters, 1);
+	const results = await search_by_payload<T>(filters, null, 1);
 	if (results.length > 0) {
 		return results[0];
 	}
@@ -97,7 +97,8 @@ export const format_filter = (filters: PayloadFilter) => {
 export async function search_by_payload<T>(
 	filter: PayloadFilter,
 	with_payload?: string[] | boolean,
-	limit?: number
+	limit?: number,
+	order_by?: string | Record<string, string>,
 ): Promise<T[]> {
 	const actual_limit = limit || 144;
 	try {
@@ -105,6 +106,7 @@ export async function search_by_payload<T>(
 			filter: format_filter(filter),
 			limit: actual_limit,
 			with_payload,
+			...(order_by && { order_by }),
 			with_vector: false
 		});
 
@@ -113,7 +115,7 @@ export async function search_by_payload<T>(
 		return results.points.map((point) => ({ ...(point.payload as T), i: point.id }));
 	} catch (error) {
 		console.error('Error in search_by_payload:', error);
-		console.error('Filters:', filter);
+		console.error('arg:', filter, with_payload, limit, order_by);
 		throw error;
 	}
 }

@@ -61,4 +61,5 @@ export interface Room {
 	u: string; // creator user id
 	a?: string; // creation timestamp
 	m?: number; // number of members
+  l?: number; // time of last message
 }

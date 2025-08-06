@@ -130,9 +130,13 @@
 		<div class="mb-8 text-center">
 			<h1 class="hero-title mb-4">Find people like you</h1>
 			<p class="hero-subtitle">
-				Find people that share your passions and beliefs, and see what you have in common with them. Describe yourself as much as
-				you wish in your profile, other users only see what they have in common with you
+				Find people that share your passions and beliefs, and see what you have in common with them.
+				Describe yourself as much as you wish in your profile, other users only see what they have
+				in common with you
 			</p>
+			<div class="mt-4">
+				<a href="/r" class="btn-accent btn-sm" style="opacity:.92">Search chatrooms →</a>
+			</div>
 		</div>
 
 		<!-- Authentication -->

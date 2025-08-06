@@ -57,6 +57,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				s: 'u',
 				t: tag.trim()
 			},
+			null,
 			1
 		);
 
