@@ -1,6 +1,20 @@
+- search chatrooms
+- join chatroom - r added to u.r
+- search joined chatrooms
+- search chatroom messages
+- leave chatroom
 - notifications
 - pwa requirements
 - style chat page
+- get create chat room working
+- search chatroom messages
+
+- make send button in chat room full rounded
+- make username closer to message
+- onmount focus message input
+- make chats scrollbar really thin and fully rounded and the same blue color as chats
+- remove border from chats container
+- remove border from message input except bottom border
 - AI suggestions
     route
         
