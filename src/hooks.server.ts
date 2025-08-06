@@ -1,5 +1,4 @@
 import type { Handle } from '@sveltejs/kit';
-import { dev } from '$app/environment';
 import { validateSessionToken, sessionCookieName } from '$lib/server/auth';
 
 export const handle: Handle = async ({ event, resolve }) => {

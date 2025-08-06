@@ -1,11 +1,20 @@
+import { PUBLIC_WORKER } from '$env/static/public';
+import { create } from '$lib/db';
+import axios from 'axios';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ request, locals, platform, params }) => {
-	const i = platform?.env.R.idFromName(params.i);
-	console.log('r i', i);
-	const o = platform?.env.R.get(i);
-	console.log('r o', o);
-	console.log('lwss', locals.ws)
-	locals.ws = await o.fetch(new Request(request.url, request));
-	return new Response()
+export const POST: RequestHandler = async ({ request, locals, params }) => {
+ const receivedString = await request.text();
+
+ const data = {
+  s: receivedString,
+  // u: locals.user?.i, // Assuming locals.user.i is available from middleware/auth
+  d: Date.now()
+ };
+
+ await create(data, JSON.stringify({sender: 'locals.user.t', sent_at: data.d, message_text: receivedString}))
+
+ await axios.post('http' + PUBLIC_WORKER + '/send/' + params.i, data)
+
+ return new Response();
 };

@@ -1,14 +1,15 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit';
-import { get, searchByVector } from '$lib/db';
+import { get, qdrant, search_by_payload, searchByVector } from '$lib/db';
 import type { User } from '$lib/types';
 import axios from 'axios';
 import { GoogleGenAI } from '@google/genai';
 import { embed } from '$lib/util/embed';
+import { collection } from '$lib/constants';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
-	if (!locals.user?.i) {
-		return json({ error: 'requires logged in user' }, { status: 401 });
-	}
+	// const utd = await qdrant.scroll(collection, { filter: { must: { is_null: { key: 'p' } } } });
+	// console.log('utd', utd);
+ //  await qdrant.delete('i', { points: utd.points.map(p => p.id)})
 
 	try {
 		const {
@@ -16,7 +17,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			n: ageMin,
 			x: ageMax,
 			d: description
-		} = (await request.json()) as { g: number; n: number; x: number };
+		} = (await request.json()) as { g: number; n: number; x: number, d: string };
 
 		// Validate inputs
 		if (typeof ageMin !== 'number' || typeof ageMax !== 'number' || ageMin > ageMax) {

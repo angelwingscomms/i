@@ -35,13 +35,16 @@ export interface NotificationSubscription {
 export interface ChatMessage {
 	s: 'm'; // tenant id for messages
 	u: string; // user ID
-	t: string; // message text
-	ts: string; // timestamp
+	ut: string; // user tag
+	mt: string; // message text
+	d: string; // date
+  i: string; // id
 	r: string; // room ID
 }
 
 export interface Room {
 	i: string; // room id
+  ci: string; // cloudflare worker id
 	t: string; // room tag/name
 	d?: string; // room description
 	c: string; // creator user id

@@ -1,6 +1,6 @@
 import { Google } from 'arctic';
 import { GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URL } from '$env/static/private';
-import { get, searchByPayload, upsertPoint, delete_ } from '$lib/db';
+import { get,  delete_, create, edit_point } from '$lib/db';
 import type { User } from '$lib/types';
 import { v7 } from 'uuid';
 import type { RequestEvent } from '@sveltejs/kit';
@@ -11,7 +11,6 @@ export const sessionCookieName = 'auth_session';
 
 interface Session {
 	s: 'se';
-	i: string; // session id
 	u: string; // user id
 	h: string; // hash (base64)
 	c: number; // created at
@@ -86,7 +85,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 			// console.log(`[validateSessionToken] - Enough time has passed, updating session ${sessionId} last activity.`);
 			session.l = now;
 			// console.log(`[validateSessionToken] - Upserting session ${sessionId} to update last activity to ${session.l}.`);
-			await upsertPoint(session);
+			await edit_point(sessionId, session);
 			// console.log(`[validateSessionToken] - Session ${sessionId} activity updated successfully.`);
 		} else {
 			// console.log(`[validateSessionToken] - Not enough time has passed to update session ${sessionId} activity.`);
@@ -125,14 +124,13 @@ export async function createSession(userId: string): Promise<string> {
 
 	const session: Session = {
 		s: 'se',
-		i: sessionId,
 		u: userId,
 		h: hashBase64,
 		c: now,
 		l: now
 	};
 
-	await upsertPoint(session);
+	await create(sessionId, session);
 	return `${sessionId}.${secret}`;
 }
 

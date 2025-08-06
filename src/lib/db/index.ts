@@ -2,9 +2,12 @@
 
 import { QDRANT_KEY, QDRANT_URL } from '$env/static/private';
 import { QdrantClient } from '@qdrant/js-client-rest';
-import { v7 } from 'uuid';
+import { v7 as uuidv7 } from 'uuid';
 import { collection } from '$lib/constants';
-import type { ChatMessage, User } from '$lib/types';
+import type { User } from '$lib/types';
+import { embed } from '$lib/util/embed';
+
+export type PayloadFilter = Record<string, unknown>;
 
 // Qdrant client configuration
 export const qdrant = new QdrantClient({
@@ -12,7 +15,20 @@ export const qdrant = new QdrantClient({
 	apiKey: QDRANT_KEY
 });
 
-export const edit_point = async (id: string, payload: Record<string, unknown>) => {
+export async function getfirst<T>(filters: PayloadFilter): Promise<T | null> {
+	const results = await search_by_payload<T>(filters, 1);
+	if (results.length > 0) {
+		return results[0];
+	}
+	return null;
+}
+
+// Utility functions
+export function generateId(): string {
+	return uuidv7();
+}
+
+export const set = async (id: string, payload: Record<string, unknown>) => {
 	await qdrant.setPayload('i', {
 		wait: true,
 		payload,
@@ -21,11 +37,7 @@ export const edit_point = async (id: string, payload: Record<string, unknown>) =
 };
 
 // Database operations wrapper
-export async function upsertPoint<T extends { i?: string; s: string }>(
-	data: T
-): Promise<T & { i: string }> {
-	const i = data.i || v7();
-
+export async function edit_point<T>(i: string, data: T): Promise<T & { i: string }> {
 	const vector = new Array(3072).fill(0);
 
 	await qdrant.upsert(collection, {
@@ -42,17 +54,18 @@ export async function upsertPoint<T extends { i?: string; s: string }>(
 	return { ...data, i };
 }
 
-export async function create<T extends { i?: string; id?: string; s: string }>(
+export async function create<T extends { s: string }>(i: string,
 	payload: T,
-	string_to_embed: string
+	string_to_embed?: string
 ): Promise<string> {
-	const id = v7();
+	const id = generateId();
 
-	let vector: number[] = new Array(768).fill(0);
+	let vector: number[] = [];
 
 	if (string_to_embed) {
-		// TODO: Implement proper embedding generation
-		vector = new Array(768).fill(0);
+		vector = await embed(string_to_embed);
+	} else {
+		vector = new Array(3072).fill(0);
 	}
 
 	await qdrant.upsert(collection, {
@@ -69,44 +82,39 @@ export async function create<T extends { i?: string; id?: string; s: string }>(
 	return id;
 }
 
-export async function searchByPayload<T>(
-	filters: Record<string, unknown>,
-	limit: number = 144
-): Promise<T[]> {
-	const mustFilters = Object.entries(filters)
-		.filter(([, value]) => value !== undefined && value !== null && value !== '')
-		.map(([key, value]) => ({
-			key,
-			match: { value }
-		}));
+export const format_filter = (filters: PayloadFilter) => {
+	return {
+		must: Object.entries(filters)
+			.filter(([, value]) => value !== undefined && value !== null && value !== '')
+			.map(([key, value]) => ({
+				key,
+				match: { value }
+			}))
+	};
+};
 
-	// If no valid filters, return empty array
-	if (mustFilters.length === 0) {
-		return [];
-	}
-
+export async function search_by_payload<T>(filter: PayloadFilter, limit?: number): Promise<T[]> {
+	const actual_limit = limit || 144;
 	try {
 		const results = await qdrant.scroll(collection, {
-			filter: {
-				must: mustFilters
-			},
-			limit,
+			filter: format_filter(filter),
+			limit: actual_limit,
 			with_payload: true,
 			with_vector: false
 		});
+		
 
-		// console.debug('searchByPayload results', results);
+		// console.debug('search_by_payload results', results);
 
 		return results.points.map((point) => ({ ...(point.payload as T), i: point.id }));
 	} catch (error) {
-		console.error('Error in searchByPayload:', error);
-		console.error('Filters:', filters);
-		console.error('Must filters:', mustFilters);
+		console.error('Error in search_by_payload:', error);
+		console.error('Filters:', filter);
 		throw error;
 	}
 }
 
-export async function searchByVector<T>({
+export async function search_by_vector<T>({
 	vector,
 	limit = 54,
 	with_payload,
@@ -126,14 +134,14 @@ export async function searchByVector<T>({
 		};
 
 		if (filter) {
-			searchParams.filter = filter;
+			searchParams.filter = format_filter(filter);
 		}
 
 		const results = await qdrant.search(collection, searchParams);
 
 		return results.map((point) => ({ ...(point.payload as T), i: point.id }));
 	} catch (error) {
-		console.error('Error in searchByVector:', error);
+		console.error('Error in search_by_vector:', error);
 		console.error('Vector length:', vector.length);
 		console.error('Filter:', filter);
 		throw error;
@@ -165,27 +173,28 @@ export async function get<T>(
 	}
 }
 
-export async function deleteById(id: string): Promise<void> {
+export async function delete_by_id(id: string): Promise<void> {
 	await qdrant.delete(collection, {
 		points: [id],
 		wait: true
 	});
 }
 
-export async function updatePoint<T extends { id: string; s: string }>(
-	id: string,
-	data: Partial<T>
-): Promise<void> {
+export async function update_point<T>(id: string, data: Partial<T>): Promise<void> {
 	const existing = await get<T>(id);
 	if (!existing) {
 		throw new Error('Document not found');
 	}
 
-	await upsertPoint({ ...existing, ...data, id });
+	await edit_point(id, { ...existing, ...data });
+}
+
+export const exists = async (i: string): Promise<boolean> => {
+  return !!(await get(i, []));
 }
 
 // Get username from their ID
-export async function getUsernameFromId(userId: string): Promise<string> {
+export async function get_username_from_id(userId: string): Promise<string> {
 	const user = await get<{ u?: string }>(userId);
 
 	if (user && user.u) {
@@ -197,7 +206,7 @@ export async function getUsernameFromId(userId: string): Promise<string> {
 }
 
 export const find_user_by_tag = async (t: string) => {
-	return (await searchByPayload<User>({ s: 'u', t }))[0];
+	return (await search_by_payload<User>({ s: 'u', t }))[0];
 };
 
 export const delete_ = async (id: string): Promise<void> => {
@@ -206,33 +215,3 @@ export const delete_ = async (id: string): Promise<void> => {
 		points: [id]
 	});
 };
-
-/**
- * Saves a message to the database.
- * @param {string} r - The ID of the chat room.
- * @param {object} message - The message object to save.
- * @param {string} message.u - The user ID.
- * @param {string} message.t - The message text.
- * @param {string} message.ts - The timestamp in ISO string format.
- */
-export async function save_message(r: string, message: { u: string; t: string; ts: string }) {
-	const chat_message: ChatMessage = {
-		s: 'm', // tenant id for messages
-		r, // room ID
-		u: message.u, // user ID
-		t: message.t, // text
-		ts: message.ts // timestamp
-	};
-	await upsertPoint(chat_message);
-}
-
-/**
- * Retrieves the chat history for a room.
- * @param {string} r - The ID of the chat room.
- * @returns {Promise<ChatMessage[]>} - A promise that resolves to an array of message objects, sorted by timestamp.
- */
-export async function get_chat_history(r: string): Promise<ChatMessage[]> {
-	const messages = await searchByPayload<ChatMessage>({ s: 'm', r });
-	// Sort messages by timestamp, as Qdrant scroll doesn't guarantee order
-	return messages.sort((a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime());
-}

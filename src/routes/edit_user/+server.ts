@@ -95,7 +95,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			points: [locals.user.i]
 		});
 
-		const vector = await embed(updatedUser.t as string)
+		const vector = await embed(updatedUser.d as string)
 
 		if (!vector) {
 			console.error('error creating embedding for user', locals.user, updatedUser);
