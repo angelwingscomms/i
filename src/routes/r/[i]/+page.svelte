@@ -9,12 +9,14 @@
 	import axios from 'axios';
 	import type { PageProps } from './$types';
 	import { animate, stagger } from 'animejs';
+	import { tick } from 'svelte';
 	let { data }: PageProps = $props();
 
 	let chat_messages: ChatMessage[] = $state(data.m);
 	let message_text = $state('');
 	let websocket: WebSocket | undefined;
 	let messagesEl: HTMLElement | null = null;
+	let messageInputEl: HTMLInputElement | null = null;
 
 	function animate_in(el: HTMLElement) {
 		animate(el, {
@@ -102,6 +104,8 @@
 			messagesEl.scrollTop = messagesEl.scrollHeight;
 			return () => stop();
 		}
+		// focus input on mount
+		tick().then(() => messageInputEl?.focus());
 	});
 
 	function send_message() {
@@ -133,7 +137,7 @@
 					class="chat_meta"
 					style={`justify-content:${msg.u === data.user?.t ? 'flex-end' : 'flex-start'}`}
 				>
-					{#if msg.u && msg.u !== data.user?.t && chat_messages[i-1]?.u !== msg.u}
+					{#if msg.u && msg.u !== data.user?.t && chat_messages[i - 1]?.u !== msg.u}
 						<div class="chat_username">{msg.u}</div>
 					{/if}
 				</div>
@@ -151,6 +155,7 @@
 			type="text"
 			class="message-input"
 			bind:value={message_text}
+			bind:this={messageInputEl}
 			on:keydown={(e) => e.key === 'Enter' && send_message()}
 			placeholder="Type a message..."
 		/>

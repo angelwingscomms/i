@@ -14,8 +14,24 @@
 .messages-container {
 	@apply mb-3 h-96 overflow-y-auto rounded-md p-3;
 	background: var(--bg-card);
-	border: 1px solid var(--border-secondary);
 	scroll-behavior: smooth;
+}
+/* thin scrollbar with fully rounded ends using exact indigo mix color */
+.messages-container::-webkit-scrollbar {
+	width: 6px;
+}
+.messages-container::-webkit-scrollbar-track {
+	background: transparent;
+}
+.messages-container::-webkit-scrollbar-thumb {
+	background: color-mix(in srgb, var(--accent-indigo) 16%, var(--bg-card));
+	border-radius: 9999px;
+	border: 2px solid transparent; /* create pill caps */
+	background-clip: padding-box; /* keep rounded ends clean */
+}
+.messages-container {
+	scrollbar-width: thin;
+	scrollbar-color: color-mix(in srgb, var(--accent-indigo) 16%, var(--bg-card)) transparent;
 }
 
 .message-item {
@@ -41,19 +57,20 @@
 }
 
 .message-input {
-	@apply flex-grow rounded-md p-2 focus:outline-none;
+	@apply flex-grow rounded-none p-2 focus:outline-none;
 	background: var(--bg-input);
-	border: 1px solid var(--border-secondary);
+	border: none;
+	border-bottom: 1px solid var(--border-secondary);
 	color: var(--text-primary);
 }
 
 .message-input:focus {
 	border-color: var(--border-focus);
-	box-shadow: 0 0 0 3px color-mix(in srgb, var(--border-focus) 20%, transparent);
+	box-shadow: none;
 }
 
 .send-button {
-	@apply rounded-md px-4 py-2 font-medium focus:outline-none;
+	@apply rounded-full px-4 py-2 font-medium focus:outline-none;
 	background: var(--accent-blue);
 	color: white;
 	transition: background-color 0.3s ease;
@@ -71,8 +88,8 @@
 .chat_item {
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem; /* more vertical air between meta and bubble */
-	margin-bottom: 0.6rem; /* more space between messages */
+	gap: 0.25rem; /* tighter spacing between username and bubble */
+	margin-bottom: 0.6rem; /* space between messages */
 }
 .chat_meta {
 	display: flex;

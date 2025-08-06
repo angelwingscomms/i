@@ -1,4 +1,5 @@
 - search chatrooms
+    create server route that emulates routes/+server.ts
 - join chatroom - r added to u.r
 - search joined chatrooms
 - search chatroom messages
