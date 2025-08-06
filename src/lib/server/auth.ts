@@ -9,7 +9,7 @@ export const google = new Google(GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URL);
 
 export const sessionCookieName = 'auth_session';
 
-interface Session {
+export interface Session {
 	s: 'se';
 	u: string; // user id
 	h: string; // hash (base64)

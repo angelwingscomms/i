@@ -1,9 +1,9 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { get, search_by_payload } from '$lib/db';
-import type { SendChatMessage, ChatMessage } from '$lib/types';
+import type { ChatMessage } from '$lib/types';
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({ params }) => {
 	if (!params.i) error(400, 'missing room id');
 
 	const r = await get<{ t: string }>(params.i, ['t']);
