@@ -29,7 +29,7 @@ export const POST: RequestHandler = async ({ request, params, locals }) => {
 			}),
 			message_text: m.t,
 			room_name_or_tag: rt
-		})
+		}), m.i
 	);
 
 	await axios.post('http' + PUBLIC_WORKER + '/send/' + params.i, {

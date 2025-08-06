@@ -56,9 +56,10 @@ export async function edit_point<T>(i: string, data: T): Promise<T & { i: string
 
 export async function create<T extends { s: string }>(
 	payload: T,
-	string_to_embed?: string
+	string_to_embed?: string,
+	i?: string
 ): Promise<string> {
-	const id = generateId();
+	const id = i || generateId();
 
 	let vector: number[] = [];
 

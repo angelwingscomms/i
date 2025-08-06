@@ -41,12 +41,14 @@ export interface CreateChatMessage {
 }
 
 export interface SendChatMessage {
+  i: string; // id
 	t: string; // message text
 	d: number; // date
 }
 
 // used for messages shown in UI
 export interface ChatMessage {
+  saved: true, // if client has received websocket event for this message, meaning message has been saved to db
   i: string, //id
   u: string, // user tag,
   t: string, // message text

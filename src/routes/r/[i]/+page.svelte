@@ -25,9 +25,12 @@
 			console.log('event', event);
 			try {
 				const message: ChatMessage = JSON.parse(event.data);
-				if (!message.u) message.anon = true;
-				chat_messages = [...chat_messages, message];
-				console.log(chat_messages);
+				let sent_message = chat_messages.find((m) => m.i === message.i);
+				if (sent_message) {
+					sent_message.saved = true;
+				} else {
+					chat_messages = [...chat_messages, { ...message, saved: true }];
+				}
 			} catch (e) {
 				console.error('Error parsing message data', e);
 				toast.error('Error receiving message.');
@@ -55,12 +58,15 @@
 	});
 
 	function send_message() {
+		let m: SendChatMessage = {
+			t: message_text,
+			d: Date.now(),
+			i: v7()
+		};
 		if (message_text) {
-			axios.post($page.url.pathname, {
-				t: message_text,
-				d: Date.now(),
-			} satisfies SendChatMessage);
+			chat_messages.push({ ...m, u: data.user.t, saved: false });
 			message_text = '';
+			axios.post($page.url.pathname, m);
 		}
 	}
 </script>
