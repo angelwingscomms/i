@@ -3,14 +3,14 @@
 
 	import { v7 } from 'uuid';
 	import { fade } from 'svelte/transition';
-	import type { ChatMessage } from '$lib/types'; // Import the new type
+	import type { ChatMessage, Message } from '$lib/types'; // Import the new type
 	import { toast } from '$lib/util/toast';
 	import { PUBLIC_WORKER } from '$env/static/public';
 	import axios from 'axios';
 	import type { PageProps } from './$types';
 	let { data }: PageProps = $props();
 
-	let chat_messages: ChatMessage[] = $state(data.m);
+	let chat_messages: Message[] = $state(data.m);
 	let message_text = $state('');
 	let websocket: WebSocket | undefined;
 	$effect(() => {
@@ -24,7 +24,8 @@
 		websocket.onmessage = (event) => {
 			console.log('event', event);
 			try {
-				const message: ChatMessage = JSON.parse(event.data);
+				const message: Message = JSON.parse(event.data);
+				if (!message.u) message.anon = true
 				chat_messages = [...chat_messages, message];
 				console.log(chat_messages);
 			} catch (e) {
@@ -52,37 +53,31 @@
 			}
 		};
 	});
-	// Simple random user ID. In a real app, this would come from user authentication (e.g., locals.user.u)
-	// For this example, we'll use a random one, but the +server.js uses the authenticated user's ID.
-
-	const chat_id = $page.params.i;
 
 	function send_message() {
-		const m: ChatMessage = {
-			u: $page.data.user ? $page.data.user.i : '',
-			mt: message_text,
-			ut: $page.data.user ? $page.data.user.t : '',
-			i: v7()
-		};
 		if (message_text) {
-			if (websocket) websocket.send(JSON.stringify(m));
-			axios.post($page.data.pathname, m);
+			axios.post($page.url.pathname, {
+				u: data.user ? data.user.i : '',
+				mt: message_text,
+				d: Date.now(),
+				r: $page.params.i,
+				i: v7(),
+			} satisfies ChatMessage);
 			message_text = '';
 		}
 	}
 </script>
 
 <div class="chat-layout">
-	<h1 class="chat-title">Chat Room: {chat_id}</h1>
+	<h1 class="chat-title">{data.t}</h1>
 	<div class="messages-container">
 		{#each chat_messages as msg (msg.i)}
-			//TODO
 			<div class="message-item" in:fade={{ duration: 150, delay: 0 }} out:fade={{ duration: 150 }}>
 				{#if msg.u === 'system'}
 					<em class="message-system text-white">{msg.mt}</em>
 				{:else}
-					<strong class="message-user text-blue-300">{msg.ut}:</strong>
-					<span class="message-text">{msg.mt}</span>
+					<strong class="message-user text-blue-300">{msg.u}:</strong>
+					<span class="message-text">{msg.t}</span>
 				{/if}
 			</div>
 		{/each}

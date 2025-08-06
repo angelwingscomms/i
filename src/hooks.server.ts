@@ -1,5 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
-import { validateSessionToken, sessionCookieName } from '$lib/server/auth';
+import { validateSessionToken, sessionCookieName, setSessionTokenCookie } from '$lib/server/auth';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	console.log(event.request.url);
@@ -14,13 +14,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const { session, user } = await validateSessionToken(sessionToken);
 	// console.log('su', session, user)
 
-	// if (session) {
-	// 	auth.setSessionTokenCookie(event, sessionToken);
-	// } else {
-	// 	auth.deleteSessionTokenCookie(event);
-	// }
-	//
-	if (!user) return resolve(event);
+	if (!user || !session) return resolve(event);
+
+	// Refresh cookie maxAge to keep session alive up to 1 year of inactivity
+	setSessionTokenCookie(event, sessionToken);
 
 	event.locals.user = { i: user.i, t: user.t };
 	event.locals.session = session;

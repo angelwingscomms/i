@@ -33,13 +33,20 @@ export interface NotificationSubscription {
 }
 
 export interface ChatMessage {
-	s: 'm'; // tenant id for messages
+	s?: 'm'; // tenant id for messages
 	u: string; // user ID
-	ut: string; // user tag
 	mt: string; // message text
-	d: string; // date
+	d: number; // date
   i: string; // id
 	r: string; // room ID
+  anon?: boolean; // sent by an anonymous user
+}
+
+// used for messages shown in UI
+export interface Message {
+  i: string, //id
+  u: string, // user tag,
+  t: string, // message text
 }
 
 export interface Room {

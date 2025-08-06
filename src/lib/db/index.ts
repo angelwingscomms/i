@@ -54,7 +54,8 @@ export async function edit_point<T>(i: string, data: T): Promise<T & { i: string
 	return { ...data, i };
 }
 
-export async function create<T extends { s: string }>(i: string,
+export async function create<T extends { s: string }>(
+	i: string,
 	payload: T,
 	string_to_embed?: string
 ): Promise<string> {
@@ -93,16 +94,15 @@ export const format_filter = (filters: PayloadFilter) => {
 	};
 };
 
-export async function search_by_payload<T>(filter: PayloadFilter, limit?: number): Promise<T[]> {
+export async function search_by_payload<T>(filter: PayloadFilter, with_payload?: string[] | boolean, limit?: number): Promise<T[]> {
 	const actual_limit = limit || 144;
 	try {
 		const results = await qdrant.scroll(collection, {
 			filter: format_filter(filter),
 			limit: actual_limit,
-			with_payload: true,
+			with_payload,
 			with_vector: false
 		});
-		
 
 		// console.debug('search_by_payload results', results);
 
@@ -190,8 +190,8 @@ export async function update_point<T>(id: string, data: Partial<T>): Promise<voi
 }
 
 export const exists = async (i: string): Promise<boolean> => {
-  return !!(await get(i, []));
-}
+	return !!(await get(i, []));
+};
 
 // Get username from their ID
 export async function get_username_from_id(userId: string): Promise<string> {
