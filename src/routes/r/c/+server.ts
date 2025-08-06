@@ -12,7 +12,7 @@ export async function POST({ request, locals }) {
 	if (!t) error(400, 'missing room tag in request body')
 
 	const room_payload: Omit<Room, 'i'> & { s: 'r' } = {
-		s: 'r', // tenant ID for rooms, as required by upsertPoint's generic type
+		s: 'r', // tenant ID for rooms
 		t: t.trim(), // room tag
 		d: d.trim(), // description
 		u: locals.user.i, // creator user id

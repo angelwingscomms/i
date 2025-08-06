@@ -1,5 +1,5 @@
-import { json } from '@sveltejs/kit';
-import { upsertPoint } from '$lib/db';
+import { error, json } from '@sveltejs/kit';
+import { create } from '$lib/db';
 import type { RequestHandler } from './$types';
 import type { NotificationSubscription } from '$lib/types';
 
@@ -7,11 +7,11 @@ export const POST: RequestHandler = async ({ request }) => {
   try {
     const subscription: NotificationSubscription = await request.json();
     
-    let res = await upsertPoint(subscription);
+    await create(subscription);
     
-    return json({ success: true });
-  } catch (error) {
-    console.error('Error saving notification subscription:', error);
-    return json({ error: 'Failed to save subscription' }, { status: 500 });
+    return new Response();
+  } catch (e) {
+    console.error('Error saving notification subscription:', e);
+    error(500, 'Failed to save subscription')
   }
 };

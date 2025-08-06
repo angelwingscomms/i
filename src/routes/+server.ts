@@ -1,5 +1,5 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit';
-import { get, qdrant, search_by_payload, searchByVector } from '$lib/db';
+import { get, qdrant, search_by_payload, search_by_vector } from '$lib/db';
 import type { User } from '$lib/types';
 import axios from 'axios';
 import { GoogleGenAI } from '@google/genai';
@@ -69,7 +69,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		// Search for similar users using vector search
 		// console.log('--filters', filters)
-		const searchResults = await searchByVector<User>({
+		const searchResults = await search_by_vector<User>({
 			vector,
 			filter,
 			with_payload: ['t', 'a', 'g']

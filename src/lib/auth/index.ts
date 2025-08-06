@@ -1,4 +1,4 @@
-import { delete_, get, search_by_payload, upsertPoint } from '$lib/db';
+import { delete_, get, search_by_payload, edit_point, create } from '$lib/db';
 import type { User } from '$lib/types';
 
 export { create_user } from './create_user';
@@ -78,7 +78,7 @@ export const createSession = async (u: string): Promise<SessionWithToken> => {
 		t: i + '.' + secret
 	};
 
-	await upsertPoint(session);
+	await create(session);
 
 	return session;
 };
@@ -121,7 +121,7 @@ export async function validateSessionToken(token: string): Promise<Session | nul
 	// Activity check: update lastVerifiedAt if enough time has passed
 	if (now - session.l >= activityCheckInterval) {
 		session.l = now;
-		await upsertPoint(session);
+		await edit_point(session.i, session);
 	}
 
 	return session;

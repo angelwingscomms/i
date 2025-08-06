@@ -24,7 +24,7 @@ vi.mock('@sveltejs/kit', () => ({
 // Mock the database functions
 import * as db from '$lib/db';
 vi.mock('$lib/db', () => ({
-    upsertPoint: vi.fn((payload) => Promise.resolve({ ...payload, i: 'mock-uuid' }))
+    edit_point: vi.fn((payload) => Promise.resolve({ ...payload, i: 'mock-uuid' }))
 }));
 
 // Mock crypto.randomUUID
@@ -54,8 +54,8 @@ describe('Room Creation POST endpoint', () => {
 
         const response = await POST({ request: mock_request, locals: mock_locals });
 
-        expect(db.upsertPoint).toHaveBeenCalledTimes(1);
-        expect(db.upsertPoint).toHaveBeenCalledWith(
+        expect(db.edit_point).toHaveBeenCalledTimes(1);
+        expect(db.edit_point).toHaveBeenCalledWith(
             expect.objectContaining({
                 s: 'r',
                 t: 'Test Room',
@@ -92,7 +92,7 @@ describe('Room Creation POST endpoint', () => {
             message: 'Validation failed',
             errors: { room_tag: 'Room Tag is required.' }
         });
-        expect(db.upsertPoint).not.toHaveBeenCalled();
+        expect(db.edit_point).not.toHaveBeenCalled();
     });
 
     it('should throw 400 error for missing description', async () => {
@@ -118,7 +118,7 @@ describe('Room Creation POST endpoint', () => {
             message: 'Validation failed',
             errors: { description: 'Description is required.' }
         });
-        expect(db.upsertPoint).not.toHaveBeenCalled();
+        expect(db.edit_point).not.toHaveBeenCalled();
     });
 
     it('should throw 400 error for room_tag exceeding max length', async () => {
@@ -147,7 +147,7 @@ describe('Room Creation POST endpoint', () => {
             message: 'Validation failed',
             errors: { room_tag: 'Room Tag must be 50 characters or less.' }
         });
-        expect(db.upsertPoint).not.toHaveBeenCalled();
+        expect(db.edit_point).not.toHaveBeenCalled();
     });
 
     it('should throw 400 error for description exceeding max length', async () => {
@@ -176,7 +176,7 @@ describe('Room Creation POST endpoint', () => {
             message: 'Validation failed',
             errors: { description: 'Description must be 200 characters or less.' }
         });
-        expect(db.upsertPoint).not.toHaveBeenCalled();
+        expect(db.edit_point).not.toHaveBeenCalled();
     });
 
     it('should throw 401 error if user is not logged in', async () => {
@@ -197,11 +197,11 @@ describe('Room Creation POST endpoint', () => {
         expect(error).toHaveBeenCalledWith(401, 'Unauthorized');
         expect(thrown_error.status).toBe(401);
         expect(thrown_error.body).toBe('Unauthorized');
-        expect(db.upsertPoint).not.toHaveBeenCalled();
+        expect(db.edit_point).not.toHaveBeenCalled();
     });
 
     it('should throw 500 error if database operation fails', async () => {
-        vi.spyOn(db, 'upsertPoint').mockRejectedValueOnce(new Error('DB connection failed'));
+        vi.spyOn(db, 'edit_point').mockRejectedValueOnce(new Error('DB connection failed'));
 
         mock_request = new Request('http://localhost/r/c', {
             method: 'POST',
@@ -219,6 +219,6 @@ describe('Room Creation POST endpoint', () => {
         expect(error).toHaveBeenCalledWith(500, 'Failed to create room due to an internal server error. Please try again.');
         expect(thrown_error.status).toBe(500);
         expect(thrown_error.body).toBe('Failed to create room due to an internal server error. Please try again.');
-        expect(db.upsertPoint).toHaveBeenCalledTimes(1); // It was called, but failed
+        expect(db.edit_point).toHaveBeenCalledTimes(1); // It was called, but failed
     });
 });

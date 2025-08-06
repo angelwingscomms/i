@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { search_by_payload, upsertPoint } from '$lib/db';
+import { search_by_payload, edit_point } from '$lib/db';
 import type { RequestHandler } from './$types';
 import type { NotificationSubscription } from '$lib/types';
 
@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
     for (const subscription of subscriptions) {
       if (subscription.id) {
-        await upsertPoint({
+        await edit_point(subscription.id, {
           ...subscription,
           ac: false // Deactivate instead of deleting
         });
