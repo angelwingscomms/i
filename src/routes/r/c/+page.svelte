@@ -10,28 +10,11 @@
 
 	async function handle_submit() {
 		form_errors = {}; // Clear previous errors
-		let has_errors = false;
 
 		if (!room_tag.trim()) {
 			form_errors.room_tag = 'Room Tag is required.';
-			has_errors = true;
-		} else if (room_tag.trim().length > 50) {
-			form_errors.room_tag = 'Room Tag must be 50 characters or less.';
-			has_errors = true;
+			return
 		}
-
-		if (!description.trim()) {
-			form_errors.description = 'Description is required.';
-			has_errors = true;
-		} else if (description.trim().length > 200) {
-			form_errors.description = 'Description must be 200 characters or less.';
-			has_errors = true;
-		}
-
-		if (has_errors) {
-			return;
-		}
-
 		is_loading = true;
 
 		try {
@@ -40,7 +23,7 @@
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ room_tag, description })
+				body: JSON.stringify({ t: room_tag, d: description })
 			});
 
 			if (response.ok) {

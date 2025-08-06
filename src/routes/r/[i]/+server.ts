@@ -1,22 +1,23 @@
-import { create } from '$lib/db';
+import { create, get } from '$lib/db';
 import axios from 'axios';
 import type { RequestHandler } from './$types';
 import { PUBLIC_WORKER } from '$env/static/public';
+import type { CreateChatMessage, SendChatMessage } from '$lib/types';
 
-export const POST: RequestHandler = async ({ request }) => {
-  // if (request.headers.get('origin') !== 'http' + 'PUBLIC_WORKER') {
-  //  return new Response('Forbidden', { status: 403 });
-  // }
-	const m = await request.json();
-  const i = m.i;
-	delete m.i;
-  m.s = 'm'
+export const POST: RequestHandler = async ({ request, params, locals }) => {
+	const m: SendChatMessage = await request.json();
+	const rt = await get(params.i, 't');
 
-	await create(
-		i,
-		m,
+	const i = await create(
+		{
+			...(locals.user ? { u: locals.user.i } : {}),
+			s: 'm',
+			d: m.d,
+			t: m.t,
+			r: params.i
+		} satisfies CreateChatMessage,
 		JSON.stringify({
-			sender: m.ut,
+			...(locals.user ? { sender: locals.user.t } : {}),
 			sent_at: new Date(m.d).toLocaleString(undefined, {
 				weekday: 'long',
 				year: 'numeric',
@@ -26,11 +27,16 @@ export const POST: RequestHandler = async ({ request }) => {
 				minute: '2-digit',
 				second: '2-digit'
 			}),
-			message_text: m.mt
+			message_text: m.t,
+			room_name_or_tag: rt
 		})
 	);
-	
-	await axios.post('http' + PUBLIC_WORKER + '/send/' + m.r, {i, u: m.ut, t: m.mt})
+
+	await axios.post('http' + PUBLIC_WORKER + '/send/' + params.i, {
+		i,
+		...(locals.user ? { u: locals.user.t } : {}),
+		t: m.t
+	});
 
 	return new Response();
 };

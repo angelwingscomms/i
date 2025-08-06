@@ -3,14 +3,14 @@
 
 	import { v7 } from 'uuid';
 	import { fade } from 'svelte/transition';
-	import type { ChatMessage, Message } from '$lib/types'; // Import the new type
+	import type { SendChatMessage, ChatMessage } from '$lib/types'; // Import the new type
 	import { toast } from '$lib/util/toast';
 	import { PUBLIC_WORKER } from '$env/static/public';
 	import axios from 'axios';
 	import type { PageProps } from './$types';
 	let { data }: PageProps = $props();
 
-	let chat_messages: Message[] = $state(data.m);
+	let chat_messages: ChatMessage[] = $state(data.m);
 	let message_text = $state('');
 	let websocket: WebSocket | undefined;
 	$effect(() => {
@@ -24,8 +24,8 @@
 		websocket.onmessage = (event) => {
 			console.log('event', event);
 			try {
-				const message: Message = JSON.parse(event.data);
-				if (!message.u) message.anon = true
+				const message: ChatMessage = JSON.parse(event.data);
+				if (!message.u) message.anon = true;
 				chat_messages = [...chat_messages, message];
 				console.log(chat_messages);
 			} catch (e) {
@@ -57,12 +57,9 @@
 	function send_message() {
 		if (message_text) {
 			axios.post($page.url.pathname, {
-				u: data.user ? data.user.i : '',
-				mt: message_text,
+				t: message_text,
 				d: Date.now(),
-				r: $page.params.i,
-				i: v7(),
-			} satisfies ChatMessage);
+			} satisfies SendChatMessage);
 			message_text = '';
 		}
 	}
@@ -73,12 +70,8 @@
 	<div class="messages-container">
 		{#each chat_messages as msg (msg.i)}
 			<div class="message-item" in:fade={{ duration: 150, delay: 0 }} out:fade={{ duration: 150 }}>
-				{#if msg.u === 'system'}
-					<em class="message-system text-white">{msg.mt}</em>
-				{:else}
-					<strong class="message-user text-blue-300">{msg.u}:</strong>
-					<span class="message-text">{msg.t}</span>
-				{/if}
+				<strong class="message-user text-blue-300">{msg.u}:</strong>
+				<span class="message-text">{msg.t}</span>
 			</div>
 		{/each}
 	</div>

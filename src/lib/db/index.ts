@@ -55,7 +55,6 @@ export async function edit_point<T>(i: string, data: T): Promise<T & { i: string
 }
 
 export async function create<T extends { s: string }>(
-	i: string,
 	payload: T,
 	string_to_embed?: string
 ): Promise<string> {
@@ -94,7 +93,11 @@ export const format_filter = (filters: PayloadFilter) => {
 	};
 };
 
-export async function search_by_payload<T>(filter: PayloadFilter, with_payload?: string[] | boolean, limit?: number): Promise<T[]> {
+export async function search_by_payload<T>(
+	filter: PayloadFilter,
+	with_payload?: string[] | boolean,
+	limit?: number
+): Promise<T[]> {
 	const actual_limit = limit || 144;
 	try {
 		const results = await qdrant.scroll(collection, {
@@ -150,13 +153,13 @@ export async function search_by_vector<T>({
 
 export async function get<T>(
 	id: string,
-	payload?: string[],
+	payload?: string[] | string | boolean,
 	with_vector?: boolean
 ): Promise<T | null> {
 	try {
 		const result = await qdrant.retrieve(collection, {
 			ids: [id],
-			with_payload: payload ? payload : true,
+			with_payload: typeof payload === 'string' ? [payload] : payload,
 			with_vector
 		});
 
@@ -164,6 +167,8 @@ export async function get<T>(
 			const res = result[0].payload as T & { vector: number[] };
 			if (with_vector) {
 				res.vector = result[0].vector;
+			} else if (payload && result[0].payload && typeof payload === 'string') {
+				return result[0].payload[payload] as T;
 			}
 			return res;
 		}

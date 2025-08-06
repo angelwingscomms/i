@@ -32,18 +32,21 @@ export interface NotificationSubscription {
 	sub: PushSubscription;
 }
 
-export interface ChatMessage {
+export interface CreateChatMessage {
 	s?: 'm'; // tenant id for messages
-	u: string; // user ID
-	mt: string; // message text
+	u?: string; // user ID
+	t: string; // message text
 	d: number; // date
-  i: string; // id
 	r: string; // room ID
-  anon?: boolean; // sent by an anonymous user
+}
+
+export interface SendChatMessage {
+	t: string; // message text
+	d: number; // date
 }
 
 // used for messages shown in UI
-export interface Message {
+export interface ChatMessage {
   i: string, //id
   u: string, // user tag,
   t: string, // message text
@@ -51,10 +54,9 @@ export interface Message {
 
 export interface Room {
 	i: string; // room id
-  ci: string; // cloudflare worker id
 	t: string; // room tag/name
 	d?: string; // room description
-	c: string; // creator user id
+	u: string; // creator user id
 	a?: string; // creation timestamp
 	m?: number; // number of members
 }
