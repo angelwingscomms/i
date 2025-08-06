@@ -4,6 +4,7 @@
 
 .chat-layout {
 	@apply mx-auto max-w-2xl p-5 font-sans;
+	scroll-behavior: smooth;
 }
 
 .chat-title {
@@ -14,6 +15,7 @@
 	@apply mb-3 h-96 overflow-y-auto rounded-md p-3;
 	background: var(--bg-card);
 	border: 1px solid var(--border-secondary);
+	scroll-behavior: smooth;
 }
 
 .message-item {
@@ -69,7 +71,8 @@
 .chat_item {
 	display: flex;
 	flex-direction: column;
-	gap: 0.25rem;
+	gap: 0.5rem; /* more vertical air between meta and bubble */
+	margin-bottom: 0.6rem; /* more space between messages */
 }
 .chat_meta {
 	display: flex;
@@ -81,35 +84,42 @@
 	letter-spacing: 0.02em;
 }
 .chat_username--anon {
-	opacity: 0.6;
+	display: none; /* hide 'Anonymous' entirely */
 }
 .chat_bubble {
-	border: 1px solid currentColor;
 	border-radius: 9999px;
 	padding: 0.5rem 0.75rem;
-	color: inherit;
+	color: var(--text-primary);
+	background: color-mix(
+		in srgb,
+		var(--accent-purple) 14%,
+		var(--bg-card)
+	); /* default: gentle purple haze */
+	/* border removed for cleaner bubble */
+}
+.chat_bubble--self {
+	background: color-mix(in srgb, var(--accent-blue) 18%, var(--bg-card)); /* self: dreamy blue */
+	/* border removed for cleaner bubble */
 }
 .chat_bubble--anon {
-	border-style: dashed;
+	opacity: 0.97;
+	background: color-mix(
+		in srgb,
+		var(--accent-emerald) 14%,
+		var(--bg-card)
+	); /* anon: soft emerald mist */
+	/* border removed for cleaner bubble */
+}
+/* pending now uses a solid dreamy color; no animation */
+.chat_bubble--pending {
+	color: var(--text-primary);
+	background: color-mix(
+		in srgb,
+		var(--accent-indigo) 16%,
+		var(--bg-card)
+	); /* pending: indigo glow */
+	/* border removed for cleaner bubble */
 	opacity: 0.9;
 }
-.chat_bubble--pending {
-	color: #9ca3af;
-	position: relative;
-}
 
-/* soft glow for pending messages */
-@keyframes chat_pending_glow {
-	0% {
-		box-shadow: 0 0 0 rgba(147, 197, 253, 0);
-	}
-	50% {
-		box-shadow: 0 0 12px rgba(147, 197, 253, 0.35);
-	}
-	100% {
-		box-shadow: 0 0 0 rgba(147, 197, 253, 0);
-	}
-}
-.chat_bubble--pending {
-	animation: chat_pending_glow 1.6s ease-in-out infinite;
-}
+/* solid dreamy colors only; no pulsing animations */

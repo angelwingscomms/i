@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { searchByPayload, upsertPoint } from '$lib/db';
+import { search_by_payload, upsertPoint } from '$lib/db';
 import type { RequestHandler } from './$types';
 import type { NotificationSubscription } from '$lib/types';
 
@@ -8,7 +8,7 @@ export const POST: RequestHandler = async ({ request }) => {
     const { endpoint, userId, schoolId } = await request.json();
     
     // Find and deactivate the subscription
-    const subscriptions = await searchByPayload<NotificationSubscription>({
+    const subscriptions = await search_by_payload<NotificationSubscription>({
       s: 'n',
       u: userId,
       sc: schoolId,

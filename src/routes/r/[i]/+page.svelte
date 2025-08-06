@@ -8,7 +8,7 @@
 	import { PUBLIC_WORKER } from '$env/static/public';
 	import axios from 'axios';
 	import type { PageProps } from './$types';
-	import anime from 'animejs/lib/anime.es.js';
+	import { animate, stagger } from 'animejs';
 	let { data }: PageProps = $props();
 
 	let chat_messages: ChatMessage[] = $state(data.m);
@@ -17,8 +17,7 @@
 	let messagesEl: HTMLElement | null = null;
 
 	function animate_in(el: HTMLElement) {
-		anime({
-			targets: el,
+		animate(el, {
 			opacity: [0, 1],
 			translateY: [8, 0],
 			scale: [0.98, 1],
@@ -32,16 +31,17 @@
 			(el) => !el.hasAttribute('data-animated')
 		);
 		if (!items.length) return;
-		anime({
-			targets: items,
+		animate(items, {
 			opacity: [0, 1],
 			translateY: [8, 0],
 			scale: [0.98, 1],
 			easing: 'easeOutQuad',
 			duration: 380,
-			delay: anime.stagger(35)
+			delay: stagger(35)
 		});
 		items.forEach((el) => el.setAttribute('data-animated', '1'));
+		// ensure scroll to bottom after new items animate in
+		container.scrollTop = container.scrollHeight;
 	}
 
 	function observe_list(container: HTMLElement) {
@@ -98,6 +98,8 @@
 		if (messagesEl) {
 			animate_in_list(messagesEl);
 			const stop = observe_list(messagesEl);
+			// initial scroll to bottom to show latest messages fully
+			messagesEl.scrollTop = messagesEl.scrollHeight;
 			return () => stop();
 		}
 	});
@@ -109,7 +111,7 @@
 			i: v7()
 		};
 		if (message_text) {
-			chat_messages.push({ ...m, u: data.user.t, saved: false });
+			chat_messages.push({ ...m, u: data.user?.t, saved: false });
 			message_text = '';
 			axios.post($page.url.pathname, m);
 		}
@@ -119,22 +121,25 @@
 <div class="chat-layout">
 	<h1 class="chat-title">{data.t}</h1>
 	<div class="messages-container" bind:this={messagesEl}>
-		{#each chat_messages as msg (msg.i)}
+		{#each chat_messages as msg, i (msg.i)}
 			<div
 				class="chat_item"
 				in:fade={{ duration: 150, delay: 0 }}
 				out:fade={{ duration: 150 }}
 				data-msg-id={msg.i}
+				style={`align-items:${msg.u === data.user?.t ? 'flex-end' : 'flex-start'}`}
 			>
-				<div class="chat_meta">
-					{#if msg.u}
+				<div
+					class="chat_meta"
+					style={`justify-content:${msg.u === data.user?.t ? 'flex-end' : 'flex-start'}`}
+				>
+					{#if msg.u && msg.u !== data.user?.t && chat_messages[i-1]?.u !== msg.u}
 						<div class="chat_username">{msg.u}</div>
-					{:else}
-						<div class="chat_username chat_username--anon">Anonymous</div>
 					{/if}
 				</div>
 				<div
-					class={`chat_bubble ${msg.u ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
+					class={`chat_bubble ${msg.u === data.user?.t ? 'chat_bubble--self' : ''} ${msg.u ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
+					style={`max-width: 90%; ${msg.u === data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
 				>
 					<span class="message-text">{msg.t}</span>
 				</div>

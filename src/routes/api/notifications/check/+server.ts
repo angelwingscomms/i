@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { searchByPayload } from '$lib/db';
+import { search_by_payload } from '$lib/db';
 import type { RequestHandler } from './$types';
 import type { NotificationSubscription } from '$lib/types';
 
@@ -14,7 +14,7 @@ export const GET: RequestHandler = async ({ url }) => {
     }
     
     // Check if subscription exists in database
-    const subscriptions = await searchByPayload<NotificationSubscription>({
+    const subscriptions = await search_by_payload<NotificationSubscription>({
       s: 'n',
       u: userId,
       sc: schoolId,

@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { qdrant, searchByPayload } from '$lib/db';
+import { qdrant, search_by_payload } from '$lib/db';
 import type { User } from '$lib/types';
 import { collection } from '$lib/constants';
 import { embed } from '$lib/util/embed';
@@ -52,7 +52,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		}
 
 		// Check if tag is already taken by another user
-		const existingUsers = await searchByPayload<User>(
+		const existingUsers = await search_by_payload<User>(
 			{
 				s: 'u',
 				t: tag.trim()

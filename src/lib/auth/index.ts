@@ -1,4 +1,4 @@
-import { delete_, get, searchByPayload, upsertPoint } from '$lib/db';
+import { delete_, get, search_by_payload, upsertPoint } from '$lib/db';
 import type { User } from '$lib/types';
 
 export { create_user } from './create_user';

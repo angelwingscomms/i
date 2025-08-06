@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { searchByPayload } from '$lib/db';
+import { search_by_payload } from '$lib/db';
 import type { RequestHandler } from './$types';
 import type { NotificationSubscription } from '$lib/types';
 import { send_push_notif } from '$lib/util/send_push_notif';
@@ -13,7 +13,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		const { u, m, t, k } = await request.json();
 		;
 		const subscriptions =
-			await searchByPayload<NotificationSubscription>({
+			await search_by_payload<NotificationSubscription>({
 				s: 'n',
 				u: u
 			});
