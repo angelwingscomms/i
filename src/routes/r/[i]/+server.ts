@@ -4,9 +4,9 @@ import type { CreateChatMessage, SendChatMessage } from '$lib/types';
 import { s } from '$lib/util/s';
 
 export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
-  console.log('platform.env.r.fetch', platform.env.r.fetch);
+	console.log('platform.env.r.fetch', platform.env.r.fetch);
 	const m: SendChatMessage = await request.json();
-	const {c, t} = await get<{c: string, t: string}>(params.i, ['c', 't']);
+	const { c, t } = await get<{ c: string; t: string }>(params.i, ['c', 't']);
 
 	const i = await create(
 		{
@@ -32,8 +32,8 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		}),
 		m.i
 	);
-	
-	platform.env.R.fetch('https://i.i/send/' + c + '?s=' + await s())
+
+	platform.env.R.fetch('https://i.i/send/' + (await s()));
 
 	// await axios.post('http' + PUBLIC_WORKER + '/send/' + params.i, {
 	// 	i,
