@@ -31,11 +31,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		if (description) {
 			vector = await embed(description);
 		} else {
-			({ vector } = (await get(locals.user.i, undefined, true)) as { vector: number[] });
+			const me = await get<{ vector: number[] }>(locals.user?.i as string, undefined, true);
+			if (!me || !me.vector) {
+				return json({ error: 'User vector not found' }, { status: 400 });
+			}
+			vector = me.vector;
 		}
 
 		// Build filters for Qdrant search
-		const filter = {
+		const filter: { must: Record<string, unknown>; must_not?: Record<string, unknown> } = {
 			must: {
 				s: 'u',
 				a: {
@@ -44,13 +48,17 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 						lte: ageMax
 					}
 				}
-			},
-			...(locals.user && { must_not: { i: locals.user.i } })
+			}
 		};
 
 		// Add gender filter if specified
 		if (genderFilter !== null) {
-			filter.must.g = genderFilter
+			(filter.must as Record<string, unknown>).g = genderFilter;
+		}
+
+		// Exclude current user if present
+		if (locals.user?.i) {
+			filter.must_not = { i: locals.user.i };
 		}
 
 		// Search for similar users using vector search

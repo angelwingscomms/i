@@ -32,39 +32,48 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		tokens = await google.validateAuthorizationCode(code, codeVerifier);
 	} catch {
 		// Invalid code or client credentials
-		console.error('Invalid code or client credentials');
-		return new Response(null, {
-			status: 400
-		});
+		console.error('Invalid code or client credentials', code, codeVerifier);
+		redirect(302, '/google');
 	}
 	const res = decodeIdToken(tokens.idToken()) as {
 		sub: string;
 		email: string;
 	};
 
-	let user: User | null = null;
+	let user_id: string | undefined = undefined;
 
 	const existingUsers = await search_by_payload<User>(
 		{
 			gid: res.sub,
 			s: 'u'
 		},
+		false,
 		1
 	);
 
 	console.log(existingUsers);
 
 	if (existingUsers.length > 0) {
-		user = existingUsers[0];
+		user_id = existingUsers[0].i;
 	} else {
-		user = await create_user(res.email.replace('@gmail.com', ''), { gid: res.sub });
+		user_id = await create_user(res.email.replace('@gmail.com', ''), { gid: res.sub });
 	}
 
 	// Create new user
 
-	if (!user) return new Response(null, { status: 500 });
+	if (!user_id) {
+		console.error('failed to create user after succesful Google Auth', {
+			code,
+			state,
+			storedState,
+			codeVerifier,
+			res,
+			existingUsers
+		});
+		redirect(302, '/google');
+	}
 
-	const sessionToken = await createSession(user.i as string);
+	const sessionToken = await createSession(user_id);
 
 	setSessionTokenCookie(event, sessionToken);
 	redirect(302, '/edit_user');

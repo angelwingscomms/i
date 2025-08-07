@@ -1,8 +1,71 @@
 <script lang="ts">
 	import { navigating } from '$app/stores';
 	import type { User } from '$lib/types';
+	import { onMount } from 'svelte';
+	import { toasts } from '$lib/util/toast';
 
 	export let user: User | null = null;
+
+	let can_install = false;
+	let deferred_prompt: BeforeInstallPromptEvent | null = null;
+	let is_installed = false;
+
+	type BeforeInstallPromptEvent = Event & {
+		prompt: () => Promise<void>;
+		userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+	};
+
+	function update_is_installed() {
+		// iOS standalone support via navigator.standalone; others via display-mode
+		// @ts-ignore
+		const iosStandalone = typeof window !== 'undefined' && (navigator as any).standalone === true;
+		const mql =
+			typeof window !== 'undefined' ? window.matchMedia('(display-mode: standalone)') : null;
+		is_installed = iosStandalone || !!mql?.matches;
+	}
+
+	function on_beforeinstallprompt(e: Event) {
+		e.preventDefault();
+		deferred_prompt = e as BeforeInstallPromptEvent;
+		can_install = !is_installed && !!deferred_prompt;
+	}
+
+	async function do_install() {
+		if (!deferred_prompt) return;
+		await deferred_prompt.prompt();
+		const choice = await deferred_prompt.userChoice;
+		if (choice.outcome === 'accepted') {
+			toasts.add({ type: 'success', message: 'App installed' });
+		} else {
+			toasts.add({ type: 'info', message: 'Install dismissed' });
+		}
+		deferred_prompt = null;
+		can_install = false;
+	}
+
+	function on_appinstalled() {
+		toasts.add({ type: 'success', message: 'App installed' });
+		update_is_installed();
+		can_install = false;
+		deferred_prompt = null;
+	}
+
+	onMount(() => {
+		update_is_installed();
+		window.addEventListener('beforeinstallprompt', on_beforeinstallprompt);
+		window.addEventListener('appinstalled', on_appinstalled);
+		const mql = window.matchMedia('(display-mode: standalone)');
+		const mql_handler = () => {
+			update_is_installed();
+			if (is_installed) can_install = false;
+		};
+		mql.addEventListener?.('change', mql_handler);
+		return () => {
+			window.removeEventListener('beforeinstallprompt', on_beforeinstallprompt);
+			window.removeEventListener('appinstalled', on_appinstalled);
+			mql.removeEventListener?.('change', mql_handler);
+		};
+	});
 </script>
 
 <nav class="nav">
@@ -40,6 +103,12 @@
 			</div>
 
 			<div class="flex items-center gap-4">
+				{#if can_install && !is_installed}
+					<button class="btn-primary btn-sm" on:click={do_install} transition:fade>
+						install
+					</button>
+				{/if}
+
 				{#if user}
 					<a href="/" class="nav-link">
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

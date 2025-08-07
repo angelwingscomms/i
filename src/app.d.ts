@@ -1,5 +1,8 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
+import type { User } from '$lib/types';
+import type { Session } from '@supabase/supabase-js';
+
 declare global {
 	namespace App {
 		interface Platform {
@@ -9,7 +12,8 @@ declare global {
 		}
 		interface Locals {
 			user: User | null;
-			session: Session | null
+			session: Session | null;
 		}
 	}
 }
+export {};

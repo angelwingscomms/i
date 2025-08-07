@@ -16,7 +16,7 @@ export const qdrant = new QdrantClient({
 });
 
 export async function getfirst<T>(filters: PayloadFilter): Promise<T | null> {
-	const results = await search_by_payload<T>(filters, null, 1);
+	const results = await search_by_payload<T>(filters, [], 1);
 	if (results.length > 0) {
 		return results[0];
 	}
@@ -37,7 +37,10 @@ export const set = async (id: string, payload: Record<string, unknown>) => {
 };
 
 // Database operations wrapper
-export async function edit_point<T>(i: string, data: T): Promise<T & { i: string }> {
+export async function edit_point<T extends Record<string, unknown>>(
+	i: string,
+	data: T
+): Promise<T & { i: string }> {
 	const vector = new Array(3072).fill(0);
 
 	await qdrant.upsert(collection, {
@@ -83,25 +86,32 @@ export async function create<T extends { s: string }>(
 	return id;
 }
 
-export const format_filter = (must?: PayloadFilter, must_not?: PayloadFilter) => {
-	return {
-		...(must && {
-			must: Object.entries(must)
-				.filter(([, value]) => value !== undefined && value !== null && value !== '')
-				.map(([key, value]) => ({
-					key,
-					match: { value }
-				}))
-		}),
-		...(must_not && {
-			must_not: Object.entries(must_not)
-				.filter(([, value]) => value !== undefined && value !== null && value !== '')
-				.map(([key, value]) => ({
-					key,
-					match: { value }
-				}))
-		})
+export const format_filter = (
+	must?: Record<string, unknown> | Array<Record<string, unknown>>,
+	must_not?: Record<string, unknown> | Array<Record<string, unknown>>
+) => {
+	const normalize = (input?: Record<string, unknown> | Array<Record<string, unknown>>) => {
+		if (!input) return undefined;
+		if (Array.isArray(input)) return input;
+		return Object.entries(input)
+			.filter(([, v]) => v !== undefined && v !== null && v !== '')
+			.map(([k, v]) => {
+				if (typeof v === 'object' && v !== null) {
+					const o = v as Record<string, unknown>;
+					if ('match' in o || 'range' in o || 'in' in o || 'is_null' in o || 'has_id' in o) {
+						return { key: k, ...(o as object) };
+					}
+				}
+				return { key: k, match: { value: v } };
+			});
 	};
+
+	const result: Record<string, unknown> = {};
+	const m = normalize(must);
+	if (m && m.length) result.must = m;
+	const mn = normalize(must_not);
+	if (mn && mn.length) result.must_not = mn;
+	return result;
 };
 
 export async function search_by_payload<T>(
@@ -152,14 +162,23 @@ export async function search_by_vector<T>({
 		if (filter) {
 			searchParams.filter = format_filter(filter.must, filter.must_not);
 		}
-
-		const results = await qdrant.search(collection, searchParams);
+		console.log('searchParams', JSON.stringify(searchParams, null, 2));
+		const results = await qdrant.search(
+			collection,
+			searchParams as {
+				vector: number[] | { name: string; vector: number[] };
+				limit?: number;
+				with_payload?: boolean | string[];
+				with_vector?: boolean;
+				filter?: Record<string, unknown>;
+			}
+		);
 
 		return results.map((point) => ({ ...(point.payload as T), i: point.id }));
 	} catch (error) {
 		console.error('Error in search_by_vector:', error);
 		console.error('Vector length:', vector.length);
-		console.error('Filter:', filter);
+		console.error('--Filter:', filter);
 		throw error;
 	}
 }
@@ -178,8 +197,8 @@ export async function get<T>(
 
 		if (result.length > 0) {
 			const res = result[0].payload as T & { vector: number[] };
-			if (with_vector) {
-				res.vector = result[0].vector;
+			if (with_vector && Array.isArray(result[0].vector)) {
+				res.vector = result[0].vector as unknown as number[];
 			} else if (payload && result[0].payload && typeof payload === 'string') {
 				return result[0].payload[payload] as T;
 			}
