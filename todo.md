@@ -1,4 +1,6 @@
-add secret to worker deployment
+where worker gets iv from
+
+let all buttons fade change color using animejs on hover like search chats button on /+page.svelte
 
 - search chatrooms
     1. create server route routes/r/search/+server.ts that works like POST on routes/+server.ts but uses search_by_vector and accepts arbritray filters in jsonbody.f, sort by params in jsonbody.s, and search string in jsonbody.s;

@@ -1,12 +1,12 @@
 import { create, get } from '$lib/db';
-import axios from 'axios';
 import type { RequestHandler } from './$types';
-import { PUBLIC_WORKER } from '$env/static/public';
 import type { CreateChatMessage, SendChatMessage } from '$lib/types';
+import { s } from '$lib/util/s';
 
 export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
+  console.log('platform.env.r.fetch', platform.env.r.fetch);
 	const m: SendChatMessage = await request.json();
-	const rt = await get(params.i, 't');
+	const {c, t} = await get<{c: string, t: string}>(params.i, ['c', 't']);
 
 	const i = await create(
 		{
@@ -28,12 +28,13 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 				second: '2-digit'
 			}),
 			message_text: m.t,
-			room_name_or_tag: rt
+			room_name_or_tag: t
 		}),
 		m.i
 	);
+	
+	platform.env.R.fetch('https://i.i/send/' + c + '?s=' + await s())
 
-	console.log('platform', platform);
 	// await axios.post('http' + PUBLIC_WORKER + '/send/' + params.i, {
 	// 	i,
 	// 	...(locals.user ? { u: locals.user.t } : {}),

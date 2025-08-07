@@ -2,12 +2,12 @@ import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { get, search_by_payload } from '$lib/db';
 import type { ChatMessage } from '$lib/types';
-import { SECRET } from '$env/static/private';
+import { s } from '$lib/util/s';
 
 export const load: PageServerLoad = async ({ params }) => {
 	if (!params.i) error(400, 'missing room id');
 
-	const r = await get<{ t: string }>(params.i, ['t']);
+	const r = await get<{ t: string; c: string }>(params.i, ['t', 'c']);
 	if (!r) error(404, 'room not found');
 
 	const msgs: ChatMessage[] = await Promise.all(
@@ -19,13 +19,5 @@ export const load: PageServerLoad = async ({ params }) => {
 		)
 	);
 
-	const raw = new TextEncoder().encode(SECRET);
-	const key = await crypto.subtle.importKey('raw', raw, { name: 'HMAC', hash: 'SHA-256' }, false, [
-		'sign',
-		'verify'
-	]);
-
-	const s = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(""));
-
-	return { m: msgs, t: r.t, s };
+	return { m: msgs, s: await s(), ...r };
 };

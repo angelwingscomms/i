@@ -59,6 +59,7 @@ export interface Room {
 	t: string; // room tag/name
 	d?: string; // room description
 	u: string; // creator user id
+  c: string; // cloudflare id
 	a?: string; // creation timestamp
 	m?: number; // number of members
   l?: number; // time of last message
