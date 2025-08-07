@@ -5,21 +5,17 @@
 
 	let { data } = $props();
 	// state
-	let q = '';
+	let q = $state('');
 	let results: { i: string; t: string }[] = $state(data.r);
-	let creating = false;
-	let t = '';
-	let d = '';
-	let loading = false;
+	let creating = $state(false);
+	let t = $state('');
+	let d = $state('');
+	let loading = $state(false);
 
 	// minimal fetch wrappers
 	async function search_rooms() {
+	loading = true;
 		try {
-			if (!q.trim()) {
-				results = [];
-				return;
-			}
-			loading = true;
 			const res = await fetch('/r/search', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -71,7 +67,7 @@
 <div class="page pad">
 	<div class="row space-between v-center">
 		<h1 class="title">Chatrooms</h1>
-		<button class="btn" on:click={() => (creating = true)}>Add</button>
+		<button class="btn" onclick={() => (creating = true)}>Add</button>
 	</div>
 
 	<div class="card gap">
@@ -79,16 +75,14 @@
 			class="input-underline"
 			placeholder="Search chatrooms..."
 			bind:value={q}
-			on:keydown={on_key}
+			onkeydown={on_key}
 		/>
-		<button class="btn" on:click={search_rooms} disabled={loading}
+		<button class="btn" onclick={search_rooms} disabled={loading}
 			>{loading ? 'Searching…' : 'Search'}</button
 		>
 	</div>
 
-	{#if loading}
-		<p class="muted">Searching…</p>
-	{:else if results.length}
+	{#if results.length}
 		<ul class="list" in:fade={{ duration: 120 }}>
 			{#each results as r (r.i)}
 				<li class="item">
@@ -102,7 +96,7 @@
 </div>
 
 {#if creating}
-	<div class="modal_backdrop" on:click={() => (creating = false)} in:fade={{ duration: 120 }} />
+	<div class="modal_backdrop" onclick={() => (creating = false)} in:fade={{ duration: 120 }} />
 	<div class="modal card" in:fade={{ duration: 120 }}>
 		<h2 class="subtitle">Create chatroom</h2>
 		<div class="gap">
@@ -114,8 +108,8 @@
 			<textarea class="input-underline" bind:value={d} rows="3" placeholder="Short description" />
 		</div>
 		<div class="row gap">
-			<button class="btn" on:click={create_room}>Create</button>
-			<button class="btn ghost" on:click={() => (creating = false)}>Cancel</button>
+			<button class="btn" onclick={create_room}>Create</button>
+			<button class="btn ghost" onclick={() => (creating = false)}>Cancel</button>
 		</div>
 	</div>
 {/if}
