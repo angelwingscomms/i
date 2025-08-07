@@ -1,3 +1,5 @@
+add secret to worker deployment
+
 - search chatrooms
     1. create server route routes/r/search/+server.ts that works like POST on routes/+server.ts but uses search_by_vector and accepts arbritray filters in jsonbody.f, sort by params in jsonbody.s, and search string in jsonbody.s;
         let search_by_vector get only payload field 't' to display room tag;

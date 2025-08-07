@@ -4,7 +4,7 @@ import type { RequestHandler } from './$types';
 import { PUBLIC_WORKER } from '$env/static/public';
 import type { CreateChatMessage, SendChatMessage } from '$lib/types';
 
-export const POST: RequestHandler = async ({ request, params, locals }) => {
+export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
 	const m: SendChatMessage = await request.json();
 	const rt = await get(params.i, 't');
 
@@ -29,14 +29,16 @@ export const POST: RequestHandler = async ({ request, params, locals }) => {
 			}),
 			message_text: m.t,
 			room_name_or_tag: rt
-		}), m.i
+		}),
+		m.i
 	);
 
-	await axios.post('http' + PUBLIC_WORKER + '/send/' + params.i, {
-		i,
-		...(locals.user ? { u: locals.user.t } : {}),
-		t: m.t
-	});
+	console.log('platform', platform);
+	// await axios.post('http' + PUBLIC_WORKER + '/send/' + params.i, {
+	// 	i,
+	// 	...(locals.user ? { u: locals.user.t } : {}),
+	// 	t: m.t
+	// });
 
 	return new Response();
 };
