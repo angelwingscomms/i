@@ -83,14 +83,24 @@ export async function create<T extends { s: string }>(
 	return id;
 }
 
-export const format_filter = (filters: PayloadFilter) => {
+export const format_filter = (must?: PayloadFilter, must_not?: PayloadFilter) => {
 	return {
-		must: Object.entries(filters)
-			.filter(([, value]) => value !== undefined && value !== null && value !== '')
-			.map(([key, value]) => ({
-				key,
-				match: { value }
-			}))
+		...(must && {
+			must: Object.entries(must)
+				.filter(([, value]) => value !== undefined && value !== null && value !== '')
+				.map(([key, value]) => ({
+					key,
+					match: { value }
+				}))
+		}),
+		...(must_not && {
+			must_not: Object.entries(must_not)
+				.filter(([, value]) => value !== undefined && value !== null && value !== '')
+				.map(([key, value]) => ({
+					key,
+					match: { value }
+				}))
+		})
 	};
 };
 
@@ -98,7 +108,7 @@ export async function search_by_payload<T>(
 	filter: PayloadFilter,
 	with_payload?: string[] | boolean,
 	limit?: number,
-	order_by?: string | Record<string, string>,
+	order_by?: string | Record<string, string>
 ): Promise<T[]> {
 	const actual_limit = limit || 144;
 	try {
@@ -129,7 +139,7 @@ export async function search_by_vector<T>({
 	vector: number[];
 	with_payload?: string[];
 	limit?: number;
-	filter?: Record<string, unknown>;
+	filter?: { must: Record<string, unknown>; must_not: Record<string, unknown> };
 }): Promise<T[]> {
 	try {
 		const searchParams: Record<string, unknown> = {
@@ -140,7 +150,7 @@ export async function search_by_vector<T>({
 		};
 
 		if (filter) {
-			searchParams.filter = format_filter(filter);
+			searchParams.filter = format_filter(filter.must, filter.must_not);
 		}
 
 		const results = await qdrant.search(collection, searchParams);

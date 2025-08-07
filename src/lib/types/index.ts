@@ -12,6 +12,7 @@ export interface User {
 	gid?: string; // google id
 	p?: string; // password hash
 	i?: string; // user id
+	c: Record<string, string>,
 	x?: string[]; // contact links
 	isAdmin?: boolean; // whether user is an admin
 }

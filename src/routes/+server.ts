@@ -7,7 +7,7 @@ import { embed } from '$lib/util/embed';
 export const POST: RequestHandler = async ({ request, locals }) => {
 	// const utd = await qdrant.scroll(collection, { filter: { must: { is_null: { key: 'p' } } } });
 	// console.log('utd', utd);
- //  await qdrant.delete('i', { points: utd.points.map(p => p.id)})
+	//  await qdrant.delete('i', { points: utd.points.map(p => p.id)})
 
 	try {
 		const {
@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			n: ageMin,
 			x: ageMax,
 			d: description
-		} = (await request.json()) as { g: number; n: number; x: number, d: string };
+		} = (await request.json()) as { g: number; n: number; x: number; d: string };
 
 		// Validate inputs
 		if (typeof ageMin !== 'number' || typeof ageMax !== 'number' || ageMin > ageMax) {
@@ -35,34 +35,22 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		}
 
 		// Build filters for Qdrant search
-		const filter: Record<string, unknown> = {
-			must: [
-				{
-					key: 's',
-					match: { value: 'u' }
-				},
-				{
-					key: 'a',
+		const filter = {
+			must: {
+				s: 'u',
+				a: {
 					range: {
 						gte: ageMin,
 						lte: ageMax
 					}
 				}
-			]
-			// must_not: [
-			// 	{
-			// 		key: 'i',
-			// 		match: { value: locals.user.i }
-			// 	}
-			// ]
+			},
+			...(locals.user && { must_not: { i: locals.user.i } })
 		};
 
 		// Add gender filter if specified
 		if (genderFilter !== null) {
-			filter.must.push({
-				key: 'g',
-				match: { value: genderFilter }
-			});
+			filter.must.g = genderFilter
 		}
 
 		// Search for similar users using vector search
