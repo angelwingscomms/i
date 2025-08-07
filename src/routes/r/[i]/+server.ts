@@ -7,7 +7,7 @@ import { PUBLIC_WORKER } from '$env/static/public';
 
 export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
 	const m: SendChatMessage = await request.json();
-	const { c, t } = (await get(params.i, 't')) as { c: string; t: string };
+	const { c, t } = (await get(params.i, ['t', 'c'])) as { c: string; t: string };
 
 	const i = await create(
 		{
