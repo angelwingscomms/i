@@ -107,7 +107,7 @@
 	async function copyProfileLink() {
 		if (!data.user?.i) return;
 
-		const profileLink = `${window.location.origin}/user/${data.user.i}`;
+		const profileLink = `${window.location.origin}/u/${data.user.i}`;
 
 		try {
 			await navigator.clipboard.writeText(profileLink);
@@ -279,7 +279,7 @@
 					</p>
 					<div class="flex items-center gap-3">
 						<div class="glass text-primary flex-1 truncate rounded-lg px-4 py-3 font-mono text-sm">
-							{window.location.origin}/user/{data.user.i}
+							{window.location.origin}/u/{data.user.i}
 						</div>
 						<button on:click={copyProfileLink} class="btn-accent btn-sm"> Copy </button>
 					</div>
@@ -305,7 +305,7 @@
 									</div>
 								</div>
 								<div class="ml-4">
-									<a href="/user/{user.i}" class="btn-primary btn-sm"> View Profile </a>
+									<a href="/u/{user.i}" class="btn-primary btn-sm"> View Profile </a>
 								</div>
 							</div>
 						</div>

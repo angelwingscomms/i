@@ -1,7 +1,12 @@
 import type { PushSubscription } from 'web-push';
 
+export interface LocalsUser {
+  t: string,
+  i: string
+}
+
 export interface User {
-	s?: string;
+	s: string; // type/tenant (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 	t: string; // tag
 	d?: string; // description
 	a?: number; // age
@@ -12,7 +17,7 @@ export interface User {
 	gid?: string; // google id
 	p?: string; // password hash
 	i?: string; // user id
-	c: Record<string, string>,
+	c: Record<string, string>;
 	x?: string[]; // contact links
 	isAdmin?: boolean; // whether user is an admin
 }
@@ -42,17 +47,17 @@ export interface CreateChatMessage {
 }
 
 export interface SendChatMessage {
-  i: string; // id
+	i: string; // id
 	t: string; // message text
 	d: number; // date
 }
 
 // used for messages shown in UI
 export interface ChatMessage {
-  saved: true, // if client has received websocket event for this message, meaning message has been saved to db
-  i: string, //id
-  u: string, // user tag,
-  t: string, // message text
+	saved: boolean; // if client has received websocket event for this message, meaning message has been saved to db
+	i: string; //id
+	u: string; // user tag,
+	t: string; // message text
 }
 
 export interface Room {
@@ -60,8 +65,8 @@ export interface Room {
 	t: string; // room tag/name
 	d?: string; // room description
 	u: string; // creator user id
-  c: string; // cloudflare id
+	c: string; // cloudflare id
 	a?: string; // creation timestamp
 	m?: number; // number of members
-  l?: number; // time of last message
+	l?: number; // time of last message
 }

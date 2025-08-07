@@ -1,6 +1,6 @@
 import { Google } from 'arctic';
 import { GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URL } from '$env/static/private';
-import { get,  delete_, create, edit_point } from '$lib/db';
+import { get, delete_, create, edit_point } from '$lib/db';
 import type { User } from '$lib/types';
 import { v7 } from 'uuid';
 import type { RequestEvent } from '@sveltejs/kit';
@@ -15,6 +15,7 @@ export interface Session {
 	h: string; // hash (base64)
 	c: number; // created at
 	l: number; // last activity
+	[key: string]: unknown; // Allow arbitrary keys for Qdrant payload compatibility
 }
 
 export interface SessionValidationResult {
@@ -130,7 +131,7 @@ export async function createSession(userId: string): Promise<string> {
 		l: now
 	};
 
-	await create(sessionId, session);
+	await create(session, undefined, sessionId);
 	return `${sessionId}.${secret}`;
 }
 

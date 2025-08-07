@@ -1,6 +1,6 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
-import type { User } from '$lib/types';
+import type { LocalsUser } from '$lib/types';
 import type { Session } from '@supabase/supabase-js';
 
 declare global {
@@ -11,7 +11,7 @@ declare global {
 			};
 		}
 		interface Locals {
-			user: User | null;
+			user: LocalsUser | null;
 			session: Session | null;
 		}
 	}

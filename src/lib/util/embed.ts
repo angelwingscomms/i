@@ -15,4 +15,3 @@ export const embed = async (contents: string): Promise<number[]> => {
 		throw 'error getting embeddings';
 	}
 };
-

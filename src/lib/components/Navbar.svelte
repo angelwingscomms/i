@@ -96,7 +96,7 @@
 								></path>
 							</svg>
 						{:else}
-							<span>i</span>
+							<span class="wdxl">144</span>
 						{/if}
 					</span>
 				</a>
@@ -132,7 +132,7 @@
 						class="ml-4 flex items-center gap-4 pl-4"
 						style="border-left: 1px solid var(--border-primary)"
 					>
-						<a href="/user/{user.i}" class="text-primary text-sm font-semibold">{user.t}</a>
+						<a href="/u/{user.i}" class="text-primary text-sm font-semibold">{user.t}</a>
 						<a href="/logout" class="nav-link text-error hover:bg-error/10">
 							<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
 								<path

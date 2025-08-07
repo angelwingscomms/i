@@ -1,4 +1,16 @@
-where worker gets iv from
+replies
+  on message click, show message menu
+    menu items
+      'replies'
+        onclick goto r/{msg.i}
+  r/:i
+    if not get:i.c
+    get c from cf
+  above chats show 
+    show {m.t} of reply to message
+    replies to {truncate(msg.t)}
+  on reply message
+    send reply event to /parent
 
 let all buttons fade change color using animejs on hover like search chats button on /+page.svelte
 

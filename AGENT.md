@@ -41,7 +41,7 @@ DB field cheatsheet:
 - s: type/tenant (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 - i: id; t: tag/name/text; u: user id; d: description/date; a: age/created at; g: gender; l: last activity/lat; n: lon; w: whatsapp; c/x: compact maps/arrays
 
-start every task by creating a telegraphic speech list that details the task into many small micro-tasks, then do each micro-task.
+start every task by creating a list that details the task into many small micro-tasks, then do each micro-task.
 
 - for each task, extremely use as little code as possible to fittingly and satisfyingly complete the task
 - all db data stored in single Qdrant collection 'i', `s` payload field isolates data types (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
@@ -71,3 +71,4 @@ start every task by creating a telegraphic speech list that details the task int
 - cookies: session cookie name `auth_session`; httpOnly; sameSite=lax; secure in prod
 - code style: concise, minimal, snake_case; tiny functions; prefer small focused modules
 - always code with extreme minimalism; style pages elegantly with the design system; golf code where feasible
+- always use only src/lib/db/index.ts helper functions for all DB ops. Create new ones there if needed. Never use qdrant client directly.
