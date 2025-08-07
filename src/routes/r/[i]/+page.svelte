@@ -53,7 +53,7 @@
 	}
 
 	$effect(() => {
-		websocket = new WebSocket('ws' + PUBLIC_WORKER + '/' + $page.params.c + + $page.params.s);
+		websocket = new WebSocket('ws' + PUBLIC_WORKER + '/' + $page.data.c + $page.data.s);
 
 		websocket.onopen = () => {
 			console.log('WebSocket connection opened.');

@@ -2,11 +2,12 @@ import { create, get } from '$lib/db';
 import type { RequestHandler } from './$types';
 import type { CreateChatMessage, SendChatMessage } from '$lib/types';
 import { s } from '$lib/util/s';
+import { cf } from '$lib/util/cf';
+import { PUBLIC_WORKER } from '$env/static/public';
 
 export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
-	console.log('platform.env.r.fetch', platform.env.r.fetch);
 	const m: SendChatMessage = await request.json();
-	const { c, t } = await get<{ c: string; t: string }>(params.i, ['c', 't']);
+	const { c, t } = (await get(params.i, 't')) as { c: string; t: string };
 
 	const i = await create(
 		{
@@ -33,13 +34,14 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		m.i
 	);
 
-	platform.env.R.fetch('https://i.i/send/' + (await s()));
-
-	// await axios.post('http' + PUBLIC_WORKER + '/send/' + params.i, {
-	// 	i,
-	// 	...(locals.user ? { u: locals.user.t } : {}),
-	// 	t: m.t
-	// });
+	cf(platform)('http' + PUBLIC_WORKER + '/send/' + c + (await s()), {
+		method: 'POST',
+		body: JSON.stringify({
+			i,
+			...(locals.user ? { u: locals.user.t } : {}),
+			t: m.t
+		})
+	});
 
 	return new Response();
 };
