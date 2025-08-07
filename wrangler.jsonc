@@ -12,7 +12,8 @@
 	},
 	"build": {
 		"command": "npm run build"
-	}
+	},
+	"services": [{ "binding": "r", "service": "r" }]
 	// ,"durable_objects": {
 	// 	"bindings": [
 	// 		{
