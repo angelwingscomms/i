@@ -38,7 +38,7 @@ export interface NotificationSubscription {
 	sub: PushSubscription;
 }
 
-export type CreateChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>
+export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>
 
 export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't'>
 

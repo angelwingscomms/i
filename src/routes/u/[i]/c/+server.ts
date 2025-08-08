@@ -1,6 +1,6 @@
 import { create } from '$lib/db';
 import type { RequestHandler } from './$types';
-import type { CreateChatMessage, SendChatMessage } from '$lib/types';
+import type { ChatMessage, DBChatMessage, SendChatMessage } from '$lib/types';
 import { s } from '$lib/util/s';
 import { cf } from '$lib/util/cf';
 import { PUBLIC_WORKER } from '$env/static/public';
@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 			d: m.d,
 			m: m.m,
 			r: params.i
-		} satisfies CreateChatMessage,
+		} satisfies DBChatMessage,
 		JSON.stringify({
 			...(locals.user ? { sender: locals.user.t } : {}),
 			receiver: m.t,
@@ -37,9 +37,9 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		method: 'POST',
 		body: JSON.stringify({
 			i,
-			...(locals.user ? { t: locals.user.t } : {}),
+			...(locals.user ? { x: locals.user.t } : {}),
 			m: m.m
-		})
+		} satisfies ChatMessage)
 	});
 
 	return new Response();
