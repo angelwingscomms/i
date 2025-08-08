@@ -18,6 +18,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		} satisfies CreateChatMessage,
 		JSON.stringify({
 			...(locals.user ? { sender: locals.user.t } : {}),
+			receiver: m.t,
 			sent_at: new Date(m.d).toLocaleString(undefined, {
 				weekday: 'long',
 				year: 'numeric',
@@ -28,7 +29,6 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 				second: '2-digit'
 			}),
 			message_text: m.m,
-			room_name_or_tag: m.t
 		}),
 		m.i
 	);
@@ -37,8 +37,8 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		method: 'POST',
 		body: JSON.stringify({
 			i,
-			...(locals.user ? { u: locals.user.t } : {}),
-			t: m.t
+			...(locals.user ? { t: locals.user.t } : {}),
+			m: m.m
 		})
 	});
 

@@ -23,16 +23,19 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 			if (!c) {
 				c = await (await cf(platform)('http' + PUBLIC_WORKER + '/i' + (await s()))).text();
 			}
+			await set(locals.user.i, { cs: c });
+			console.log('cs', c);
 		} else {
-			c = u.c[locals.user.i] || ((await get(locals.user.i, 'c.' + params.i)) as string);
+			const sort = [locals.user.i, params.i].sort();
+			c = await get(sort[0], 'c.' + sort[0] + sort[1]);
 			if (!c) {
 				c = await (await cf(platform)('http' + PUBLIC_WORKER + '/i' + (await s()))).text();
-				await set(params.i, { ['c.' + locals.user.i]: c });
-				await set(locals.user.i, { ['c.' + params.i]: c });
+				console.log('c', c);
+				await set(sort[0], { ['c.' + sort[0] + sort[1]]: c });
 			}
 		}
 
-		return { s: await s(), c, t: u.t, m: search_by_payload({ c }) };
+		return { s: await s(), c, t: u.t, m: await search_by_payload({ c, s: 'm' }) };
 	} catch (err) {
 		console.error('Error loading chat:', err);
 		throw error(500, 'Failed to load chat');

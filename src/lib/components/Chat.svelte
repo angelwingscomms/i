@@ -51,6 +51,7 @@
 	}
 
 	$effect(() => {
+		console.log('c', c);
 		websocket = new WebSocket('ws' + PUBLIC_WORKER + '/' + c + s);
 
 		websocket.onopen = () => {
@@ -108,13 +109,16 @@
 
 	function send_message() {
 		let m: SendChatMessage = {
-			t: message_text,
+			m: message_text,
+			c,
+			t,
 			d: Date.now(),
 			i: v7()
 		};
 		if (message_text) {
-			chat_messages.push({ ...m, u: page.data.user?.t, saved: false });
+			chat_messages.push({ m: m.m, i: m.i, x: page.data.user.t, saved: false });
 			message_text = '';
+			console.log(page.url.pathname);
 			axios.post(page.url.pathname, m);
 		}
 	}
@@ -129,21 +133,21 @@
 				in:fade={{ duration: 150, delay: 0 }}
 				out:fade={{ duration: 150 }}
 				data-msg-id={msg.i}
-				style={`align-items:${msg.u === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
+				style={`align-items:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
 			>
 				<div
 					class="chat_meta"
-					style={`justify-content:${msg.u === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
+					style={`justify-content:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
 				>
-					{#if msg.u && msg.u !== page.data.user?.t && chat_messages[i - 1]?.u !== msg.u}
-						<div class="chat_username">{msg.u}</div>
+					{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x}
+						<div class="chat_username">{msg.x}</div>
 					{/if}
 				</div>
 				<div
-					class={`chat_bubble ${msg.u === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.u ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
-					style={`max-width: 90%; ${msg.u === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
+					class={`chat_bubble ${msg.x === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.x ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
+					style={`max-width: 90%; ${msg.x === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
 				>
-					<span class="message-text">{msg.t}</span>
+					<span class="message-text">{msg.m}</span>
 				</div>
 			</div>
 		{/each}

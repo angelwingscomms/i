@@ -1,8 +1,8 @@
 import type { PushSubscription } from 'web-push';
 
 export interface LocalsUser {
-  t: string,
-  i: string
+	t: string;
+	i: string;
 }
 
 export interface User {
@@ -38,26 +38,23 @@ export interface NotificationSubscription {
 	sub: PushSubscription;
 }
 
-export interface CreateChatMessage {
+export type CreateChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>
+
+export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't'>
+
+export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x'>
+
+export interface Message {
+	saved?: boolean; // if client has received websocket event for this message, meaning message has been saved to db
+	m: string; // message
+	i: string; //id
+	x?: string; // sender user tag,
+	d: number; // date
+	c: string; // cf id
+	t: string; // receiving room/user tag
 	s?: 'm'; // tenant id for messages
 	u?: string; // user ID
-	t: string; // message text
-	d: number; // date
 	r: string; // room ID
-}
-
-export interface SendChatMessage {
-	i: string; // id
-	t: string; // message text
-	d: number; // date
-}
-
-// used for messages shown in UI
-export interface ChatMessage {
-	saved: boolean; // if client has received websocket event for this message, meaning message has been saved to db
-	i: string; //id
-	u: string; // user tag,
-	t: string; // message text
 }
 
 export interface Room {
