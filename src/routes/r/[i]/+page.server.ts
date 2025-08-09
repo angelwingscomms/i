@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		(
 			await search_by_payload<DBChatMessage & { i: string }>(
 				{ s: 'm', r: params.i },
-				['t', 'u'],
+				['m', 'u'],
 				72
 			)
 		).map(async (m) => ({

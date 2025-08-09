@@ -44,6 +44,11 @@ export const actions: Actions = {
 
 		const session = await auth.createSession(existingUser.i as string);
 		auth.setSessionTokenCookie(event, session);
+		try {
+			const [sessionId] = session.split('.') as [string, string?];
+			const jwt = await auth.createSessionJWT({ id: sessionId, createdAt: new Date() });
+			auth.setSessionJwtCookie(event, jwt);
+		} catch {}
 
 		return redirect(302, '/');
 	},
@@ -70,13 +75,18 @@ export const actions: Actions = {
 		const passwordHash = await hash(password);
 
 		try {
-			const user = await create_user(username, {p: passwordHash})
+			const userId = await create_user(username, {p: passwordHash})
 			// console.log('created user', user)
 
-			// console.log('i--', user.i)
-			const session = await auth.createSession(user.i as string);
+			// console.log('i--', userId)
+			const session = await auth.createSession(userId as string);
 			// console.log('s', session)
 			auth.setSessionTokenCookie(event, session);
+			try {
+				const [sessionId] = session.split('.') as [string, string?];
+				const jwt = await auth.createSessionJWT({ id: sessionId, createdAt: new Date() });
+				auth.setSessionJwtCookie(event, jwt);
+			} catch {}
 		} catch {
 			return fail(500, { message: 'An error has occurred' });
 		}

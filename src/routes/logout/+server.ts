@@ -1,5 +1,10 @@
 import { redirect, type RequestHandler } from '@sveltejs/kit';
-import { invalidateSession, deleteSessionTokenCookie, sessionCookieName } from '$lib/server/auth';
+import {
+  invalidateSession,
+  deleteSessionTokenCookie,
+  deleteSessionJwtCookie,
+  sessionCookieName
+} from '$lib/server/auth';
 
 export const GET: RequestHandler = async ({ cookies, locals }) => {
 	// Get the session token from cookies
@@ -12,6 +17,7 @@ export const GET: RequestHandler = async ({ cookies, locals }) => {
 
 	// Delete the session cookie
 	deleteSessionTokenCookie({ cookies, locals } as any);
+	deleteSessionJwtCookie({ cookies, locals } as any);
 
 	// Redirect to home page
 	redirect(302, '/');

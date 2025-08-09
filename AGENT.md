@@ -40,9 +40,7 @@ Config/formatting:
 DB field cheatsheet:
 - s: type/tenant (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 - i: id; t: tag/name/text; u: user id; d: description/date; a: age/created at; g: gender; l: last activity/lat; n: lon; w: whatsapp; c/x: compact maps/arrays
-
-start every task by creating a list that details the task into many small micro-tasks, then do each micro-task.
-
+---
 - for each task, extremely use as little code as possible to fittingly and satisfyingly complete the task
 - all db data stored in single Qdrant collection 'i', `s` payload field isolates data types (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 - always use single/double letter field names for db (`i` id, `t` tag/text, `u` user id, `d` desc/date, `a` age/created, `g` gender, `l` last/lat, `n` lon, `w` whatsapp, `c` compact map, `x` compact array)

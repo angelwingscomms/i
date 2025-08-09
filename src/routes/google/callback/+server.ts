@@ -1,4 +1,5 @@
 import { createSession, google, setSessionTokenCookie } from '$lib/server/auth';
+import { setSessionJwtCookie, createSessionJWT } from '$lib/server/auth';
 import { decodeIdToken } from 'arctic';
 
 import { redirect, type RequestEvent } from '@sveltejs/kit';
@@ -76,5 +77,10 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	const sessionToken = await createSession(user_id);
 
 	setSessionTokenCookie(event, sessionToken);
+	try {
+		const [sessionId] = sessionToken.split('.') as [string, string?];
+		const jwt = await createSessionJWT({ id: sessionId, createdAt: new Date() });
+		setSessionJwtCookie(event, jwt);
+	} catch {}
 	redirect(302, '/edit_user');
 }

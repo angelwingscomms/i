@@ -1,13 +1,18 @@
 import { Google } from 'arctic';
 import { GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URL } from '$env/static/private';
+import { SECRET } from '$env/static/private';
 import { get, delete_, create, edit_point } from '$lib/db';
 import type { User } from '$lib/types';
 import { v7 } from 'uuid';
 import type { RequestEvent } from '@sveltejs/kit';
+import * as oslo_encoding from '@oslojs/encoding';
 
 export const google = new Google(GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URL);
 
 export const sessionCookieName = 'auth_session';
+export const sessionJwtCookieName = 'auth_session_jwt';
+
+const SESSION_JWT_TTL_SECONDS = 24 * 60; // 24 minutes
 
 export interface Session {
 	s: 'se';
@@ -149,8 +154,27 @@ export function setSessionTokenCookie(event: RequestEvent, token: string): void 
 	});
 }
 
+export function setSessionJwtCookie(event: RequestEvent, jwt: string): void {
+	event.cookies.set(sessionJwtCookieName, jwt, {
+		path: '/',
+		httpOnly: true,
+		secure: process.env.NODE_ENV === 'production',
+		sameSite: 'lax',
+		maxAge: SESSION_JWT_TTL_SECONDS
+	});
+}
+
 export function deleteSessionTokenCookie(event: RequestEvent): void {
 	event.cookies.delete(sessionCookieName, {
+		path: '/',
+		httpOnly: true,
+		secure: process.env.NODE_ENV === 'production',
+		sameSite: 'lax'
+	});
+}
+
+export function deleteSessionJwtCookie(event: RequestEvent): void {
+	event.cookies.delete(sessionJwtCookieName, {
 		path: '/',
 		httpOnly: true,
 		secure: process.env.NODE_ENV === 'production',
@@ -203,4 +227,113 @@ function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
 		result |= a[i] ^ b[i];
 	}
 	return result === 0;
+}
+
+// ===== Stateless JWT (HS256) =====
+
+async function getJwtHS256Key(): Promise<CryptoKey> {
+	// Derive a 32-byte key deterministically from an env secret
+	const material = new TextEncoder().encode(SECRET ?? '');
+	const hash = await crypto.subtle.digest('SHA-256', material);
+	const keyBytes = new Uint8Array(hash); // 32 bytes
+	return crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, [
+		'sign',
+		'verify'
+	]);
+}
+
+export interface ValidatedSession {
+	id: string;
+	createdAt: Date;
+	issuedAt: Date;
+	expiresAt: Date;
+}
+
+export async function createSessionJWTFromToken(token: string): Promise<string> {
+	const [sessionId] = token.split('.');
+	if (!sessionId) throw new Error('Invalid session token');
+	const session = await get<Session>(sessionId);
+	if (!session) throw new Error('Session not found');
+	return createSessionJWT({ id: sessionId, createdAt: new Date(session.c) });
+}
+
+export async function createSessionJWT(session: { id: string; createdAt: Date }): Promise<string> {
+	const now = new Date();
+	const header = { alg: 'HS256', typ: 'JWT' } as const;
+	const body = {
+		session: {
+			id: session.id,
+			created_at: Math.floor(session.createdAt.getTime() / 1000)
+		},
+		iat: Math.floor(now.getTime() / 1000),
+		exp: Math.floor(now.getTime() / 1000) + SESSION_JWT_TTL_SECONDS
+	};
+
+	const headerJSON = JSON.stringify(header);
+	const bodyJSON = JSON.stringify(body);
+	const encodedHeader = oslo_encoding.encodeBase64url(new TextEncoder().encode(headerJSON));
+	const encodedBody = oslo_encoding.encodeBase64url(new TextEncoder().encode(bodyJSON));
+	const headerAndBody = `${encodedHeader}.${encodedBody}`;
+	const hmacKey = await getJwtHS256Key();
+	const signature = await crypto.subtle.sign(
+		'HMAC',
+		hmacKey,
+		new TextEncoder().encode(headerAndBody)
+	);
+	const encodedSignature = oslo_encoding.encodeBase64url(new Uint8Array(signature));
+	return `${headerAndBody}.${encodedSignature}`;
+}
+
+export async function validateSessionJWT(jwt: string): Promise<ValidatedSession | null> {
+	const now = Date.now();
+	const parts = jwt.split('.');
+	if (parts.length !== 3) return null;
+
+	// Parse header
+	let header: any;
+	try {
+		const headerJSON = new TextDecoder().decode(oslo_encoding.decodeBase64url(parts[0]));
+		header = JSON.parse(headerJSON);
+		if (typeof header !== 'object' || header === null) return null;
+	} catch {
+		return null;
+	}
+	if ((header.typ && header.typ !== 'JWT') || header.alg !== 'HS256') return null;
+
+	// Verify signature
+	let validSig = false;
+	try {
+		const hmacKey = await getJwtHS256Key();
+		const signatureBytes = oslo_encoding.decodeBase64url(parts[2]);
+		validSig = await crypto.subtle.verify(
+			'HMAC',
+			hmacKey,
+			(signatureBytes.buffer as unknown as ArrayBuffer),
+			new TextEncoder().encode(parts[0] + '.' + parts[1])
+		);
+	} catch {
+		return null;
+	}
+	if (!validSig) return null;
+
+	// Parse body
+	let body: any;
+	try {
+		const bodyJSON = new TextDecoder().decode(oslo_encoding.decodeBase64url(parts[1]));
+		body = JSON.parse(bodyJSON);
+		if (typeof body !== 'object' || body === null) return null;
+	} catch {
+		return null;
+	}
+
+	if (typeof body.exp !== 'number') return null;
+	if (now >= body.exp * 1000) return null;
+
+	if (!body.session || typeof body.session !== 'object') return null;
+	const s = body.session;
+	if (typeof s.id !== 'string' || typeof s.created_at !== 'number') return null;
+
+	const issuedAt = typeof body.iat === 'number' ? new Date(body.iat * 1000) : new Date(0);
+	const expiresAt = new Date(body.exp * 1000);
+	return { id: s.id, createdAt: new Date(s.created_at * 1000), issuedAt, expiresAt };
 }
