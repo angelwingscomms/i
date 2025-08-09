@@ -38,7 +38,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		body: JSON.stringify({
 			i,
 			...(locals.user ? { x: locals.user.t } : {}),
-			m: m.t
+			m: m.m
 		} satisfies ChatMessage)
 	});
 
