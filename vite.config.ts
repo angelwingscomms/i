@@ -18,7 +18,7 @@ export default defineConfig({
 			injectRegister: 'auto',
 			strategies: 'injectManifest',
 			srcDir: 'src',
-			filename: 'sw.ts',
+			filename: 'service-worker.ts',
 			includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
 			manifest: {
 				name: '144',

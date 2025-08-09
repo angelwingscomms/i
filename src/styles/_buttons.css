@@ -1,6 +1,6 @@
 /* Buttons */
 @utility btn {
-	@apply inline-flex transform items-center justify-center gap-2 rounded-full font-medium transition-all duration-300 hover:-translate-y-1 disabled:transform-none disabled:opacity-50;
+	@apply inline-flex transform items-center justify-center gap-2 rounded-full font-medium transition-all duration-300 disabled:transform-none disabled:opacity-50;
 	box-shadow: var(--shadow-lg);
 }
 

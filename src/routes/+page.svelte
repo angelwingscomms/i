@@ -29,24 +29,6 @@
             {/if}
         </section>
 
-        <section class="mx-auto max-w-5xl">
-            <div class="grid gap-4 md:grid-cols-3">
-                <div class="rounded-2xl p-6" style="background: var(--panel-lilac)">
-                    <div class="text-3xl">1</div>
-                    <div class="mt-2 text-lg font-medium">join</div>
-                    <p class="m-0 text-sm text-[var(--text-secondary)]">make an account and pick a tag</p>
-                </div>
-                <div class="rounded-2xl p-6" style="background: var(--panel-lilac)">
-                    <div class="text-3xl">2</div>
-                    <div class="mt-2 text-lg font-medium">edit profile</div>
-                    <p class="m-0 text-sm text-[var(--text-secondary)]">add a short description (voice-ok)</p>
-                </div>
-                <div class="rounded-2xl p-6" style="background: var(--panel-lilac)">
-                    <div class="text-3xl">3</div>
-                    <div class="mt-2 text-lg font-medium">connect</div>
-                    <p class="m-0 text-sm text-[var(--text-secondary)]">join rooms and meet matches</p>
-                </div>
-            </div>
-        </section>
+        
     </div>
 </main>

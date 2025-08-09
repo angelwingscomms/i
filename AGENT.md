@@ -1,4 +1,4 @@
-For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary
+For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary. Always think about styling deeply, like you're Steve Jobs and Jony Ive. Like you have years of expert experience creating beautiful UI and design. Like you work at a high brow creative studio with high brow clients like Apple.
 
 Codebase conventions:
 - naming: always snake_case for vars/functions; db payload keys are 1-2 letters (e.g., s,t,u,i,a,g,d)

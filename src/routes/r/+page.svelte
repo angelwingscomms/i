@@ -66,8 +66,8 @@
 
 <div class="page pad">
     <div class="row space-between v-center">
-        <h1 class="title">chatrooms</h1>
-        <button class="btn" onclick={() => (creating = true)}>add</button>
+        <h1 class="title">search chatrooms</h1>
+        <button class="btn-primary" onclick={() => (creating = true)}>add chatroom</button>
 	</div>
 
 	<div class="card gap">
@@ -78,7 +78,7 @@
 			bind:value={q}
 			onkeydown={on_key}
 		/>
-        <button class="btn" onclick={search_rooms} disabled={loading}
+        <button class="btn-primary" onclick={search_rooms} disabled={loading}
             >{loading ? 'searching…' : 'search'}</button
 		>
 	</div>

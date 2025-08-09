@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { navigating } from '$app/stores';
 	import type { User } from '$lib/types';
-	import { onMount } from 'svelte';
+	import { onMount, createEventDispatcher } from 'svelte';
 	import { toasts } from '$lib/util/toast';
 
 	export let user: User | null = null;
@@ -9,6 +9,12 @@
 	let can_install = false;
 	let deferred_prompt: BeforeInstallPromptEvent | null = null;
 	let is_installed = false;
+
+	const dispatch = createEventDispatcher();
+
+	function toggle_menu() {
+		dispatch('menutoggle');
+	}
 
 	type BeforeInstallPromptEvent = Event & {
 		prompt: () => Promise<void>;
@@ -102,7 +108,21 @@
 				</a>
 			</div>
 
-			<div class="flex items-center gap-4">
+			<div class="md:hidden">
+				<button class="btn-icon" on:click={toggle_menu} aria-label="Toggle menu">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="currentColor"
+						width="24"
+						height="24"
+					>
+						<path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+					</svg>
+				</button>
+			</div>
+
+			<div class="hidden md:flex items-center gap-4">
 				{#if can_install && !is_installed}
 					<button class="btn-primary btn-sm" on:click={do_install} transition:fade>
 						install
@@ -110,15 +130,6 @@
 				{/if}
 
 				{#if user}
-					<a href="/" class="nav-link">
-						<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-							<path
-								d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
-							/>
-						</svg>
-						Search
-					</a>
-
 					<a href="/edit_user" class="nav-link">
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
 							<path

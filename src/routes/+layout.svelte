@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import Navbar from '$lib/components/Navbar.svelte';
+	import MobileSidebar from '$lib/components/MobileSidebar.svelte';
 	import { toasts, toast, removeToast } from '$lib/util/toast';
 	import { fade } from 'svelte/transition';
 	import { themeStore } from '$lib/stores/theme';
@@ -8,15 +9,16 @@
 	import { ensurePushSubscribed } from '$lib/util/notifications';
 
 	let { children, data } = $props();
+	let is_sidebar_open = false;
 
 	onMount(() => {
 		themeStore.init();
 		if (data?.user?.i) {
 			ensurePushSubscribed(data.user.i).then((res) => {
 				if (res.ok) return;
-				if (res.reason === 'denied') {
-					toast.info('Enable notifications anytime in your browser settings.');
-				}
+					if (res.reason === 'denied') {
+						toast.info('Enable notifications anytime in your browser settings.');
+					}
 			});
 		}
 	});
@@ -26,7 +28,8 @@
 	<meta name="theme-color" content="#000000" />
 </svelte:head>
 
-<Navbar user={data?.user as any} />
+<Navbar user={data?.user as any} on:menutoggle={() => (is_sidebar_open = !is_sidebar_open)} />
+<MobileSidebar bind:is_open={is_sidebar_open} user={data?.user as any} />
 {@render children()}
 
 <div class="pointer-events-none fixed top-4 right-4 z-[1000] flex flex-col gap-2">

@@ -88,6 +88,7 @@
 						{user.gender === 0 ? 'male' : 'female'}
 					</span>
 				</div>
+				<p class="text-xs text-gray-500 dark:text-gray-400 mb-1">share profile</p>
 				<div class="mt-4 flex items-center justify-center gap-3">
 					<div class="rounded-full bg-[#e9d5ff] px-4 py-2 text-sm text-gray-900 dark:text-black">
 						{#if typeof window !== 'undefined'}{window.location.origin}/u/{user.i}{/if}
