@@ -16,9 +16,10 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		}
 
 		// Basic user info to return
-		const userInfo = {
+        const userInfo = {
 		  i: i,
 			tag: user.t,
+          avatar: (user as any).av,
 			age: user.a,
 			gender: user.g,
 			description: user.d,

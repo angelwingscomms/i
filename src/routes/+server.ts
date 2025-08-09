@@ -63,10 +63,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		// Search for similar users using vector search
 		// console.log('--filters', filters)
-		const searchResults = await search_by_vector<User>({
+        const searchResults = await search_by_vector<User>({
 			vector,
 			filter,
-			with_payload: ['t', 'a', 'g']
+            with_payload: ['t', 'a', 'g', 'av']
 		});
 
 		return json(searchResults);

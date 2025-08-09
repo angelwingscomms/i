@@ -24,15 +24,15 @@ export const POST: RequestHandler = async ({ request }) => {
 	// Vectorize query
 	const vector = await embed(q);
 
-	// Only fetch minimal payload needed for listing: the room tag 't'
-	const results = await search_by_vector<{ t?: string }>({
+    // Fetch room tag and optional metadata
+    const results = await search_by_vector<{ t?: string; l?: number; m?: number }>({
 		vector,
-		with_payload: ['t'],
+        with_payload: ['t','l','m'],
 		limit: Math.min(Math.max(body?.l || 24, 1), 144),
 		filter
 	});
 	
 	console.log('r', results)
 	// Return list of { i, t } for rooms
-	return json(results);
+    return json(results);
 };

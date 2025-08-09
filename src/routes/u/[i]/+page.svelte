@@ -4,7 +4,15 @@
 
 	let { data }: PageProps = $props();
 	console.log('d', data)
-	let { u: user, c: comparison, s: is_own_profile } = data;
+    let { u: user, c: comparison, s: is_own_profile } = data as unknown as { u: { i: string; tag: string; avatar?: string; age?: number; gender?: number; description?: string; socialLinks: string[] }, c: string, s: boolean };
+    let copied = $state(false);
+    async function copyLink() {
+        try {
+            await navigator.clipboard.writeText(`${window.location.origin}/u/${user?.i ?? ''}`);
+            copied = true;
+            setTimeout(() => (copied = false), 1200);
+        } catch {}
+    }
 	function getSocialMediaInfo(url: string): { name: string; iconClass: string | null } {
 		try {
 			const hostname = new URL(url).hostname;
@@ -44,20 +52,34 @@
 <div class="mx-auto max-w-3xl px-4 py-8 sm:px-2 sm:py-4">
 	{#if user}
 		<div class="mb-8 sm:p-6">
-			<header class="mb-8 border-b-2 border-gray-100 pb-6 text-center dark:border-gray-900">
-				<h1 class="text-primary mb-4 text-4xl font-bold sm:text-3xl">{user.tag}</h1>
+            <header class="mb-8 border-b-2 border-gray-100 pb-6 text-center dark:border-gray-900">
+                <div class="mb-3 flex items-center justify-center">
+                    <div class="h-20 w-20 overflow-hidden rounded-full bg-gray-800">
+                        {#if user.avatar}
+                            <img src={user.avatar} alt={user.tag} class="h-full w-full object-cover" />
+                        {/if}
+                    </div>
+                </div>
+                <h1 class="text-primary mb-2 text-3xl font-bold sm:text-2xl">{user.tag}</h1>
 				<div class="flex flex-wrap justify-center gap-8 sm:flex-col sm:items-center sm:gap-4">
 					<span
-						class="rounded-lg border border-gray-200 px-4 py-2 font-medium text-gray-700 dark:border-gray-900 dark:bg-transparent dark:text-gray-300"
-						>Age: {user.age}</span
+                        class="rounded-lg border border-gray-200 px-4 py-2 font-medium text-gray-700 dark:border-gray-900 dark:bg-transparent dark:text-gray-300"
+                        >age: {user.age}</span
 					>
 					<span
 						class="rounded-lg border border-gray-200 px-4 py-2 font-medium text-gray-700 dark:border-gray-900 dark:bg-transparent dark:text-gray-300"
 					>
-						{user.gender === 0 ? 'Male' : 'Female'}
+                        {user.gender === 0 ? 'male' : 'female'}
 					</span>
 				</div>
-			</header>
+                <div class="mt-4 flex items-center justify-center gap-3">
+                    <div class="rounded-full bg-[#e9d5ff] px-4 py-2 text-sm text-gray-900 dark:text-black">
+                        {#if typeof window !== 'undefined'}{window.location.origin}/u/{user.i}{/if}
+                    </div>
+                    <button class="btn-primary btn-sm" onclick={copyLink}>copy</button>
+                    {#if copied}<span class="text-emerald-400 text-sm">copied!</span>{/if}
+                </div>
+            </header>
 
 			{#if comparison && data.user && !is_own_profile}
 				<div
@@ -65,8 +87,8 @@
 				>
 					<h2
 						class="mb-4 flex items-center gap-2 text-xl font-semibold text-sky-700 dark:text-sky-400"
-					>
-						What You Have in Common
+                    >
+                        what you have in common
 					</h2>
 					<div class="leading-relaxed text-blue-800 dark:text-blue-200">
 						{@html marked.parse(comparison)}
@@ -85,7 +107,7 @@
 								d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2M6,9H18V11H6V9M14,14H6V12H14V14M18,8H6V6H18V8Z"
 							/>
 						</svg>
-						Start Chat
+                        start chat
 					</a>
 				</div>
 			<!-- {:else if is_own_profile}
@@ -106,12 +128,12 @@
 				<div
 					class="mb-8 rounded-lg border border-amber-400 p-8 text-center dark:border-gray-900 dark:bg-transparent"
 				>
-					<p class="m-0 text-amber-900 dark:text-amber-100">
-						Please <a
+                    <p class="m-0 text-amber-900 dark:text-amber-100">
+                        please <a
 							href="/google"
 							class="font-semibold text-blue-700 no-underline hover:underline dark:text-blue-400"
-							>log in</a
-						> to see compatibility and start chatting.
+                            >log in</a
+                        > to see compatibility and start chatting.
 					</p>
 				</div>
 			{/if}
@@ -144,14 +166,14 @@
 			</div> -->
 		</div>
 	{:else}
-		<!-- Fallback for when user is not found -->
+        <!-- fallback when user not found -->
 		<div
 			class="mb-8 rounded-lg border border-gray-200 p-8 text-center dark:border-gray-900 dark:bg-transparent"
 		>
-			<h2 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-300">User Not Found</h2>
-			<p class="text-gray-600 dark:text-gray-400">The requested user profile could not be found.</p>
+            <h2 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-300">user not found</h2>
+            <p class="text-gray-600 dark:text-gray-400">the requested user profile could not be found.</p>
 			<a href="/" class="mt-4 inline-block text-blue-600 hover:underline dark:text-blue-400"
-				>Go back to search</a
+                >go back to search</a
 			>
 		</div>
 	{/if}

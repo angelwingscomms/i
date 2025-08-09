@@ -163,7 +163,7 @@ export async function search_by_vector<T>({
 			searchParams.filter = format_filter(filter.must, filter.must_not);
 		}
 		console.log('searchParams', JSON.stringify(searchParams, null, 2));
-		const results = await qdrant.search(
+        const results = await qdrant.search(
 			collection,
 			searchParams as {
 				vector: number[] | { name: string; vector: number[] };
@@ -174,7 +174,7 @@ export async function search_by_vector<T>({
 			}
 		);
 
-		return results.map((point) => ({ ...(point.payload as T), i: point.id }));
+		return results.map((point) => ({ ...(point.payload as T), i: point.id, score: (point as any).score }));
 	} catch (error) {
 		console.error('Error in search_by_vector:', error);
 		console.error('Vector length:', vector.length);

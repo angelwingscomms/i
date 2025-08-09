@@ -4,8 +4,9 @@ import type { ChatMessage, DBChatMessage, SendChatMessage } from '$lib/types';
 import { s } from '$lib/util/s';
 import { cf } from '$lib/util/cf';
 import { PUBLIC_WORKER } from '$env/static/public';
+import { find_user_by_tag } from '$lib/db';
 
-export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
+export const POST: RequestHandler = async ({ platform, request, params, locals, fetch }) => {
 	const m: SendChatMessage = await request.json();
 
 	const i = await create(
@@ -41,6 +42,22 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 			m: m.m
 		} satisfies ChatMessage)
 	});
+
+	// // Server-side push notification: resolve recipient by tag and notify if found
+	// try {
+	// 	if (m.t) {
+	// 		const recipient = await find_user_by_tag(m.t);
+	// 		if (recipient?.i) {
+	// 			await fetch('/push_notif', {
+	// 				method: 'POST',
+	// 				headers: { 'Content-Type': 'application/json' },
+	// 				body: JSON.stringify({ u: recipient.i, t: `New message in ${m.t}`, m: m.m, k: i })
+	// 			});
+	// 		}
+	// 	}
+	// } catch (err) {
+	// 	console.error('push notif error', err);
+	// }
 
 	return new Response();
 };

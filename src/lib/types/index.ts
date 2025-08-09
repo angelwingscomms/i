@@ -8,6 +8,7 @@ export interface LocalsUser {
 export interface User {
 	s: string; // type/tenant (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 	t: string; // tag
+  av?: string; // avatar data url or external url
 	d?: string; // description
 	a?: number; // age
 	g?: number; // gender, 0 is male, 1 is female
@@ -20,6 +21,7 @@ export interface User {
 	c: Record<string, string>;
 	x?: string[]; // contact links
 	isAdmin?: boolean; // whether user is an admin
+  	ps?: PushSubscription; // push subscription
 }
 
 export interface Group {

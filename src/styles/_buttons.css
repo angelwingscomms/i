@@ -36,6 +36,16 @@
 	background: var(--accent-pink);
 }
 
+/* Brand-specific helpers */
+@utility btn-pink {
+    @apply btn text-white;
+    background: var(--accent-pink);
+}
+
+.btn-pink:hover:not(:disabled) {
+    filter: brightness(1.05);
+}
+
 @utility btn-ghost {
 	@apply btn;
 	background: var(--bg-glass);
