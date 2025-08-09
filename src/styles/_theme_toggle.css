@@ -1,0 +1,14 @@
+/* Dark Mode Toggle */
+@utility theme-toggle {
+	@apply flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300;
+	background: var(--bg-glass);
+	border: 1px solid var(--border-glass);
+	color: var(--text-secondary);
+	backdrop-filter: blur(12px);
+}
+
+.theme-toggle:hover {
+	background: var(--bg-glass-hover);
+	color: var(--text-primary);
+	transform: scale(1.05);
+}

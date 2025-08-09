@@ -1,0 +1,123 @@
+/* Inputs */
+@utility input {
+	@apply px-4 py-3 font-light transition-all duration-300 focus:outline-none;
+	background: var(--bg-input);
+	color: var(--text-primary);
+	border: 2px solid var(--border-secondary);
+	backdrop-filter: blur(12px);
+}
+
+/* Bottom-border-only input style: consistent grey underline across the app */
+@utility input-underline {
+	@apply font-light transition-all duration-300 focus:outline-none;
+	background: transparent;
+	color: var(--text-primary);
+	border: none;
+	border-bottom: 1px solid var(--border-secondary);
+	border-radius: 0;
+	padding: 8px 0;
+}
+
+.input-underline:focus {
+	border-bottom-color: var(--border-focus);
+	box-shadow: none;
+}
+
+.input:focus {
+	border-color: var(--border-focus);
+	box-shadow: 0 0 0 4px var(--border-focus);
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent);
+}
+
+@utility input-rounded {
+	@apply input rounded-full;
+}
+
+@utility input-pill {
+	@apply input-rounded text-center;
+}
+
+@utility input-rect {
+	@apply input rounded-lg;
+}
+
+/* Text Areas */
+@utility textarea {
+	@apply input min-h-[120px] rounded-lg;
+}
+
+.textarea:focus {
+	border-color: var(--border-focus);
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent);
+}
+
+/* Form Groups */
+@utility form-group {
+	@apply space-y-2;
+}
+
+@utility form-label {
+	@apply block text-sm font-medium;
+	color: var(--text-primary);
+}
+
+@utility form-help {
+	@apply text-xs;
+	color: var(--text-tertiary);
+}
+
+/* Description Input Specific */
+@utility description-container {
+	@apply relative w-full;
+}
+
+@utility description-textarea {
+	@apply textarea w-full;
+}
+
+@utility description-controls {
+	@apply mt-2 flex items-center justify-between;
+}
+
+@utility char-count {
+	@apply text-xs;
+	color: var(--text-tertiary);
+}
+
+@utility char-count-over {
+	@apply char-count;
+	color: var(--text-error);
+}
+
+@utility voice-controls {
+	@apply flex gap-2;
+}
+
+@utility voice-btn {
+	@apply btn-sm flex items-center gap-2 transition-all duration-300;
+	background: var(--accent-blue);
+	color: white;
+}
+
+.voice-btn:hover:not(:disabled) {
+	background: var(--accent-indigo);
+}
+
+@utility voice-btn-recording {
+	@apply voice-btn animate-pulse;
+	background: var(--text-error);
+}
+
+@utility voice-btn-transcribing {
+	@apply voice-btn cursor-not-allowed;
+	background: var(--text-tertiary);
+}
+
+/* Phone Input Specific */
+@utility phone-input-container {
+	@apply relative;
+}
+
+@utility phone-input {
+	@apply input-rect w-full;
+}

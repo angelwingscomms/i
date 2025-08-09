@@ -1,0 +1,27 @@
+/* Cards */
+@utility card {
+	@apply rounded-3xl backdrop-blur-lg transition-all duration-500;
+	background: var(--bg-card);
+	border: 1px solid var(--border-glass);
+	box-shadow: var(--shadow-xl);
+}
+
+@utility card-hover {
+	@apply card hover:-translate-y-1;
+}
+
+.card-hover:hover {
+	box-shadow: var(--shadow-2xl);
+}
+
+@utility card-compact {
+	@apply card p-4;
+}
+
+@utility card-normal {
+	@apply card p-6;
+}
+
+@utility card-large {
+	@apply card p-8;
+}

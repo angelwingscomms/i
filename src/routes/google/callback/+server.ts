@@ -1,0 +1,86 @@
+import { createSession, google, setSessionTokenCookie } from '$lib/server/auth';
+import { setSessionJwtCookie, createSessionJWT } from '$lib/server/auth';
+import { decodeIdToken } from 'arctic';
+
+import { redirect, type RequestEvent } from '@sveltejs/kit';
+import type { OAuth2Tokens } from 'arctic';
+import { create_user } from '$lib/auth';
+import { search_by_payload } from '$lib/db';
+import type { User } from '$lib/types';
+
+export async function GET(event: RequestEvent): Promise<Response> {
+	const code = event.url.searchParams.get('code');
+	const state = event.url.searchParams.get('state');
+	const storedState = event.cookies.get('google_oauth_state') ?? null;
+	const codeVerifier = event.cookies.get('google_code_verifier') ?? null;
+	// console.log('code:', code);
+	// console.log('state:', state);
+	// console.log('storedState:', storedState);
+	// console.log('codeVerifier:', codeVerifier);
+	if (code === null || state === null || storedState === null || codeVerifier === null) {
+		return new Response(null, {
+			status: 400
+		});
+	}
+	if (state !== storedState) {
+		return new Response(null, {
+			status: 400
+		});
+	}
+
+	let tokens: OAuth2Tokens;
+	try {
+		tokens = await google.validateAuthorizationCode(code, codeVerifier);
+	} catch {
+		// Invalid code or client credentials
+		console.error('Invalid code or client credentials', code, codeVerifier);
+		redirect(302, '/google');
+	}
+	const res = decodeIdToken(tokens.idToken()) as {
+		sub: string;
+		email: string;
+	};
+
+	let user_id: string | undefined = undefined;
+
+	const existingUsers = await search_by_payload<User>(
+		{
+			gid: res.sub,
+			s: 'u'
+		},
+		false,
+		1
+	);
+
+	console.log(existingUsers);
+
+	if (existingUsers.length > 0) {
+		user_id = existingUsers[0].i;
+	} else {
+		user_id = await create_user(res.email.replace('@gmail.com', ''), { gid: res.sub });
+	}
+
+	// Create new user
+
+	if (!user_id) {
+		console.error('failed to create user after succesful Google Auth', {
+			code,
+			state,
+			storedState,
+			codeVerifier,
+			res,
+			existingUsers
+		});
+		redirect(302, '/google');
+	}
+
+	const sessionToken = await createSession(user_id);
+
+	setSessionTokenCookie(event, sessionToken);
+	try {
+		const [sessionId] = sessionToken.split('.') as [string, string?];
+		const jwt = await createSessionJWT({ id: sessionId, createdAt: new Date() });
+		setSessionJwtCookie(event, jwt);
+	} catch {}
+	redirect(302, '/edit_user');
+}

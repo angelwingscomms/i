@@ -1,0 +1,14 @@
+/* Results */
+@utility result-card {
+	@apply card-hover card-normal;
+}
+
+@utility result-title {
+	@apply text-xl font-medium transition-colors duration-300;
+	color: var(--text-primary);
+}
+
+@utility result-meta {
+	@apply flex items-center gap-4 text-sm font-light;
+	color: var(--text-secondary);
+}

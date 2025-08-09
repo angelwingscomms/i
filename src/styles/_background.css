@@ -1,0 +1,27 @@
+/* Background Elements */
+@utility bg-orb {
+	@apply pointer-events-none absolute overflow-hidden;
+}
+
+.bg-orb::before {
+	@apply absolute animate-pulse rounded-full blur-3xl;
+	content: '';
+	opacity: 0.3;
+}
+
+.bg-orb-1::before {
+	@apply -top-20 -right-20 h-40 w-40;
+	background: var(--accent-purple);
+}
+
+.bg-orb-2::before {
+	@apply -bottom-20 -left-20 h-48 w-48;
+	background: var(--accent-blue);
+	animation-delay: 2s;
+}
+
+.bg-orb-3::before {
+	@apply top-1/2 left-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 blur-2xl;
+	background: var(--accent-emerald);
+	animation-delay: 4s;
+}

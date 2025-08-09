@@ -1,0 +1,20 @@
+/* Layout */
+@utility container-main {
+	@apply mx-auto w-full max-w-6xl px-4;
+}
+
+@utility container-narrow {
+	@apply mx-auto w-full max-w-2xl px-4;
+}
+
+@utility section-spacing {
+	@apply space-y-6;
+}
+
+@utility section-spacing-sm {
+	@apply space-y-3;
+}
+
+@utility section-spacing-lg {
+	@apply space-y-8;
+}

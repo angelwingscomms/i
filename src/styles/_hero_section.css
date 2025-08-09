@@ -1,0 +1,10 @@
+/* Hero Section */
+@utility hero-title {
+	@apply text-4xl leading-tight font-light md:text-6xl;
+	color: var(--text-primary);
+}
+
+@utility hero-subtitle {
+	@apply mx-auto max-w-2xl text-lg font-light opacity-90 md:text-xl;
+	color: var(--text-secondary);
+}

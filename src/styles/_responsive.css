@@ -1,0 +1,22 @@
+/* Responsive Design */
+@media (max-width: 640px) {
+	.container-main {
+		@apply px-2;
+	}
+
+	.card-normal {
+		@apply p-4;
+	}
+
+	.hero-title {
+		@apply text-3xl;
+	}
+
+	.age-range-container {
+		@apply flex-col gap-2;
+	}
+
+	.choice-group {
+		@apply justify-center;
+	}
+}
