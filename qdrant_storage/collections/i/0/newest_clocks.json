@@ -1,1 +1,6 @@
-{"clocks":[{"peer_id":4688918646750328,"clock_id":1,"current_tick":1,"token":7248295754910449279},{"peer_id":4688918646750328,"clock_id":0,"current_tick":63,"token":7798372741512225857}]}
+{
+	"clocks": [
+		{ "peer_id": 4688918646750328, "clock_id": 1, "current_tick": 1, "token": 7248295754910449279 },
+		{ "peer_id": 4688918646750328, "clock_id": 0, "current_tick": 63, "token": 7798372741512225857 }
+	]
+}

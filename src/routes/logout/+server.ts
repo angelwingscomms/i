@@ -1,9 +1,9 @@
 import { redirect, type RequestHandler } from '@sveltejs/kit';
 import {
-  invalidateSession,
-  deleteSessionTokenCookie,
-  deleteSessionJwtCookie,
-  sessionCookieName
+	invalidateSession,
+	deleteSessionTokenCookie,
+	deleteSessionJwtCookie,
+	sessionCookieName
 } from '$lib/server/auth';
 
 export const GET: RequestHandler = async ({ cookies, locals }) => {

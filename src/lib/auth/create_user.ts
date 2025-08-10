@@ -12,6 +12,7 @@ export const create_user = async (tag: string, other: { p?: string; gid?: string
 		n: 0, // default longitude
 		w: '', // empty whatsapp link initially
 		c: {}, // required compact map, initially empty
+		dc: Date.now(), // date created
 		...other
 	});
 };

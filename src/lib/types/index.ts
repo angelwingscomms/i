@@ -8,7 +8,7 @@ export interface LocalsUser {
 export interface User {
 	s: string; // type/tenant (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 	t: string; // tag
-  av?: string; // avatar data url or external url
+	av?: string; // avatar data url or external url
 	d?: string; // description
 	a?: number; // age
 	g?: number; // gender, 0 is male, 1 is female
@@ -18,10 +18,12 @@ export interface User {
 	gid?: string; // google id
 	p?: string; // password hash
 	i?: string; // user id
+	dc?: number; // date created
 	c: Record<string, string>;
 	x?: string[]; // contact links
+	r?: string[]; // saved room ids
 	isAdmin?: boolean; // whether user is an admin
-  	ps?: PushSubscription; // push subscription
+	ps?: PushSubscription; // push subscription
 }
 
 export interface Group {
@@ -40,11 +42,11 @@ export interface NotificationSubscription {
 	sub: PushSubscription;
 }
 
-export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>
+export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>;
 
-export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't'>
+export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't'>;
 
-export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x'>
+export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x'>;
 
 export interface Message {
 	saved?: boolean; // if client has received websocket event for this message, meaning message has been saved to db
@@ -53,10 +55,10 @@ export interface Message {
 	x?: string; // sender user tag,
 	d: number; // date
 	c: string; // cf id
-	t: string; // receiving room/user tag
+	t: string; // receiver's (room/user) tag
 	s?: 'm'; // tenant id for messages
 	u?: string; // user ID
-	r: string; // room ID
+	r: string; // receiver ID (room/user)
 }
 
 export interface Room {

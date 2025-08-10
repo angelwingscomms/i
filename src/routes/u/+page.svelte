@@ -2,6 +2,8 @@
 	import type { PageData } from './$types';
 	import { browser } from '$app/environment';
 	import axios from 'axios';
+	import { onMount } from 'svelte'; // Import onMount
+
 	export let data: PageData;
 
 	type Result = { i: string; t: string; a?: number; g?: number; av?: string; score?: number };
@@ -14,6 +16,35 @@
 	let loading = false;
 	let results: Result[] = [];
 	let sort: 'match' | 'age' = 'match';
+
+	// Reactive statement to sync search query to localStorage
+	$: if (browser) {
+		localStorage.setItem(
+			'user_search_query',
+			JSON.stringify({ gender, minAge, maxAge, mode, description, sort })
+		);
+	}
+
+	onMount(() => {
+		if (browser) {
+			const savedQuery = localStorage.getItem('user_search_query');
+			if (savedQuery) {
+				const { g, n, x, m, d, s } = JSON.parse(savedQuery);
+				gender = g;
+				minAge = n;
+				maxAge = x;
+				mode = m;
+				description = d;
+				sort = s;
+				search(); // Trigger search with loaded query
+			} else {
+				// If no saved query, fetch most recently joined users.
+				// This will require a change in +page.server.ts or a new API.
+				// For now, I'll just call search() with default parameters.
+				search();
+			}
+		}
+	});
 
 	function matchPercent(score?: number) {
 		if (typeof score !== 'number') return null;

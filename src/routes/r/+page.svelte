@@ -2,11 +2,12 @@
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { toast } from '$lib/util/toast';
+	import axios from 'axios';
 
 	let { data } = $props();
 	// state
 	let q = $state('');
-    let results: { i: string; t: string; l?: number; m?: number; score?: number }[] = $state(data.r);
+	let results: { i: string; t: string; l?: number; m?: number; score?: number }[] = $state(data.r);
 	let creating = $state(false);
 	let t = $state('');
 	let d = $state('');
@@ -14,15 +15,9 @@
 
 	// minimal fetch wrappers
 	async function search_rooms() {
-	loading = true;
+		loading = true;
 		try {
-			const res = await fetch('/r/search', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ q, f: { s: 'r' } })
-			});
-			if (!res.ok) throw new Error('search failed');
-            results = await res.json();
+			({ data: results } = await axios.post('/r/search', { q, f: { s: 'r' } }));
 		} catch (e) {
 			toast.error('Search failed. Try again.');
 		} finally {
@@ -65,9 +60,9 @@
 </script>
 
 <div class="page pad">
-    <div class="row space-between v-center">
-        <h1 class="title">search chatrooms</h1>
-        <button class="btn-primary btn-wide" onclick={() => (creating = true)}>add chatroom</button>
+	<div class="row space-between v-center">
+		<h1 class="title">search chatrooms</h1>
+		<button class="btn-primary btn-wide" onclick={() => (creating = true)}>add chatroom</button>
 	</div>
 
 	<div class="card gap">
@@ -78,27 +73,27 @@
 			bind:value={q}
 			onkeydown={on_key}
 		/>
-        <button class="btn-primary btn-compact" onclick={search_rooms} disabled={loading}
-            >{loading ? 'searching…' : 'search'}</button
+		<button class="btn-primary btn-compact" onclick={search_rooms} disabled={loading}
+			>{loading ? 'searching…' : 'search'}</button
 		>
 	</div>
 
 	{#if results.length}
 		<ul class="list" in:fade={{ duration: 120 }}>
-            {#each results as r (r.i)}
-                <li class="item">
-                    <a class="link" href={`/r/${r.i}`}>
-                        <div class="row space-between v-center">
-                            <div>
-                                <div class="result-title">{r.t}</div>
-                                <div class="result-meta muted">{r.m ?? 0} members</div>
-                            </div>
-                            {#if r.score !== undefined}
-                                <div class="badge">{Math.round(Math.max(0, Math.min(1, r.score)) * 100)}%</div>
-                            {/if}
-                        </div>
-                    </a>
-                </li>
+			{#each results as r (r.i)}
+				<li class="item">
+					<a class="link" href={`/r/${r.i}`}>
+						<div class="row space-between v-center">
+							<div>
+								<div class="result-title">{r.t}</div>
+								<div class="result-meta muted">{r.m ?? 0} members</div>
+							</div>
+							{#if r.score !== undefined}
+								<div class="badge">{Math.round(Math.max(0, Math.min(1, r.score)) * 100)}%</div>
+							{/if}
+						</div>
+					</a>
+				</li>
 			{/each}
 		</ul>
 	{:else}
@@ -107,16 +102,29 @@
 </div>
 
 {#if creating}
-    <div class="modal_backdrop" role="button" tabindex="0" onclick={() => (creating = false)} onkeydown={(e) => e.key==='Escape' && (creating=false)} in:fade={{ duration: 120 }}></div>
+	<div
+		class="modal_backdrop"
+		role="button"
+		tabindex="0"
+		onclick={() => (creating = false)}
+		onkeydown={(e) => e.key === 'Escape' && (creating = false)}
+		in:fade={{ duration: 120 }}
+	></div>
 	<div class="modal card" in:fade={{ duration: 120 }}>
-        <h2 class="subtitle">create chatroom</h2>
+		<h2 class="subtitle">create chatroom</h2>
 		<div class="gap">
 			<label class="label" for="room_tag">tag</label>
 			<input id="room_tag" class="input-underline" bind:value={t} placeholder="e.g. general" />
 		</div>
 		<div class="gap">
-            <label class="label" for="room_desc">description</label>
-            <textarea id="room_desc" class="input-underline" bind:value={d} rows="3" placeholder="Short description"></textarea>
+			<label class="label" for="room_desc">description</label>
+			<textarea
+				id="room_desc"
+				class="input-underline"
+				bind:value={d}
+				rows="3"
+				placeholder="Short description"
+			></textarea>
 		</div>
 		<div class="row gap">
 			<button class="btn" onclick={create_room}>Create</button>
@@ -163,7 +171,7 @@
 		display: grid;
 		gap: 8px;
 	}
-    /* reserved for future inputs */
+	/* reserved for future inputs */
 	.btn {
 		background: var(--btn);
 		color: var(--btn-text);
@@ -223,12 +231,12 @@
 		font-size: 12px;
 		color: var(--muted);
 	}
-    .badge {
-        padding: 4px 8px;
-        border-radius: 999px;
-        background: var(--accent-emerald);
-        color: white;
-        font-weight: 700;
-        font-size: 12px;
-    }
+	.badge {
+		padding: 4px 8px;
+		border-radius: 999px;
+		background: var(--accent-emerald);
+		color: white;
+		font-weight: 700;
+		font-size: 12px;
+	}
 </style>

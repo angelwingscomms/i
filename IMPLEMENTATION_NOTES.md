@@ -22,13 +22,14 @@ This document provides details about the implementations made to fulfill the req
     - `rows`: Number of rows to display
 
 ### Usage Example:
+
 ```svelte
 <DescriptionInput
-  bind:value={description}
-  maxLength={500}
-  autoUpdate={true}
-  endpoint="/api/update-description"
-  on:update={handleUpdate}
+	bind:value={description}
+	maxLength={500}
+	autoUpdate={true}
+	endpoint="/api/update-description"
+	on:update={handleUpdate}
 />
 ```
 
@@ -45,6 +46,7 @@ This document provides details about the implementations made to fulfill the req
   - Events for validation state changes
 
 ### Associated API Endpoint:
+
 - **Path**: `i/src/routes/api/validate-username/+server.ts`
 - Checks username availability and validates format
 

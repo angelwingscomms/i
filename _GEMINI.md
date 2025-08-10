@@ -1,14 +1,17 @@
 # Codebase Guide
 
 All db data stored in single Qdrant collection `'i'`, `s` payload field isolates data types (e.g., 'u` for user id).
+
 - always use single/double letter field names for db (`t` user tag, `u` user id, `s` tenant id)
+
 ## 3. Design System
+
 defined in src/app.css
 
 always use `snake_case` for variable/function names
 
-
 ## other styles
+
 - define all types in `src/lib/types`.
 - for db stuff, always use the db helper functions in src/lib/db/index.ts
 - always use api routes to get data from client to server, e.g routes/search/+server.ts

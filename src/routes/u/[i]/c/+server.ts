@@ -31,7 +31,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 				minute: '2-digit',
 				second: '2-digit'
 			}),
-			message_text: m.m,
+			message_text: m.m
 		}),
 		m.i
 	);
@@ -45,16 +45,16 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		} satisfies ChatMessage)
 	});
 
-    // After message is saved and broadcast, send push notif to receiving user (room id is params.i)
-    try {
-        const recipient = await get<User>(params.i);
-        if (recipient?.i) {
-            const title = `text from ${m.t}`;
-            await sendPushToUserId(recipient.i, title, m.m, i);
-        }
-    } catch (err) {
-        console.error('push notif error', err);
-    }
+	// After message is saved and broadcast, send push notif to receiving user (room id is params.i)
+	try {
+		const recipient = await get<User>(params.i);
+		if (recipient?.i) {
+			const title = `text from ${m.t}`;
+			await sendPushToUserId(recipient.i, title, m.m, i);
+		}
+	} catch (err) {
+		console.error('push notif error', err);
+	}
 
 	return new Response();
 };

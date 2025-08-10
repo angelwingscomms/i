@@ -7,21 +7,21 @@
  * @returns A debounced version of the function
  */
 export function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number = 300
+	func: T,
+	wait: number = 300
 ): (...args: Parameters<T>) => void {
-  let timeout: ReturnType<typeof setTimeout> | null = null;
+	let timeout: ReturnType<typeof setTimeout> | null = null;
 
-  return function (...args: Parameters<T>): void {
-    const later = () => {
-      timeout = null;
-      func(...args);
-    };
+	return function (...args: Parameters<T>): void {
+		const later = () => {
+			timeout = null;
+			func(...args);
+		};
 
-    if (timeout !== null) {
-      clearTimeout(timeout);
-    }
+		if (timeout !== null) {
+			clearTimeout(timeout);
+		}
 
-    timeout = setTimeout(later, wait);
-  };
+		timeout = setTimeout(later, wait);
+	};
 }

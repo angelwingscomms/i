@@ -308,7 +308,7 @@ export async function validateSessionJWT(jwt: string): Promise<ValidatedSession 
 		validSig = await crypto.subtle.verify(
 			'HMAC',
 			hmacKey,
-			(signatureBytes.buffer as unknown as ArrayBuffer),
+			signatureBytes.buffer as unknown as ArrayBuffer,
 			new TextEncoder().encode(parts[0] + '.' + parts[1])
 		);
 	} catch {

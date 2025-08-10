@@ -7,8 +7,7 @@
 	let {
 		u: user,
 		c: comparison,
-		s: is_own_profile,
-		ld: local_description // Destructure local_description
+		s: is_own_profile
 	} = data as unknown as {
 		u: {
 			i: string;
@@ -21,7 +20,6 @@
 		};
 		c: string;
 		s: boolean;
-		ld?: string; // Add to type definition
 	};
 	let copied = $state(false);
 	async function copyLink() {
@@ -29,7 +27,9 @@
 			await navigator.clipboard.writeText(`${window.location.origin}/u/${user?.i ?? ''}`);
 			copied = true;
 			setTimeout(() => (copied = false), 1200);
-		} catch {}
+		} catch {
+			// Do nothing on error
+		}
 	}
 	function getSocialMediaInfo(url: string): { name: string; iconClass: string | null } {
 		try {
@@ -90,7 +90,7 @@
 						{user.gender === 0 ? 'male' : 'female'}
 					</span>
 				</div>
-				<p class="text-sm text-gray-500 dark:text-gray-400 mb-1">share profile</p>
+				<p class="mb-1 text-sm text-gray-500 dark:text-gray-400">share profile</p>
 				<div class="mt-4 flex items-center justify-center gap-3">
 					<div class="rounded-full bg-[#e9d5ff] px-4 py-2 text-sm text-gray-900 dark:text-black">
 						{#if typeof window !== 'undefined'}{window.location.origin}/u/{user.i}{/if}
@@ -101,41 +101,30 @@
 			</header>
 
 			{#if !is_own_profile && data.user}
-			{#if comparison}
-				<div
-					class="mb-8 rounded-xl border border-blue-200 p-6 sm:p-4 dark:border-gray-900 dark:bg-transparent"
-				>
-					<h2
-						class="mb-4 flex items-center gap-2 text-xl font-semibold text-sky-700 dark:text-sky-400"
+				{#if comparison}
+					<div
+						class="mb-8 rounded-xl border border-blue-200 p-6 sm:p-4 dark:border-gray-900 dark:bg-transparent"
 					>
-						what you have in common
-					</h2>
-					<div class="leading-relaxed text-blue-800 dark:text-blue-200">
-						{@html marked.parse(comparison)}
+						<h2
+							class="mb-4 flex items-center gap-2 text-xl font-semibold text-sky-700 dark:text-sky-400"
+						>
+							what you have in common
+						</h2>
+						<div class="leading-relaxed text-blue-800 dark:text-blue-200">
+							{@html marked.parse(comparison)}
+						</div>
 					</div>
-				</div>
-			{:else if !local_description}
-				<div
-					class="mb-8 rounded-lg border border-amber-400 p-8 text-center dark:border-gray-900 dark:bg-transparent"
-				>
-					<p class="m-0 text-amber-900 dark:text-amber-100">
-						You don't have a description yet. <a
-							href="/edit_user"
-							class="font-semibold text-blue-700 no-underline hover:underline dark:text-blue-400"
-							>Update your description</a
-						> so you can see your similarities with this user.
-					</p>
-				</div>
-			{:else if !user.description}
-				<div
-					class="mb-8 rounded-lg border border-amber-400 p-8 text-center dark:border-gray-900 dark:bg-transparent"
-				>
-					<p class="m-0 text-amber-900 dark:text-amber-100">
-						This user doesn't have a description yet. You'll be able to see similarities with them when they put a description of themselves.
-					</p>
-				</div>
+				{:else if !user.description}
+					<div
+						class="mb-8 rounded-lg border border-amber-400 p-8 text-center dark:border-gray-900 dark:bg-transparent"
+					>
+						<p class="m-0 text-amber-900 dark:text-amber-100">
+							This user doesn't have a description yet. You'll be able to see similarities with them
+							when they put a description of themselves.
+						</p>
+					</div>
+				{/if}
 			{/if}
-		{/if}
 
 			{#if data.user && !is_own_profile}
 				<div class=" mb-8 flex justify-center">
@@ -151,7 +140,7 @@
 						start chat
 					</a>
 				</div>
-				<!-- {:else if is_own_profile}
+			{:else if is_own_profile}
 				<div class="mb-8 flex justify-center">
 					<a
 						href="/edit_user"
@@ -164,7 +153,20 @@
 						</svg>
 						Edit Profile
 					</a>
-				</div> -->
+				</div>
+				{#if !user.description}
+					<div
+						class="mb-8 rounded-lg border border-amber-400 p-8 text-center dark:border-gray-900 dark:bg-transparent"
+					>
+						<p class="m-0 text-amber-900 dark:text-amber-100">
+							You don't have a description yet. <a
+								href="/edit_user"
+								class="font-semibold text-blue-700 no-underline hover:underline dark:text-blue-400"
+								>Update your description</a
+							> to complete your profile.
+						</p>
+					</div>
+				{/if}
 			{:else}
 				<div
 					class="mb-8 rounded-lg border border-amber-400 p-8 text-center dark:border-gray-900 dark:bg-transparent"

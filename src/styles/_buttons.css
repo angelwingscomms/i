@@ -1,11 +1,12 @@
 /* Buttons */
 @utility btn {
-	@apply inline-flex transform items-center justify-center gap-2 rounded-full font-medium transition-all duration-300 disabled:transform-none disabled:opacity-50 px-6 py-3 text-base;
+	@apply inline-flex transform items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-medium transition-all duration-300 disabled:transform-none disabled:opacity-50;
 	box-shadow: var(--shadow-lg);
 }
 
 .btn:hover {
 	box-shadow: var(--shadow-xl);
+	background-color: var(--bg-button-hover-default);
 }
 
 @utility btn-primary {
@@ -38,12 +39,12 @@
 
 /* Brand-specific helpers */
 @utility btn-pink {
-    @apply btn text-white;
-    background: var(--accent-pink);
+	@apply btn text-white;
+	background: var(--accent-pink);
 }
 
 .btn-pink:hover:not(:disabled) {
-    filter: brightness(1.05);
+	filter: brightness(1.05);
 }
 
 @utility btn-ghost {
@@ -59,5 +60,5 @@
 }
 
 @utility btn-sm {
-    @apply px-4 py-2 text-sm;
+	@apply px-4 py-2 text-sm;
 }

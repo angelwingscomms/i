@@ -16,9 +16,9 @@
 		if (data?.user?.i) {
 			ensurePushSubscribed(data.user.i).then((res) => {
 				if (res.ok) return;
-					if (res.reason === 'denied') {
-						toast.info('Enable notifications anytime in your browser settings.');
-					}
+				if (res.reason === 'denied') {
+					toast.info('Enable notifications anytime in your browser settings.');
+				}
 			});
 		}
 	});
@@ -57,9 +57,8 @@
 					onClick={() => {
 						toastItem.action?.callback();
 						removeToast(toastItem.id);
-					}}
-				>{toastItem.action.label}</button
-			>
+					}}>{toastItem.action.label}</button
+				>
 			{/if}
 			<button
 				class="cursor-pointer border-none bg-transparent px-2 text-2xl leading-none text-white transition-opacity duration-200 hover:opacity-70"

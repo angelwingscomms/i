@@ -9,45 +9,45 @@
 	let tag = data.u!.t || '';
 	let description = data.u!.d || '';
 	let age = data.u!.a || 18;
-    let gender: 0 | 1 = (data.u!.g ?? 0) as 0 | 1;
+	let gender: 0 | 1 = (data.u!.g ?? 0) as 0 | 1;
 	let latitude = data.u!.l || 0;
 	let longitude = data.u!.n || 0;
 	let socialLinks: string[] = data.u!.x || [];
 	let usernameValid = true;
 
-    let isGettingLocation = false;
+	let isGettingLocation = false;
 	let isSubmitting = false;
 
-    // avatar upload (stored as small data url)
-    let avatarDataUrl: string = (data.u && (data.u as any).av) || '';
-    function onAvatarChange(e: Event) {
-        const input = e.target as HTMLInputElement;
-        const file = input.files?.[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const size = 128;
-                canvas.width = size;
-                canvas.height = size;
-                const ctx = canvas.getContext('2d');
-                if (!ctx) return;
-                // cover-fit crop
-                const scale = Math.max(size / img.width, size / img.height);
-                const sw = size / scale;
-                const sh = size / scale;
-                const sx = (img.width - sw) / 2;
-                const sy = (img.height - sh) / 2;
-                ctx.clearRect(0, 0, size, size);
-                ctx.drawImage(img, sx, sy, sw, sh, 0, 0, size, size);
-                avatarDataUrl = canvas.toDataURL('image/png', 0.9);
-            };
-            img.src = reader.result as string;
-        };
-        reader.readAsDataURL(file);
-    }
+	// avatar upload (stored as small data url)
+	let avatarDataUrl: string = (data.u && (data.u as any).av) || '';
+	function onAvatarChange(e: Event) {
+		const input = e.target as HTMLInputElement;
+		const file = input.files?.[0];
+		if (!file) return;
+		const reader = new FileReader();
+		reader.onload = () => {
+			const img = new Image();
+			img.onload = () => {
+				const canvas = document.createElement('canvas');
+				const size = 128;
+				canvas.width = size;
+				canvas.height = size;
+				const ctx = canvas.getContext('2d');
+				if (!ctx) return;
+				// cover-fit crop
+				const scale = Math.max(size / img.width, size / img.height);
+				const sw = size / scale;
+				const sh = size / scale;
+				const sx = (img.width - sw) / 2;
+				const sy = (img.height - sh) / 2;
+				ctx.clearRect(0, 0, size, size);
+				ctx.drawImage(img, sx, sy, sw, sh, 0, 0, size, size);
+				avatarDataUrl = canvas.toDataURL('image/png', 0.9);
+			};
+			img.src = reader.result as string;
+		};
+		reader.readAsDataURL(file);
+	}
 
 	function handleDescriptionUpdate(event: CustomEvent) {
 		description = event.detail.value;
@@ -91,7 +91,7 @@
 		isSubmitting = true;
 		form = null; // Clear previous messages
 
-        try {
+		try {
 			const response = await axios.post('/edit_user', {
 				tag,
 				description,
@@ -99,8 +99,8 @@
 				gender: +gender,
 				latitude,
 				longitude,
-                socialLinks,
-                avatarDataUrl
+				socialLinks,
+				avatarDataUrl
 			});
 
 			if (response.data.success) {
@@ -133,22 +133,30 @@
 			<p class="hero-subtitle">Update your information to improve matching</p>
 		</header>
 
-        <div class="card-normal">
-            <!-- avatar -->
-            <div class="form-group">
-                <label class="form-label" for="avatar_input">avatar</label>
-                <div class="flex items-center gap-4">
-                    <div class="h-16 w-16 overflow-hidden rounded-full bg-gray-800">
-                        {#if avatarDataUrl}
-                            <img src={avatarDataUrl} alt="avatar preview" class="h-full w-full object-cover" />
-                        {:else}
-                            <div class="flex h-full w-full items-center justify-center text-xs text-gray-400">no pic</div>
-                        {/if}
-                    </div>
-                    <input id="avatar_input" type="file" accept="image/*" on:change={onAvatarChange} class="input-rect" />
-                </div>
-                <small class="form-help">square image recommended. we store a tiny 128px copy.</small>
-            </div>
+		<div class="card-normal">
+			<!-- avatar -->
+			<div class="form-group">
+				<label class="form-label" for="avatar_input">avatar</label>
+				<div class="flex items-center gap-4">
+					<div class="h-16 w-16 overflow-hidden rounded-full bg-gray-800">
+						{#if avatarDataUrl}
+							<img src={avatarDataUrl} alt="avatar preview" class="h-full w-full object-cover" />
+						{:else}
+							<div class="flex h-full w-full items-center justify-center text-xs text-gray-400">
+								no pic
+							</div>
+						{/if}
+					</div>
+					<input
+						id="avatar_input"
+						type="file"
+						accept="image/*"
+						on:change={onAvatarChange}
+						class="input-rect"
+					/>
+				</div>
+				<small class="form-help">square image recommended. we store a tiny 128px copy.</small>
+			</div>
 			<form on:submit={handleSubmit} class="section-spacing">
 				<div class="form-group">
 					<label for="tag" class="form-label">user tag</label>
@@ -191,17 +199,31 @@
 					/>
 				</div>
 
-                <div class="form-group">
-                    <span class="form-label" id="gender_label">Gender</span>
+				<div class="form-group">
+					<span class="form-label" id="gender_label">Gender</span>
 					<div class="choice-group">
 						<label>
-                            <input aria-labelledby="gender_label" type="radio" name="gender" value={0} bind:group={gender} class="sr-only" />
+							<input
+								aria-labelledby="gender_label"
+								type="radio"
+								name="gender"
+								value={0}
+								bind:group={gender}
+								class="sr-only"
+							/>
 							<div class={gender === 0 ? 'choice-btn-active-blue' : 'choice-btn-inactive'}>
 								Male
 							</div>
 						</label>
 						<label>
-                            <input aria-labelledby="gender_label" type="radio" name="gender" value={1} bind:group={gender} class="sr-only" />
+							<input
+								aria-labelledby="gender_label"
+								type="radio"
+								name="gender"
+								value={1}
+								bind:group={gender}
+								class="sr-only"
+							/>
 							<div class={gender === 1 ? 'choice-btn-active' : 'choice-btn-inactive'}>Female</div>
 						</label>
 					</div>
@@ -243,8 +265,8 @@
 					</div>
 				</div> -->
 
-                <div class="form-group">
-                    <span class="form-label" id="social_label">Social Media Links (Optional)</span>
+				<div class="form-group">
+					<span class="form-label" id="social_label">Social Media Links (Optional)</span>
 					<div class="mb-3 flex items-center gap-2">
 						<button
 							type="button"
@@ -257,7 +279,8 @@
 					</div>
 					{#each socialLinks as link, index (index)}
 						<div class="social-link-item">
-                            <input aria-labelledby="social_label"
+							<input
+								aria-labelledby="social_label"
 								type="url"
 								bind:value={socialLinks[index]}
 								placeholder="Enter social media link"

@@ -122,7 +122,7 @@
 				</button>
 			</div>
 
-			<div class="hidden md:flex items-center gap-4">
+			<div class="hidden items-center gap-4 md:flex">
 				{#if can_install && !is_installed}
 					<button class="btn-primary btn-sm" on:click={do_install} transition:fade>
 						install

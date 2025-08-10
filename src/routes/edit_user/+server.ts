@@ -12,8 +12,17 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	try {
-    const { tag, description, age, gender, latitude, longitude, whatsapp, socialLinks, avatarDataUrl } =
-            await request.json();
+		const {
+			tag,
+			description,
+			age,
+			gender,
+			latitude,
+			longitude,
+			whatsapp,
+			socialLinks,
+			avatarDataUrl
+		} = await request.json();
 
 		const whatsappLink = whatsapp || '';
 
@@ -43,7 +52,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			return json({ error: 'Invalid location coordinates' }, { status: 400 });
 		}
 
-        // Validate social links
+		// Validate social links
 		if (
 			socialLinks !== undefined &&
 			(!Array.isArray(socialLinks) || socialLinks.some((link) => typeof link !== 'string'))
@@ -51,23 +60,23 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			return json({ error: 'Social links must be an array of strings' }, { status: 400 });
 		}
 
-        // Validate avatar (optional). Accept small data URLs or external URLs.
-        let avatar: string | undefined = undefined;
-        if (typeof avatarDataUrl === 'string' && avatarDataUrl.trim().length > 0) {
-            const val = avatarDataUrl.trim();
-            if (val.startsWith('data:image/')) {
-                // enforce max size ~200KB to avoid overloading payload
-                const approxBytes = Math.ceil((val.length * 3) / 4);
-                if (approxBytes > 200_000) {
-                    return json({ error: 'avatar image too large (max 200KB)' }, { status: 400 });
-                }
-                avatar = val;
-            } else if (/^https?:\/\//.test(val)) {
-                avatar = val;
-            } else {
-                return json({ error: 'invalid avatar format' }, { status: 400 });
-            }
-        }
+		// Validate avatar (optional). Accept small data URLs or external URLs.
+		let avatar: string | undefined = undefined;
+		if (typeof avatarDataUrl === 'string' && avatarDataUrl.trim().length > 0) {
+			const val = avatarDataUrl.trim();
+			if (val.startsWith('data:image/')) {
+				// enforce max size ~200KB to avoid overloading payload
+				const approxBytes = Math.ceil((val.length * 3) / 4);
+				if (approxBytes > 200_000) {
+					return json({ error: 'avatar image too large (max 200KB)' }, { status: 400 });
+				}
+				avatar = val;
+			} else if (/^https?:\/\//.test(val)) {
+				avatar = val;
+			} else {
+				return json({ error: 'invalid avatar format' }, { status: 400 });
+			}
+		}
 
 		// Check if tag is already taken by another user
 		const existingUsers = await search_by_payload<User>(
@@ -88,7 +97,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		const updatedUser: Partial<User> = {
 			t: tag.trim(),
-            ...(avatar ? { av: avatar } : {}),
+			...(avatar ? { av: avatar } : {}),
 			d: description.trim(),
 			a: age,
 			g: gender,
@@ -115,7 +124,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			points: [locals.user.i]
 		});
 
-        const vector = await embed(updatedUser.d as string)
+		const vector = await embed(updatedUser.d as string);
 
 		if (!vector) {
 			console.error('error creating embedding for user', locals.user, updatedUser);

@@ -1,1 +1,17 @@
-{"indexed_fields":{"tk_a":"keyword","t":"keyword","s":"keyword","g":"integer","a":"integer","gid":"keyword","i":"uuid","e":"keyword","u":"keyword","p":"integer","r":"keyword","l":"integer","c":"keyword"}}
+{
+	"indexed_fields": {
+		"tk_a": "keyword",
+		"t": "keyword",
+		"s": "keyword",
+		"g": "integer",
+		"a": "integer",
+		"gid": "keyword",
+		"i": "uuid",
+		"e": "keyword",
+		"u": "keyword",
+		"p": "integer",
+		"r": "keyword",
+		"l": "integer",
+		"c": "keyword"
+	}
+}

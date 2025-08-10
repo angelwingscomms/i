@@ -1,14 +1,10 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
-import { get, search_by_vector } from '$lib/db';
+import { get, search_by_vector, search_by_payload } from '$lib/db';
 import type { User } from '$lib/types';
 import axios from 'axios';
 import { embed } from '$lib/util/embed';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
-	// const utd = await qdrant.scroll(collection, { filter: { must: { is_null: { key: 'p' } } } });
-	// console.log('utd', utd);
-	//  await qdrant.delete('i', { points: utd.points.map(p => p.id)})
-
 	try {
 		const {
 			g: genderFilter,
@@ -17,7 +13,26 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			d: description
 		} = (await request.json()) as { g: number; n: number; x: number; d: string };
 
-		// Validate inputs
+		// Check if it's an empty search query (i.e., no specific filters applied)
+		const is_empty_query = !description && ageMin === 18 && ageMax === 99 && genderFilter === null;
+
+		if (is_empty_query) {
+			const filter: { must: Record<string, unknown>; must_not?: Record<string, unknown> } = {
+				must: { s: 'u' }
+			};
+			if (locals.user?.i) {
+				filter.must_not = { i: locals.user.i };
+			}
+			const recentUsers = await search_by_payload<User>(
+				filter.must,
+				['t', 'a', 'g', 'av', 'dc'], // Include dc for potential display/sorting on client
+				20, // Limit to 20 most recent users
+				{ key: 'dc', direction: 'desc' } // Sort by date created descending
+			);
+			return json(recentUsers);
+		}
+
+		// Validate inputs for actual search
 		if (typeof ageMin !== 'number' || typeof ageMax !== 'number' || ageMin > ageMax) {
 			return json({ error: 'Invalid age range' }, { status: 400 });
 		}
@@ -62,11 +77,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		}
 
 		// Search for similar users using vector search
-		// console.log('--filters', filters)
-        const searchResults = await search_by_vector<User>({
+		const searchResults = await search_by_vector<User>({
 			vector,
 			filter,
-            with_payload: ['t', 'a', 'g', 'av']
+			with_payload: ['t', 'a', 'g', 'av']
 		});
 
 		return json(searchResults);
