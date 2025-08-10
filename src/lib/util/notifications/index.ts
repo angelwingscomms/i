@@ -1,3 +1,5 @@
+import { toast } from "../toast";
+
 export async function ensurePushSubscribed(userId: string) {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator) || !('PushManager' in window)) {
     return { ok: false, reason: 'unsupported' } as const;
@@ -12,6 +14,16 @@ export async function ensurePushSubscribed(userId: string) {
       permission = await Notification.requestPermission();
     }
     if (permission !== 'granted') {
+      if (permission === 'denied') {
+        toast.info('Notifications blocked. Please enable them in your browser settings.');
+      } else {
+        toast.info('Please enable notifications.', undefined, undefined, {
+          label: 'Enable',
+          callback: async () => {
+            await Notification.requestPermission();
+          },
+        });
+      }
       return { ok: false, reason: 'denied' } as const;
     }
 

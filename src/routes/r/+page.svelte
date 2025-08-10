@@ -67,7 +67,7 @@
 <div class="page pad">
     <div class="row space-between v-center">
         <h1 class="title">search chatrooms</h1>
-        <button class="btn-primary" onclick={() => (creating = true)}>add chatroom</button>
+        <button class="btn-primary btn-wide" onclick={() => (creating = true)}>add chatroom</button>
 	</div>
 
 	<div class="card gap">
@@ -78,7 +78,7 @@
 			bind:value={q}
 			onkeydown={on_key}
 		/>
-        <button class="btn-primary" onclick={search_rooms} disabled={loading}
+        <button class="btn-primary btn-compact" onclick={search_rooms} disabled={loading}
             >{loading ? 'searching…' : 'search'}</button
 		>
 	</div>
@@ -102,7 +102,7 @@
 			{/each}
 		</ul>
 	{:else}
-		<p class="muted">No results yet.</p>
+		<p class="muted">Try searching for a chatroom.</p>
 	{/if}
 </div>
 
@@ -176,6 +176,13 @@
 	.btn.ghost {
 		background: transparent;
 		color: var(--text);
+	}
+	.btn-compact {
+		width: fit-content;
+	}
+	.btn-wide {
+		padding-left: 24px;
+		padding-right: 24px;
 	}
 	.list {
 		list-style: none;

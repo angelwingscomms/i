@@ -8,15 +8,19 @@ export interface Toast {
     message: string;
     type: ToastType;
     duration?: number; // Optional duration in ms, defaults to a standard value
+    action?: { // New optional action property
+        label: string;
+        callback: () => void;
+    };
 }
 
 // Create a writable store to hold an array of toasts
 export const toasts = writable<Toast[]>([]);
 
 // Function to add a new toast notification
-export function addToast(message: string, type: ToastType = 'info', duration: number = 3000) {
+export function addToast(message: string, type: ToastType = 'info', duration: number = 3000, action?: { label: string; callback: () => void }) {
     const id = Date.now().toString() + Math.random().toString(36).substring(2, 9); // Simple unique ID
-    const newToast: Toast = { id, message, type, duration };
+    const newToast: Toast = { id, message, type, duration, action };
 
     toasts.update(currentToasts => [...currentToasts, newToast]);
     
@@ -35,8 +39,8 @@ export function removeToast(id: string) {
 
 // Helper functions for different toast types for convenience
 export const toast = {
-    success: (message: string, duration?: number) => addToast(message, 'success', duration),
-    error: (message: string, duration?: number) => addToast(message, 'error', duration),
-    warning: (message: string, duration?: number) => addToast(message, 'warning', duration),
-    info: (message: string, duration?: number) => addToast(message, 'info', duration),
+    success: (message: string, duration?: number, action?: { label: string; callback: () => void }) => addToast(message, 'success', duration, action),
+    error: (message: string, duration?: number, action?: { label: string; callback: () => void }) => addToast(message, 'error', duration, action),
+    warning: (message: string, duration?: number, action?: { label: string; callback: () => void }) => addToast(message, 'warning', duration, action),
+    info: (message: string, duration?: number, action?: { label: string; callback: () => void }) => addToast(message, 'info', duration, action),
 };

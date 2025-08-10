@@ -7,7 +7,8 @@
 	let {
 		u: user,
 		c: comparison,
-		s: is_own_profile
+		s: is_own_profile,
+		ld: local_description // Destructure local_description
 	} = data as unknown as {
 		u: {
 			i: string;
@@ -20,6 +21,7 @@
 		};
 		c: string;
 		s: boolean;
+		ld?: string; // Add to type definition
 	};
 	let copied = $state(false);
 	async function copyLink() {
@@ -88,7 +90,7 @@
 						{user.gender === 0 ? 'male' : 'female'}
 					</span>
 				</div>
-				<p class="text-xs text-gray-500 dark:text-gray-400 mb-1">share profile</p>
+				<p class="text-sm text-gray-500 dark:text-gray-400 mb-1">share profile</p>
 				<div class="mt-4 flex items-center justify-center gap-3">
 					<div class="rounded-full bg-[#e9d5ff] px-4 py-2 text-sm text-gray-900 dark:text-black">
 						{#if typeof window !== 'undefined'}{window.location.origin}/u/{user.i}{/if}
@@ -98,7 +100,8 @@
 				</div>
 			</header>
 
-			{#if comparison && data.user && !is_own_profile}
+			{#if !is_own_profile && data.user}
+			{#if comparison}
 				<div
 					class="mb-8 rounded-xl border border-blue-200 p-6 sm:p-4 dark:border-gray-900 dark:bg-transparent"
 				>
@@ -111,7 +114,28 @@
 						{@html marked.parse(comparison)}
 					</div>
 				</div>
+			{:else if !local_description}
+				<div
+					class="mb-8 rounded-lg border border-amber-400 p-8 text-center dark:border-gray-900 dark:bg-transparent"
+				>
+					<p class="m-0 text-amber-900 dark:text-amber-100">
+						You don't have a description yet. <a
+							href="/edit_user"
+							class="font-semibold text-blue-700 no-underline hover:underline dark:text-blue-400"
+							>Update your description</a
+						> so you can see your similarities with this user.
+					</p>
+				</div>
+			{:else if !user.description}
+				<div
+					class="mb-8 rounded-lg border border-amber-400 p-8 text-center dark:border-gray-900 dark:bg-transparent"
+				>
+					<p class="m-0 text-amber-900 dark:text-amber-100">
+						This user doesn't have a description yet. You'll be able to see similarities with them when they put a description of themselves.
+					</p>
+				</div>
 			{/if}
+		{/if}
 
 			{#if data.user && !is_own_profile}
 				<div class=" mb-8 flex justify-center">

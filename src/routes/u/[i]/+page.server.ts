@@ -28,18 +28,23 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 		// If current user is logged in, compare descriptions
 		let comparisonResult = null;
-		if (locals.user?.i && locals.user.i !== user.i) {
-			const self = (await get(locals.user.i, ['d', 't'])) as { d: string; t: string };
-			if (!self) return
-			comparisonResult = await compare_users(self, user)
-		}
+        let local_description: string | undefined = undefined; // New variable for local user's description
 
-		// console.log('comparisonResult', comparisonResult)
+		if (locals.user?.i) { // Check if local user is logged in
+            const self = (await get(locals.user.i, ['d', 't'])) as { d?: string; t: string };
+            if (self) {
+                local_description = self.d; // Store local user's description
+                if (locals.user.i !== user.i) { // Only compare if not viewing own profile
+                    comparisonResult = await compare_users(self, user);
+                }
+            }
+		}
 
 		return {
 			u: userInfo,
 			c: comparisonResult,
-			s: locals.user?.i === user.i
+			s: locals.user?.i === user.i,
+          ld: local_description // Pass local user's description
 		};
 	} catch (err) {
 		console.error('Error loading user:', err);

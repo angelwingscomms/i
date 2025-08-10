@@ -51,6 +51,16 @@
 			aria-atomic="true"
 		>
 			<div class="mr-4 flex-grow">{toastItem.message}</div>
+			{#if toastItem.action}
+				<button
+					class="btn-ghost btn-sm"
+					onClick={() => {
+						toastItem.action?.callback();
+						removeToast(toastItem.id);
+					}}
+				>{toastItem.action.label}</button
+			>
+			{/if}
 			<button
 				class="cursor-pointer border-none bg-transparent px-2 text-2xl leading-none text-white transition-opacity duration-200 hover:opacity-70"
 				onclick={() => removeToast(toastItem.id)}

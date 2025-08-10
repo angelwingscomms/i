@@ -1,6 +1,6 @@
 /* Buttons */
 @utility btn {
-	@apply inline-flex transform items-center justify-center gap-2 rounded-full font-medium transition-all duration-300 disabled:transform-none disabled:opacity-50;
+	@apply inline-flex transform items-center justify-center gap-2 rounded-full font-medium transition-all duration-300 disabled:transform-none disabled:opacity-50 px-6 py-3 text-base;
 	box-shadow: var(--shadow-lg);
 }
 
@@ -59,13 +59,5 @@
 }
 
 @utility btn-sm {
-	@apply px-4 py-2 text-sm;
-}
-
-@utility btn-md {
-	@apply px-6 py-3 text-base;
-}
-
-@utility btn-lg {
-	@apply px-8 py-4 text-lg;
+    @apply px-4 py-2 text-sm;
 }

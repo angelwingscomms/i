@@ -1,8 +1,5 @@
 @import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 @import 'tailwindcss';
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
-
 @import './styles/_variables.css';
 @import './styles/_base.css';
 @import './styles/_background.css';
@@ -27,3 +24,6 @@
 @import './styles/_utilities.css';
 @import './styles/_responsive.css';
 @import './styles/_fonts.css';
+
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
