@@ -1,7 +1,3 @@
----
-type: "always_apply"
----
-
 For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary. Always think about styling deeply, like you're Steve Jobs and Jony Ive. Like you have years of expert experience creating beautiful UI and design. Like you work at a high brow creative studio with high brow clients like Apple.
 
 Codebase conventions:
@@ -11,6 +7,8 @@ Codebase conventions:
 - ids: use uuid v7; i is the primary id everywhere
 - qdrant: single collection 'i'; always wait: true; vectors len 3072; use edit_point for updates; create for inserts; include s in all filters; use format_filter for filters; use search_by_payload/scroll for payload queries; use search_by_vector for semantic queries; never expose secrets client-side
 - filters: pass must/must_not through format_filter; filter payload values must be compact; omit null/undefined/''
+- vars: avoid creating variables for single-use expressions, values, or simple property accesses; pass them directly into functions/expressions when possible
+
 
 SvelteKit patterns:
 
@@ -22,7 +20,7 @@ SvelteKit patterns:
 UI:
 
 - minimal components; prefer slots and tiny props
-- transitions: use animejs fade as much as possible
+- transitions: use svelte fade where helpful
 - toasts: use src/lib/util/toast.ts
 - avoid inline styles; only use design system utilities
 
@@ -38,7 +36,6 @@ Validation and security:
 Utilities:
 
 - use src/lib/util/embed.ts for embeddings
-- use src/lib/util/outside_click.ts svelte action for doing stuff when outside a component is clicked
 - debounce small helpers when needed (see util/debounce.ts)
 - use src/lib/util/s.ts for short-lived signed query params
 - keep helpers tiny and composable
@@ -49,14 +46,11 @@ Config/formatting:
 - lint/format: Prettier (tabs, singleQuote, width 100), ESLint flat config; maintain concise code
 - use wrangler.jsonc (not wrangler.toml)
 
-DB field cheatsheet:
-
+DB fields:
 - s: type/tenant (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 - i: id; t: tag/name/text; u: user id; d: description/date; a: age/created at; g: gender; l: last activity/lat; n: lon; w: whatsapp; c/x: compact maps/arrays
 
----
-
-- for each task, extremely use as little code as possible to fittingly and satisfyingly complete the task
+- for each task, extremely use as little code as possible to fittingly and satisfyingly complete the task. This rule does not apply to styling. go extreme for styling and subtle animejs effects. Always think like a pro designer at a renowned creative studio working for Apple, think like Jony Ive.
 - all db data stored in single Qdrant collection 'i', `s` payload field isolates data types (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 - always use single/double letter field names for db (`i` id, `t` tag/text, `u` user id, `d` desc/date, `a` age/created, `g` gender, `l` last/lat, `n` lon, `w` whatsapp, `c` compact map, `x` compact array)
 - always use `snake_case` for variable/function names; files and routes use SvelteKit defaults
@@ -65,7 +59,7 @@ DB field cheatsheet:
 - for db stuff, always use helpers in `src/lib/db/index.ts`; use `create` for inserts, `edit_point` for updates; always `wait: true`
 - always use `+server.ts` API routes for client↔server; validate inputs; return friendly errors
 - qdrant: single collection `i`; vectors len 3072; include `s` in filters; use `format_filter`; use `scroll`/`search_by_payload` for payload queries; `search_by_vector` for semantic
-- always keep components minimal; tiny props; prefer slots
+- always use svelte fade transition in UI when you want; keep components minimal; tiny props; prefer slots
 - toasts: use `src/lib/util/toast.ts`; avoid inline styles; only design-system utilities
 - in server files, use `error(status, message)` from `@sveltejs/kit` or return `json(..., { status })` in APIs
 - auth: user in `locals.user { i, t }`; sessions via httpOnly cookie; refresh activity on requests

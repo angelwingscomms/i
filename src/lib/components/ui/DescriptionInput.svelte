@@ -3,9 +3,9 @@
 	import axios from 'axios';
 
 	export let value = '';
-	export let maxLength = 500;
+	export const maxLength = 500;
 	export let editable = true;
-	export let autoUpdate = false;
+	export const autoUpdate = false;
 	export let endpoint = '/api/update-description';
 	export let placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`;
 	export let rows = 6;
@@ -145,7 +145,6 @@
 		{placeholder}
 		{rows}
 		required
-		on:input
 		disabled={!editable || isSaving || isTranscribing}
 		readonly={!editable}
 	></textarea>
@@ -158,7 +157,7 @@
 		{#if editable}
 			<div class="voice-controls">
 				{#if !isRecording && !isTranscribing}
-					<button type="button" class="voice-btn rounded-full" on:click={startRecording}>
+					<button type="button" class="voice-btn rounded-full" onclick={startRecording}>
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
 							<path
 								d="M12 2C13.1 2 14 2.9 14 4V12C14 13.1 13.1 14 12 14C10.9 14 10 13.1 10 12V4C10 2.9 10.9 2 12 2M19 12C19 16.2 15.8 19.2 12 19.2S5 16.2 5 12H7C7 15.1 9.5 17.6 12 17.6S17 15.1 17 12H19Z"
@@ -167,7 +166,7 @@
 						Start Recording
 					</button>
 				{:else if isRecording}
-					<button type="button" class="voice-btn-recording rounded-full" on:click={stopRecording}>
+					<button type="button" class="voice-btn-recording rounded-full" onclick={stopRecording}>
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
 							<path d="M6 6H18V18H6V6Z" />
 						</svg>
@@ -190,7 +189,7 @@
 				<button
 					type="button"
 					class="update-btn"
-					on:click={updateDescription}
+					onclick={updateDescription}
 					disabled={isSaving || value === originalValue}
 				>
 					{isSaving ? 'Saving...' : 'Update'}

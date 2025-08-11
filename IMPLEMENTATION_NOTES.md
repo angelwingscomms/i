@@ -29,7 +29,7 @@ This document provides details about the implementations made to fulfill the req
 	maxLength={500}
 	autoUpdate={true}
 	endpoint="/api/update-description"
-	on:update={handleUpdate}
+	onupdate={handleUpdate}
 />
 ```
 

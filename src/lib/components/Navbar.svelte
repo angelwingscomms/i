@@ -41,9 +41,9 @@
 		await deferred_prompt.prompt();
 		const choice = await deferred_prompt.userChoice;
 		if (choice.outcome === 'accepted') {
-			toasts.add({ type: 'success', message: 'App installed' });
+			import('$lib/util/toast').then(({ addToast }) => addToast('App installed', 'success'));
 		} else {
-			toasts.add({ type: 'info', message: 'Install dismissed' });
+			import('$lib/util/toast').then(({ addToast }) => addToast('Install dismissed', 'info'));
 		}
 		deferred_prompt = null;
 		can_install = false;
@@ -109,7 +109,7 @@
 			</div>
 
 			<div class="md:hidden">
-				<button class="btn-icon" on:click={toggle_menu} aria-label="Toggle menu">
+				<button class="btn-icon" onclick={toggle_menu} aria-label="Toggle menu">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24"
@@ -124,7 +124,7 @@
 
 			<div class="hidden items-center gap-4 md:flex">
 				{#if can_install && !is_installed}
-					<button class="btn-primary btn-sm" on:click={do_install} transition:fade>
+					<button class="btn-primary btn-sm" onclick={do_install} transition:fade>
 						install
 					</button>
 				{/if}

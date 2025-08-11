@@ -8,7 +8,7 @@
 	import axios from 'axios';
 	import { animate, stagger } from 'animejs';
 	import { tick } from 'svelte';
-	let { m, s, c, t, r }: {m: ChatMessage[], s: string, c: string, t: string, r: boolean} = $props();
+	let { m, s, c, t, r, children }: {m: ChatMessage[], s: string, c: string, t: string, r: boolean, children?: any} = $props();
 
 	let chat_messages: ChatMessage[] = $state(m);
 	let message_text = $state('');
@@ -127,7 +127,7 @@
 <div class="chat-layout">
 	<div class="chat-header">
 	<h1 class="chat-title">{t}</h1>
-	<slot />
+	{#if children}{@render children()}{/if}
 </div>
 	<div class="messages-container" bind:this={messagesEl}>
 		{#each chat_messages as msg, i (msg.i)}

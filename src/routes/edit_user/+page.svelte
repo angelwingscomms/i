@@ -151,13 +151,13 @@
 						id="avatar_input"
 						type="file"
 						accept="image/*"
-						on:change={onAvatarChange}
+						onchange={onAvatarChange}
 						class="input-rect"
 					/>
 				</div>
 				<small class="form-help">square image recommended. we store a tiny 128px copy.</small>
 			</div>
-			<form on:submit={handleSubmit} class="section-spacing">
+			<form onsubmit={handleSubmit} class="section-spacing">
 				<div class="form-group">
 					<label for="tag" class="form-label">user tag</label>
 					<input
@@ -176,8 +176,6 @@
 					<div class="glass rounded-lg p-1">
 						<DescriptionInput
 							bind:value={description}
-							maxLength={500}
-							autoUpdate={true}
 							endpoint="/api/update-description"
 							on:update={handleDescriptionUpdate}
 						/>
@@ -231,8 +229,8 @@
 
 				<!-- Location -->
 				<div class="form-group">
-					<label class="form-label">Location</label>
-					<div class="location-container">
+					<label class="form-label" for="location_btn" id="location_label">Location</label>
+					<div class="location-container" aria-labelledby="location_label">
 						<div class="location-display">
 							{#if latitude && longitude}
 								<span class="current-location">{latitude.toFixed(6)}, {longitude.toFixed(6)}</span>
@@ -243,18 +241,20 @@
 							<input type="hidden" name="longitude" value={longitude} />
 						</div>
 						<button
+							id="location_btn"
 							type="button"
 							class="location-btn rounded-full"
-							on:click={getCurrentLocation}
+							onclick={getCurrentLocation}
 							disabled={isGettingLocation}
+							aria-labelledby="location_label"
 						>
 							{#if isGettingLocation}
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" role="img" aria-hidden="true">
 									<path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" class="animate-spin" />
 								</svg>
 								Getting Location...
 							{:else}
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" role="img" aria-hidden="true">
 									<path
 										d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M3.05,13H1V11H3.05C3.5,6.83 6.83,3.5 11,3.05V1H13V3.05C17.17,3.5 20.5,6.83 20.95,11H23V13H20.95C20.5,17.17 17.17,20.5 13,20.95V23H11V20.95C6.83,20.5 3.5,17.17 3.05,13M12,5A7,7 0 0,0 5,12A7,7 0 0,0 12,19A7,7 0 0,0 19,12A7,7 0 0,0 12,5Z"
 									/>
@@ -270,14 +270,15 @@
 					<div class="mb-3 flex items-center gap-2">
 						<button
 							type="button"
-							on:click={() => (socialLinks = [...socialLinks, ''])}
+							onclick={() => (socialLinks = [...socialLinks, ''])}
 							class="add-link-btn flex h-8 w-8 items-center justify-center rounded-full"
+							aria-labelledby="social_label"
 						>
 							+
 						</button>
 						<small class="form-help">WhatsApp, Telegram or Social media links</small>
 					</div>
-					{#each socialLinks as link, index (index)}
+					{#each socialLinks as _, index (index)}
 						<div class="social-link-item">
 							<input
 								aria-labelledby="social_label"
@@ -288,8 +289,9 @@
 							/>
 							<button
 								type="button"
-								on:click={() => (socialLinks = socialLinks.filter((_, i) => i !== index))}
+								onclick={() => (socialLinks = socialLinks.filter((_, i) => i !== index))}
 								class="remove-link-btn flex h-8 w-8 items-center justify-center rounded-full"
+								aria-labelledby="social_label"
 							>
 								×
 							</button>

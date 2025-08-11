@@ -88,7 +88,7 @@
 	}
 </script>
 
-<svelte:window on:click={handleClickOutside} />
+<svelte:window onclick={handleClickOutside} />
 
 <div class="phone-input-container">
 	<div class="flex w-full">
@@ -97,7 +97,7 @@
 				type="button"
 				class="hover:bg-glass flex h-full items-center rounded-l-lg border-r-0 px-3 py-3 transition-all duration-200"
 				style="border: 2px solid var(--border-secondary); background: var(--bg-input);"
-				on:click={toggleDropdown}
+				onclick={toggleDropdown}
 			>
 				<span class="mr-2 text-lg"
 					>{countries.find((c) => c.code === selectedCountryCode)?.flag || '🌐'}</span
@@ -126,7 +126,7 @@
 							country.code
 								? 'bg-glass-hover'
 								: ''}"
-							on:click={() => selectCountry(country.code)}
+							onclick={() => selectCountry(country.code)}
 						>
 							<span class="mr-3 text-lg">{country.flag}</span>
 							<span class="text-primary flex-1 text-sm">{country.name}</span>
@@ -150,7 +150,7 @@
 			{placeholder}
 			{disabled}
 			{required}
-			on:input={handleLocalNumberInput}
+			oninput={handleLocalNumberInput}
 		/>
 	</div>
 

@@ -15,13 +15,15 @@
 
 <aside class="mobile-sidebar" class:is-open={is_open}>
 	<div class="sidebar-content">
-		<button class="close-button" on:click={close_sidebar}>
+		<button class="close-button" onclick={close_sidebar} aria-label="Close sidebar">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 24 24"
 				fill="currentColor"
 				width="24"
 				height="24"
+				role="img"
+				aria-hidden="true"
 			>
 				<path
 					d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
@@ -30,19 +32,19 @@
 		</button>
 		<nav class="sidebar-nav">
 			{#if user}
-				<a href="/r" class="sidebar-nav-link" on:click={close_sidebar}>search chatrooms</a>
-				<a href="/u" class="sidebar-nav-link" on:click={close_sidebar}>search users</a>
-				<a href="/edit_user" class="sidebar-nav-link" on:click={close_sidebar}>edit profile</a>
-				<a href="/u/{user.i}" class="sidebar-nav-link" on:click={close_sidebar}>{user.t}</a>
-				<a href="/logout" class="sidebar-nav-link text-error" on:click={close_sidebar}>logout</a>
+				<a href="/r" class="sidebar-nav-link" onclick={close_sidebar}>search chatrooms</a>
+				<a href="/u" class="sidebar-nav-link" onclick={close_sidebar}>search users</a>
+				<a href="/edit_user" class="sidebar-nav-link" onclick={close_sidebar}>edit profile</a>
+				<a href="/u/{user.i}" class="sidebar-nav-link" onclick={close_sidebar}>{user.t}</a>
+				<a href="/logout" class="sidebar-nav-link text-error" onclick={close_sidebar}>logout</a>
 			{:else}
-				<a href="/google" class="sidebar-nav-link" on:click={close_sidebar}>login w Google</a>
+				<a href="/google" class="sidebar-nav-link" onclick={close_sidebar}>login w Google</a>
 			{/if}
 		</nav>
 	</div>
 </aside>
 
-<div class="overlay" class:is-open={is_open} on:click={close_sidebar}></div>
+<div class="overlay" class:is-open={is_open} onclick={close_sidebar} role="button" tabindex="0" onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && close_sidebar()} aria-label="Close sidebar overlay"></div>
 
 <style>
 	.mobile-sidebar {

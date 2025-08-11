@@ -69,6 +69,7 @@
 	},
 	"dependencies": {
 		"@google/genai": "^1.13.0",
+		"@google/generative-ai": "^0.24.1",
 		"@libsql/client": "^0.15.10",
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
@@ -78,6 +79,7 @@
 		"argon2": "^0.43.1",
 		"axios": "^1.11.0",
 		"drizzle-orm": "^0.44.4",
+		"ibm-cos-sdk": "^1.14.1",
 		"marked": "^16.1.2",
 		"miniflare": "^4.20250803.0",
 		"web-push": "^3.6.7"

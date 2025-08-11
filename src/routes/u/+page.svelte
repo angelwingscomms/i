@@ -94,7 +94,7 @@
 	}
 </script>
 
-<svelte:window on:click={handle_click_outside} />
+<svelte:window onclick={handle_click_outside} />
 
 
 <div class="container-main py-8">
@@ -131,7 +131,7 @@
 						min="13"
 						max="99"
 						bind:value={minAge}
-						on:input={() => {
+						oninput={() => {
 							if (minAge > maxAge) maxAge = minAge;
 						}}
 					/>
@@ -143,7 +143,7 @@
 						min="13"
 						max="99"
 						bind:value={maxAge}
-						on:input={() => {
+						oninput={() => {
 							if (maxAge < minAge) minAge = maxAge;
 						}}
 					/>
@@ -155,18 +155,18 @@
 				<div class="choice-group">
 					<button
 						class={mode === 'profile' ? 'choice-btn-active' : 'choice-btn-inactive'}
-						on:click={() => (mode = 'profile')}>profile</button
+						onclick={() => (mode = 'profile')}>profile</button
 					>
 					<button
 						class={mode === 'custom' ? 'choice-btn-active' : 'choice-btn-inactive'}
-						on:click={() => (mode = 'custom')}>custom</button
+						onclick={() => (mode = 'custom')}>custom</button
 					>
 				</div>
 			{/if}
 
 			<div class="ml-auto flex items-center gap-3">
 				<div class="dropdown-container" bind:this={sort_ref}>
-					<button type="button" class="dropdown-trigger" on:click={() => (sort_open = !sort_open)} aria-haspopup="listbox" aria-expanded={sort_open} aria-label="sort options">
+					<button type="button" class="dropdown-trigger" onclick={() => (sort_open = !sort_open)} aria-haspopup="listbox" aria-expanded={sort_open} aria-label="sort options">
 						<span class="text-secondary">sort:</span>
 						<span class="text-primary">{sort}</span>
 						<svg class="dropdown-caret {sort_open ? 'dropdown-caret-open' : ''}" width="10" height="6" viewBox="0 0 10 6" fill="currentColor" aria-hidden="true">
@@ -175,12 +175,12 @@
 					</button>
 					{#if sort_open}
 						<div role="listbox" class="dropdown-panel dropdown-sm animate-fade-in">
-							<button type="button" role="option" aria-selected={sort === 'match'} class="dropdown-item" on:click={() => apply_sort('match')}>match</button>
-							<button type="button" role="option" aria-selected={sort === 'age'} class="dropdown-item" on:click={() => apply_sort('age')}>age</button>
+							<button type="button" role="option" aria-selected={sort === 'match'} class="dropdown-item" onclick={() => apply_sort('match')}>match</button>
+							<button type="button" role="option" aria-selected={sort === 'age'} class="dropdown-item" onclick={() => apply_sort('age')}>age</button>
 						</div>
 					{/if}
 				</div>
-				<button class="btn-primary btn-md" on:click={search} disabled={loading}
+				<button class="btn-primary btn-md" onclick={search} disabled={loading}
 					>{loading ? 'searching…' : 'search'}</button
 				>
 			</div>

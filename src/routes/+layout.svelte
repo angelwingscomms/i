@@ -9,7 +9,7 @@
 	import { ensurePushSubscribed } from '$lib/util/notifications';
 
 	let { children, data } = $props();
-	let is_sidebar_open = false;
+	let is_sidebar_open = $state(false);
 
 	onMount(() => {
 		themeStore.init();
@@ -28,7 +28,7 @@
 	<meta name="theme-color" content="#000000" />
 </svelte:head>
 
-<Navbar user={data?.user as any} on:menutoggle={() => (is_sidebar_open = !is_sidebar_open)} />
+<Navbar user={data?.user as any} onmenutoggle={() => (is_sidebar_open = !is_sidebar_open)} />
 <MobileSidebar bind:is_open={is_sidebar_open} user={data?.user as any} />
 {@render children()}
 
@@ -54,7 +54,7 @@
 			{#if toastItem.action}
 				<button
 					class="btn-ghost btn-sm"
-					onClick={() => {
+					onclick={() => {
 						toastItem.action?.callback();
 						removeToast(toastItem.id);
 					}}>{toastItem.action.label}</button

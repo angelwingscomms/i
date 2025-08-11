@@ -87,11 +87,11 @@
 			{placeholder}
 			{disabled}
 			{required}
-			on:blur
+			onblur
 			minlength={minLength}
 			maxlength={maxLength}
 			autocomplete="username"
-			on:input={handleInput}
+			oninput={handleInput}
 		/>
 
 		{#if touched && value}

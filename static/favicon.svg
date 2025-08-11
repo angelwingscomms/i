@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="3.7846mm"
-   height="2.2891772mm"
-   viewBox="0 0 3.7846 2.2891772"
+   width="3.7849998mm"
+   height="3.7850082mm"
+   viewBox="0 0 3.7849998 3.7850082"
    version="1.1"
    id="svg1"
    xmlns="http://www.w3.org/2000/svg"
@@ -13,16 +13,23 @@
      id="defs1" />
   <g
      id="layer1"
-     transform="translate(-55.254676,-122.41587)">
+     transform="translate(-103.1075,-146.6075)">
+    <rect
+       style="fill:none;stroke:none;stroke-width:2.68159"
+       id="rect1"
+       width="3.7850001"
+       height="3.7850001"
+       x="103.1075"
+       y="146.6075" />
     <text
        xml:space="preserve"
-       style="font-size:3.175px;font-family:Monospace;-inkscape-font-specification:Monospace;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;stroke-width:1"
-       x="55.191177"
-       y="124.67648"
+       style="font-size:3.175px;font-family:'WDXL Lubrifont TC';-inkscape-font-specification:'WDXL Lubrifont TC';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#2563eb;stroke-width:1"
+       x="103.0442"
+       y="149.61601"
        id="text1"><tspan
          id="tspan1"
-         x="55.191177"
-         y="124.67648"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'WDXL Lubrifont TC';-inkscape-font-specification:'WDXL Lubrifont TC';fill:#2563eb;fill-opacity:1;stroke-width:1">144</tspan></text>
+         style="stroke-width:1"
+         x="103.0442"
+         y="149.61601">144</tspan></text>
   </g>
 </svg>
