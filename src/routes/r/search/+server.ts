@@ -14,9 +14,6 @@ export const POST: RequestHandler = async ({ request }) => {
 	const body = (await request.json()) as SearchBody;
 
 	const q = body?.q as string;
-	if (!q || typeof q !== 'string') {
-		throw error(400, 'Missing search string');
-	}
 
 	// Vectorize query
 	const vector = await embed(q);

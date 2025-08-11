@@ -4,9 +4,8 @@ import type { ChatMessage, DBChatMessage, SendChatMessage } from '$lib/types';
 import { s } from '$lib/util/s';
 import { cf } from '$lib/util/cf';
 import { PUBLIC_WORKER } from '$env/static/public';
-import { find_user_by_tag } from '$lib/db';
 
-export const POST: RequestHandler = async ({ platform, request, params, locals, fetch }) => {
+export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
 	const m: SendChatMessage = await request.json();
 
 	const i = await create(

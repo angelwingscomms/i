@@ -17,6 +17,23 @@
 	let results: Result[] = [];
 	let sort: 'match' | 'age' = 'match';
 
+	let sort_open = false;
+	let sort_ref: HTMLDivElement | null = null;
+
+	function apply_sort(s: 'match' | 'age') {
+		sort = s;
+		sort_open = false;
+		results = results.slice().sort((a, b) =>
+			sort === 'match' ? (b.score ?? 0) - (a.score ?? 0) : (a.a ?? 0) - (b.a ?? 0)
+		);
+	}
+
+	function handle_click_outside(event: MouseEvent) {
+		if (sort_ref && !sort_ref.contains(event.target as Node)) {
+			sort_open = false;
+		}
+	}
+
 	// Reactive statement to sync search query to localStorage
 	$: if (browser) {
 		localStorage.setItem(
@@ -77,8 +94,12 @@
 	}
 </script>
 
+<svelte:window on:click={handle_click_outside} />
+
+
 <div class="container-main py-8">
 	<h1 class="hero-title mb-4 text-center">search users</h1>
+
 
 	<!-- filter bar -->
 	<div class="card-normal mb-6">
@@ -144,10 +165,21 @@
 			{/if}
 
 			<div class="ml-auto flex items-center gap-3">
-				<select bind:value={sort} class="input-rounded">
-					<option value="match">sort: match</option>
-					<option value="age">sort: age</option>
-				</select>
+				<div class="dropdown-container" bind:this={sort_ref}>
+					<button type="button" class="dropdown-trigger" on:click={() => (sort_open = !sort_open)} aria-haspopup="listbox" aria-expanded={sort_open} aria-label="sort options">
+						<span class="text-secondary">sort:</span>
+						<span class="text-primary">{sort}</span>
+						<svg class="dropdown-caret {sort_open ? 'dropdown-caret-open' : ''}" width="10" height="6" viewBox="0 0 10 6" fill="currentColor" aria-hidden="true">
+							<path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</button>
+					{#if sort_open}
+						<div role="listbox" class="dropdown-panel dropdown-sm animate-fade-in">
+							<button type="button" role="option" aria-selected={sort === 'match'} class="dropdown-item" on:click={() => apply_sort('match')}>match</button>
+							<button type="button" role="option" aria-selected={sort === 'age'} class="dropdown-item" on:click={() => apply_sort('age')}>age</button>
+						</div>
+					{/if}
+				</div>
 				<button class="btn-primary btn-md" on:click={search} disabled={loading}
 					>{loading ? 'searching…' : 'search'}</button
 				>

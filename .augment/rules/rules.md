@@ -1,3 +1,7 @@
+---
+type: "always_apply"
+---
+
 For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary. Always think about styling deeply, like you're Steve Jobs and Jony Ive. Like you have years of expert experience creating beautiful UI and design. Like you work at a high brow creative studio with high brow clients like Apple.
 
 Codebase conventions:
@@ -18,7 +22,7 @@ SvelteKit patterns:
 UI:
 
 - minimal components; prefer slots and tiny props
-- transitions: use svelte fade where helpful
+- transitions: use animejs fade as much as possible
 - toasts: use src/lib/util/toast.ts
 - avoid inline styles; only use design system utilities
 
@@ -34,6 +38,7 @@ Validation and security:
 Utilities:
 
 - use src/lib/util/embed.ts for embeddings
+- use src/lib/util/outside_click.ts svelte action for doing stuff when outside a component is clicked
 - debounce small helpers when needed (see util/debounce.ts)
 - use src/lib/util/s.ts for short-lived signed query params
 - keep helpers tiny and composable
@@ -60,7 +65,7 @@ DB field cheatsheet:
 - for db stuff, always use helpers in `src/lib/db/index.ts`; use `create` for inserts, `edit_point` for updates; always `wait: true`
 - always use `+server.ts` API routes for client↔server; validate inputs; return friendly errors
 - qdrant: single collection `i`; vectors len 3072; include `s` in filters; use `format_filter`; use `scroll`/`search_by_payload` for payload queries; `search_by_vector` for semantic
-- always use svelte fade transition in UI when you want; keep components minimal; tiny props; prefer slots
+- always keep components minimal; tiny props; prefer slots
 - toasts: use `src/lib/util/toast.ts`; avoid inline styles; only design-system utilities
 - in server files, use `error(status, message)` from `@sveltejs/kit` or return `json(..., { status })` in APIs
 - auth: user in `locals.user { i, t }`; sessions via httpOnly cookie; refresh activity on requests

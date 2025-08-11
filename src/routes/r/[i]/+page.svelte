@@ -7,7 +7,7 @@
 
 	async function save_room() {
 		try {
-			const response = await fetch(`/r/${data.i}/save`, {
+			const response = await fetch(`/r/${(data as any).i}/save`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -27,8 +27,9 @@
 	}
 </script>
 
-<div class="save-room-container">
-	<button class="btn btn-primary" onclick={save_room}>Save Room</button>
+<div class="chat-layout">
+	<div class="mb-3">
+		<button class="btn-primary btn" onclick={save_room}>save room</button>
+	</div>
+	<Chat m={data.m} c={data.c} s={data.s} t={data.t} r />
 </div>
-
-<Chat m={data.m} c={data.c} s={data.s} t={data.t} />

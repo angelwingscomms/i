@@ -1,3 +1,0 @@
-want push notif subscriptions to now be stored on a user's point payload directly on u.ps (meaning 'push sub')
-want to create a push_notif_to_user function in $lib/util/notifications/push_notif_to_user.ts that gets the user's push sub and sends notif to sub. this function meant for client only
-after message send on /u/:i/c/+server.ts, send push notif to receiving user

@@ -59,6 +59,7 @@ export interface Message {
 	s?: 'm'; // tenant id for messages
 	u?: string; // user ID
 	r: string; // receiver ID (room/user)
+	tc?: number; // token count
 }
 
 export interface Room {

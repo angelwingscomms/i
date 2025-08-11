@@ -11,18 +11,21 @@ export const load: PageServerLoad = async ({ params }) => {
 	if (!r) error(404, 'room not found');
 	console.log('c', r.c);
 
+	// Fetch latest messages for this room and shape to ChatMessage
+	const raw = await search_by_payload<DBChatMessage & { i: string }>(
+		{ s: 'm', r: params.i },
+		['m', 'u', 'd'],
+		72,
+		{ key: 'd', direction: 'asc' }
+	);
+
 	const msgs: ChatMessage[] = await Promise.all(
-		(
-			await search_by_payload<DBChatMessage & { i: string }>(
-				{ s: 'm', r: params.i },
-				['m', 'u'],
-				72
-			)
-		).map(async (m) => ({
-			...m,
-			u: (await get<string>(m.u, 't')) as string
+		raw.map(async (m) => ({
+			i: m.i,
+			m: m.m,
+			x: m.u ? ((await get<string>(m.u, 't')) as string) : undefined
 		}))
 	);
 
-	return { m: msgs, s: await s(), ...r };
+	return { m: msgs, s: await s(), ...r, i: params.i };
 };

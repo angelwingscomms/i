@@ -8,7 +8,7 @@
 	import axios from 'axios';
 	import { animate, stagger } from 'animejs';
 	import { tick } from 'svelte';
-	let { m, s, c, t } = $props();
+	let { m, s, c, t, r }: {m: ChatMessage[], s: string, c: string, t: string, r: boolean} = $props();
 
 	let chat_messages: ChatMessage[] = $state(m);
 	let message_text = $state('');
@@ -125,31 +125,60 @@
 </script>
 
 <div class="chat-layout">
+	<div class="chat-header">
 	<h1 class="chat-title">{t}</h1>
+	<slot />
+</div>
 	<div class="messages-container" bind:this={messagesEl}>
 		{#each chat_messages as msg, i (msg.i)}
-			<div
-				class="chat_item"
-				in:fade={{ duration: 150, delay: 0 }}
-				out:fade={{ duration: 150 }}
-				data-msg-id={msg.i}
-				style={`align-items:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
-			>
-				<div
-					class="chat_meta"
-					style={`justify-content:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
-				>
-					{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x}
-						<div class="chat_username">{msg.x}</div>
+					{#if r}
+						<a
+							class="chat_item"
+							in:fade={{ duration: 150, delay: 0 }}
+							out:fade={{ duration: 150 }}
+							href={page.url.pathname.split('/').slice(0, -1).join('/') + '/' + msg.i}
+							data-msg-id={msg.i}
+							style={`align-items:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
+						>
+							<div
+								class="chat_meta"
+								style={`justify-content:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
+							>
+								{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x}
+									<div class="chat_username">{msg.x}</div>
+								{/if}
+							</div>
+							<div
+								class={`chat_bubble ${msg.x === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.x ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
+								style={`max-width: 90%; ${msg.x === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
+							>
+								<span class="message-text">{msg.m}</span>
+							</div>
+						</a>
+					{:else}
+						<div
+							class="chat_item"
+							in:fade={{ duration: 150, delay: 0 }}
+							out:fade={{ duration: 150 }}
+							data-msg-id={msg.i}
+							style={`align-items:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
+						>
+							<div
+								class="chat_meta"
+								style={`justify-content:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
+							>
+								{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x}
+									<div class="chat_username">{msg.x}</div>
+								{/if}
+							</div>
+							<div
+								class={`chat_bubble ${msg.x === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.x ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
+								style={`max-width: 90%; ${msg.x === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
+							>
+								<span class="message-text">{msg.m}</span>
+							</div>
+						</div>
 					{/if}
-				</div>
-				<div
-					class={`chat_bubble ${msg.x === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.x ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
-					style={`max-width: 90%; ${msg.x === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
-				>
-					<span class="message-text">{msg.m}</span>
-				</div>
-			</div>
 		{/each}
 	</div>
 	<div class="input-area">
