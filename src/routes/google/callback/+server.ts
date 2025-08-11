@@ -60,8 +60,6 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		user_id = await create_user(res.email.replace('@gmail.com', ''), { gid: res.sub });
 	}
 
-	// Create new user
-
 	if (!user_id) {
 		console.error('failed to create user after succesful Google Auth', {
 			code,
@@ -82,5 +80,11 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		const jwt = await createSessionJWT({ id: sessionId, createdAt: new Date() });
 		setSessionJwtCookie(event, jwt);
 	} catch {}
+
+	// Redirect to saved next path or fallback
+	const next = event.cookies.get('login_next');
+	if (next && next.startsWith('/')) {
+		return new Response(null, { status: 302, headers: { Location: next } });
+	}
 	redirect(302, '/edit_user');
 }

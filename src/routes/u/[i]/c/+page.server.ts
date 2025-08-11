@@ -9,7 +9,7 @@ import { chat_store_id } from '$lib/constants';
 export const load: PageServerLoad = async ({ locals, params, platform }) => {
 	if (!(await exists(params.i))) error(404, 'user not found');
 	if (!locals.user) {
-		redirect(302, '/google');
+		redirect(302, `/google?next=/u/${params.i}/c`);
 	}
 
 	try {

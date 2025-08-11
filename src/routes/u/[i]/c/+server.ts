@@ -1,24 +1,38 @@
 import { create } from '$lib/db';
 import type { RequestHandler } from './$types';
-import type { ChatMessage, DBChatMessage, SendChatMessage } from '$lib/types';
+import type { ChatMessage, DBChatMessage, SendChatMessage, Message } from '$lib/types';
 import { s } from '$lib/util/s';
 import { cf } from '$lib/util/cf';
 import { PUBLIC_WORKER } from '$env/static/public';
 import { get } from '$lib/db';
 import type { User } from '$lib/types';
 import { sendPushToUserId } from '$lib/server/push';
+import { process_message } from '$lib/util/chat/process_message';
 
 export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
 	const m: SendChatMessage = await request.json();
+
+	const base: Message = {
+		m: m.m,
+		d: m.d,
+		i: m.i,
+		c: m.c,
+		t: m.t,
+		r: params.i,
+		s: 'm',
+		...(locals.user ? { u: locals.user.i } : {})
+	};
+	const with_tc = await process_message(base);
 
 	const i = await create(
 		{
 			...(locals.user ? { u: locals.user.i } : {}),
 			s: 'm',
-			d: m.d,
-			m: m.m,
-			r: params.i
-		} satisfies DBChatMessage,
+			d: with_tc.d,
+			m: with_tc.m,
+			r: params.i,
+			tc: with_tc.tc
+		} satisfies DBChatMessage & { tc?: number },
 		JSON.stringify({
 			...(locals.user ? { sender: locals.user.t } : {}),
 			receiver: m.t,

@@ -4,9 +4,10 @@
 	box-shadow: var(--shadow-lg);
 }
 
-.btn:hover {
+.btn:hover:not(:disabled) {
 	box-shadow: var(--shadow-xl);
 	background-color: var(--bg-button-hover-default);
+	transition: background-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
 }
 
 @utility btn-primary {

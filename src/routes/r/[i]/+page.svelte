@@ -25,6 +25,8 @@
 			toast.error('An unexpected error occurred.');
 		}
 	}
+
+	console.log('d', data)
 </script>
 
 <div class="chat-layout">

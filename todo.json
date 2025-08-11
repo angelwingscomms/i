@@ -1,0 +1,225 @@
+{
+	"ui": {
+		"style": {
+			"/r/:/page": "save room shows well"
+		},
+		"buttons": {
+			"update_profile_hover": "change color on hover",
+			"design_system": "apply hover effect to all except disabled buttons",
+			"fade_hover": "animejs fade color change on hover like search chats button"
+		},
+		"user_description": {
+			"path": "u/:i",
+			"conditions": {
+				"not_self": "show 'You don't have a description yet...'",
+				"self": {
+					"show_description": true,
+					"note": "other users can only see what they have in common",
+					"button": "update your description"
+				}
+			}
+		}
+	},
+	"redirects": {
+		"description": "short alias routes that resolve tokens/handles to canonical ids and redirect",
+		"/u/:t": "resolve user by token/handle 't' (username, slug, short token) -> find user_i -> 302 redirect to /u/:user_i",
+		"/u/:t/c": "resolve user by token 't' -> find user_i -> 302 redirect to /u/:user_i/c (user's personal ai chat)",
+		"/r/:t": "resolve chatroom by tag/name 't' -> find room_i -> 302 redirect to /r/:room_i"
+	},
+	"user": {
+		"fields": {
+			"dc": {
+				"type": "number",
+				"description": "date created",
+				"set_on_create": "Date.now()"
+			},
+			"location": {
+				"type": "object",
+				"description": "optional user location stored for nearby searches and personalisation",
+				"schema": {
+					"lat": "number (decimal degrees)",
+					"lon": "number (decimal degrees)",
+					"place": "string (optional human readable place name)",
+					"accuracy": "number (optional meters)",
+					"updated_at": "number (Date.now())"
+				}
+			}
+		},
+		"edit_user": {
+			"include_location": "allow users to add/update location as part of profile editing; validate coord ranges",
+			"privacy_note": "location is optional and only used for 'nearby' searches and suggestions; respect user privacy settings"
+		},
+		"/u_pageload": {
+			"action": "search_by_vector using user description",
+			"return_format": "{results: r}",
+			"use_in": "page.svelte"
+		}
+	},
+	"utils": {
+		"token_count": {
+			"path": "lib/util",
+			"impl": "google/genai gemini-2.5-flash",
+			"signature": "(t: string) => number"
+		},
+		"get_message_token_count": {
+			"path": "lib/util/chat",
+			"signature": "(m: {r, d, m}) => number",
+			"logic": [
+				"lastmessage = searchbypayload(filters: r = m.r, d < m.d, payload: 'tc')",
+				"return lastmessage.tc + token_count(m.m)"
+			]
+		},
+		"process_message": {
+			"signature": "(message: DBMessage) => DBMessage",
+			"description": "updates message.tc with get_message_token_count",
+			"use_in": ["/u/:i/c/+server.ts", "/r/:i/+server.ts"]
+		}
+	},
+	"components": {
+		"ChatBox": {
+			"props": {
+				"onsend": "(text: string) => void",
+				"messages": "ChatMessage[]"
+			},
+			"function": "only shows chat UI from Chat"
+		},
+		"UserChat": {
+			"refactor_from": "Chat",
+			"uses": "ChatBox"
+		}
+	},
+	"ai_chat": {
+		"routes": {
+			"/i/c": {
+				"uses": "ChatBox",
+				"onsend": "axios.post('/i')",
+				"server": "/i/+server.ts",
+				"logic": {
+					"create": {
+						"requires": "locals.user",
+						"fields": {
+							"u": "locals.user.i",
+							"s": "a",
+							"i": "0 if from user, 1 if from ai",
+							"string_to_embed": "like /i/+server.ts without room_name_or_tag and without 'r' in payload"
+						}
+					}
+				}
+			}
+		},
+		"desc": "describe a great friend for {user_description}",
+		"system_prompt": "use desc",
+		"tools": ["search_messages", "search_users", "search_groups"],
+		"refactor_search_messages": {
+			"from": "/r/:i/+page.server.ts",
+			"args": ["search string", "u?", "r?", "s?", "e?"],
+			"use": "AI to search groups/messages embeds({name: description})"
+		}
+	},
+	"auth": {
+		"post_login_redirect": "to previous page"
+	},
+	"item": {
+		"unify": {
+			"type": "Item",
+			"tenant_id": "i",
+			"payload_fields": {
+				"v": "stock count",
+				"q": "description summary",
+				"kind": "number (0 = product, 1 = service) - use numeric enum to simplify filters and storage",
+				"location": {
+					"type": "object",
+					"description": "item location for nearby search",
+					"schema": {
+						"lat": "number (decimal degrees)",
+						"lon": "number (decimal degrees)",
+						"address": "string (optional)",
+						"place": "string (optional)",
+						"geohash": "string (optional, precomputed geohash for fast filtering)"
+					}
+				}
+			}
+		},
+		"create": {
+			"gemini": "generate description summary",
+			"images": {
+				"storage": "ibm-cos-sdk",
+				"env": "credentials/bucket",
+				"store": "URLs in payload",
+				"primary_image": "markable in UI, default first uploaded",
+				"ui_display": "Primary image shown prominently, other images in horizontal scroll row; click opens full screen viewer"
+			}
+		},
+		"page_load": {
+			"search_query": "gemini + vector search",
+			"get_fields": ["name", "price", "ds"]
+		},
+		"search": {
+			"method": "search_by_vector",
+			"filter": "price range"
+		},
+		"search_nearby": {
+			"api": "/i/search_nearby",
+			"description": "server route that returns items within a radius from a given lat/lon in requested units (meters or miles)",
+			"ai_note": "AI should think deeply about edge cases, performance, and accuracy for location-based searches",
+			"params": {
+				"lat": "number (required)",
+				"lon": "number (required)",
+				"radius": "number (required, interpreted in 'unit')",
+				"unit": "string ('meters' or 'miles'), default 'meters'",
+				"kind": "optional filter: 0=product,1=service",
+				"limit": "optional result limit, default 50",
+				"q": "optional search text to combine with vector search"
+			},
+			"algorithm": [
+				"1. validate lat/lon and radius",
+				"2. convert radius to meters if unit == 'miles' (1 mile = 1609.344 meters)",
+				"3. compute a conservative bounding box to reduce candidates (latDelta = (radiusMeters / 6371000) * (180 / PI); lonDelta = latDelta / cos(lat * PI/180))",
+				"4. use bounding box as payload filter in Qdrant (payload.lat between minLat and maxLat AND payload.lon between minLon and maxLon). If Qdrant supports range payload filters, use them; otherwise store geohash and filter by prefix match",
+				"5. if 'q' provided: perform a vector search with embedding of 'q' (use existing search_by_vector) but limit candidate set to bounding box filter",
+				"6. retrieve a capped candidate set (e.g. 500) to avoid heavy CPU cost",
+				"7. on server compute exact haversine distance for each candidate and filter by radiusMeters; haversine formula recommended for accuracy",
+				"8. sort remaining results by distance asc (or by relevance if 'q' used) and return first 'limit' items with distance field included",
+				"9. pagination: support 'cursor' or offset using last returned id + distance to continue beyond 'limit'",
+				"10. edge cases: handle dateline crossing (lon wrap-around), high-latitude distortions, and very large radii that make bounding box equal entire globe",
+				"11. performance notes: Qdrant can work for moderate-sized collections if you rely on payload filters + candidate capping",
+				"12. privacy: respect user visibility flags when returning nearby items"
+			],
+			"notes": {
+				"unit_conversion": "1 mile = 1609.344 meters",
+				"earth_radius_meters": 6371000,
+				"haversine": "use server-side haversine implementation using double precision",
+				"recommendation": "If 'nearby' searches become critical and frequent, consider adding a dedicated spatial index and sync item locations to it for ultra-fast geospatial queries; otherwise the bounding-box + candidate-filter + haversine approach is robust and portable"
+			}
+		},
+		"page": {
+			"path": "/i/:i",
+			"ui": [
+				"show all item details",
+				"chat with owner button",
+				"description summary + accordion",
+				"chat with ai about product button -> AI chat route"
+			]
+		}
+	},
+	"refactor": {
+		"ChatMessage": "from Chat",
+		"ChatInput": {
+			"from": "Chat",
+			"onmount": "focus input",
+			"ai_suggestion": {
+				"ui": "AI icon inside input right side",
+				"click": "request to gemini for suggestion",
+				"server_logic": {
+					"route": "dedicated suggestion route",
+					"args": "receiver id",
+					"get_last_message": "search_by_payload sort by 'd'",
+					"context_messages": "tc > lastmessage.tc-1000000",
+					"add_user_description": "if locals.user, add user description to give AI context",
+					"prompt": "suggest reasonable chat message based on prior conversation context, last message, and user profile"
+				},
+				"purpose": "Feature provides AI-generated chat message suggestions tailored to conversation history and known user details, to help user continue dialogue naturally"
+			}
+		}
+	}
+}

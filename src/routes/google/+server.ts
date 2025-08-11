@@ -8,6 +8,17 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	const codeVerifier = generateCodeVerifier();
 	const url = google.createAuthorizationURL(state, codeVerifier, ['openid', 'profile', 'email']);
 
+	// Capture intended redirect after login
+	const next = event.url.searchParams.get('next');
+	if (next && next.startsWith('/')) {
+		event.cookies.set('login_next', next, {
+			path: '/',
+			httpOnly: true,
+			maxAge: 300,
+			sameSite: 'lax'
+		});
+	}
+
 	event.cookies.set('google_oauth_state', state, {
 		path: '/',
 		httpOnly: true,

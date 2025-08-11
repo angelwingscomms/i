@@ -1,1 +1,0 @@
-do everything in @/home/x/z/angelwingscomms/i/i ask for clarification

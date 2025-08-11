@@ -230,7 +230,7 @@
 				</div>
 
 				<!-- Location -->
-				<!-- <div class="form-group">
+				<div class="form-group">
 					<label class="form-label">Location</label>
 					<div class="location-container">
 						<div class="location-display">
@@ -263,7 +263,7 @@
 							{/if}
 						</button>
 					</div>
-				</div> -->
+				</div>
 
 				<div class="form-group">
 					<span class="form-label" id="social_label">Social Media Links (Optional)</span>

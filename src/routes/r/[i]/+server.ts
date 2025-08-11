@@ -8,14 +8,20 @@ import { PUBLIC_WORKER } from '$env/static/public';
 export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
 	const m: SendChatMessage = await request.json();
 
+	const messageData = {
+		...(locals.user ? { u: locals.user.i } : {}),
+		s: 'm',
+		d: m.d,
+		m: m.m,
+		r: params.i,
+		...(m.v ? { v: m.v } : {}), // voice data
+		...(m.rp ? { rp: m.rp } : {}), // reply to message ID
+		...(m.at ? { at: m.at } : {}), // attachments
+		...(m.mt ? { mt: m.mt } : {}) // message type
+	} satisfies DBChatMessage & { v?: string; rp?: string; at?: any[]; mt?: string };
+
 	const i = await create(
-		{
-			...(locals.user ? { u: locals.user.i } : {}),
-			s: 'm',
-			d: m.d,
-			m: m.m,
-			r: params.i
-		} satisfies DBChatMessage,
+		messageData,
 		JSON.stringify({
 			...(locals.user ? { sender: locals.user.t } : {}),
 			sent_at: new Date(m.d).toLocaleString(undefined, {
@@ -28,7 +34,8 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 				second: '2-digit'
 			}),
 			message_text: m.m,
-			room_name_or_tag: m.t
+			room_name_or_tag: m.t,
+			message_type: m.mt || 'text'
 		}),
 		m.i
 	);
@@ -36,10 +43,15 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 	cf(platform)('http' + PUBLIC_WORKER + '/send/' + m.c + (await s()), {
 		method: 'POST',
 		body: JSON.stringify({
+			type: 'message',
 			i,
 			...(locals.user ? { x: locals.user.t } : {}),
-			m: m.m
-		} satisfies ChatMessage)
+			m: m.m,
+			...(m.v ? { v: m.v } : {}),
+			...(m.rp ? { rp: m.rp } : {}),
+			...(m.at ? { at: m.at } : {}),
+			...(m.mt ? { mt: m.mt } : {})
+		} satisfies ChatMessage & { type: string })
 	});
 
 	// // Server-side push notification: resolve recipient by tag and notify if found

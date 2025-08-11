@@ -1,0 +1,1 @@
+cp AGENT.md .augment/rules/rules.md

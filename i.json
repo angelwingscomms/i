@@ -1,0 +1,171 @@
+{
+  "ui": {
+    "user_description": {
+      "path": "u/:i",
+      "conditions": {
+        "not_self": "show 'You don't have a description yet...'",
+        "self": {
+          "show_description": true,
+          "note": "other users can only see what they have in common",
+          "button": "update your description"
+        }
+      }
+    }
+  },
+  "user": {
+    "fields": {
+      "dc": {
+        "type": "number",
+        "description": "date created",
+        "set_on_create": "Date.now()"
+      }
+    },
+    "/u_pageload": {
+      "action": "search_by_vector using user description",
+      "return_format": "{results: r}",
+      "use_in": "page.svelte"
+    }
+  },
+  "utils": {
+    "token_count": {
+      "path": "lib/util",
+      "impl": "google/genai gemini-2.5-flash",
+      "signature": "(t: string) => number"
+    },
+    "get_message_token_count": {
+      "path": "lib/util/chat",
+      "signature": "(m: {r, d, m}) => number",
+      "logic": [
+        "lastmessage = searchbypayload(filters: r = m.r, d < m.d, payload: 'tc')",
+        "return lastmessage.tc + token_count(m.m)"
+      ]
+    },
+    "process_message": {
+      "signature": "(m: {r, d, m}) => void",
+      "description": "updates message.tc",
+      "use_in": ["/u/:i/c/+server.ts", "/r/:i/+server.ts"]
+    }
+  },
+  "components": {
+    "ChatBox": {
+      "props": {
+        "onsend": null,
+        "messages": "ChatMessage[]",
+        "text": "$bindable string"
+      },
+      "function": "only shows chat UI from Chat"
+    },
+    "UserChat": {
+      "refactor_from": "Chat",
+      "uses": "ChatBox"
+    }
+  },
+  "ai_chat": {
+    "routes": {
+      "/i/c": {
+        "uses": "ChatBox",
+        "onsend": "axios.post('/i')",
+        "server": "/i/+server.ts",
+        "logic": {
+          "create": {
+            "requires": "locals.user",
+            "fields": {
+              "u": "locals.user.i",
+              "s": "i",
+              "i": "0 if from user, 1 if from ai",
+              "string_to_embed": "like /i/+server.ts without room_name_or_tag"
+            }
+          }
+        }
+      }
+    },
+    "desc": "describe a great friend for {user_description}",
+    "system_prompt": "use desc",
+    "tools": ["search_messages", "search_users", "search_groups"],
+    "refactor_search_messages": {
+      "from": "/r/:i/+page.server.ts",
+      "args": ["search string", "u?", "r?", "s?", "e?"],
+      "use": "AI to search groups/messages embeds({name: description})"
+    }
+  },
+  "chatroom_search": {
+    "routes": {
+      "server": "routes/r/search/+server.ts",
+      "method": "POST",
+      "logic": {
+        "search_by_vector": "with arbitrary filters, payload 't' only",
+        "sort": "by params in jsonbody.s"
+      }
+    },
+    "ui": {
+      "path": "/r/+page.svelte",
+      "features": [
+        "search input -> /r/search",
+        "results show tag and link",
+        "add chatroom button -> modal -> POST /r"
+      ]
+    },
+    "load_recent": {
+      "path": "/r/+page.server.ts",
+      "logic": "search_by_payload({s: 'r'}, null, sort by 'l' desc)"
+    }
+  },
+  "auth": {
+    "post_login_redirect": "to previous page"
+  },
+  "item": {
+    "unify": {
+      "type": "Item",
+      "tenant_id": "i",
+      "payload_fields": {
+        "v": "stock count",
+        "q": "description summary"
+      }
+    },
+    "create": {
+      "gemini": "generate description summary",
+      "images": {
+        "storage": "ibm-cos-sdk",
+        "env": "credentials/bucket",
+        "store": "URLs in payload",
+        "primary_image": "markable in UI, default first uploaded"
+      }
+    },
+    "page_load": {
+      "search_query": "gemini + vector search",
+      "get_fields": ["name", "price", "ds"]
+    },
+    "search": {
+      "method": "search_by_vector",
+      "filter": "price range"
+    },
+    "page": {
+      "path": "/i/:i",
+      "ui": [
+        "show all item details",
+        "chat with owner button",
+        "description summary + accordion",
+        "chat with ai about product button -> AI chat route"
+      ]
+    }
+  },
+  "refactor": {
+    "ChatMessage": "from Chat",
+    "ChatInput": {
+      "from": "Chat",
+      "onmount": "focus input",
+      "ai_suggestion": {
+        "ui": "AI icon inside input right side",
+        "click": "request to gemini for suggestion",
+        "server_logic": {
+          "route": "dedicated suggestion route",
+          "args": "receiver id",
+          "get_last_message": "search_by_payload sort by 'd'",
+          "context_messages": "tc > lastmessage.tc-1000000",
+          "add_user_description": "if locals.user",
+          "prompt": "suggest reasonable chat message"
+        }
+      }
+    }
+  }
+}
