@@ -10,7 +10,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		lon: number;
 		radius: number;
 		unit?: 'meters' | 'miles';
-		kind?: number;
+		kind?: 0 | 1;
 		limit?: number;
 		q?: string;
 	};
@@ -30,7 +30,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		s: 'i',
 		l: { range: { gte: minLat, lte: maxLat } },
 		n: { range: { gte: minLon, lte: maxLon } },
-		...(kind !== undefined ? { kind } : {})
+		...(kind !== undefined ? { k: kind } : {})
 	};
 	const cap = Math.min(Math.max(limit, 1), 200);
 	let candidates: Array<{ i: string; t?: string; l?: number; n?: number; q?: string }> = [];

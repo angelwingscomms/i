@@ -42,7 +42,7 @@ export interface NotificationSubscription {
 	sub: PushSubscription;
 }
 
-export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>;
+export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'> | 'h';
 
 export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't'>;
 
@@ -55,6 +55,7 @@ export interface Message {
 	x?: string; // sender user tag,
 	d: number; // date
 	c: string; // cf id
+	h: number; // has reply
 	t: string; // receiver's (room/user) tag
 	s?: 'm'; // tenant id for messages
 	u?: string; // user ID
