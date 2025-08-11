@@ -37,6 +37,12 @@
 	--accent-pink: #ee4b92; /* vivid pink-magenta */
 	--accent-emerald: #10b981;
 	--accent-rose: #f43f5e;
+	--accent-lilac: #c084fc;
+	--accent-lilac-light: #ddd6fe;
+	--accent-lilac-dark: #a855f7;
+
+	--border-lilac: #c084fc;
+	--shadow-lilac: 0 10px 25px -5px rgba(192, 132, 252, 0.2), 0 4px 6px -2px rgba(192, 132, 252, 0.1);
 }
 
 [data-theme='dark'] {
@@ -72,16 +78,22 @@
 	--accent-pink: #ee4b92;
 	--accent-emerald: #50d194;
 	--accent-rose: #f43f5e;
+	--accent-lilac: #e879f9;
+	--accent-lilac-light: #f3e8ff;
+	--accent-lilac-dark: #c084fc;
+
+	--border-lilac: #e879f9;
+	--shadow-lilac: 0 10px 25px -5px rgba(232, 121, 249, 0.3), 0 4px 6px -2px rgba(232, 121, 249, 0.2);
 
 	--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
 	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
 	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
 	--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4);
 	--shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
-	/* lilac panel for contrast sections */
 }
 
 /* additional brand tokens */
 :root {
 	--panel-lilac: #e9d5ff; /* light panels */
+	--panel-lilac-dark: #1e1b3a; /* dark panels */
 }

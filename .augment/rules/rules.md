@@ -50,7 +50,8 @@ DB fields:
 - s: type/tenant (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 - i: id; t: tag/name/text; u: user id; d: description/date; a: age/created at; g: gender; l: last activity/lat; n: lon; w: whatsapp; c/x: compact maps/arrays
 
-- for each task, extremely use as little code as possible to fittingly and satisfyingly complete the task. This rule does not apply to styling. go extreme for styling and subtle animejs effects. Always think like a pro designer at a renowned creative studio working for Apple, think like Jony Ive.
+- be as nondestructive as possible when editing code. edit only what pertains to your objective and touch nothing else
+- go extreme for styling and subtle animejs effects. Always think like a pro designer at a renowned creative studio working for Apple, think like Jony Ive.
 - all db data stored in single Qdrant collection 'i', `s` payload field isolates data types (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 - always use single/double letter field names for db (`i` id, `t` tag/text, `u` user id, `d` desc/date, `a` age/created, `g` gender, `l` last/lat, `n` lon, `w` whatsapp, `c` compact map, `x` compact array)
 - always use `snake_case` for variable/function names; files and routes use SvelteKit defaults

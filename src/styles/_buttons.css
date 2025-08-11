@@ -12,11 +12,13 @@
 
 @utility btn-primary {
 	@apply btn text-white;
-	background: var(--accent-blue);
+	background: linear-gradient(135deg, var(--accent-blue), var(--accent-lilac));
+	box-shadow: var(--shadow-lilac);
 }
 
 .btn-primary:hover:not(:disabled) {
-	background: var(--accent-indigo);
+	background: linear-gradient(135deg, var(--accent-indigo), var(--accent-lilac-dark));
+	transform: translateY(-2px);
 }
 
 @utility btn-secondary {
@@ -57,9 +59,34 @@
 
 .btn-ghost:hover:not(:disabled) {
 	background: var(--bg-glass-hover);
-	color: var(--text-primary);
+	color: var(--accent-lilac);
+	border-color: var(--accent-lilac);
+	transform: translateY(-1px);
+}
+
+/* Lilac Button */
+@utility btn-lilac {
+	@apply btn text-white;
+	background: linear-gradient(135deg, var(--accent-lilac), var(--accent-purple));
+	box-shadow: var(--shadow-lilac);
+}
+
+.btn-lilac:hover:not(:disabled) {
+	background: linear-gradient(135deg, var(--accent-lilac-dark), var(--accent-pink));
+	transform: translateY(-2px);
 }
 
 @utility btn-sm {
 	@apply px-4 py-2 text-sm;
+}
+
+@utility btn-lg {
+	@apply px-8 py-4 text-lg font-semibold;
+	min-height: 3.5rem;
+}
+
+@utility btn-xl {
+	@apply px-12 py-6 text-xl font-bold;
+	min-height: 4rem;
+	border-radius: 2rem;
 }
