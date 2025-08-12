@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { animate, createTimeline, stagger } from 'animejs';
+	
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -11,12 +11,6 @@
 	onMount(() => {
 		// Hero entrance animation sequence
 		const timeline = createTimeline()
-		.add('.hero-background-orb', {
-			scale: [0, 1],
-			opacity: [0, 0.3],
-			duration: 2000,
-			delay: stagger(300),
-		})
 		.add('.hero-title', {
 			opacity: [0, 1],
 			translateY: [100, 0],
@@ -34,18 +28,6 @@
 			scale: [0.9, 1],
 			duration: 600,
 		}, '-=400');
-
-		// Continuous floating animations
-		animate('.hero-background-orb', {
-			translateY: [-20, 20],
-			translateX: [-10, 10],
-			rotate: [0, 360],
-			duration: 8000,
-			direction: 'alternate',
-			loop: true,
-			ease: 'inOutSine',
-			delay: stagger(1000),
-		});
 
 		// Pulse animation for CTA button
 		animate('.pulse-button', {
@@ -162,14 +144,7 @@
 <main class="min-h-screen bg-gradient-to-br from-bg-primary via-bg-secondary to-bg-tertiary">
 	<!-- Hero Section -->
 	<section class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-20">
-		<!-- Animated Background Elements -->
-		<div class="absolute inset-0 overflow-hidden">
-			<div class="hero-background-orb absolute -top-20 -left-20 h-64 w-64 rounded-full opacity-0" style="background: var(--color-theme-1);"></div>
-			<div class="hero-background-orb absolute -bottom-20 -right-20 h-80 w-80 rounded-full opacity-0" style="background: var(--color-theme-6);"></div>
-			<div class="hero-background-orb absolute top-1/4 left-1/4 h-32 w-32 rounded-full opacity-0" style="background: var(--color-theme-3);"></div>
-			<div class="hero-background-orb absolute bottom-1/4 right-1/3 h-48 w-48 rounded-full opacity-0" style="background: var(--color-theme-2);"></div>
-			<div class="hero-background-orb absolute top-1/2 right-1/4 h-24 w-24 rounded-full opacity-0" style="background: var(--color-theme-4);"></div>
-		</div>
+		
 
 		<!-- Hero Content -->
 		<div class="relative z-10 mx-auto max-w-6xl text-center">
@@ -409,37 +384,3 @@
 		</div>
 	</section>
 </main>
-
-<!-- Custom Styles -->
-<style>
-	.hero-background-orb {
-		filter: blur(40px);
-	}
-
-	.pulse-button {
-		animation: pulse-glow 3s ease-in-out infinite;
-	}
-
-	@keyframes pulse-glow {
-		0%, 100% {
-			box-shadow: 0 0 20px rgba(182, 55, 250, 0.3);
-		}
-		50% {
-			box-shadow: 0 0 40px rgba(182, 55, 250, 0.6), 0 0 60px rgba(182, 55, 250, 0.4);
-		}
-	}
-
-	.feature-card {
-		opacity: 0;
-		transform: translateY(40px);
-	}
-
-	.interactive-btn:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-	}
-
-	.hero-title, .hero-subtitle, .hero-cta {
-		opacity: 0;
-	}
-</style>

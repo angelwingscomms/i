@@ -7,9 +7,22 @@
 	import { themeStore } from '$lib/stores/theme';
 	import { onMount } from 'svelte';
 	import { ensurePushSubscribed } from '$lib/util/notifications';
+	import { animate, createTimeline, stagger, utils } from 'animejs';
 
 	let { children, data } = $props();
 	let is_sidebar_open = $state(false);
+
+	const animateOrb = async (orb: Element) => {
+		// We wrap the logic in a continuous loop
+		while (true) {
+			await animate(orb, {
+				translateX: () => utils.random(-window.innerWidth / 3, window.innerWidth / 3),
+				translateY: () => utils.random(-window.innerHeight / 3, window.innerHeight / 3),
+				duration: () => utils.random(5000, 8000),
+				easing: 'inOutSine'
+			}).finished; // .finished is a Promise that resolves when the animation completes
+		}
+	};
 
 	onMount(() => {
 		themeStore.init();
@@ -21,12 +34,56 @@
 				}
 			});
 		}
+
+		// Animated background orbs
+		const timeline = createTimeline().add('.hero-background-orb', {
+			scale: [0, 1],
+			opacity: [0, 0.3],
+			duration: 2000,
+			delay: stagger(300)
+		});
+
+		async function randomMovement(element: Element) {
+			const orbs = document.querySelectorAll('.hero-background-orb');
+			orbs.forEach((orb) => {
+				// We start the infinite animation loop for each orb
+				animateOrb(orb);
+			});
+		}
+
+		const orbs = document.querySelectorAll('.hero-background-orb');
+		orbs.forEach((orb) => {
+			randomMovement(orb);
+		});
 	});
 </script>
 
 <svelte:head>
 	<meta name="theme-color" content="#000000" />
 </svelte:head>
+
+<div class="absolute inset-0 -z-10 overflow-hidden">
+	<div
+		class="hero-background-orb absolute -top-20 -left-20 h-64 w-64 rounded-full opacity-0"
+		style="background: var(--color-theme-1);"
+	></div>
+	<div
+		class="hero-background-orb absolute -right-20 -bottom-20 h-80 w-80 rounded-full opacity-0"
+		style="background: var(--color-theme-6);"
+	></div>
+	<div
+		class="hero-background-orb absolute top-1/4 left-1/4 h-32 w-32 rounded-full opacity-0"
+		style="background: var(--color-theme-3);"
+	></div>
+	<div
+		class="hero-background-orb absolute right-1/3 bottom-1/4 h-48 w-48 rounded-full opacity-0"
+		style="background: var(--color-theme-2);"
+	></div>
+	<div
+		class="hero-background-orb absolute top-1/2 right-1/4 h-24 w-24 rounded-full opacity-0"
+		style="background: var(--color-theme-4);"
+	></div>
+</div>
 
 <Navbar user={data?.user as any} onmenutoggle={() => (is_sidebar_open = !is_sidebar_open)} />
 <MobileSidebar bind:is_open={is_sidebar_open} user={data?.user as any} />

@@ -1,11 +1,8 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import type { User } from '$lib/types';
 
 	export let is_open: boolean;
 	export let user: User | null = null;
-
-	const dispatch = createEventDispatcher();
 
 	function close_sidebar() {
 		is_open = false;

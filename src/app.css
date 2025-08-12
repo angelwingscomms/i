@@ -26,6 +26,7 @@
 @import './styles/_utilities.css';
 @import './styles/_responsive.css';
 @import './styles/_fonts.css';
+@import './styles/_animated_background.css';
 
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';

@@ -11,6 +11,7 @@
 body {
 	@apply min-h-screen transition-colors duration-300;
 	color: var(--text-primary);
+	background-color: var(--bg-primary);
 }
 
 /* Remove spinner buttons from number inputs */
