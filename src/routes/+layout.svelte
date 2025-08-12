@@ -20,7 +20,7 @@
 				translateY: () => utils.random(-window.innerHeight / 3, window.innerHeight / 3),
 				duration: () => utils.random(5000, 8000),
 				easing: 'inOutSine'
-			}).finished; // .finished is a Promise that resolves when the animation completes
+			})
 		}
 	};
 
