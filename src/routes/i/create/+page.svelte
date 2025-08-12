@@ -109,7 +109,7 @@
 	<!-- Floating background elements -->
 	<div class="absolute inset-0 overflow-hidden">
 		<div class="floating-orb absolute -top-20 -left-20 h-64 w-64 rounded-full opacity-20" style="background: var(--color-theme-1);"></div>
-		<div class="floating-orb absolute -bottom-20 -right-20 h-80 w-80 rounded-full opacity-15" style="background: var(--color-theme-6);"></div>
+		<div class="floating-orb absolute -bottom-20 -right-20 h-80 w-80 rounded-full opacity-15" style="background: var(--color-theme-3);"></div>
 		<div class="floating-orb absolute top-1/4 right-1/4 h-32 w-32 rounded-full opacity-10" style="background: var(--color-theme-3);"></div>
 	</div>
 
@@ -127,7 +127,7 @@
 
 	<!-- Form Section -->
 	<div class="form-section relative z-10 mx-auto max-w-2xl px-4 pb-16 opacity-0">
-		<div class="rounded-3xl p-8 sm:p-6" style="background: transparent; border: 1px solid var(--color-theme-6);">
+		<div class="rounded-3xl p-8 sm:p-6" style="background: transparent; border: 1px solid var(--color-theme-3);">
 			<div class="space-y-8">
 				<!-- Name Field -->
 				<div class="form-field opacity-0">
@@ -137,11 +137,11 @@
 					<input
 						id="item-name"
 						class="w-full rounded-full px-6 py-4 text-lg font-medium transition-all focus:outline-none"
-						style="border: 1px solid var(--color-theme-6); background: transparent;"
+						style="border: 1px solid var(--color-theme-3); background: transparent;"
 						placeholder="Enter a catchy name for your item..."
 						bind:value={name}
 						onfocus={(e) => (e.target as HTMLInputElement).style.border = '1px solid var(--color-theme-1)'}
-						onblur={(e) => (e.target as HTMLInputElement).style.border = '1px solid var(--color-theme-6)'}
+						onblur={(e) => (e.target as HTMLInputElement).style.border = '1px solid var(--color-theme-3)'}
 					/>
 				</div>
 
@@ -153,11 +153,11 @@
 					<textarea
 						id="item-description"
 						class="w-full rounded-2xl px-6 py-4 text-lg font-medium transition-all focus:outline-none min-h-[120px]"
-						style="border: 1px solid var(--color-theme-6); background: transparent;"
+						style="border: 1px solid var(--color-theme-3); background: transparent;"
 						placeholder="Describe your item in detail. What makes it special?"
 						bind:value={desc}
 						onfocus={(e) => (e.target as HTMLTextAreaElement).style.border = '1px solid var(--color-theme-1)'}
-						onblur={(e) => (e.target as HTMLTextAreaElement).style.border = '1px solid var(--color-theme-6)'}
+						onblur={(e) => (e.target as HTMLTextAreaElement).style.border = '1px solid var(--color-theme-3)'}
 					></textarea>
 				</div>
 
@@ -170,13 +170,13 @@
 						<div class="flex gap-4">
 							<label class="flex-1">
 								<input type="radio" class="sr-only" bind:group={kind} value={0} />
-								<div class="cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all" style="{kind === 0 ? `background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);` : `background: transparent; border: 1px solid var(--color-theme-6); color: var(--color-theme-4);`}">
+								<div class="cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all" style="{kind === 0 ? `background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);` : `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}">
 									🛍️ Product
 								</div>
 							</label>
 							<label class="flex-1">
 								<input type="radio" class="sr-only" bind:group={kind} value={1} />
-								<div class="cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all" style="{kind === 1 ? `background: transparent; border: 1px solid var(--color-theme-2); color: var(--color-theme-2);` : `background: transparent; border: 1px solid var(--color-theme-6); color: var(--color-theme-4);`}">
+								<div class="cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all" style="{kind === 1 ? `background: transparent; border: 1px solid var(--color-theme-2); color: var(--color-theme-2);` : `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}">
 									⚡ Service
 								</div>
 							</label>
@@ -198,12 +198,12 @@
 							class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
 							onchange={(e) => (files = (e.target as HTMLInputElement).files)}
 						/>
-						<div class="rounded-2xl border border-dashed p-8 text-center transition-all" style="border-color: var(--color-theme-6); background: transparent;">
+						<div class="rounded-2xl border border-dashed p-8 text-center transition-all" style="border-color: var(--color-theme-3); background: transparent;">
 							<div class="mb-4 text-4xl">📸</div>
 							<p class="text-lg font-medium" style="color: var(--color-theme-4);">
 								{files && files.length > 0 ? `${files.length} file(s) selected` : 'Click to upload images'}
 							</p>
-							<p class="mt-2 text-sm" style="color: var(--color-theme-6);">
+							<p class="mt-2 text-sm" style="color: var(--color-theme-3);">
 								PNG, JPG, GIF up to 10MB each
 							</p>
 						</div>
