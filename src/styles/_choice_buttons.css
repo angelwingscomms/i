@@ -6,25 +6,25 @@
 @utility choice-btn {
 	@apply transform cursor-pointer rounded-full px-4 py-2 text-sm transition-all duration-300 hover:scale-105;
 	border: 2px solid var(--border-secondary);
-	background: var(--bg-glass);
+	background: transparent;
 	color: var(--text-secondary);
 }
 
 .choice-btn:hover {
 	border-color: var(--accent-rose);
-	background: var(--bg-glass-hover);
+	background: transparent;
 }
 
 @utility choice-btn-active {
 	@apply choice-btn choice-btn-glow text-white;
-	background: var(--accent-rose);
+	background: transparent;
 }
 
 @utility choice-btn-active-blue {
 	@apply choice-btn choice-btn-glow text-white;
-	background: var(--accent-blue);
+	background: transparent;
 	border-color: var(--border-focus); /* Ensure blue border */
-	box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent); /* Ensure blue glow */
+	box-shadow: none; /* Ensure blue glow */
 }
 
 @utility choice-btn-inactive {
@@ -33,6 +33,5 @@
 
 @utility choice-btn-glow {
 	border-color: var(--border-focus);
-	box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent);
 	outline: none;
 }

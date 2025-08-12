@@ -34,11 +34,10 @@
 	min-width: 100%;
 	z-index: 60; /* above cards/nav content */
 	/* look */
-	background: var(--bg-card);
+	background: transparent;
 	border: 2px solid var(--border-secondary);
 	border-radius: 12px;
 	backdrop-filter: blur(12px);
-	box-shadow: var(--shadow-lg);
 	/* scroll */
 	max-height: 320px;
 	overflow-y: auto;
@@ -60,11 +59,11 @@
 }
 
 .dropdown-item:hover {
-	background: var(--bg-glass-hover);
+	background: transparent;
 }
 
 .dropdown-item[aria-selected='true'] {
-	background: var(--bg-glass);
+	background: transparent;
 	color: var(--text-primary);
 	font-weight: 600;
 }

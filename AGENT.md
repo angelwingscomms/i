@@ -1,4 +1,4 @@
-For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary. Always think about styling deeply, like you're Steve Jobs and Jony Ive. Like you have years of expert experience creating beautiful UI and design. Like you work at a high brow creative studio with high brow clients like Apple.
+For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary. Always think about styling deeply, like you're Steve Jobs and Jony Ive. Like you have years of expert experience creating beautiful UI and design. Like you work at a high brow creative studio with high brow clients like Apple. All elements, including buttons, must never have a background color. Buttons should only have thin outlines.
 
 Codebase conventions:
 
@@ -53,7 +53,7 @@ DB field cheatsheet:
 
 ---
 
-- for each task, extremely use as little code as possible to fittingly and satisfyingly complete the task. This rule does not apply to styling. go extreme for styling and subtle animejs effects. Always think like a pro designer at a renowned creative studio working for Apple, think like Jony Ive.
+- go extreme for styling and subtle animejs effects. Always think like a pro designer at a renowned creative studio working for Apple, think like Jony Ive.
 - all db data stored in single Qdrant collection 'i', `s` payload field isolates data types (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 - always use single/double letter field names for db (`i` id, `t` tag/text, `u` user id, `d` desc/date, `a` age/created, `g` gender, `l` last/lat, `n` lon, `w` whatsapp, `c` compact map, `x` compact array)
 - always use `snake_case` for variable/function names; files and routes use SvelteKit defaults
@@ -80,5 +80,7 @@ DB field cheatsheet:
 - routes: place auth, search, notif APIs under `src/routes/.../+server.ts`; load user via `+layout.server.ts`
 - cookies: session cookie name `auth_session`; httpOnly; sameSite=lax; secure in prod
 - code style: concise, minimal, snake_case; tiny functions; prefer small focused modules
-- always code with extreme minimalism; style pages elegantly with the design system; golf code where feasible
+- style pages elegantly with the design system
+- golf code where feasible
 - always use only src/lib/db/index.ts helper functions for all DB ops. Create new ones there if needed. Never use qdrant client directly.
+- always code as nondestructively and defensively as possible. only affect code that pertains to your objective and touch nothing else

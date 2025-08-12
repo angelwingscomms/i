@@ -2,7 +2,8 @@
 	import type { PageData } from './$types';
 	import { browser } from '$app/environment';
 	import axios from 'axios';
-	import { onMount } from 'svelte'; // Import onMount
+	import { onMount } from 'svelte';
+	import { animate, createTimeline, stagger } from 'animejs';
 
 	export let data: PageData;
 
@@ -23,9 +24,11 @@
 	function apply_sort(s: 'match' | 'age') {
 		sort = s;
 		sort_open = false;
-		results = results.slice().sort((a, b) =>
-			sort === 'match' ? (b.score ?? 0) - (a.score ?? 0) : (a.a ?? 0) - (b.a ?? 0)
-		);
+		results = results
+			.slice()
+			.sort((a, b) =>
+				sort === 'match' ? (b.score ?? 0) - (a.score ?? 0) : (a.a ?? 0) - (b.a ?? 0)
+			);
 	}
 
 	function handle_click_outside(event: MouseEvent) {
@@ -61,6 +64,57 @@
 				search();
 			}
 		}
+
+		// Page entrance animations
+		const timeline = createTimeline()
+			.add('.page-header', {
+				opacity: [0, 1],
+				translateY: [50, 0],
+				duration: 800
+			})
+			.add(
+				'.search-filters',
+				{
+					opacity: [0, 1],
+					translateY: [30, 0],
+					duration: 600
+				},
+				'-=400'
+			)
+			.add(
+				'.search-actions',
+				{
+					opacity: [0, 1],
+					translateY: [20, 0],
+					duration: 400
+				},
+				'-=200'
+			);
+
+		// Interactive hover animations
+		document.addEventListener('mouseover', (e) => {
+			const target = e.target as HTMLElement;
+			if (target.classList.contains('user-card')) {
+				animate(target, {
+					scale: 1.02,
+					translateY: -5,
+					duration: 300,
+					ease: 'outQuart'
+				});
+			}
+		});
+
+		document.addEventListener('mouseout', (e) => {
+			const target = e.target as HTMLElement;
+			if (target.classList.contains('user-card')) {
+				animate(target, {
+					scale: 1,
+					translateY: 0,
+					duration: 300,
+					ease: 'outQuart'
+				});
+			}
+		});
 	});
 
 	function matchPercent(score?: number) {
@@ -69,12 +123,7 @@
 		return Math.round(pct);
 	}
 
-	function badgeColor(p: number | null | undefined) {
-		if (p === null || p === undefined) return 'bg-gray-400';
-		if (p >= 75) return 'bg-emerald-500';
-		if (p >= 45) return 'bg-yellow-500';
-		return 'bg-rose-500';
-	}
+
 
 	async function search() {
 		if (minAge > maxAge) return;
@@ -96,136 +145,254 @@
 
 <svelte:window onclick={handle_click_outside} />
 
-
-<div class="container-main py-8">
-	<h1 class="hero-title mb-4 text-center">search users</h1>
-
-
-	<!-- filter bar -->
-	<div class="card-normal mb-6">
-		<div class="flex flex-wrap items-center gap-3">
-			<div class="choice-group">
-				<label
-					><input type="radio" class="sr-only" bind:group={gender} value={undefined} />
-					<div class={gender == null ? 'choice-btn-active' : 'choice-btn-inactive'}>any</div></label
-				>
-				<label
-					><input type="radio" class="sr-only" bind:group={gender} value={0} />
-					<div class={gender === 0 ? 'choice-btn-active-blue' : 'choice-btn-inactive'}>
-						male
-					</div></label
-				>
-				<label
-					><input type="radio" class="sr-only" bind:group={gender} value={1} />
-					<div class={gender === 1 ? 'choice-btn-active' : 'choice-btn-inactive'}>
-						female
-					</div></label
-				>
-			</div>
-
-			<div class="age-range-container ml-auto">
-				<div class="flex items-center gap-2">
-					<span class="text-sm text-[var(--text-tertiary)]">{minAge}</span>
-					<input
-						type="range"
-						min="13"
-						max="99"
-						bind:value={minAge}
-						oninput={() => {
-							if (minAge > maxAge) maxAge = minAge;
-						}}
-					/>
-				</div>
-				<div class="age-divider"></div>
-				<div class="flex items-center gap-2">
-					<input
-						type="range"
-						min="13"
-						max="99"
-						bind:value={maxAge}
-						oninput={() => {
-							if (maxAge < minAge) minAge = maxAge;
-						}}
-					/>
-					<span class="text-sm text-[var(--text-tertiary)]">{maxAge}</span>
-				</div>
-			</div>
-
-			{#if data?.user}
-				<div class="choice-group">
-					<button
-						class={mode === 'profile' ? 'choice-btn-active' : 'choice-btn-inactive'}
-						onclick={() => (mode = 'profile')}>profile</button
-					>
-					<button
-						class={mode === 'custom' ? 'choice-btn-active' : 'choice-btn-inactive'}
-						onclick={() => (mode = 'custom')}>custom</button
-					>
-				</div>
-			{/if}
-
-			<div class="ml-auto flex items-center gap-3">
-				<div class="dropdown-container" bind:this={sort_ref}>
-					<button type="button" class="dropdown-trigger" onclick={() => (sort_open = !sort_open)} aria-haspopup="listbox" aria-expanded={sort_open} aria-label="sort options">
-						<span class="text-secondary">sort:</span>
-						<span class="text-primary">{sort}</span>
-						<svg class="dropdown-caret {sort_open ? 'dropdown-caret-open' : ''}" width="10" height="6" viewBox="0 0 10 6" fill="currentColor" aria-hidden="true">
-							<path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-						</svg>
-					</button>
-					{#if sort_open}
-						<div role="listbox" class="dropdown-panel dropdown-sm animate-fade-in">
-							<button type="button" role="option" aria-selected={sort === 'match'} class="dropdown-item" onclick={() => apply_sort('match')}>match</button>
-							<button type="button" role="option" aria-selected={sort === 'age'} class="dropdown-item" onclick={() => apply_sort('age')}>age</button>
-						</div>
-					{/if}
-				</div>
-				<button class="btn-primary btn-md" onclick={search} disabled={loading}
-					>{loading ? 'searching…' : 'search'}</button
-				>
-			</div>
+<div class="min-h-screen">
+	<!-- Page Header -->
+	<div class="page-header px-4 py-16 text-center opacity-0 sm:py-12">
+		<div class="mx-auto max-w-4xl">
+			<h1 class="mb-6 text-6xl font-black sm:text-4xl" style="color: var(--color-theme-4);">
+				Find Your <span style="color: var(--color-theme-1);">Perfect Match</span>
+			</h1>
+			<p class="text-xl text-gray-600 sm:text-lg dark:text-gray-300">
+				Discover amazing people in your community with AI-powered compatibility matching
+			</p>
 		</div>
-
-		{#if !data?.user || mode === 'custom'}
-			<div class="mt-3">
-				<input
-					class="input-rect w-full"
-					placeholder="add a short description to match on (optional)"
-					bind:value={description}
-				/>
-			</div>
-		{/if}
 	</div>
 
-	<!-- results grid -->
-	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-		{#each results as u (u.i)}
-			{@const p = matchPercent(u.score)}
-			<a class="no-underline" href={`/u/${u.i}`}>
-				<div class="result-card">
-					<div class="flex items-center gap-3">
-						<div class="h-12 w-12 overflow-hidden rounded-full bg-gray-800">
-							{#if u.av}
-								<img src={u.av} alt={u.t} class="h-full w-full object-cover" />
-							{:else}
-								<div class="flex h-full w-full items-center justify-center text-xs text-gray-400">
-									no pic
-								</div>
-							{/if}
-						</div>
-						<div class="flex-1">
-							<div class="result-title">{u.t}</div>
-							<div class="result-meta text-sm">
-								<span>{u.a ?? '?'} yrs</span>
-								<span>· {u.g === 0 ? 'male' : u.g === 1 ? 'female' : '?'}</span>
+	<!-- Search Filters -->
+	<div class="search-filters mx-auto max-w-4xl px-4 pb-8 opacity-0">
+		<div
+			class="rounded-3xl p-8 sm:p-6"
+			style=" border: 3px solid var(--color-theme-6);"
+		>
+			<div class="flex flex-wrap items-center gap-6 sm:flex-col sm:items-stretch">
+				<!-- Gender Selection -->
+				<div class="flex-1">
+					<fieldset>
+						<legend class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">Gender Preference</legend>
+						<div class="flex gap-2">
+						<label class="flex-1">
+							<input type="radio" class="sr-only" bind:group={gender} value={undefined} />
+							<div
+								class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ==
+								null
+									? 'text-white'
+									: 'text-gray-600 hover:bg-gray-100'}"
+								style={gender == null
+									? `background: transparent; border: 2px solid var(--color-theme-6);`
+									: 'background: transparent; border: 2px solid var(--color-theme-6);'}
+							>
+								Any
 							</div>
+						</label>
+						<label class="flex-1">
+							<input type="radio" class="sr-only" bind:group={gender} value={0} />
+							<div
+								class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ===
+								0
+									? 'text-white'
+									: 'text-gray-600 hover:bg-gray-100'}"
+								style={gender === 0
+									? `background: transparent; border: 2px solid var(--color-theme-2);`
+									: 'background: transparent; border: 2px solid var(--color-theme-2);'}
+							>
+								Male
+							</div>
+						</label>
+						<label class="flex-1">
+							<input type="radio" class="sr-only" bind:group={gender} value={1} />
+							<div
+								class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ===
+								1
+									? 'text-white'
+									: 'text-gray-600 hover:bg-gray-100'}"
+								style={gender === 1
+									? `background: transparent; border: 2px solid var(--color-theme-3);`
+									: 'background: transparent; border: 2px solid var(--color-theme-3);'}
+							>
+								Female
+							</div>
+						</label>
+					</div>
+					</fieldset>
+				</div>
+
+				<!-- Age Range -->
+				<div class="flex-1">
+					<div class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">Age Range</div>
+					<div class="space-y-4">
+						<div class="flex items-center gap-4">
+							<span class="text-sm font-medium" style="color: var(--color-theme-1);"
+								>Min: {minAge}</span
+							>
+							<input
+								type="range"
+								min="13"
+								max="99"
+								bind:value={minAge}
+								class="flex-1 accent-[var(--color-theme-1)]"
+								oninput={() => {
+									if (minAge > maxAge) maxAge = minAge;
+								}}
+							/>
 						</div>
-						<div class={`rounded-full px-2 py-1 text-xs font-semibold text-white ${badgeColor(p)}`}>
-							{p === null ? '—' : `${p}%`}
+						<div class="flex items-center gap-4">
+							<span class="text-sm font-medium" style="color: var(--color-theme-2);"
+								>Max: {maxAge}</span
+							>
+							<input
+								type="range"
+								min="13"
+								max="99"
+								bind:value={maxAge}
+								class="flex-1 accent-[var(--color-theme-2)]"
+								oninput={() => {
+									if (maxAge < minAge) minAge = maxAge;
+								}}
+							/>
 						</div>
 					</div>
 				</div>
-			</a>
-		{/each}
+
+				{#if data?.user}
+					<div class="choice-group">
+						<button
+							class={mode === 'profile' ? 'choice-btn-active' : 'choice-btn-inactive'}
+							onclick={() => (mode = 'profile')}>profile</button
+						>
+						<button
+							class={mode === 'custom' ? 'choice-btn-active' : 'choice-btn-inactive'}
+							onclick={() => (mode = 'custom')}>custom</button
+						>
+					</div>
+				{/if}
+
+				<div class="ml-auto flex items-center gap-3">
+					<div class="dropdown-container" bind:this={sort_ref}>
+						<button
+							type="button"
+							class="dropdown-trigger"
+							onclick={() => (sort_open = !sort_open)}
+							aria-haspopup="listbox"
+							aria-expanded={sort_open}
+							aria-label="sort options"
+						>
+							<span class="text-secondary">sort:</span>
+							<span class="text-primary">{sort}</span>
+							<svg
+								class="dropdown-caret {sort_open ? 'dropdown-caret-open' : ''}"
+								width="10"
+								height="6"
+								viewBox="0 0 10 6"
+								fill="currentColor"
+								aria-hidden="true"
+							>
+								<path
+									d="M1 1L5 5L9 1"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								/>
+							</svg>
+						</button>
+						{#if sort_open}
+							<div role="listbox" class="dropdown-panel dropdown-sm animate-fade-in">
+								<button
+									type="button"
+									role="option"
+									aria-selected={sort === 'match'}
+									class="dropdown-item"
+									onclick={() => apply_sort('match')}>match</button
+								>
+								<button
+									type="button"
+									role="option"
+									aria-selected={sort === 'age'}
+									class="dropdown-item"
+									onclick={() => apply_sort('age')}>age</button
+								>
+							</div>
+						{/if}
+					</div>
+					<button class="btn-primary btn-md" onclick={search} disabled={loading}
+						>{loading ? 'searching…' : 'search'}</button
+					>
+				</div>
+			</div>
+
+			{#if !data?.user || mode === 'custom'}
+				<div class="mt-3">
+					<input
+						class="input-rect w-full"
+						placeholder="add a short description to match on (optional)"
+						bind:value={description}
+						style="background: transparent; border: 1px solid var(--color-theme-6);"
+					/>
+				</div>
+			{/if}
+		</div>
+
+		<!-- Results List -->
+		<div class="space-y-3">
+			{#each results as u (u.i)}
+				{@const p = matchPercent(u.score)}
+				<a class="user-card group block no-underline" href={`/u/${u.i}`}>
+					<div class="flex items-center gap-4 rounded-2xl p-4 transition-all duration-300" style="background: transparent; border: 1px solid var(--color-theme-6);">
+						<!-- Avatar -->
+						<div class="relative flex-shrink-0">
+							<div class="h-12 w-12 overflow-hidden rounded-full" style="border: 1px solid var(--color-theme-6);">
+								{#if u.av}
+									<img src={u.av} alt={u.t} class="h-full w-full object-cover" />
+								{:else}
+									<div class="flex h-full w-full items-center justify-center text-lg font-bold" style="background: transparent; color: var(--text-primary);">
+										{u.t.charAt(0).toUpperCase()}
+									</div>
+								{/if}
+							</div>
+						</div>
+
+						<!-- User Info -->
+						<div class="flex-1 min-w-0">
+							<div class="flex items-center justify-between">
+								<h3 class="text-lg font-bold truncate group-hover:scale-105 transition-transform" style="color: var(--color-theme-4);">
+									{u.t}
+								</h3>
+								{#if p !== null}
+									<span class="rounded-full px-2 py-1 text-xs font-bold ml-2" style="background: transparent; border: 1px solid {p >= 80 ? 'var(--color-theme-1)' : p >= 60 ? 'var(--color-theme-2)' : p >= 40 ? 'var(--color-theme-3)' : 'var(--color-theme-6)'}; color: {p >= 80 ? 'var(--color-theme-1)' : p >= 60 ? 'var(--color-theme-2)' : p >= 40 ? 'var(--color-theme-3)' : 'var(--color-theme-6)'};">
+										{p}%
+									</span>
+								{/if}
+							</div>
+
+							<!-- Details -->
+							<div class="flex items-center gap-3 mt-1 text-sm">
+								<span style="color: var(--color-theme-1);">
+									{u.a ?? '?'} years
+								</span>
+								<span style="color: var(--color-theme-2);">
+									{u.g === 0 ? 'Male' : u.g === 1 ? 'Female' : 'Other'}
+								</span>
+							</div>
+						</div>
+
+						<!-- Arrow -->
+						<div class="flex-shrink-0">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--color-theme-6);" class="group-hover:translate-x-1 transition-transform">
+								<path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"/>
+							</svg>
+						</div>
+					</div>
+				</a>
+			{/each}
+		</div>
+
+		<!-- No Results State -->
+		{#if !loading && results.length === 0}
+			<div class="text-center py-16">
+				<div class="mb-6 text-6xl">🔍</div>
+				<h3 class="mb-4 text-2xl font-bold" style="color: var(--color-theme-4);">No users found</h3>
+				<p class="text-lg" style="color: var(--color-theme-6);">Try adjusting your search criteria</p>
+			</div>
+		{/if}
 	</div>
 </div>

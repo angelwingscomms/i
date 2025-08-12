@@ -6,21 +6,21 @@
 
 @utility error-card {
 	@apply message-card;
-	background: color-mix(in srgb, var(--text-error) 10%, var(--bg-card));
+	background: transparent;
 	color: var(--text-error);
 	border-color: color-mix(in srgb, var(--text-error) 30%, transparent);
 }
 
 @utility success-card {
 	@apply message-card;
-	background: color-mix(in srgb, var(--text-success) 10%, var(--bg-card));
+	background: transparent;
 	color: var(--text-success);
 	border-color: color-mix(in srgb, var(--text-success) 30%, transparent);
 }
 
 @utility warning-card {
 	@apply message-card;
-	background: color-mix(in srgb, var(--text-warning) 10%, var(--bg-card));
+	background: transparent;
 	color: var(--text-warning);
 	border-color: color-mix(in srgb, var(--text-warning) 30%, transparent);
 }

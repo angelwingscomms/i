@@ -1,1 +1,35 @@
-on message add, if 
+remove from entire site and design system: background gradients, shadows. 
+
+create /i/:i/+page.svelte
+
+animate to features section on 'discover features' button click
+
+i'm telling you, the sidbar doesn't open on mobile
+remove the trusted by thousands part and w/ the numbers
+let the powerful features for everyone cards not have a background at all, just a really thin outline, do this for other similar design molecules
+let the continue button have no background, just a really thin outline and text and the icon
+
+let products link in nav go to /i
+on /i/create, remove the bakground from the create card, just a really thin outline, same with the click to upload images card
+
+let user search results have no background, just really thin outline, let the results be horizontal narrow cards, like line by line, still showing the match percentage, profile pic and stuff, but clean. same with room search results
+
+let all buttons accross the entire site, have no background color, just really thin outline. make it so from the design system
+
+remove join room button from room search results
+
+let search room text input have no background, just really thin outline
+
+use a different color fo the + button to add social media links on edit_user page
+
+change 'products' in navbar to 'items'. products and services are called items across the site
+
+remove 'nearby' from navbar
+
+remove explore our platform section from /u/[i]
+
+remove background from all cards on /
+
+remove floating-stats section from /
+
+remove the danger feel of 'this user doesn't have a description...', let it just be a subtle notice

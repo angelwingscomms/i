@@ -5,7 +5,7 @@
 
 @utility age-input {
 	@apply w-24 rounded-full px-4 py-3 text-center font-medium;
-	background: var(--bg-input);
+	background: transparent;
 	border: 2px solid var(--border-secondary);
 	color: var(--text-primary);
 	transition: all 0.3s ease;
@@ -13,11 +13,10 @@
 
 .age-input:focus {
 	border-color: var(--border-focus);
-	box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent);
 	outline: none;
 }
 
 @utility age-divider {
 	@apply h-px w-8;
-	background: linear-gradient(to right, transparent, var(--border-secondary), transparent);
+	
 }

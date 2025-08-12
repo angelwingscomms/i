@@ -1,79 +1,109 @@
-/* Buttons */
+/* Buttons - Thin Outline Design System */
 @utility btn {
 	@apply inline-flex transform items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-medium transition-all duration-300 disabled:transform-none disabled:opacity-50;
-	box-shadow: var(--shadow-lg);
+	border: 1px solid var(--color-theme-6);
+	background: transparent;
+	color: var(--color-theme-4);
 }
 
 .btn:hover:not(:disabled) {
-	box-shadow: var(--shadow-xl);
-	background-color: var(--bg-button-hover-default);
-	transition: background-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+	border: 1px solid var(--color-theme-1);
+	background: transparent;
+	color: var(--color-theme-1);
+	transform: translateY(-1px);
+	transition: all 180ms ease;
 }
 
 @utility btn-primary {
-	@apply btn text-white;
-	background: linear-gradient(135deg, var(--accent-blue), var(--accent-lilac));
-	box-shadow: var(--shadow-lilac);
+	@apply btn;
+	border: 1px solid var(--color-theme-1);
+	background: transparent;
+	color: var(--color-theme-1);
 }
 
 .btn-primary:hover:not(:disabled) {
-	background: linear-gradient(135deg, var(--accent-indigo), var(--accent-lilac-dark));
+	background: transparent;
+	border: 1px solid var(--color-theme-1);
 	transform: translateY(-2px);
 }
 
 @utility btn-secondary {
 	@apply btn text-white;
-	background: var(--accent-emerald);
+	background: transparent;
+	border: 1px solid var(--color-theme-2);
 }
 
 .btn-secondary:hover:not(:disabled) {
-	background: var(--accent-emerald);
-	filter: brightness(1.1);
+	background: transparent;
+	border: 1px solid var(--color-theme-2);
+	transform: translateY(-2px);
 }
 
 @utility btn-accent {
 	@apply btn text-white;
-	background: var(--accent-purple);
+	background: transparent;
+	border: 1px solid var(--color-theme-6);
 }
 
 .btn-accent:hover:not(:disabled) {
-	background: var(--accent-pink);
+	background: transparent;
+	border: 1px solid var(--color-theme-6);
+	transform: translateY(-2px);
 }
 
 /* Brand-specific helpers */
 @utility btn-pink {
 	@apply btn text-white;
-	background: var(--accent-pink);
+	background: transparent;
+	border: 1px solid var(--color-theme-2);
 }
 
 .btn-pink:hover:not(:disabled) {
-	filter: brightness(1.05);
+	background: transparent;
+	border: 1px solid var(--color-theme-2);
+	transform: translateY(-2px);
 }
 
 @utility btn-ghost {
 	@apply btn;
-	background: var(--bg-glass);
-	color: var(--text-secondary);
-	backdrop-filter: blur(12px);
+	background: transparent;
+	color: var(--color-theme-4);
+	border: 2px solid var(--color-theme-6);
 }
 
 .btn-ghost:hover:not(:disabled) {
-	background: var(--bg-glass-hover);
-	color: var(--accent-lilac);
-	border-color: var(--accent-lilac);
+	background: transparent;
+	border: 2px solid var(--color-theme-6);
+	color: var(--color-theme-1);
 	transform: translateY(-1px);
 }
 
-/* Lilac Button */
-@utility btn-lilac {
-	@apply btn text-white;
-	background: linear-gradient(135deg, var(--accent-lilac), var(--accent-purple));
-	box-shadow: var(--shadow-lilac);
+/* Outline Button */
+@utility btn-outline {
+	@apply btn;
+	background: transparent;
+	color: var(--color-theme-1);
+	border: 3px solid var(--color-theme-1);
 }
 
-.btn-lilac:hover:not(:disabled) {
-	background: linear-gradient(135deg, var(--accent-lilac-dark), var(--accent-pink));
+.btn-outline:hover:not(:disabled) {
+	background: transparent;
+	color: var(--color-theme-1);
 	transform: translateY(-2px);
+}
+
+/* Error Button */
+@utility btn-error {
+	@apply btn text-white;
+	background: transparent;
+	border: 1px solid var(--color-theme-5);
+}
+
+.btn-error:hover:not(:disabled) {
+	background: transparent;
+	color: var(--color-theme-5);
+	border: 1px solid var(--color-theme-5);
+	transform: translateY(-1px);
 }
 
 @utility btn-sm {
@@ -89,4 +119,23 @@
 	@apply px-12 py-6 text-xl font-bold;
 	min-height: 4rem;
 	border-radius: 2rem;
+}
+
+/* Icon button for mobile menu */
+@utility btn-icon {
+	@apply inline-flex items-center justify-center p-3 rounded-full transition-all duration-300;
+	border: 1px solid var(--color-theme-6);
+	background: transparent;
+	color: var(--color-theme-4);
+}
+
+.btn-icon:hover {
+	border: 1px solid var(--color-theme-1);
+	background: transparent;
+	color: var(--color-theme-1);
+	transform: scale(1.05);
+}
+
+.btn-icon:active {
+	transform: scale(0.95);
 }

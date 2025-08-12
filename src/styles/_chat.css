@@ -13,7 +13,7 @@
 
 .messages-container {
 	@apply mb-3 h-96 overflow-y-auto rounded-md p-3;
-	background: var(--bg-card);
+	background: transparent;
 	scroll-behavior: smooth;
 }
 /* thin scrollbar with fully rounded ends using exact indigo mix color */
@@ -24,14 +24,14 @@
 	background: transparent;
 }
 .messages-container::-webkit-scrollbar-thumb {
-	background: color-mix(in srgb, var(--accent-indigo) 16%, var(--bg-card));
+	background: transparent;
 	border-radius: 9999px;
 	border: 2px solid transparent; /* create pill caps */
 	background-clip: padding-box; /* keep rounded ends clean */
 }
 .messages-container {
 	scrollbar-width: thin;
-	scrollbar-color: color-mix(in srgb, var(--accent-indigo) 16%, var(--bg-card)) transparent;
+	scrollbar-color: transparent transparent;
 }
 
 .message-item {
@@ -58,7 +58,7 @@
 
 .message-input {
 	@apply flex-grow rounded-none p-2 focus:outline-none;
-	background: var(--bg-input);
+	background: transparent;
 	border: none;
 	border-bottom: 1px solid var(--border-secondary);
 	color: var(--text-primary);
@@ -71,17 +71,17 @@
 
 .send-button {
 	@apply rounded-full px-4 py-2 font-medium focus:outline-none;
-	background: var(--accent-blue);
-	color: white;
+	background: transparent;
+	color: var(--text-primary);
 	transition: background-color 0.3s ease;
 }
 
 .send-button:hover {
-	background: var(--accent-indigo);
+	background: transparent;
 }
 
 .send-button:focus {
-	box-shadow: 0 0 0 3px color-mix(in srgb, var(--border-focus) 20%, transparent);
+	box-shadow: none;
 }
 
 /* Chat bubble utilities */
@@ -107,34 +107,22 @@
 	border-radius: 9999px;
 	padding: 0.5rem 0.75rem;
 	color: var(--text-primary);
-	background: color-mix(
-		in srgb,
-		var(--accent-purple) 14%,
-		var(--bg-card)
-	); /* default: gentle purple haze */
+	background: transparent; /* default: gentle purple haze */
 	/* border removed for cleaner bubble */
 }
 .chat_bubble--self {
-	background: color-mix(in srgb, var(--accent-blue) 18%, var(--bg-card)); /* self: dreamy blue */
+	background: transparent; /* self: dreamy blue */
 	/* border removed for cleaner bubble */
 }
 .chat_bubble--anon {
 	opacity: 0.97;
-	background: color-mix(
-		in srgb,
-		var(--accent-emerald) 14%,
-		var(--bg-card)
-	); /* anon: soft emerald mist */
+	background: transparent; /* anon: soft emerald mist */
 	/* border removed for cleaner bubble */
 }
 /* pending now uses a solid dreamy color; no animation */
 .chat_bubble--pending {
 	color: var(--text-primary);
-	background: color-mix(
-		in srgb,
-		var(--accent-indigo) 16%,
-		var(--bg-card)
-	); /* pending: indigo glow */
+	background: transparent; /* pending: indigo glow */
 	/* border removed for cleaner bubble */
 	opacity: 0.9;
 }

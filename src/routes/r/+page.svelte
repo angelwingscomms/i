@@ -72,6 +72,7 @@
 			id="room_search"
 			bind:value={q}
 			onkeydown={on_key}
+			style="background: transparent; border: 1px solid var(--color-theme-6);"
 		/>
 		<button class="btn-primary btn-compact" onclick={search_rooms} disabled={loading}
 			>{loading ? 'searching…' : 'search'}</button
@@ -162,8 +163,8 @@
 		margin-bottom: 8px;
 	}
 	.card {
-		background: var(--card);
-		border: 1px solid var(--border);
+		background: transparent;
+		border: 1px solid var(--color-theme-6);
 		border-radius: 12px;
 		padding: 12px;
 	}
@@ -201,9 +202,9 @@
 	}
 	.item {
 		padding: 10px 12px;
-		border: 1px solid var(--border);
+		border: 1px solid var(--color-theme-6);
 		border-radius: 10px;
-		background: var(--surface);
+		background: transparent;
 	}
 	.link {
 		color: var(--link);

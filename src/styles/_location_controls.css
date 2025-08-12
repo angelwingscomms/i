@@ -5,7 +5,7 @@
 
 @utility location-display {
 	@apply rounded-lg p-3 backdrop-blur-lg;
-	background: var(--bg-glass);
+	background: transparent;
 	border: 2px solid var(--border-secondary);
 }
 

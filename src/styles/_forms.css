@@ -1,32 +1,30 @@
-/* Inputs */
+/* Inputs - Outline-based Design System */
 @utility input {
 	@apply px-4 py-3 font-light transition-all duration-300 focus:outline-none;
-	background: var(--bg-input);
+	background: transparent;
 	color: var(--text-primary);
-	border: 2px solid var(--border-secondary);
-	backdrop-filter: blur(12px);
+	border: 2px solid var(--color-theme-6);
 }
 
-/* Bottom-border-only input style: consistent grey underline across the app */
+/* Bottom-border-only input style: using new color palette */
 @utility input-underline {
 	@apply font-light transition-all duration-300 focus:outline-none;
 	background: transparent;
 	color: var(--text-primary);
 	border: none;
-	border-bottom: 1px solid var(--border-secondary);
+	border-bottom: 2px solid var(--color-theme-6);
 	border-radius: 0;
 	padding: 8px 0;
 }
 
 .input-underline:focus {
-	border-bottom-color: var(--border-focus);
-	box-shadow: none;
+	border-bottom: 3px solid var(--color-theme-1);
+	border-bottom-color: var(--color-theme-1);
 }
 
 .input:focus {
-	border-color: var(--border-focus);
-	box-shadow: 0 0 0 4px var(--border-focus);
-	box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent);
+	border: 3px solid var(--color-theme-1);
+	border-color: var(--color-theme-1);
 }
 
 @utility input-rounded {
@@ -95,22 +93,22 @@
 
 @utility voice-btn {
 	@apply btn-sm flex items-center gap-2 transition-all duration-300;
-	background: var(--accent-blue);
-	color: white;
+	background: transparent;
+	color: var(--text-primary);
 }
 
 .voice-btn:hover:not(:disabled) {
-	background: var(--accent-indigo);
+	background: transparent;
 }
 
 @utility voice-btn-recording {
 	@apply voice-btn animate-pulse;
-	background: var(--text-error);
+	background: transparent;
 }
 
 @utility voice-btn-transcribing {
 	@apply voice-btn cursor-not-allowed;
-	background: var(--text-tertiary);
+	background: transparent;
 }
 
 /* Phone Input Specific */

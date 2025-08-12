@@ -5,10 +5,10 @@
 
 @utility remove-link-btn {
 	@apply btn-sm text-white;
-	background: var(--text-error);
+	background: transparent;
 }
 
 @utility add-link-btn {
 	@apply btn-sm mt-2 text-white;
-	background: var(--text-success);
+	background: transparent;
 }

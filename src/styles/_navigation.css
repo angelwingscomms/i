@@ -1,9 +1,8 @@
 /* Navigation */
 @utility nav {
 	@apply sticky top-0 z-50 backdrop-blur-lg transition-all duration-300;
-	background: var(--bg-overlay);
+	background: transparent;
 	border-bottom: 1px solid var(--border-primary);
-	box-shadow: var(--shadow-sm);
 }
 
 @utility nav-link {

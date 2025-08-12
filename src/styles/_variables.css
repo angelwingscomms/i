@@ -1,99 +1,108 @@
 /* CSS Custom Properties for Light/Dark Mode */
 :root {
-	--bg-primary: #fefefe;
-	--bg-secondary: #f8fafc;
-	--bg-tertiary: #f1f5f9;
-	--bg-glass: rgba(255, 255, 255, 0.6);
-	--bg-glass-hover: rgba(255, 255, 255, 0.8);
-	--bg-card: rgba(255, 255, 255, 0.7);
-	--bg-input: rgba(255, 255, 255, 0.8);
-	--bg-overlay: rgba(255, 255, 255, 0.9);
+	/* New Color Palette */
+	--color-theme-1: #B637FA; /* Purple-magenta */
+	--color-theme-2: #FA378B; /* Pink-magenta */
+	--color-theme-3: #F737FA; /* Bright magenta */
+	--color-theme-4: #7837FA; /* Deep purple */
+	--color-theme-5: #FA3A2F; /* Red-orange */
+	--color-theme-6: #F889FA; /* Light magenta */
 
+	/* Background colors - simplified, no gradients */
+	--bg-primary: transparent;
+	--bg-secondary: transparent;
+	--bg-tertiary: transparent;
+	--bg-glass: transparent;
+	--bg-glass-hover: transparent;
+	--bg-card: transparent;
+	--bg-input: transparent;
+	--bg-overlay: transparent;
+
+	/* Text colors using new palette */
 	--text-primary: #1f2937;
 	--text-secondary: #6b7280;
 	--text-tertiary: #9ca3af;
-	--text-accent: #2563eb;
+	--text-accent: var(--color-theme-4); /* Deep purple for accents */
 	--text-success: #16a34a;
-	--text-error: #dc2626;
+	--text-error: var(--color-theme-5); /* Red-orange for errors */
 	--text-warning: #d97706;
 
-	--border-primary: #e5e7eb;
-	--border-secondary: #d1d5db;
-	--border-focus: #3b82f6;
+	/* Border colors using new palette */
+	--border-primary: rgba(182, 55, 250, 0.1); /* Light theme-1 */
+	--border-secondary: rgba(248, 137, 250, 0.2); /* Light theme-6 */
+	--border-focus: var(--color-theme-1); /* Theme-1 for focus */
 	--border-glass: rgba(255, 255, 255, 0.3);
 
-	--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-	--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-	--shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+	/* Shadows removed - using none */
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-xl: none;
+	--shadow-2xl: none;
 
-	--bg-button-hover-default: rgba(0, 0, 0, 0.05);
+	/* Brand accents using new palette */
+	--accent-primary: var(--color-theme-1); /* B637FA */
+	--accent-secondary: var(--color-theme-2); /* FA378B */
+	--accent-tertiary: var(--color-theme-3); /* F737FA */
+	--accent-deep: var(--color-theme-4); /* 7837FA */
+	--accent-alert: var(--color-theme-5); /* FA3A2F */
+	--accent-light: var(--color-theme-6); /* F889FA */
 
-	--accent-blue: #3b82f6;
-	--accent-indigo: #6366f1;
-	--accent-purple: #8b5cf6;
-	/* Brand accents */
-	--accent-pink: #ee4b92; /* vivid pink-magenta */
-	--accent-emerald: #10b981;
-	--accent-rose: #f43f5e;
-	--accent-lilac: #c084fc;
-	--accent-lilac-light: #ddd6fe;
-	--accent-lilac-dark: #a855f7;
+	/* Lilac variations for special elements */
+	--accent-lilac: var(--color-theme-6); /* F889FA */
+	--accent-lilac-light: rgba(248, 137, 250, 0.3);
+	--accent-lilac-dark: var(--color-theme-1); /* B637FA */
 
-	--border-lilac: #c084fc;
-	--shadow-lilac: 0 10px 25px -5px rgba(192, 132, 252, 0.2), 0 4px 6px -2px rgba(192, 132, 252, 0.1);
+	--border-lilac: var(--color-theme-6);
 }
 
 [data-theme='dark'] {
-	/* deep black backdrop with slight lift for surfaces */
-	--bg-primary: #0b0b0f;
-	--bg-secondary: #000000;
-	--bg-tertiary: #000000;
-	--bg-glass: rgba(0, 0, 0, 0.6);
-	--bg-glass-hover: rgba(0, 0, 0, 0.8);
+	/* Deep black backdrop - simplified, no gradients */
+	--bg-primary: transparent;
+	--bg-secondary: transparent;
+	--bg-tertiary: transparent;
+	--bg-glass: transparent;
+	--bg-glass-hover: transparent;
 	--bg-card: transparent;
 	--bg-input: transparent;
-	--bg-overlay: rgba(0, 0, 0, 0.9);
+	--bg-overlay: transparent;
 
-	--bg-button-hover-default: rgba(255, 255, 255, 0.05);
+	
 
+	/* Text colors with new palette for dark theme */
 	--text-primary: #f9fafb;
 	--text-secondary: #d1d5db;
 	--text-tertiary: #9ca3af;
-	--text-accent: #60a5fa;
+	--text-accent: var(--color-theme-6); /* Light magenta for dark theme accents */
 	--text-success: #34d399;
-	--text-error: #f87171;
+	--text-error: var(--color-theme-5); /* Red-orange for errors */
 	--text-warning: #fbbf24;
 
-	--border-primary: #374151;
-	--border-secondary: #4b5563;
-	--border-focus: #60a5fa;
+	/* Borders with new palette for dark theme */
+	--border-primary: rgba(248, 137, 250, 0.2); /* Light theme-6 */
+	--border-secondary: rgba(182, 55, 250, 0.3); /* Light theme-1 */
+	--border-focus: var(--color-theme-6); /* Light magenta for focus */
 	--border-glass: rgba(255, 255, 255, 0.1);
 
-	/* Brighter accent colors for better visibility on pure black backgrounds */
-	--accent-blue: #8cc0fc;
-	--accent-indigo: #6366f1;
-	--accent-purple: #b79cfe;
-	--accent-pink: #ee4b92;
-	--accent-emerald: #50d194;
-	--accent-rose: #f43f5e;
-	--accent-lilac: #e879f9;
-	--accent-lilac-light: #f3e8ff;
-	--accent-lilac-dark: #c084fc;
+	/* Enhanced accent colors for dark theme visibility */
+	--accent-primary: var(--color-theme-6); /* F889FA - brighter for dark */
+	--accent-secondary: var(--color-theme-2); /* FA378B */
+	--accent-tertiary: var(--color-theme-3); /* F737FA */
+	--accent-deep: var(--color-theme-1); /* B637FA - lighter purple for dark */
+	--accent-alert: var(--color-theme-5); /* FA3A2F */
+	--accent-light: var(--color-theme-6); /* F889FA */
 
-	--border-lilac: #e879f9;
-	--shadow-lilac: 0 10px 25px -5px rgba(232, 121, 249, 0.3), 0 4px 6px -2px rgba(232, 121, 249, 0.2);
+	/* Lilac variations for dark theme */
+	--accent-lilac: var(--color-theme-6); /* F889FA */
+	--accent-lilac-light: rgba(248, 137, 250, 0.4);
+	--accent-lilac-dark: var(--color-theme-1); /* B637FA */
 
-	--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
-	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
-	--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4);
-	--shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+	--border-lilac: var(--color-theme-6);
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-xl: none;
+	--shadow-2xl: none;
 }
 
-/* additional brand tokens */
-:root {
-	--panel-lilac: #e9d5ff; /* light panels */
-	--panel-lilac-dark: #1e1b3a; /* dark panels */
-}
+

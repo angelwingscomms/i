@@ -1,3 +1,7 @@
+---
+type: "always_apply"
+---
+
 For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary. Always think about styling deeply, like you're Steve Jobs and Jony Ive. Like you have years of expert experience creating beautiful UI and design. Like you work at a high brow creative studio with high brow clients like Apple.
 
 Codebase conventions:
@@ -46,11 +50,13 @@ Config/formatting:
 - lint/format: Prettier (tabs, singleQuote, width 100), ESLint flat config; maintain concise code
 - use wrangler.jsonc (not wrangler.toml)
 
-DB fields:
+DB field cheatsheet:
+
 - s: type/tenant (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 - i: id; t: tag/name/text; u: user id; d: description/date; a: age/created at; g: gender; l: last activity/lat; n: lon; w: whatsapp; c/x: compact maps/arrays
 
-- be as nondestructive as possible when editing code. edit only what pertains to your objective and touch nothing else
+---
+
 - go extreme for styling and subtle animejs effects. Always think like a pro designer at a renowned creative studio working for Apple, think like Jony Ive.
 - all db data stored in single Qdrant collection 'i', `s` payload field isolates data types (e.g., 'u' user, 'se' session, 'm' message, 'n' notif sub)
 - always use single/double letter field names for db (`i` id, `t` tag/text, `u` user id, `d` desc/date, `a` age/created, `g` gender, `l` last/lat, `n` lon, `w` whatsapp, `c` compact map, `x` compact array)
@@ -78,5 +84,7 @@ DB fields:
 - routes: place auth, search, notif APIs under `src/routes/.../+server.ts`; load user via `+layout.server.ts`
 - cookies: session cookie name `auth_session`; httpOnly; sameSite=lax; secure in prod
 - code style: concise, minimal, snake_case; tiny functions; prefer small focused modules
-- always code with extreme minimalism; style pages elegantly with the design system; golf code where feasible
+- style pages elegantly with the design system
+- golf code where feasible
 - always use only src/lib/db/index.ts helper functions for all DB ops. Create new ones there if needed. Never use qdrant client directly.
+- always code as nondestructively and defensively as possible. only affect code that pertains to your objective and touch nothing else

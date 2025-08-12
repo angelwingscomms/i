@@ -1,17 +1,17 @@
 /* Utility Classes */
 @utility glass {
-	background: var(--bg-glass);
-	backdrop-filter: blur(12px);
+	background: transparent;
+	backdrop-filter: none;
 }
 
 @utility glass-hover {
-	background: var(--bg-glass-hover);
-	backdrop-filter: blur(12px);
+	background: transparent;
+	backdrop-filter: none;
 }
 
 @utility divider {
 	@apply h-px;
-	background: linear-gradient(to right, transparent, var(--border-secondary), transparent);
+	
 }
 
 /* Loading States */
