@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	
 	import type { PageData } from './$types';
+	import { createTimeline, animate } from 'animejs';
 
 	export let data: PageData;
 
