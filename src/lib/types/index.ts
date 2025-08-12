@@ -42,7 +42,7 @@ export interface NotificationSubscription {
 	sub: PushSubscription;
 }
 
-export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'> | 'h';
+export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>;
 
 export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't'>;
 

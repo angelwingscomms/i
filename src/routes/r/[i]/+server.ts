@@ -2,7 +2,7 @@ import { create } from '$lib/db';
 import type { RequestHandler } from './$types';
 import type { ChatMessage, DBChatMessage, SendChatMessage } from '$lib/types';
 import { s } from '$lib/util/s';
-import { cf } from '$lib/util/cf'
+import { cf } from '$lib/util/cf';
 import { PUBLIC_WORKER } from '$env/static/public';
 
 export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
@@ -13,12 +13,8 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		s: 'm',
 		d: m.d,
 		m: m.m,
-		r: params.i,
-		...(m.v ? { v: m.v } : {}), // voice data
-		...(m.rp ? { rp: m.rp } : {}), // reply to message ID
-		...(m.at ? { at: m.at } : {}), // attachments
-		...(m.mt ? { mt: m.mt } : {}) // message type
-	} satisfies DBChatMessage & { v?: string; rp?: string; at?: any[]; mt?: string };
+		r: params.i
+	} satisfies DBChatMessage;
 
 	const i = await create(
 		messageData,
@@ -35,7 +31,6 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 			}),
 			message_text: m.m,
 			room_name_or_tag: m.t,
-			message_type: m.mt || 'text'
 		}),
 		m.i
 	);
@@ -47,10 +42,6 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 			i,
 			...(locals.user ? { x: locals.user.t } : {}),
 			m: m.m,
-			...(m.v ? { v: m.v } : {}),
-			...(m.rp ? { rp: m.rp } : {}),
-			...(m.at ? { at: m.at } : {}),
-			...(m.mt ? { mt: m.mt } : {})
 		} satisfies ChatMessage & { type: string })
 	});
 

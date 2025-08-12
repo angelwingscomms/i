@@ -1,5 +1,8 @@
 <script lang="ts">
-	import Page from '../[i]/+page.svelte';
+	import Chat from '$lib/components/Chat.svelte';
+	import type { PageProps } from './$types';
+	const {data}: PageProps = $props()
 </script>
-<Page />
+
+<Chat s={data.s} />
 
