@@ -1,15 +1,18 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { get, search_by_payload } from '$lib/db';
-import type { ChatMessage, DBChatMessage } from '$lib/types';
+import type { ChatMessage, DBChatMessage, Room } from '$lib/types';
 import { s } from '$lib/util/s';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals, cookies }) => {
 	if (!params.i) error(400, 'missing room id');
 
-	const r = await get<{ t: string; c: string }>(params.i, ['t', 'c']);
+	const r = await get<Room>(params.i, ['t', 'c', 'r']);
 	if (!r) error(404, 'room not found');
 
+	if (r.r && (locals.user?.i || cookies.get('u')) !== (r.u || r.r)) {
+		error(401, `you don't belong to this room`);
+	}
 	return {
 		m: (await Promise.all(
 			(

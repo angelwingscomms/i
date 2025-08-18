@@ -4,5 +4,5 @@
 	const {data}: PageProps = $props()
 </script>
 
-<Chat s={data.s} />
+<Chat s={data.s} m={data.m} t={data.c} c={data.c} r={true} a={true} />
 

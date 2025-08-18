@@ -44,7 +44,7 @@ export interface NotificationSubscription {
 
 export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>;
 
-export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't'>;
+export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't' | 'a'>;
 
 export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x'>;
 
@@ -56,6 +56,8 @@ export interface Message {
 	d: number; // date
 	c: string; // cf id
 	h: number; // has reply
+	z?: string; // chat id
+	a?: string; // anonymous
 	t: string; // receiver's (room/user) tag
 	s?: 'm'; // tenant id for messages
 	u?: string; // user ID
@@ -68,6 +70,7 @@ export interface Room {
 	t: string; // room tag/name
 	d?: string; // room description
 	u: string; // creator user id
+	r?: string; // receiver id - for anon chats
 	c: string; // cloudflare id
 	a?: string; // creation timestamp
 	m?: number; // number of members

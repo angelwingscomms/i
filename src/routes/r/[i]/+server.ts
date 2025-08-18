@@ -9,7 +9,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 	const m: SendChatMessage = await request.json();
 
 	const messageData = {
-		...(locals.user ? { u: locals.user.i } : {}),
+		...(locals.user && m.a ? { u: locals.user.i } : {}),
 		s: 'm',
 		d: m.d,
 		m: m.m,

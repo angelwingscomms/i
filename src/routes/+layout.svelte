@@ -16,11 +16,11 @@
 		// We wrap the logic in a continuous loop
 		while (true) {
 			await animate(orb, {
-				translateX: () => utils.random(-window.innerWidth / 3, window.innerWidth / 3),
-				translateY: () => utils.random(-window.innerHeight / 3, window.innerHeight / 3),
+				translateX: () => utils.random(-window.innerWidth, window.innerWidth),
+				translateY: () => utils.random(-window.innerHeight, window.innerHeight),
 				duration: () => utils.random(5000, 8000),
-				easing: 'inOutSine'
-			})
+				// easing: 'inOutSine'
+			});
 		}
 	};
 
@@ -62,26 +62,34 @@
 	<meta name="theme-color" content="#000000" />
 </svelte:head>
 
-<div class="absolute inset-0 -z-10 overflow-hidden">
+<div class="fixed inset-0 -z-10 min-h-screen overflow-hidden">
 	<div
-		class="hero-background-orb absolute -top-20 -left-20 h-64 w-64 rounded-full opacity-0"
+		class="hero-background-orb absolute -top-32 -left-32 h-96 w-96 rounded-full opacity-0"
 		style="background: var(--color-theme-1);"
 	></div>
 	<div
-		class="hero-background-orb absolute -right-20 -bottom-20 h-80 w-80 rounded-full opacity-0"
+		class="hero-background-orb absolute -right-32 -bottom-32 h-[30rem] w-[30rem] rounded-full opacity-0"
 		style="background: var(--color-theme-6);"
 	></div>
 	<div
-		class="hero-background-orb absolute top-1/4 left-1/4 h-32 w-32 rounded-full opacity-0"
+		class="hero-background-orb absolute top-1/4 left-1/4 h-64 w-64 rounded-full opacity-0"
 		style="background: var(--color-theme-3);"
 	></div>
 	<div
-		class="hero-background-orb absolute right-1/3 bottom-1/4 h-48 w-48 rounded-full opacity-0"
+		class="hero-background-orb absolute right-1/3 bottom-1/4 h-80 w-80 rounded-full opacity-0"
 		style="background: var(--color-theme-2);"
 	></div>
 	<div
-		class="hero-background-orb absolute top-1/2 right-1/4 h-24 w-24 rounded-full opacity-0"
+		class="hero-background-orb absolute top-1/2 right-1/4 h-48 w-48 rounded-full opacity-0"
 		style="background: var(--color-theme-4);"
+	></div>
+	<div
+		class="hero-background-orb absolute bottom-1/3 left-1/3 h-72 w-72 rounded-full opacity-0"
+		style="background: var(--color-theme-5);"
+	></div>
+	<div
+		class="hero-background-orb absolute top-2/3 right-1/3 h-56 w-56 rounded-full opacity-0"
+		style="background: var(--color-theme-1);"
 	></div>
 </div>
 

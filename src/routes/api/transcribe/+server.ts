@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { GEMINI_API_KEY } from '$env/static/private';
+import { GEMINI } from '$env/static/private';
 import axios from 'axios';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
@@ -48,7 +48,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					'Content-Type': 'application/json'
 				},
 				params: {
-					key: GEMINI_API_KEY
+					key: GEMINI
 				}
 			}
 		);

@@ -68,6 +68,7 @@
 		"wrangler": "^4.28.1"
 	},
 	"dependencies": {
+		"@fortawesome/free-regular-svg-icons": "^7.0.0",
 		"@google/genai": "^1.13.0",
 		"@google/generative-ai": "^0.24.1",
 		"@libsql/client": "^0.15.10",

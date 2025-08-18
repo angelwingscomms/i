@@ -5,21 +5,21 @@
 	import { onMount } from 'svelte';
 	import { animate, createTimeline, stagger } from 'animejs';
 
-	export let data: PageData;
+	let {user}: PageData = $props();
 
 	type Result = { i: string; t: string; a?: number; g?: number; av?: string; score?: number };
 
-	let gender: number | undefined = undefined;
-	let minAge = 18;
-	let maxAge = 99;
-	let mode: 'profile' | 'custom' = data?.user ? 'profile' : 'custom';
-	let description = '';
-	let loading = false;
-	let results: Result[] = [];
-	let sort: 'match' | 'age' = 'match';
+	let gender = $state<number | undefined>(undefined);
+	let minAge = $state(0);
+	let maxAge = $state(99);
+	let mode = $state<'profile' | 'custom'>(user ? 'profile' : 'custom');
+	let description = $state('');
+	let loading = $state(false);
+	let results = $state<Result[]>([]);
+	let sort = $state<'match' | 'age'>('match');
 
-	let sort_open = false;
-	let sort_ref: HTMLDivElement | null = null;
+	let sort_open = $state(false);
+	let sort_ref = $state<HTMLDivElement | null>(null);
 
 	function apply_sort(s: 'match' | 'age') {
 		sort = s;
@@ -38,12 +38,14 @@
 	}
 
 	// Reactive statement to sync search query to localStorage
-	$: if (browser) {
-		localStorage.setItem(
-			'user_search_query',
-			JSON.stringify({ gender, minAge, maxAge, mode, description, sort })
-		);
-	}
+	$effect(() => {
+		if (browser) {
+			localStorage.setItem(
+				'user_search_query',
+				JSON.stringify({ gender, minAge, maxAge, mode, description, sort })
+			);
+		}
+	});
 
 	onMount(() => {
 		if (browser) {
@@ -126,11 +128,11 @@
 
 
 	async function search() {
-		if (minAge > maxAge) return;
+		if (minAge > maxAge) return; // TODO notify
 		loading = true;
 		try {
 			const payload: Record<string, unknown> = { g: gender ?? null, n: minAge, x: maxAge };
-			if (mode === 'custom' || !data?.user) {
+			if (mode === 'custom' || !user) {
 				if (description?.trim()) payload.d = description.trim();
 			}
 			const arr = (await axios.post('/u', payload)).data as Result[];
@@ -253,7 +255,7 @@
 					</div>
 				</div>
 
-				{#if data?.user}
+				{#if user}
 					<div class="choice-group">
 						<button
 							class={mode === 'profile' ? 'choice-btn-active' : 'choice-btn-inactive'}
@@ -320,7 +322,7 @@
 				</div>
 			</div>
 
-			{#if !data?.user || mode === 'custom'}
+			{#if !user || mode === 'custom'}
 				<div class="mt-3">
 					<input
 						class="input-rect w-full"

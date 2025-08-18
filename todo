@@ -1,3 +1,11 @@
-use fontawesome for create item product/service buttons
+anon chat
+    u = locals.user.i/cookie
+    r = user.i
 
-remove the danger feel of 'this user doesn't have a description...', let it just be a subtle notice
+
+
+enable notificatons notification button
+
+show see this user's products and services on user page
+    show 'See their products and services' if not viewing own profile
+    show 'See your products and services' if viewing own profile

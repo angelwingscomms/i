@@ -64,6 +64,10 @@
 	color: var(--text-primary);
 }
 
+.ghost-border {
+	border: 2px dashed var(--border-secondary);
+}
+
 .message-input:focus {
 	border-color: var(--border-focus);
 	box-shadow: none;
