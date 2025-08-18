@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { animate, createTimeline, stagger } from 'animejs';
 
-	let {user}: PageData = $props();
+	let { user }: PageData = $props();
 
 	type Result = { i: string; t: string; a?: number; g?: number; av?: string; score?: number };
 
@@ -125,8 +125,6 @@
 		return Math.round(pct);
 	}
 
-
-
 	async function search() {
 		if (minAge > maxAge) return; // TODO notify
 		loading = true;
@@ -152,75 +150,76 @@
 	<div class="page-header px-4 py-16 text-center opacity-0 sm:py-12">
 		<div class="mx-auto max-w-4xl">
 			<h1 class="mb-6 text-6xl font-black sm:text-4xl" style="color: var(--color-theme-4);">
-				Find Your <span style="color: var(--color-theme-1);">Perfect Match</span>
+				Find people
 			</h1>
 			<p class="text-xl text-gray-600 sm:text-lg dark:text-gray-300">
-				Discover amazing people in your community with AI-powered compatibility matching
+				Discover people with AI-powered search
 			</p>
 		</div>
 	</div>
 
 	<!-- Search Filters -->
 	<div class="search-filters mx-auto max-w-4xl px-4 pb-8 opacity-0">
-		<div
-			class="rounded-3xl p-8 sm:p-6"
-			style=" border: 3px solid var(--color-theme-6);"
-		>
+		<div class="rounded-3xl p-8 sm:p-6" style=" border: 3px solid var(--color-theme-6);">
 			<div class="flex flex-wrap items-center gap-6 sm:flex-col sm:items-stretch">
 				<!-- Gender Selection -->
 				<div class="flex-1">
 					<fieldset>
-						<legend class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">Gender Preference</legend>
+						<legend class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);"
+							>Gender Preference</legend
+						>
 						<div class="flex gap-2">
-						<label class="flex-1">
-							<input type="radio" class="sr-only" bind:group={gender} value={undefined} />
-							<div
-								class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ==
-								null
-									? 'text-white'
-									: 'text-gray-600 hover:bg-gray-100'}"
-								style={gender == null
-									? `background: transparent; border: 2px solid var(--color-theme-6);`
-									: 'background: transparent; border: 2px solid var(--color-theme-6);'}
-							>
-								Any
-							</div>
-						</label>
-						<label class="flex-1">
-							<input type="radio" class="sr-only" bind:group={gender} value={0} />
-							<div
-								class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ===
-								0
-									? 'text-white'
-									: 'text-gray-600 hover:bg-gray-100'}"
-								style={gender === 0
-									? `background: transparent; border: 2px solid var(--color-theme-2);`
-									: 'background: transparent; border: 2px solid var(--color-theme-2);'}
-							>
-								Male
-							</div>
-						</label>
-						<label class="flex-1">
-							<input type="radio" class="sr-only" bind:group={gender} value={1} />
-							<div
-								class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ===
-								1
-									? 'text-white'
-									: 'text-gray-600 hover:bg-gray-100'}"
-								style={gender === 1
-									? `background: transparent; border: 2px solid var(--color-theme-3);`
-									: 'background: transparent; border: 2px solid var(--color-theme-3);'}
-							>
-								Female
-							</div>
-						</label>
-					</div>
+							<label class="flex-1">
+								<input type="radio" class="sr-only" bind:group={gender} value={undefined} />
+								<div
+									class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ==
+									null
+										? 'text-white'
+										: 'text-gray-600 hover:bg-gray-100'}"
+									style={gender == null
+										? `background: transparent; border: 2px solid var(--color-theme-6);`
+										: 'background: transparent; border: 2px solid var(--color-theme-6);'}
+								>
+									Any
+								</div>
+							</label>
+							<label class="flex-1">
+								<input type="radio" class="sr-only" bind:group={gender} value={0} />
+								<div
+									class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ===
+									0
+										? 'text-white'
+										: 'text-gray-600 hover:bg-gray-100'}"
+									style={gender === 0
+										? `background: transparent; border: 2px solid var(--color-theme-2);`
+										: 'background: transparent; border: 2px solid var(--color-theme-2);'}
+								>
+									Male
+								</div>
+							</label>
+							<label class="flex-1">
+								<input type="radio" class="sr-only" bind:group={gender} value={1} />
+								<div
+									class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ===
+									1
+										? 'text-white'
+										: 'text-gray-600 hover:bg-gray-100'}"
+									style={gender === 1
+										? `background: transparent; border: 2px solid var(--color-theme-3);`
+										: 'background: transparent; border: 2px solid var(--color-theme-3);'}
+								>
+									Female
+								</div>
+							</label>
+						</div>
 					</fieldset>
 				</div>
 
 				<!-- Age Range -->
 				<div class="flex-1">
-					<div class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">Age Range</div>
+					<div class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">
+						Age Range
+					</div>
 					<div class="space-y-4">
 						<div class="flex items-center gap-4">
 							<span class="text-sm font-medium" style="color: var(--color-theme-1);"
@@ -339,14 +338,23 @@
 			{#each results as u (u.i)}
 				{@const p = matchPercent(u.score)}
 				<a class="user-card group block no-underline" href={`/u/${u.i}`}>
-					<div class="flex items-center gap-4 rounded-2xl p-4 transition-all duration-300" style="background: transparent; border: 1px solid var(--color-theme-6);">
+					<div
+						class="flex items-center gap-4 rounded-2xl p-4 transition-all duration-300"
+						style="background: transparent; border: 1px solid var(--color-theme-6);"
+					>
 						<!-- Avatar -->
 						<div class="relative flex-shrink-0">
-							<div class="h-12 w-12 overflow-hidden rounded-full" style="border: 1px solid var(--color-theme-6);">
+							<div
+								class="h-12 w-12 overflow-hidden rounded-full"
+								style="border: 1px solid var(--color-theme-6);"
+							>
 								{#if u.av}
 									<img src={u.av} alt={u.t} class="h-full w-full object-cover" />
 								{:else}
-									<div class="flex h-full w-full items-center justify-center text-lg font-bold" style="background: transparent; color: var(--text-primary);">
+									<div
+										class="flex h-full w-full items-center justify-center text-lg font-bold"
+										style="background: transparent; color: var(--text-primary);"
+									>
 										{u.t.charAt(0).toUpperCase()}
 									</div>
 								{/if}
@@ -354,20 +362,38 @@
 						</div>
 
 						<!-- User Info -->
-						<div class="flex-1 min-w-0">
+						<div class="min-w-0 flex-1">
 							<div class="flex items-center justify-between">
-								<h3 class="text-lg font-bold truncate group-hover:scale-105 transition-transform" style="color: var(--color-theme-4);">
+								<h3
+									class="truncate text-lg font-bold transition-transform group-hover:scale-105"
+									style="color: var(--color-theme-4);"
+								>
 									{u.t}
 								</h3>
 								{#if p !== null}
-									<span class="rounded-full px-2 py-1 text-xs font-bold ml-2" style="background: transparent; border: 1px solid {p >= 80 ? 'var(--color-theme-1)' : p >= 60 ? 'var(--color-theme-2)' : p >= 40 ? 'var(--color-theme-3)' : 'var(--color-theme-6)'}; color: {p >= 80 ? 'var(--color-theme-1)' : p >= 60 ? 'var(--color-theme-2)' : p >= 40 ? 'var(--color-theme-3)' : 'var(--color-theme-6)'};">
+									<span
+										class="ml-2 rounded-full px-2 py-1 text-xs font-bold"
+										style="background: transparent; border: 1px solid {p >= 80
+											? 'var(--color-theme-1)'
+											: p >= 60
+												? 'var(--color-theme-2)'
+												: p >= 40
+													? 'var(--color-theme-3)'
+													: 'var(--color-theme-6)'}; color: {p >= 80
+											? 'var(--color-theme-1)'
+											: p >= 60
+												? 'var(--color-theme-2)'
+												: p >= 40
+													? 'var(--color-theme-3)'
+													: 'var(--color-theme-6)'};"
+									>
 										{p}%
 									</span>
 								{/if}
 							</div>
 
 							<!-- Details -->
-							<div class="flex items-center gap-3 mt-1 text-sm">
+							<div class="mt-1 flex items-center gap-3 text-sm">
 								<span style="color: var(--color-theme-1);">
 									{u.a ?? '?'} years
 								</span>
@@ -379,8 +405,15 @@
 
 						<!-- Arrow -->
 						<div class="flex-shrink-0">
-							<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--color-theme-6);" class="group-hover:translate-x-1 transition-transform">
-								<path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"/>
+							<svg
+								width="16"
+								height="16"
+								viewBox="0 0 24 24"
+								fill="currentColor"
+								style="color: var(--color-theme-6);"
+								class="transition-transform group-hover:translate-x-1"
+							>
+								<path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" />
 							</svg>
 						</div>
 					</div>
@@ -390,10 +423,12 @@
 
 		<!-- No Results State -->
 		{#if !loading && results.length === 0}
-			<div class="text-center py-16">
+			<div class="py-16 text-center">
 				<div class="mb-6 text-6xl">🔍</div>
 				<h3 class="mb-4 text-2xl font-bold" style="color: var(--color-theme-4);">No users found</h3>
-				<p class="text-lg" style="color: var(--color-theme-6);">Try adjusting your search criteria</p>
+				<p class="text-lg" style="color: var(--color-theme-6);">
+					Try adjusting your search criteria
+				</p>
 			</div>
 		{/if}
 	</div>

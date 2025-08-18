@@ -14,11 +14,13 @@
 		c,
 		t,
 		r,
-		a,
+		n,
 		children
-	}: { m: ChatMessage[]; s: string; c: string; t: string; r: boolean; children?: any; a: boolean } =
+	}: { n?: number; m: ChatMessage[]; s: string; c: string; t: string; r: boolean; children?: any } =
 		$props();
 
+	console.log('r:', r);
+	console.log('t:', t);
 	let chat_messages: ChatMessage[] = $state(m);
 	let message_text = $state('');
 	let websocket: WebSocket | undefined;
@@ -136,8 +138,8 @@
 
 <div class="chat-layout">
 	<div class="chat-header">
-		<h1 class="chat-title">{t}</h1>
-		{#if children}{@render children()}{/if}
+		<h1 class="chat-title">{r ? `anon chat ${n} with ${t}` : t}</h1>
+		<!-- {#if children}{@render children()}{/if} -->
 	</div>
 	<div class="messages-container" bind:this={messagesEl}>
 		{#each chat_messages as msg, i (msg.i)}
@@ -194,7 +196,8 @@
 	<div class="input-area">
 		<input
 			type="text"
-			class="message-input ghost-border"
+			class="message-input"
+			class:ghost-border={true}
 			bind:value={message_text}
 			bind:this={messageInputEl}
 			onkeydown={(e) => e.key === 'Enter' && send_message()}

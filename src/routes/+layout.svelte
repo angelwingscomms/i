@@ -38,7 +38,7 @@
 		// Animated background orbs
 		const timeline = createTimeline().add('.hero-background-orb', {
 			scale: [0, 1],
-			opacity: [0, 0.3],
+			opacity: [0, 0.054], // Reduced opacity from 0.3 to 0.1
 			duration: 2000,
 			delay: stagger(300)
 		});
@@ -65,31 +65,31 @@
 <div class="fixed inset-0 -z-10 min-h-screen overflow-hidden">
 	<div
 		class="hero-background-orb absolute -top-32 -left-32 h-96 w-96 rounded-full opacity-0"
-		style="background: var(--color-theme-1);"
+		style="background: var(--color-theme-1); opacity: 0.1;"
 	></div>
 	<div
 		class="hero-background-orb absolute -right-32 -bottom-32 h-[30rem] w-[30rem] rounded-full opacity-0"
-		style="background: var(--color-theme-6);"
+		style="background: var(--color-theme-6); opacity: 0.1;"
 	></div>
 	<div
 		class="hero-background-orb absolute top-1/4 left-1/4 h-64 w-64 rounded-full opacity-0"
-		style="background: var(--color-theme-3);"
+		style="background: var(--color-theme-3); opacity: 0.1;"
 	></div>
 	<div
 		class="hero-background-orb absolute right-1/3 bottom-1/4 h-80 w-80 rounded-full opacity-0"
-		style="background: var(--color-theme-2);"
+		style="background: var(--color-theme-2); opacity: 0.1;"
 	></div>
 	<div
 		class="hero-background-orb absolute top-1/2 right-1/4 h-48 w-48 rounded-full opacity-0"
-		style="background: var(--color-theme-4);"
+		style="background: var(--color-theme-4); opacity: 0.1;"
 	></div>
 	<div
 		class="hero-background-orb absolute bottom-1/3 left-1/3 h-72 w-72 rounded-full opacity-0"
-		style="background: var(--color-theme-5);"
+		style="background: var(--color-theme-5); opacity: 0.1;"
 	></div>
 	<div
 		class="hero-background-orb absolute top-2/3 right-1/3 h-56 w-56 rounded-full opacity-0"
-		style="background: var(--color-theme-1);"
+		style="background: var(--color-theme-1); opacity: 0.1;"
 	></div>
 </div>
 

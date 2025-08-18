@@ -16,6 +16,7 @@ SvelteKit patterns:
 - endpoints: always use +server.ts API routes for client-server data flow
 - errors: throw error(status, message) from '@sveltejs/kit' in server files
 - auth: user in locals.user { i, t }; sessions via httpOnly cookie; refresh activity on each request
+- events: always use Svelte5 event attribute syntax e.g `onclick` instead of `on:click`
 
 UI:
 
@@ -23,6 +24,7 @@ UI:
 - transitions: use svelte fade where helpful
 - toasts: use src/lib/util/toast.ts
 - avoid inline styles; only use design system utilities
+- always add loading indicators for buttons that do something that might wait e.g search or submit buttons
 
 Testing:
 

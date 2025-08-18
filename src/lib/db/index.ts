@@ -114,6 +114,20 @@ export const format_filter = (
 	return result;
 };
 
+export async function count(filter: PayloadFilter): Promise<number> {
+	try {
+		const result = await qdrant.count(collection, {
+			filter: format_filter(filter),
+			exact: true
+		});
+		return result.count;
+	} catch (error) {
+		console.error('Error in count:', error);
+		console.error('arg:', filter);
+		throw error;
+	}
+}
+
 export async function search_by_payload<T>(
 	filter: PayloadFilter,
 	with_payload?: string[] | boolean,

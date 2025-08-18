@@ -4,13 +4,15 @@ import { get, search_by_payload } from '$lib/db';
 import type { ChatMessage, DBChatMessage, Room } from '$lib/types';
 import { s } from '$lib/util/s';
 
-export const load: PageServerLoad = async ({ params, locals, cookies }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!params.i) error(400, 'missing room id');
 
-	const r = await get<Room>(params.i, ['t', 'c', 'r']);
+	const r = await get<Room>(params.i, ['t', 'c', 'r', 'n', 'u']);
+	console.log('r', r)
 	if (!r) error(404, 'room not found');
 
-	if (r.r && (locals.user?.i || cookies.get('u')) !== (r.u || r.r)) {
+
+	if (r.r && !(r.r === locals.user?.i || r.u === locals.user?.i)) {
 		error(401, `you don't belong to this room`);
 	}
 	return {
