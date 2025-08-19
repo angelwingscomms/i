@@ -125,7 +125,6 @@
 			t,
 			d: Date.now(),
 			i: v7(),
-			a
 		};
 		if (message_text) {
 			chat_messages.push({ m: m.m, i: m.i, x: page.data.user.t, saved: false });

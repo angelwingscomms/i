@@ -17,14 +17,18 @@ SvelteKit patterns:
 - errors: throw error(status, message) from '@sveltejs/kit' in server files
 - auth: user in locals.user { i, t }; sessions via httpOnly cookie; refresh activity on each request
 - events: always use Svelte5 event attribute syntax e.g `onclick` instead of `on:click`
+- props: always use `$bindable()` within the `$props()` declaration for bindable properties in components.
+- user: always get the current user from `page.data.user`, with `page` imported from `$app/stores` (e.g., `import { page } from '$app/stores';`).
 
 UI:
 
 - minimal components; prefer slots and tiny props
+- always compose pages and components from many small, focused components to enhance maintainability and readability.
 - transitions: use svelte fade where helpful
 - toasts: use src/lib/util/toast.ts
 - avoid inline styles; only use design system utilities
 - always add loading indicators for buttons that do something that might wait e.g search or submit buttons
+- all site copy always be all lowercase
 
 Testing:
 
