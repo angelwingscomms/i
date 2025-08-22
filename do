@@ -1,0 +1,3 @@
+users can send files in chat
+files are uploaded to ibm storage and the urls, just the url strings, are stored in message point payload field 'f' as string array
+in chat ui, for a message, if messsage.f is not empty, for each link, render a minimal horizontal widget that shows just the filename, with a small icon that shows if it's an image, audio or doc file (any other type of file) maybe also shows the file extension suchly, like an icon; also for each widget, if audio, let there be a sleek minimal audio player, just for playing and seeking the audio, if image, let the image open in a fullscreen modal on click, swiping left and right on the opened image goes to the previous and next image. each widget would also have a download button
