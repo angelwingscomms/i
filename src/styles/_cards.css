@@ -50,3 +50,39 @@
 	border: 3px solid var(--color-theme-5);
 	background: transparent;
 }
+
+/* Item-specific card styles */
+@utility item-card {
+	@apply card-hover;
+}
+
+.item-card:hover {
+	transform: translateY(-2px);
+	border: 1px solid var(--color-theme-1);
+	background: transparent;
+}
+
+/* Search form styles */
+@utility search-form {
+	@apply card-accent p-6;
+}
+
+@utility search-input {
+	@apply w-full px-4 py-3 rounded-xl border-2 transition-colors;
+	border-color: var(--color-theme-6);
+}
+
+.search-input:focus {
+	border-color: var(--color-theme-1);
+	outline: none;
+}
+
+@utility search-select {
+	@apply px-4 py-3 rounded-xl border-2 transition-colors;
+	border-color: var(--color-theme-6);
+}
+
+.search-select:focus {
+	border-color: var(--color-theme-1);
+	outline: none;
+}

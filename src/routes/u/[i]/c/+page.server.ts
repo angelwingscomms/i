@@ -30,7 +30,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 			}
 		}
 
-		return { s: await s(), c, t, m: await search_by_payload({ c, s: 'm' }) };
+		return { s: await s(), c, t, m: await search_by_payload({ c, s: 'm' }, undefined, undefined, { key: 'd', direction: 'asc' }) };
 	} catch (err) {
 		console.error('Error loading chat:', err);
 		throw error(500, 'Failed to load chat');

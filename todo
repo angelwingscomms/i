@@ -1,14 +1,4 @@
-show dates in anon chat list
-
-
-anon chat
-    u = locals.user.i/cookie
-    r = user.i
-
-
-
-enable notificatons notification button
-
-show see this user's products and services on user page
-    show 'See their products and services' if not viewing own profile
-    show 'See your products and services' if viewing own profile
+chat images
+voice type
+voice call
+video call

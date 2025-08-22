@@ -23,7 +23,7 @@ export default defineConfig({
 			manifest: {
 				name: '144',
 				short_name: '144',
-				description: 'PWA-ready SvelteKit app',
+				description: 'Apexlinks - a site to connect with people',
 				start_url: '/',
 				scope: '/',
 				display: 'standalone',
@@ -47,10 +47,6 @@ export default defineConfig({
 						purpose: 'maskable'
 					}
 				]
-			},
-			injectManifest: {
-				// keep same offline fallback route in SW if needed
-				globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}']
 			},
 			devOptions: {
 				enabled: true,

@@ -1,148 +1,227 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
+	import axios from 'axios';
 	import { onMount } from 'svelte';
-	import { animate, createTimeline, stagger } from 'animejs';
-	import type { PageData } from './$types';
+	import ItemResultsList from '$lib/components/ItemResultsList.svelte';
 
-	export let data: PageData;
+	type Item = {
+		i: string;
+		t?: string;
+		d?: string;
+		k?: number;
+		a?: number;
+		q?: string;
+		x?: string[];
+		score?: number;
+	};
+
+	let { data } = $props();
+	let user = $derived(data?.user);
+
+	let query = $state('');
+	let kind = $state<0 | 1 | undefined>(undefined);
+	let sort = $state<'relevance' | 'newest' | 'oldest'>('relevance');
+	let loading = $state(false);
+	let results = $state<Item[]>([]);
+	let searchTimeout = $state<NodeJS.Timeout | null>(null);
+
+	// Reactive statement to sync search query to localStorage
+	$effect(() => {
+		if (browser) {
+			localStorage.setItem(
+				'item_search_query',
+				JSON.stringify({ query, kind, sort })
+			);
+		}
+	});
 
 	onMount(() => {
-		// Page entrance animations
-		const timeline = createTimeline()
-		.add('.page-header', {
-			opacity: [0, 1],
-			translateY: [50, 0],
-			duration: 800,
-		})
-		.add('.items-grid', {
-			opacity: [0, 1],
-			translateY: [30, 0],
-			duration: 600,
-		}, '-=400')
-		.add('.item-card', {
-			opacity: [0, 1],
-			translateY: [20, 0],
-			duration: 400,
-			delay: stagger(100),
-		}, '-=200');
-
-		// Interactive hover animations
-		document.addEventListener('mouseover', (e) => {
-			const target = e.target as HTMLElement;
-			if (target.classList.contains('item-card')) {
-				animate(target, {
-					scale: 1.02,
-					translateY: -5,
-					duration: 300,
-					ease: 'outQuart'
-				});
+		if (browser) {
+			const savedQuery = localStorage.getItem('item_search_query');
+			if (savedQuery) {
+				const { q, k, s } = JSON.parse(savedQuery);
+				query = q || '';
+				kind = k;
+				sort = s || 'relevance';
 			}
-		});
-
-		document.addEventListener('mouseout', (e) => {
-			const target = e.target as HTMLElement;
-			if (target.classList.contains('item-card')) {
-				animate(target, {
-					scale: 1,
-					translateY: 0,
-					duration: 300,
-					ease: 'outQuart'
-				});
-			}
-		});
+			// Load initial results
+			search();
+		}
 	});
+
+	async function search() {
+		loading = true;
+
+		// Clear previous timeout
+		if (searchTimeout) {
+			clearTimeout(searchTimeout);
+		}
+
+		try {
+			const payload: Record<string, unknown> = {
+				q: query.trim() || undefined,
+				kind,
+				sort,
+				limit: 50
+			};
+
+			const response = await axios.post('/i', payload);
+			results = response.data as Item[];
+		} catch (error) {
+			console.error('Search error:', error);
+			results = [];
+		} finally {
+			loading = false;
+		}
+	}
+
+	function debouncedSearch() {
+		if (searchTimeout) {
+			clearTimeout(searchTimeout);
+		}
+
+		searchTimeout = setTimeout(() => {
+			search();
+		}, 300);
+	}
+
+	function clearSearch() {
+		query = '';
+		search();
+	}
 </script>
 
-<div class="min-h-screen" style="background: var(--bg-primary);">
-	<!-- Page Header -->
-	<div class="page-header px-4 py-16 text-center opacity-0 sm:py-12">
-		<div class="mx-auto max-w-4xl">
-			<h1 class="mb-6 text-6xl font-black sm:text-4xl" style="color: var(--color-theme-4);">
-				Discover Amazing <span style="color: var(--color-theme-1);">Items</span>
-			</h1>
-			<p class="text-xl text-gray-600 sm:text-lg dark:text-gray-300">
-				Find products and services from your community
-			</p>
-			{#if data.user}
-				<div class="mt-8">
-					<a href="/i/create" class="btn-primary btn-lg">
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-							<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+<svelte:head>
+	<title>Search Items - AngelWings</title>
+	<meta name="description" content="Find products and services in your community" />
+</svelte:head>
+
+<div class="min-h-screen bg-gradient-to-br from-background to-surface">
+	<!-- Header -->
+	<div class="bg-gradient-to-r from-theme-1 to-theme-2 text-white">
+		<div class="max-w-4xl mx-auto px-4 py-8">
+			<div class="flex items-center justify-between">
+				<div>
+					<h1 class="text-4xl font-bold mb-2">Search Items</h1>
+					<p class="text-white/80">Find products and services in your community</p>
+				</div>
+				{#if user}
+					<a
+						href="/i/create"
+						class="inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-3 font-medium text-white backdrop-blur-sm transition-all hover:bg-white/20"
+						style="border: 2px solid rgba(255, 255, 255, 0.2);"
+						aria-label="Create new item"
+					>
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+							<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
 						</svg>
 						Create Item
 					</a>
-				</div>
-			{/if}
+				{/if}
+			</div>
 		</div>
 	</div>
 
-	<!-- Items Grid -->
-	<div class="items-grid mx-auto max-w-6xl px-4 pb-16 opacity-0">
-		{#if data.items.length > 0}
-			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-				{#each data.items as item (item.i)}
-					<a href="/i/{item.i}" class="item-card card-hover card-normal no-underline">
-						<div class="mb-4">
-							<div class="flex items-center justify-between mb-2">
-								<span class="text-sm font-medium rounded-full px-3 py-1" style="border: 1px solid var(--color-theme-{item.k === 0 ? '1' : '2'}); color: var(--color-theme-{item.k === 0 ? '1' : '2'});">
-									{item.k === 0 ? '🛍️ Product' : '⚡ Service'}
-								</span>
-								<span class="text-xs text-gray-500">
-									{new Date(item.a).toLocaleDateString()}
-								</span>
-							</div>
-							<h3 class="text-xl font-bold mb-2" style="color: var(--color-theme-4);">
-								{item.t}
-							</h3>
-							{#if item.d}
-								<p class="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
-									{item.d}
-								</p>
-							{/if}
-						</div>
-						
-						{#if item.x && item.x.length > 0}
-							<div class="mb-4">
-								<img src={item.x[0]} alt={item.t} class="w-full h-32 object-cover rounded-lg" />
-							</div>
+	<!-- Search Form -->
+	<div class="max-w-4xl mx-auto px-4 py-8">
+		<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8" style="border: 2px solid var(--color-theme-6);">
+			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+				<!-- Search Query -->
+				<div class="md:col-span-2">
+					<label for="query" class="block text-sm font-medium mb-2" style="color: var(--color-theme-4);">
+						Search
+					</label>
+					<div class="relative">
+						<input
+							id="query"
+							type="text"
+							bind:value={query}
+							oninput={debouncedSearch}
+							placeholder="Search for items..."
+							class="w-full px-4 py-3 pr-12 rounded-xl border-2 transition-colors"
+							style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
+						/>
+						{#if query}
+							<button
+								onclick={clearSearch}
+								class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+								aria-label="Clear search"
+							>
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+									<path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+								</svg>
+							</button>
 						{/if}
+					</div>
+				</div>
 
-						<div class="flex items-center justify-between text-sm">
-							<span class="text-gray-500">View Details</span>
-							<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--color-theme-1);">
-								<path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"/>
-							</svg>
-						</div>
-					</a>
-				{/each}
+				<!-- Item Type -->
+				<div>
+					<label for="kind" class="block text-sm font-medium mb-2" style="color: var(--color-theme-4);">
+						Type
+					</label>
+					<select
+						id="kind"
+						bind:value={kind}
+						onchange={search}
+						class="w-full px-4 py-3 rounded-xl border-2 transition-colors"
+						style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
+					>
+						<option value={undefined}>All Items</option>
+						<option value={0}>🛍️ Products</option>
+						<option value={1}>⚡ Services</option>
+					</select>
+				</div>
+
+				<!-- Sort -->
+				<div>
+					<label for="sort" class="block text-sm font-medium mb-2" style="color: var(--color-theme-4);">
+						Sort by
+					</label>
+					<select
+						id="sort"
+						bind:value={sort}
+						onchange={search}
+						class="w-full px-4 py-3 rounded-xl border-2 transition-colors"
+						style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
+					>
+						<option value="relevance">Relevance</option>
+						<option value="newest">Newest</option>
+						<option value="oldest">Oldest</option>
+					</select>
+				</div>
 			</div>
-		{:else}
-			<div class="text-center py-16">
-				<div class="mb-6 text-6xl">📦</div>
-				<h3 class="mb-4 text-2xl font-bold" style="color: var(--color-theme-4);">No items yet</h3>
-				<p class="text-lg mb-8" style="color: var(--color-theme-6);">Be the first to share something amazing!</p>
-				{#if data.user}
-					<a href="/i/create" class="btn-primary btn-lg">
-						Create First Item
-					</a>
-				{:else}
-					<a href="/google" class="btn-primary btn-lg">
-						Sign In to Create
-					</a>
-				{/if}
+
+			<!-- Loading indicator -->
+			{#if loading}
+				<div class="mt-4 text-center">
+					<div class="inline-flex items-center gap-2 text-sm" style="color: var(--color-theme-1);">
+						<div class="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent"></div>
+						Searching...
+					</div>
+				</div>
+			{/if}
+		</div>
+
+		<!-- Results -->
+		<div class="space-y-4">
+			<div class="flex items-center justify-between">
+				<h2 class="text-xl font-semibold" style="color: var(--color-theme-4);">
+					Results {#if !loading}({results.length}){/if}
+				</h2>
 			</div>
-		{/if}
+
+			<ItemResultsList {results} />
+		</div>
 	</div>
 </div>
 
 <style>
-	.page-header, .items-grid, .item-card {
-		opacity: 0;
+	:global(.bg-gradient-to-r) {
+		background: linear-gradient(to right, var(--color-theme-1), var(--color-theme-2));
 	}
 
-	.line-clamp-3 {
-		display: -webkit-box;
-		-webkit-line-clamp: 3;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
+	:global(.bg-gradient-to-br) {
+		background: linear-gradient(to bottom right, var(--background), var(--surface));
 	}
 </style>

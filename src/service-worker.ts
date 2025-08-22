@@ -1,67 +1,61 @@
 /// <reference types="vite/client" />
 /* global self */
 
-import { clientsClaim } from 'workbox-core';
-import {
-	cleanupOutdatedCaches,
-	createHandlerBoundToURL,
-	precacheAndRoute
-} from 'workbox-precaching';
-import { NavigationRoute, registerRoute } from 'workbox-routing';
+console.log('🔧 Service worker starting...');
 
-// Precache manifest injected at build time
-// eslint-disable-next-line no-underscore-dangle
-precacheAndRoute(self.__WB_MANIFEST || []);
-cleanupOutdatedCaches();
-clientsClaim();
-
-// SPA navigation fallback to index.html
-registerRoute(new NavigationRoute(createHandlerBoundToURL('/')));
-
-self.addEventListener('install', (event: ExtendableEvent) => {
-	self.skipWaiting();
+// Basic service worker functionality without workbox dependencies
+self.addEventListener('install', (event: Event) => {
+	console.log('📦 Service worker installing...');
+	(self as any).skipWaiting();
 });
 
-self.addEventListener('activate', (event: ExtendableEvent) => {
-	event.waitUntil(self.clients.claim());
+self.addEventListener('activate', (event: Event) => {
+	console.log('🚀 Service worker activating...');
+	(event as any).waitUntil((self as any).clients.claim());
 });
 
-self.addEventListener('push', (event: PushEvent) => {
-	let data: any = {};
+self.addEventListener('push', (event: Event) => {
+	console.log('📱 Push notification received');
+	let userTag = '';
+	let chatId = '';
+
 	try {
-		data = event.data ? event.data.json() : {};
-	} catch (_) {
-		try {
-			// @ts-ignore - text may not exist on some user agents
-			data = JSON.parse(event.data?.text() || '{}');
-		} catch (_) {
-			data = {};
-		}
+		const pushEvent = event as any;
+		const data = pushEvent.data ? pushEvent.data.json() : {};
+		userTag = data.userTag || 'someone';
+		chatId = data.chatId || '';
+	} catch (e) {
+		console.log('Push data parse error:', e);
+		userTag = 'someone';
 	}
 
-	const title = data.title || 'Notification';
+	const title = `new text from ${userTag}`;
 	const options: NotificationOptions = {
-		body: data.body || '',
-		icon: data.icon || '/icons/icon-192.png',
-		badge: data.badge || '/icons/icon-192.png',
-		tag: data.tag,
-		data: data.data || {}
+		icon: '/icons/icon-192.png',
+		data: { chatId, userTag }
 	};
 
-	event.waitUntil(self.registration.showNotification(title, options));
+	(event as any).waitUntil((self as any).registration.showNotification(title, options));
 });
 
 self.addEventListener('notificationclick', (event: any) => {
 	event.notification.close();
-	const url = event.notification?.data?.url || '/';
-	event.waitUntil(
+	const chatId = event.notification.data?.chatId;
+	const url = chatId ? `/u/${chatId}` : '/';
+
+	(event as any).waitUntil(
 		(async () => {
-			const allClients = await self.clients.matchAll({ includeUncontrolled: true, type: 'window' });
-			const client: any = allClients.find((c: any) => c.url.includes(url));
+			const allClients = await (self as any).clients.matchAll({
+				includeUncontrolled: true,
+				type: 'window'
+			});
+			const client = allClients.find((c: any) => c.url.includes(url));
+
 			if (client) {
 				client.focus();
+				client.navigate(url);
 			} else {
-				await self.clients.openWindow(url);
+				await (self as any).clients.openWindow(url);
 			}
 		})()
 	);

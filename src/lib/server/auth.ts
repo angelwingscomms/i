@@ -1,13 +1,9 @@
-import { Google } from 'arctic';
-import { GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URL } from '$env/static/private';
 import { SECRET } from '$env/static/private';
 import { get, delete_, create, edit_point } from '$lib/db';
 import type { User } from '$lib/types';
 import { v7 } from 'uuid';
 import type { RequestEvent } from '@sveltejs/kit';
 import * as oslo_encoding from '@oslojs/encoding';
-
-export const google = new Google(GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URL);
 
 export const sessionCookieName = 'auth_session';
 export const sessionJwtCookieName = 'auth_session_jwt';

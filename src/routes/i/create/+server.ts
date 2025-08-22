@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const { t, d, k, x } = (await request.json()) as { t: string; d: string; k?: 0 | 1; x?: string[] };
 	if (!t || !d) throw error(400, 'missing fields');
 	const q = await summarize(d);
-	const payload: Item = { s: 'i', t: t.trim(), q, k: k ?? 0, ...(x?.length ? { x } : {}) };
+	const payload: Item = { s: 'i', t: t.trim(), d: d.trim(), q, k: k ?? 0, a: Date.now(), ...(x?.length ? { x } : {}) };
 	const i = await create(payload, d);
 	return json({ i });
 };

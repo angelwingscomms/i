@@ -1,18 +1,20 @@
-import { createSession, google, setSessionTokenCookie } from '$lib/server/auth';
+import { createSession, setSessionTokenCookie } from '$lib/server/auth';
 import { setSessionJwtCookie, createSessionJWT } from '$lib/server/auth';
-import { decodeIdToken } from 'arctic';
+import { decodeIdToken, Google } from 'arctic';
 
 import { redirect, type RequestEvent } from '@sveltejs/kit';
 import type { OAuth2Tokens } from 'arctic';
 import { create_user } from '$lib/auth';
 import { search_by_payload } from '$lib/db';
 import type { User } from '$lib/types';
+import { GOOGLE_ID, GOOGLE_SECRET } from '$env/static/private';
 
 export async function GET(event: RequestEvent): Promise<Response> {
 	const code = event.url.searchParams.get('code');
 	const state = event.url.searchParams.get('state');
 	const storedState = event.cookies.get('google_oauth_state') ?? null;
 	const codeVerifier = event.cookies.get('google_code_verifier') ?? null;
+	const google = new Google(GOOGLE_ID, GOOGLE_SECRET, `${event.url.origin}/google/callback`);
 	// console.log('code:', code);
 	// console.log('state:', state);
 	// console.log('storedState:', storedState);

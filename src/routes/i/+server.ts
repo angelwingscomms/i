@@ -1,20 +1,64 @@
+import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { error, json } from '@sveltejs/kit';
-import { create } from '$lib/db';
-import type { DBChatMessage } from '$lib/types';
+import { embed } from '$lib/util/embed';
+import { search_by_payload, search_by_vector } from '$lib/db';
 
-export const POST: RequestHandler = async ({ locals, request }) => {
-	if (!locals.user) throw error(401, 'Unauthorized');
-	const body = (await request.json()) as { m: string; d: number; i?: string };
-	if (!body?.m || typeof body.m !== 'string') throw error(400, 'missing message');
-	const payload: DBChatMessage = {
-		s: 'm',
-		u: locals.user.i,
-		d: body.d || Date.now(),
-		m: body.m,
-		r: locals.user.i
+export const POST: RequestHandler = async ({ request }) => {
+	const { q, kind, limit = 50, sort = 'relevance' } = (await request.json()) as {
+		q?: string;
+		kind?: 0 | 1;
+		limit?: number;
+		sort?: 'relevance' | 'newest' | 'oldest';
 	};
-	const i = await create(payload, body.m, body.i);
-	return json({ i }, { status: 201 });
-};
 
+	if (typeof limit !== 'number' || limit < 1 || limit > 200) {
+		throw error(400, 'invalid limit (1-200)');
+	}
+
+	const payload_filter: Record<string, unknown> = {
+		s: 'i',
+		...(kind !== undefined ? { k: kind } : {})
+	};
+
+	let candidates: Array<{ i: string; t?: string; d?: string; k?: number; a?: number; q?: string; x?: string[] }> = [];
+
+	if (q && q.trim()) {
+		const vector = await embed(q);
+		candidates = await search_by_vector({
+			vector,
+			with_payload: ['t', 'd', 'k', 'a', 'q', 'x'],
+			filter: { must: payload_filter },
+			limit: Math.min(500, limit * 2)
+		});
+	} else {
+		// No query - return all items with basic filtering
+		candidates = await search_by_payload(
+			payload_filter,
+			['t', 'd', 'k', 'a', 'q', 'x'],
+			Math.min(500, limit * 2)
+		);
+	}
+
+	// Sort results based on criteria
+	switch (sort) {
+		case 'newest':
+			candidates.sort((a, b) => (b.a || 0) - (a.a || 0));
+			break;
+		case 'oldest':
+			candidates.sort((a, b) => (a.a || 0) - (b.a || 0));
+			break;
+		case 'relevance':
+		default:
+			// For vector search, results are already sorted by relevance (score)
+			// For payload search, maintain insertion order or sort by newest
+			if (!q || !q.trim()) {
+				candidates.sort((a, b) => (b.a || 0) - (a.a || 0));
+			}
+			break;
+	}
+
+	// Limit results
+	const results = candidates.slice(0, limit);
+
+	return json(results);
+};

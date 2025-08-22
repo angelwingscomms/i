@@ -4,8 +4,7 @@ import type { ChatMessage, DBChatMessage, SendChatMessage, Message } from '$lib/
 import { s } from '$lib/util/s';
 import { cf } from '$lib/util/cf';
 import { PUBLIC_WORKER } from '$env/static/public';
-import { get } from '$lib/db';
-import type { User } from '$lib/types';
+
 import { sendPushToUserId } from '$lib/server/push';
 import { process_message } from '$lib/util/chat/process_message';
 
@@ -17,6 +16,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		d: m.d,
 		i: m.i,
 		c: m.c,
+		h: 0,
 		t: m.t,
 		r: params.i,
 		s: 'm',
@@ -59,13 +59,9 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		} satisfies ChatMessage)
 	});
 
-	// After message is saved and broadcast, send push notif to receiving user (room id is params.i)
+	// Send push notification to receiving user with chat ID
 	try {
-		const recipient = await get<User>(params.i);
-		if (recipient?.i) {
-			const title = `text from ${m.t}`;
-			await sendPushToUserId(recipient.i, title, m.m, i);
-		}
+		await sendPushToUserId(params.i, m.t, locals.user?.i);
 	} catch (err) {
 		console.error('push notif error', err);
 	}

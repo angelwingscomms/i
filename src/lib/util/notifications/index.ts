@@ -1,3 +1,4 @@
+import { PUBLIC_VAPID_KEY } from '$env/static/public';
 import { toast } from '../toast';
 
 export async function ensurePushSubscribed(userId: string) {
@@ -10,47 +11,128 @@ export async function ensurePushSubscribed(userId: string) {
 	}
 
 	try {
-		// vite-plugin-pwa registers the service worker, wait until it's ready
-		const registration = await navigator.serviceWorker.ready;
+		console.log('🎯 Starting push notification setup...');
+
+		// Check if service worker is available and get registration
+		console.log('⏳ Checking service worker registration...');
+		if (!('serviceWorker' in navigator)) {
+			throw new Error('Service workers not supported');
+		}
+
+		let registration = await navigator.serviceWorker.getRegistration();
+		if (!registration) {
+			console.log('📝 No existing service worker, registering...');
+			try {
+				registration = await navigator.serviceWorker.register('/service-worker.js');
+				console.log('✅ Service worker registered!');
+			} catch (error) {
+				console.error('❌ Failed to register service worker:', error);
+				throw new Error('Service worker registration failed');
+			}
+
+			// Wait for it to be ready with timeout
+			const readyRegistration = await Promise.race([
+				navigator.serviceWorker.ready,
+				new Promise<never>((_, reject) =>
+					setTimeout(() => reject(new Error('Service worker ready timeout')), 10000)
+				)
+			]);
+			registration = readyRegistration;
+		}
+		console.log('✅ Service worker ready!');
 
 		let permission = Notification.permission;
+		console.log('📋 Current notification permission:', permission);
+
 		if (permission === 'default') {
-			permission = await Notification.requestPermission();
+			console.log('🔐 Requesting notification permission...');
+			// Request permission with timeout
+			permission = await Promise.race([
+				Notification.requestPermission(),
+				new Promise<NotificationPermission>((_, reject) =>
+					setTimeout(() => reject(new Error('Permission request timeout')), 10000)
+				)
+			]);
+			console.log('📋 New notification permission:', permission);
 		}
+
 		if (permission !== 'granted') {
 			if (permission === 'denied') {
 				toast.info('Notifications blocked. Please enable them in your browser settings.');
 			} else {
-				toast.info('Please enable notifications.', undefined, undefined, {
-					label: 'Enable',
-					callback: async () => {
-						await Notification.requestPermission();
-					}
-				});
+				toast.info('Please enable notifications to stay connected.');
 			}
 			return { ok: false, reason: 'denied' } as const;
 		}
 
-		const vapidRes = await fetch('/push_notif');
-		const { publicKey } = await vapidRes.json();
+		console.log('🔑 Processing VAPID key...');
+		const applicationServerKey = urlBase64ToUint8Array(PUBLIC_VAPID_KEY);
 
-		const applicationServerKey = urlBase64ToUint8Array(publicKey);
-
+		console.log('📱 Getting existing subscription...');
 		// Try to reuse an existing subscription if present
 		const existing = await registration.pushManager.getSubscription();
+		console.log('📱 Existing subscription:', existing ? 'found' : 'none');
+
+		console.log('📱 Creating subscription...');
 		const sub =
 			existing ||
 			(await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey }));
+		console.log('📱 Subscription created successfully!');
 
-		await fetch(`/u/${userId}/push_notifications/save_subscription`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(sub)
-		});
+		// Log subscription creation
+		if (!existing) {
+			console.log('🔔 Push notification subscription created:', {
+				userId,
+				endpoint: sub.endpoint,
+				keys: sub.getKey ? {
+					p256dh: sub.getKey('p256dh') ? 'present' : 'missing',
+					auth: sub.getKey('auth') ? 'present' : 'missing'
+				} : 'getKey not available',
+				timestamp: new Date().toISOString()
+			});
+		} else {
+			console.log('🔄 Reusing existing push notification subscription:', {
+				userId,
+				endpoint: existing.endpoint,
+				timestamp: new Date().toISOString()
+			});
+		}
 
+		console.log('💾 Saving subscription to server...');
+		// Save subscription with timeout
+		const saveResponse = await Promise.race([
+			fetch(`/u/${userId}/push_notifications/save_subscription`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(sub)
+			}),
+			new Promise<never>((_, reject) =>
+				setTimeout(() => reject(new Error('Save subscription timeout')), 5000)
+			)
+		]);
+
+		if (!saveResponse.ok) {
+			throw new Error(`Save subscription failed: ${saveResponse.status}`);
+		}
+
+		console.log('✅ Push notification setup completed successfully!');
 		return { ok: true } as const;
 	} catch (e) {
 		console.error('ensurePushSubscribed error', e);
+
+		// Show user-friendly error message
+		if (e instanceof Error) {
+			if (e.message.includes('timeout')) {
+				toast.error('Request timed out. Please try again.');
+			} else if (e.message.includes('Service worker')) {
+				toast.error('Service worker not ready. Please refresh the page and try again.');
+			} else {
+				toast.error('Failed to enable notifications. Please try again.');
+			}
+		} else {
+			toast.error('Failed to enable notifications. Please try again.');
+		}
+
 		return { ok: false, reason: 'error' } as const;
 	}
 }

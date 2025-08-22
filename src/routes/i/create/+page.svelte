@@ -170,13 +170,13 @@
 						<div class="flex gap-4">
 							<label class="flex-1">
 								<input type="radio" class="sr-only" bind:group={kind} value={0} />
-								<div class="cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all" style="{kind === 0 ? `background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);` : `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}">
+								<div class="cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all active-button" style="{kind === 0 ? `background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);` : `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}">
 									🛍️ Product
 								</div>
 							</label>
 							<label class="flex-1">
 								<input type="radio" class="sr-only" bind:group={kind} value={1} />
-								<div class="cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all" style="{kind === 1 ? `background: transparent; border: 1px solid var(--color-theme-2); color: var(--color-theme-2);` : `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}">
+								<div class="cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all active-button" style="{kind === 1 ? `background: transparent; border: 1px solid var(--color-theme-2); color: var(--color-theme-2);` : `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}">
 									⚡ Service
 								</div>
 							</label>
@@ -266,6 +266,12 @@
 	}
 
 	.submit-button:hover:not(:disabled) {
+		transform: translateY(-3px);
+		box-shadow: 0 20px 40px rgba(182, 55, 250, 0.3);
+	}
+
+	/* Active button glow effect */
+	.active-button:hover {
 		transform: translateY(-3px);
 		box-shadow: 0 20px 40px rgba(182, 55, 250, 0.3);
 	}

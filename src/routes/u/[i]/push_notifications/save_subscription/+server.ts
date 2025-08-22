@@ -12,6 +12,17 @@ export const POST: RequestHandler = async ({ params, request }) => {
 		if (!sub || !sub.endpoint) return json({ error: 'invalid subscription' }, { status: 400 });
 
 		await set(i, { ps: sub });
+
+		// Log successful subscription save
+		console.log('🔔 Push notification subscription saved on server:', {
+			userId: i,
+			endpoint: sub.endpoint,
+			hasKeys: sub.keys ? 'yes' : 'no',
+			p256dh: sub.keys?.p256dh ? 'present' : 'missing',
+			auth: sub.keys?.auth ? 'present' : 'missing',
+			timestamp: new Date().toISOString()
+		});
+
 		return new Response();
 	} catch (e) {
 		console.error('save_subscription error', e);

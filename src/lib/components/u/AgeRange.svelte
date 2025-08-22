@@ -1,5 +1,7 @@
 <script lang="ts">
-	let { minAge = $bindable(0), maxAge = $bindable(144) }: { minAge: number; maxAge: number } = $props();
+	let { minAge = $bindable(), maxAge = $bindable() }: { minAge: number; maxAge: number } = $props();
+	$inspect(minAge)
+	$inspect(maxAge)
 </script>
 
 <div class="flex-1">

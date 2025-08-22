@@ -5,11 +5,11 @@ import { sendPushToUserId } from '$lib/server/push';
 export const POST: RequestHandler = async ({ params, request }) => {
 	try {
 		const { i } = params;
-		const { t, m, k } = await request.json();
+		const { userTag, chatId } = await request.json();
 		if (!i) return json({ error: 'missing user id' }, { status: 400 });
-		if (!m) return json({ error: 'missing message' }, { status: 400 });
+		if (!userTag) return json({ error: 'missing userTag' }, { status: 400 });
 
-		const res = await sendPushToUserId(i, t || 'Notification', m, k);
+		const res = await sendPushToUserId(i, userTag, chatId);
 		if (!res.ok) return new Response(res.reason, { status: res.status });
 		return json({ message: 'Push notification sent' });
 	} catch (error) {

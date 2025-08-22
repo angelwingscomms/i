@@ -2,6 +2,7 @@
 	import '../app.css';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import MobileSidebar from '$lib/components/MobileSidebar.svelte';
+	import PushNotificationBanner from '$lib/components/PushNotificationBanner.svelte';
 	import { toasts, toast, removeToast } from '$lib/util/toast';
 	import { fade } from 'svelte/transition';
 	import { themeStore } from '$lib/stores/theme';
@@ -12,16 +13,20 @@
 	let { children, data } = $props();
 	let is_sidebar_open = $state(false);
 
-	const animateOrb = async (orb: Element) => {
-		// We wrap the logic in a continuous loop
-		while (true) {
-			await animate(orb, {
+	const animateOrb = (orb: Element) => {
+		const runAnimation = () => {
+			animate(orb, {
 				translateX: () => utils.random(-window.innerWidth, window.innerWidth),
 				translateY: () => utils.random(-window.innerHeight, window.innerHeight),
 				duration: () => utils.random(5000, 8000),
+				complete: () => {
+					// Small delay before next animation
+					setTimeout(runAnimation, 1000);
+				}
 				// easing: 'inOutSine'
 			});
-		}
+		};
+		runAnimation();
 	};
 
 	onMount(() => {
@@ -93,9 +98,11 @@
 	></div>
 </div>
 
-<Navbar user={data?.user as any} onmenutoggle={() => (is_sidebar_open = !is_sidebar_open)} />
+<Navbar user={data?.user as any} on:menutoggle={() => (is_sidebar_open = !is_sidebar_open)} />
 <MobileSidebar bind:is_open={is_sidebar_open} user={data?.user as any} />
 {@render children()}
+
+<PushNotificationBanner userId={data?.user?.i} />
 
 <div class="pointer-events-none fixed top-4 right-4 z-[1000] flex flex-col gap-2">
 	{#each $toasts as toastItem (toastItem.id)}
