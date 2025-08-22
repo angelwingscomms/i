@@ -8,6 +8,8 @@
 	import axios from 'axios';
 	import { animate, stagger } from 'animejs';
 	import { tick } from 'svelte';
+	import FileWidget from './FileWidget.svelte';
+	import ChatInput from './ChatInput.svelte';
 	let {
 		m,
 		s,
@@ -26,6 +28,11 @@
 	let websocket: WebSocket | undefined;
 	let messagesEl: HTMLElement | null = null;
 	let messageInputEl: HTMLInputElement | null = null;
+
+	// Define onsend function for ChatInput
+	const onsend = (text: string, files?: string[]) => {
+		send_message(text, files);
+	};
 
 	// function animate_in(el: HTMLElement) {
 	// 	animate(el, {
@@ -114,20 +121,30 @@
 			messagesEl.scrollTop = messagesEl.scrollHeight;
 			return () => stop();
 		}
-		// focus input on mount
-		tick().then(() => messageInputEl?.focus());
+		// ChatInput handles its own focus
 	});
 
-	function send_message() {
+	function send_message(text?: string, fileUrls?: string[]) {
+		const messageText = text || message_text;
+		const files = fileUrls || [];
+
 		let m: SendChatMessage = {
-			m: message_text,
+			m: messageText,
 			c,
 			t,
 			d: Date.now(),
 			i: v7(),
+			...(files.length > 0 && { f: files })
 		};
-		if (message_text) {
-			chat_messages.push({ m: m.m, i: m.i, x: page.data.user.t, saved: false });
+
+		if (messageText || files.length > 0) {
+			chat_messages.push({
+				m: m.m,
+				i: m.i,
+				x: page.data.user.t,
+				saved: false,
+				...(files.length > 0 && { f: files })
+			});
 			message_text = '';
 			console.log(page.url.pathname);
 			axios.post(page.url.pathname, m);
@@ -164,6 +181,13 @@
 						style={`max-width: 90%; ${msg.x === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
 					>
 						<span class="message-text">{msg.m}</span>
+						{#if msg.f && msg.f.length > 0}
+							<div class="message-files">
+								{#each msg.f as fileUrl}
+									<FileWidget url={fileUrl} />
+								{/each}
+							</div>
+						{/if}
 					</div>
 				</a>
 			{:else}
@@ -187,31 +211,32 @@
 						style={`max-width: 90%; ${msg.x === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
 					>
 						<span class="message-text">{msg.m}</span>
+						{#if msg.f && msg.f.length > 0}
+							<div class="message-files">
+								{#each msg.f as fileUrl}
+									<FileWidget url={fileUrl} />
+								{/each}
+							</div>
+						{/if}
 					</div>
 				</div>
 			{/if}
 		{/each}
 	</div>
 	<div class="input-area">
-		<input
-			type="text"
-			class="message-input"
-			class:ghost-border={true}
-			bind:value={message_text}
-			bind:this={messageInputEl}
-			onkeydown={(e) => e.key === 'Enter' && send_message()}
-			placeholder="Type a message..."
-		/>
-		<button
-			aria-label="send"
-			class="send-button"
-			style="color: var(--color-theme-2);"
-			onclick={() => (a = !a)}><i class="fa-solid fa-ghost"></i></button
-		><button
-			aria-label="send"
-			class="send-button"
-			style="color: var(--color-theme-2);"
-			onclick={send_message}><i class="fa-solid fa-paper-plane"></i></button
-		>
+		<ChatInput {onsend} placeholder="Type a message..." />
 	</div>
 </div>
+
+<style>
+	.message-files {
+		margin-top: 0.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+
+	.message-files:empty {
+		display: none;
+	}
+</style>

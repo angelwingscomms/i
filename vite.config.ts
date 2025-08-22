@@ -3,7 +3,6 @@ import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
-import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 /**
  * Local minimal type to avoid implicit any in workbox urlPattern predicate.
@@ -56,15 +55,7 @@ export default defineConfig({
 		}),
 		devtoolsJson()
 	],
-	build: {
-		rollupOptions: {
-			plugins: [
-				nodePolyfills({
-					include: ['querystring', 'url', 'buffer', 'events', 'util', 'stream', 'crypto']
-				})
-			]
-		}
-	},
+
 	test: {
 		projects: [
 			{

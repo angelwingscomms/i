@@ -1,13 +1,16 @@
 <script lang="ts">
 	import axios from 'axios';
 
-	let { onsend = (t: string) => {}, placeholder = 'Type a message…', receiver = '' } = $props();
+	let { onsend = (t: string, files?: string[]) => {}, placeholder = 'Type a message…', receiver = '' } = $props();
 	let text = $state('');
 	let inputEl: HTMLInputElement | null = null;
 	let isRecording = $state(false);
 	let isTranscribing = $state(false);
 	let mediaRecorder: MediaRecorder | null = null;
 	let audioChunks: Blob[] = [];
+	let selectedFiles = $state<File[]>([]);
+	let isUploading = $state(false);
+	let fileInputEl: HTMLInputElement | null = null;
 
 	$effect(() => {
 		queueMicrotask(() => inputEl?.focus());
@@ -82,16 +85,96 @@
 		}
 	}
 
+	function handleFileSelect(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const files = Array.from(target.files || []);
+
+		// Filter out files that are too large (e.g., 50MB limit)
+		const maxSize = 50 * 1024 * 1024; // 50MB
+		const validFiles = files.filter(file => {
+			if (file.size > maxSize) {
+				console.warn(`File ${file.name} is too large (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+				return false;
+			}
+			return true;
+		});
+
+		selectedFiles = [...selectedFiles, ...validFiles];
+
+		// Reset file input
+		if (fileInputEl) {
+			fileInputEl.value = '';
+		}
+	}
+
+	async function uploadFiles(): Promise<string[]> {
+		if (selectedFiles.length === 0) return [];
+
+		isUploading = true;
+		try {
+			const formData = new FormData();
+			selectedFiles.forEach(file => {
+				formData.append('files', file);
+			});
+
+			const response = await axios.post('/i/upload', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			});
+
+			return response.data.x || [];
+		} catch (error) {
+			console.error('File upload error:', error);
+			return [];
+		} finally {
+			isUploading = false;
+		}
+	}
+
+	function removeFile(index: number) {
+		selectedFiles = selectedFiles.filter((_, i) => i !== index);
+	}
+
 	function send() {
 		const t = text.trim();
-		if (!t) return;
-		onsend(t);
-		text = '';
+		if (!t && selectedFiles.length === 0) return;
+
+		// Send immediately if no files to upload
+		if (selectedFiles.length === 0) {
+			onsend(t);
+			text = '';
+			return;
+		}
+
+		// Upload files first, then send message
+		uploadFiles().then(fileUrls => {
+			onsend(t, fileUrls);
+			text = '';
+			selectedFiles = [];
+		}).catch(error => {
+			console.error('Error sending message with files:', error);
+		});
 	}
 </script>
 
 <div class="input-area">
-	<input class="message-input" bind:this={inputEl} bind:value={text} onkeydown={(e) => e.key === 'Enter' && send()} {placeholder} disabled={isRecording || isTranscribing} />
+	<!-- File Preview Area -->
+	{#if selectedFiles.length > 0}
+		<div class="file-preview">
+			{#each selectedFiles as file, index}
+				<div class="file-item">
+					<span class="file-name">{file.name}</span>
+					<span class="file-size">({(file.size / 1024 / 1024).toFixed(1)}MB)</span>
+					<button class="remove-file" onclick={() => removeFile(index)} title="Remove file">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			{/each}
+		</div>
+	{/if}
+
+	<input class="message-input" bind:this={inputEl} bind:value={text} onkeydown={(e) => e.key === 'Enter' && send()} {placeholder} disabled={isRecording || isTranscribing || isUploading} />
 
 	<!-- Voice Recording Controls -->
 	{#if !isRecording && !isTranscribing}
@@ -114,10 +197,34 @@
 		</button>
 	{/if}
 
-	<button class="send-button" title="AI suggest" onclick={suggest} disabled={isRecording || isTranscribing}>
+	<!-- File Upload Button -->
+	<input
+		type="file"
+		bind:this={fileInputEl}
+		onchange={handleFileSelect}
+		multiple
+		accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.txt,.csv,.zip"
+		style="display: none;"
+	/>
+	<button
+		class="file-button"
+		title="Attach files"
+		onclick={() => fileInputEl?.click()}
+		disabled={isRecording || isTranscribing || isUploading}
+	>
+		<i class="fas fa-paperclip"></i>
+	</button>
+
+	<button class="send-button" title="AI suggest" onclick={suggest} disabled={isRecording || isTranscribing || isUploading}>
 		<i class="fas fa-magic"></i>
 	</button>
-	<button class="send-button" onclick={send} disabled={isRecording || isTranscribing}>Send</button>
+	<button class="send-button" onclick={send} disabled={isRecording || isTranscribing || isUploading}>
+		{#if isUploading}
+			<i class="fas fa-spinner fa-spin"></i>
+		{:else}
+			Send
+		{/if}
+	</button>
 </div>
 
 <style>
@@ -177,6 +284,92 @@
 	}
 
 	.send-button:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.file-preview {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		padding: 0.75rem;
+		background: var(--bg-secondary, #f8f9fa);
+		border: 1px solid var(--border-color, #e9ecef);
+		border-radius: 8px;
+		margin-bottom: 0.5rem;
+		max-height: 200px;
+		overflow-y: auto;
+	}
+
+	.file-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.375rem 0.5rem;
+		background: white;
+		border: 1px solid var(--border-color, #dee2e6);
+		border-radius: 4px;
+		font-size: 0.875rem;
+	}
+
+	.file-name {
+		flex: 1;
+		font-weight: 500;
+		color: var(--text-primary, #212529);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.file-size {
+		color: var(--text-secondary, #6c757d);
+		font-size: 0.75rem;
+		white-space: nowrap;
+	}
+
+	.remove-file {
+		background: none;
+		border: none;
+		color: var(--text-secondary, #6c757d);
+		cursor: pointer;
+		padding: 0.25rem;
+		border-radius: 2px;
+		transition: all 0.2s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+	}
+
+	.remove-file:hover {
+		background: #f8d7da;
+		color: #dc3545;
+	}
+
+	.file-button {
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-color);
+		color: var(--text-secondary);
+		padding: 8px;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 32px;
+		height: 32px;
+		font-size: 0.875rem;
+	}
+
+	.file-button:hover:not(:disabled) {
+		background: var(--color-theme-1);
+		border-color: var(--color-theme-1);
+		color: white;
+	}
+
+	.file-button:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
 	}

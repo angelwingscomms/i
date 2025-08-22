@@ -44,9 +44,9 @@ export interface NotificationSubscription {
 
 export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>;
 
-export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't' | 'a'>;
+export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't' | 'a' | 'f'>;
 
-export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x'>;
+export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x' | 'f'>;
 
 export interface Message {
 	saved?: boolean; // if client has received websocket event for this message, meaning message has been saved to db
@@ -63,6 +63,7 @@ export interface Message {
 	u?: string; // user ID
 	r: string; // receiver ID (room/user)
 	tc?: number; // token count
+	f?: string[]; // file URLs array
 }
 
 export interface Room {

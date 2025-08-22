@@ -2,11 +2,17 @@
 	"name": "i",
 	"main": ".svelte-kit/cloudflare/_worker.js",
 	"compatibility_date": "2025-01-01",
-	"compatibility_flags": ["nodejs_compat_v2"],
+
 	"assets": {
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare"
 	},
+	"r2_buckets": [
+		{
+			"binding": "R2",
+			"bucket_name": "iri"
+		}
+	],
 	"observability": {
 		"enabled": true
 	},

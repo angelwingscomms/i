@@ -1,9 +1,10 @@
 import { env } from '$env/dynamic/private';
 
-// R2 binding will be available in the platform environment
+// Platform interface for Cloudflare Workers
 interface Platform {
 	env: {
 		R2: R2Bucket;
+		[key: string]: any;
 	};
 }
 
