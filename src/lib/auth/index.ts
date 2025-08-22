@@ -1,13 +1,8 @@
-import { delete_, get, search_by_payload, edit_point, create } from '$lib/db';
-import type { User } from '$lib/types';
+import { delete_, get, edit_point, create } from '$lib/db';
 
 export { create_user } from './create_user';
 
-import { Google } from 'arctic';
-import { GOOGLE_ID, GOOGLE_REDIRECT_URL, GOOGLE_SECRET } from '$env/static/private';
 import { v7 } from 'uuid';
-
-export const google = new Google(GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URL);
 
 export async function requireAuth(locals: App.Locals) {
 	if (!locals.user) {
