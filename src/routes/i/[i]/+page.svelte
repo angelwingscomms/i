@@ -19,7 +19,7 @@
 	};
 
 	let { data }: PageProps = $props();
-	let { i: item, relatedItems } = data as unknown as { i: Item; relatedItems: Item[] };
+	let { i: item, relatedItems } = data as unknown as { i: Item; relatedItems?: Item[] };
 	let selectedImageIndex = $state(0);
 	let showImageModal = $state(false);
 

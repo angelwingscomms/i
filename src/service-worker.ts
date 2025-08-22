@@ -1,6 +1,9 @@
 /// <reference types="vite/client" />
 /* global self */
 
+// This is required for workbox injectManifest to work properly
+self.__WB_MANIFEST = [];
+
 console.log('🔧 Service worker starting...');
 
 // Basic service worker functionality without workbox dependencies
