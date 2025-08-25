@@ -1,6 +1,6 @@
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { create, get, qdrant } from '$lib/db';
+import { create, get, qdrant, update_point } from '$lib/db';
 import { s } from '$lib/util/s';
 import { cf } from '$lib/util/cf';
 import { PUBLIC_WORKER } from '$env/static/public';
@@ -51,6 +51,29 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 			room_type: `direct message`
 		})
 	);
+
+	// Add room ID to both users' .r arrays
+	const auth_rooms: string[] = (await get(locals.user.i, 'r')) || [];
+	const user_rooms: string[] = (await get(params.i, 'r')) || [];
+
+	// Update current user's room list
+	if (!auth_rooms.includes(r)) {
+		await qdrant.setPayload(collection, {
+			wait: true,
+			payload: { r: [...auth_rooms, r] },
+			points: [locals.user.i]
+		});
+	}
+
+	// Update target user's room list
+	const targetUserRooms = user_rooms?.r || [];
+	if (!targetUserRooms.includes(r)) {
+		await qdrant.setPayload(collection, {
+			wait: true,
+			payload: { r: [...targetUserRooms, r] },
+			points: [params.i]
+		});
+	}
 
 	// Redirect to the newly created room
 	redirect(302, `/r/${r}`);

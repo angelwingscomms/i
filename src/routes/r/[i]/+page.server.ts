@@ -7,13 +7,18 @@ import { s } from '$lib/util/s';
 export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!params.i) error(400, 'missing room id');
 
-	const r = await get<Room>(params.i, ['t', 'c', 'r', 'n', 'u']);
+	const r = await get<Pick<Room, 't' | 'c' | 'r' | 'u'>>(params.i, ['t', 'c', 'r', 'u']);
 	console.log('r', r);
 	if (!r) error(404, 'room not found');
 
-	if (r.r && !(r.r === locals.user?.i || r.u === locals.user?.i)) {
-		error(401, `you don't belong to this room`);
+	// Check if user has access to this room
+	if (locals.user) {
+		const userRooms: string[] = (await get(locals.user.i, 'r')) || [];
+		if (!userRooms.includes(params.i)) {
+			error(403, 'you do not belong to this room');
+		}
 	}
+	
 	return {
 		m: (await Promise.all(
 			(
