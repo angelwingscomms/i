@@ -11,25 +11,25 @@
 	let deferred_prompt: BeforeInstallPromptEvent | null = null;
 
 	// Navigation timeout to prevent endless spinning
-	let navigation_start_time = $state<number | null>(null);
+	// let navigation_start_time = $state<number | null>(null);
 
-	$effect(() => {
-		if (navigating) {
-			navigation_start_time = Date.now();
-			// Set a timeout to reset navigation state if it takes too long
-			const timeout = setTimeout(() => {
-				if (navigation_start_time && Date.now() - navigation_start_time > 10000) {
-					console.warn('Navigation timeout - forcing reset');
-					// This is a workaround - in a real scenario, we'd need to handle this differently
-					window.location.reload();
-				}
-			}, 10000);
+	// $effect(() => {
+	// 	if (navigating) {
+	// 		navigation_start_time = Date.now();
+	// 		// Set a timeout to reset navigation state if it takes too long
+	// 		const timeout = setTimeout(() => {
+	// 			if (navigation_start_time && Date.now() - navigation_start_time > 10000) {
+	// 				console.warn('Navigation timeout - forcing reset');
+	// 				// This is a workaround - in a real scenario, we'd need to handle this differently
+	// 				window.location.reload();
+	// 			}
+	// 		}, 10000);
 
-			return () => clearTimeout(timeout);
-		} else {
-			navigation_start_time = null;
-		}
-	});
+	// 		return () => clearTimeout(timeout);
+	// 	} else {
+	// 		navigation_start_time = null;
+	// 	}
+	// });
 	let is_installed = false;
 
 	const dispatch = createEventDispatcher();

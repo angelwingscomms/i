@@ -77,5 +77,5 @@ export interface Room {
 	m?: number; // number of members
 	l?: number; // time of last message
 	x?: string[]; // member user ids
-	o?: ',' | '.' | '-' | '|';  // room type: - is anon, `|` is one one one (dm), `,` is private, `.` is open 
+	_?: ',' | '.' | '-' | '|';  // room type: - is anon, `|` is one one one (dm), `,` is private, `.` is open 
 }
