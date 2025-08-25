@@ -1,14 +1,27 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import axios from 'axios';
 
-	export let value = '';
-	export const maxLength = 500;
-	export let editable = true;
-	export const autoUpdate = false;
-	export let endpoint = '/api/update-description';
-	export let placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`;
-	export let rows = 6;
+	let {
+		value = '',
+		editable = true,
+		endpoint = '/api/update-description',
+		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
+		rows = 6,
+		onUpdate,
+		onInput
+	}: {
+		value?: string;
+		editable?: boolean;
+		endpoint?: string;
+		placeholder?: string;
+		rows?: number;
+		onUpdate?: (detail: any) => void;
+		onInput?: (detail: any) => void;
+	} = $props();
+
+	// Constants
+	const maxLength = 500;
+	const autoUpdate = false;
 
 	let originalValue = value;
 	let isSaving = false;
@@ -19,8 +32,6 @@
 	let mediaRecorder: MediaRecorder | null = null;
 	let audioChunks: Blob[] = [];
 	let charCount = value.length;
-
-	const dispatch = createEventDispatcher();
 
 	$: {
 		// Update char count when value changes
@@ -53,16 +64,16 @@
 			if (response.data.success) {
 				success = 'Description updated successfully';
 				originalValue = value;
-				dispatch('update', { value, success: true });
+				onUpdate?.({ value, success: true });
 				return true;
 			} else {
 				error = response.data.error || 'Failed to update description';
-				dispatch('update', { value, success: false, error });
+				onUpdate?.({ value, success: false, error });
 				return false;
 			}
 		} catch (err: any) {
 			error = err.response?.data?.error || 'An error occurred while updating';
-			dispatch('update', { value, success: false, error });
+			onUpdate?.({ value, success: false, error });
 			return false;
 		} finally {
 			isSaving = false;
@@ -121,7 +132,7 @@
 
 			if (response.data.text) {
 				value += ' ' + response.data.text;
-				dispatch('input', { value });
+				onInput?.({ value });
 
 				// if (autoUpdate) {
 				// 	await updateDescription();

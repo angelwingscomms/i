@@ -1,12 +1,15 @@
 <script lang="ts">
 	import type { User } from '$lib/types';
 
-	export let is_open: boolean;
-	export let user: User | null = null;
+	let {
+		is_open,
+		user = null,
+		onClose
+	}: { is_open: boolean; user: User | null; onClose?: () => void } = $props();
 
 	function close_sidebar() {
 		is_open = false;
-		dispatch('close');
+		onClose?.();
 	}
 </script>
 
@@ -41,7 +44,15 @@
 	</div>
 </aside>
 
-<div class="overlay" class:is-open={is_open} onclick={close_sidebar} role="button" tabindex="0" onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && close_sidebar()} aria-label="Close sidebar overlay"></div>
+<div
+	class="overlay"
+	class:is-open={is_open}
+	onclick={close_sidebar}
+	role="button"
+	tabindex="0"
+	onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && close_sidebar()}
+	aria-label="Close sidebar overlay"
+></div>
 
 <style>
 	.mobile-sidebar {

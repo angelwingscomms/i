@@ -22,8 +22,8 @@
 </div>
 
 {#if results.length === 0}
-	<div class="text-center py-12">
-		<div class="text-gray-500 text-lg mb-2">No items found</div>
-		<p class="text-gray-400 text-sm">Try adjusting your search terms or filters</p>
+	<div class="py-12 text-center">
+		<div class="mb-2 text-lg text-gray-500">No items found</div>
+		<p class="text-sm text-gray-400">Try adjusting your search terms or filters</p>
 	</div>
 {/if}

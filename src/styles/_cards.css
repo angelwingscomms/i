@@ -68,7 +68,7 @@
 }
 
 @utility search-input {
-	@apply w-full px-4 py-3 rounded-xl border-2 transition-colors;
+	@apply w-full rounded-xl border-2 px-4 py-3 transition-colors;
 	border-color: var(--color-theme-6);
 }
 
@@ -78,7 +78,7 @@
 }
 
 @utility search-select {
-	@apply px-4 py-3 rounded-xl border-2 transition-colors;
+	@apply rounded-xl border-2 px-4 py-3 transition-colors;
 	border-color: var(--color-theme-6);
 }
 

@@ -136,17 +136,37 @@ export async function search_by_payload<T>(
 ): Promise<T[]> {
 	const actual_limit = limit || 144;
 	try {
-		const results = await qdrant.scroll(collection, {
-			filter: format_filter(filter),
-			limit: actual_limit,
-			with_payload,
-			...(order_by && { order_by }),
-			with_vector: false
-		});
+		let results;
+
+		// If ordering is requested, use search with a dummy vector
+		// Otherwise, use scroll for better performance
+		if (order_by) {
+			// Create a dummy vector for payload-only search
+			const dummyVector = new Array(3072).fill(0);
+			const orderByObj = typeof order_by === 'string' ? { key: order_by } : order_by;
+
+			results = await qdrant.search(collection, {
+				vector: dummyVector,
+				limit: actual_limit,
+				with_payload,
+				filter: format_filter(filter),
+				with_vector: false,
+				...(orderByObj && { order_by: orderByObj })
+			});
+		} else {
+			results = await qdrant.scroll(collection, {
+				filter: format_filter(filter),
+				limit: actual_limit,
+				with_payload,
+				with_vector: false
+			});
+		}
 
 		// console.debug('search_by_payload results', results);
 
-		return results.points.map((point) => ({ ...(point.payload as T), i: point.id }));
+		// Handle both search and scroll result formats
+		const points = 'points' in results ? results.points : results;
+		return points.map((point: any) => ({ ...(point.payload as T), i: point.id }));
 	} catch (error) {
 		console.error('Error in search_by_payload:', error);
 		console.error('arg:', filter, with_payload, limit, order_by);

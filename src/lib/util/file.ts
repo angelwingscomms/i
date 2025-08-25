@@ -14,7 +14,12 @@ const MIME_TYPE_MAP: Record<string, FileInfo> = {
 	'image/png': { type: 'image', icon: 'fa-file-image', mimeType: 'image/png', extension: 'png' },
 	'image/gif': { type: 'image', icon: 'fa-file-image', mimeType: 'image/gif', extension: 'gif' },
 	'image/webp': { type: 'image', icon: 'fa-file-image', mimeType: 'image/webp', extension: 'webp' },
-	'image/svg+xml': { type: 'image', icon: 'fa-file-image', mimeType: 'image/svg+xml', extension: 'svg' },
+	'image/svg+xml': {
+		type: 'image',
+		icon: 'fa-file-image',
+		mimeType: 'image/svg+xml',
+		extension: 'svg'
+	},
 
 	// Audio
 	'audio/mpeg': { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/mpeg', extension: 'mp3' },
@@ -32,52 +37,122 @@ const MIME_TYPE_MAP: Record<string, FileInfo> = {
 	'video/webm': { type: 'video', icon: 'fa-file-video', mimeType: 'video/webm', extension: 'webm' },
 
 	// Documents
-	'application/pdf': { type: 'document', icon: 'fa-file-pdf', mimeType: 'application/pdf', extension: 'pdf' },
-	'application/msword': { type: 'document', icon: 'fa-file-word', mimeType: 'application/msword', extension: 'doc' },
-	'application/vnd.openxmlformats-officedocument.wordprocessingml.document': { type: 'document', icon: 'fa-file-word', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', extension: 'docx' },
-	'application/vnd.ms-excel': { type: 'document', icon: 'fa-file-excel', mimeType: 'application/vnd.ms-excel', extension: 'xls' },
-	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': { type: 'document', icon: 'fa-file-excel', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', extension: 'xlsx' },
-	'application/vnd.ms-powerpoint': { type: 'document', icon: 'fa-file-powerpoint', mimeType: 'application/vnd.ms-powerpoint', extension: 'ppt' },
-	'application/vnd.openxmlformats-officedocument.presentationml.presentation': { type: 'document', icon: 'fa-file-powerpoint', mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', extension: 'pptx' },
-	'text/plain': { type: 'document', icon: 'fa-file-text', mimeType: 'text/plain', extension: 'txt' },
+	'application/pdf': {
+		type: 'document',
+		icon: 'fa-file-pdf',
+		mimeType: 'application/pdf',
+		extension: 'pdf'
+	},
+	'application/msword': {
+		type: 'document',
+		icon: 'fa-file-word',
+		mimeType: 'application/msword',
+		extension: 'doc'
+	},
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document': {
+		type: 'document',
+		icon: 'fa-file-word',
+		mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		extension: 'docx'
+	},
+	'application/vnd.ms-excel': {
+		type: 'document',
+		icon: 'fa-file-excel',
+		mimeType: 'application/vnd.ms-excel',
+		extension: 'xls'
+	},
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
+		type: 'document',
+		icon: 'fa-file-excel',
+		mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		extension: 'xlsx'
+	},
+	'application/vnd.ms-powerpoint': {
+		type: 'document',
+		icon: 'fa-file-powerpoint',
+		mimeType: 'application/vnd.ms-powerpoint',
+		extension: 'ppt'
+	},
+	'application/vnd.openxmlformats-officedocument.presentationml.presentation': {
+		type: 'document',
+		icon: 'fa-file-powerpoint',
+		mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+		extension: 'pptx'
+	},
+	'text/plain': {
+		type: 'document',
+		icon: 'fa-file-text',
+		mimeType: 'text/plain',
+		extension: 'txt'
+	},
 	'text/csv': { type: 'document', icon: 'fa-file-csv', mimeType: 'text/csv', extension: 'csv' },
-	'application/zip': { type: 'document', icon: 'fa-file-archive', mimeType: 'application/zip', extension: 'zip' },
+	'application/zip': {
+		type: 'document',
+		icon: 'fa-file-archive',
+		mimeType: 'application/zip',
+		extension: 'zip'
+	}
 };
 
 const EXTENSION_MAP: Record<string, FileInfo> = {
 	// Images
-	'jpg': { type: 'image', icon: 'fa-file-image', mimeType: 'image/jpeg', extension: 'jpg' },
-	'jpeg': { type: 'image', icon: 'fa-file-image', mimeType: 'image/jpeg', extension: 'jpeg' },
-	'png': { type: 'image', icon: 'fa-file-image', mimeType: 'image/png', extension: 'png' },
-	'gif': { type: 'image', icon: 'fa-file-image', mimeType: 'image/gif', extension: 'gif' },
-	'webp': { type: 'image', icon: 'fa-file-image', mimeType: 'image/webp', extension: 'webp' },
-	'svg': { type: 'image', icon: 'fa-file-image', mimeType: 'image/svg+xml', extension: 'svg' },
+	jpg: { type: 'image', icon: 'fa-file-image', mimeType: 'image/jpeg', extension: 'jpg' },
+	jpeg: { type: 'image', icon: 'fa-file-image', mimeType: 'image/jpeg', extension: 'jpeg' },
+	png: { type: 'image', icon: 'fa-file-image', mimeType: 'image/png', extension: 'png' },
+	gif: { type: 'image', icon: 'fa-file-image', mimeType: 'image/gif', extension: 'gif' },
+	webp: { type: 'image', icon: 'fa-file-image', mimeType: 'image/webp', extension: 'webp' },
+	svg: { type: 'image', icon: 'fa-file-image', mimeType: 'image/svg+xml', extension: 'svg' },
 
 	// Audio
-	'mp3': { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/mpeg', extension: 'mp3' },
-	'wav': { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/wav', extension: 'wav' },
-	'ogg': { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/ogg', extension: 'ogg' },
-	'aac': { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/aac', extension: 'aac' },
-	'flac': { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/flac', extension: 'flac' },
+	mp3: { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/mpeg', extension: 'mp3' },
+	wav: { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/wav', extension: 'wav' },
+	ogg: { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/ogg', extension: 'ogg' },
+	aac: { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/aac', extension: 'aac' },
+	flac: { type: 'audio', icon: 'fa-file-audio', mimeType: 'audio/flac', extension: 'flac' },
 
 	// Video
-	'mp4': { type: 'video', icon: 'fa-file-video', mimeType: 'video/mp4', extension: 'mp4' },
-	'avi': { type: 'video', icon: 'fa-file-video', mimeType: 'video/avi', extension: 'avi' },
-	'mov': { type: 'video', icon: 'fa-file-video', mimeType: 'video/mov', extension: 'mov' },
-	'wmv': { type: 'video', icon: 'fa-file-video', mimeType: 'video/wmv', extension: 'wmv' },
-	'webm': { type: 'video', icon: 'fa-file-video', mimeType: 'video/webm', extension: 'webm' },
+	mp4: { type: 'video', icon: 'fa-file-video', mimeType: 'video/mp4', extension: 'mp4' },
+	avi: { type: 'video', icon: 'fa-file-video', mimeType: 'video/avi', extension: 'avi' },
+	mov: { type: 'video', icon: 'fa-file-video', mimeType: 'video/mov', extension: 'mov' },
+	wmv: { type: 'video', icon: 'fa-file-video', mimeType: 'video/wmv', extension: 'wmv' },
+	webm: { type: 'video', icon: 'fa-file-video', mimeType: 'video/webm', extension: 'webm' },
 
 	// Documents
-	'pdf': { type: 'document', icon: 'fa-file-pdf', mimeType: 'application/pdf', extension: 'pdf' },
-	'doc': { type: 'document', icon: 'fa-file-word', mimeType: 'application/msword', extension: 'doc' },
-	'docx': { type: 'document', icon: 'fa-file-word', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', extension: 'docx' },
-	'xls': { type: 'document', icon: 'fa-file-excel', mimeType: 'application/vnd.ms-excel', extension: 'xls' },
-	'xlsx': { type: 'document', icon: 'fa-file-excel', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', extension: 'xlsx' },
-	'ppt': { type: 'document', icon: 'fa-file-powerpoint', mimeType: 'application/vnd.ms-powerpoint', extension: 'ppt' },
-	'pptx': { type: 'document', icon: 'fa-file-powerpoint', mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', extension: 'pptx' },
-	'txt': { type: 'document', icon: 'fa-file-text', mimeType: 'text/plain', extension: 'txt' },
-	'csv': { type: 'document', icon: 'fa-file-csv', mimeType: 'text/csv', extension: 'csv' },
-	'zip': { type: 'document', icon: 'fa-file-archive', mimeType: 'application/zip', extension: 'zip' },
+	pdf: { type: 'document', icon: 'fa-file-pdf', mimeType: 'application/pdf', extension: 'pdf' },
+	doc: { type: 'document', icon: 'fa-file-word', mimeType: 'application/msword', extension: 'doc' },
+	docx: {
+		type: 'document',
+		icon: 'fa-file-word',
+		mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		extension: 'docx'
+	},
+	xls: {
+		type: 'document',
+		icon: 'fa-file-excel',
+		mimeType: 'application/vnd.ms-excel',
+		extension: 'xls'
+	},
+	xlsx: {
+		type: 'document',
+		icon: 'fa-file-excel',
+		mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		extension: 'xlsx'
+	},
+	ppt: {
+		type: 'document',
+		icon: 'fa-file-powerpoint',
+		mimeType: 'application/vnd.ms-powerpoint',
+		extension: 'ppt'
+	},
+	pptx: {
+		type: 'document',
+		icon: 'fa-file-powerpoint',
+		mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+		extension: 'pptx'
+	},
+	txt: { type: 'document', icon: 'fa-file-text', mimeType: 'text/plain', extension: 'txt' },
+	csv: { type: 'document', icon: 'fa-file-csv', mimeType: 'text/csv', extension: 'csv' },
+	zip: { type: 'document', icon: 'fa-file-archive', mimeType: 'application/zip', extension: 'zip' }
 };
 
 /**

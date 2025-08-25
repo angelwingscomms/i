@@ -1,5 +1,5 @@
 ---
-type: "always_apply"
+type: 'always_apply'
 ---
 
 For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary. Always think about styling deeply, like you're Steve Jobs and Jony Ive. Like you have years of expert experience creating beautiful UI and design. Like you work at a high brow creative studio with high brow clients like Apple.
@@ -12,7 +12,6 @@ Codebase conventions:
 - qdrant: single collection 'i'; always wait: true; vectors len 3072; use edit_point for updates; create for inserts; include s in all filters; use format_filter for filters; use search_by_payload/scroll for payload queries; use search_by_vector for semantic queries; never expose secrets client-side
 - filters: pass must/must_not through format_filter; filter payload values must be compact; omit null/undefined/''
 - vars: avoid creating variables for single-use expressions, values, or simple property accesses; pass them directly into functions/expressions when possible
-
 
 SvelteKit patterns:
 

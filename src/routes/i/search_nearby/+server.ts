@@ -5,7 +5,15 @@ import { bbox, haversine_m, to_meters } from '$lib/util/geo';
 import { search_by_payload, search_by_vector } from '$lib/db';
 
 export const POST: RequestHandler = async ({ request }) => {
-	const { lat, lon, radius, unit = 'meters', kind, limit = 50, q } = (await request.json()) as {
+	const {
+		lat,
+		lon,
+		radius,
+		unit = 'meters',
+		kind,
+		limit = 50,
+		q
+	} = (await request.json()) as {
 		lat: number;
 		lon: number;
 		radius: number;
@@ -36,18 +44,29 @@ export const POST: RequestHandler = async ({ request }) => {
 	let candidates: Array<{ i: string; t?: string; l?: number; n?: number; q?: string }> = [];
 	if (q && q.trim()) {
 		const vector = await embed(q);
-		candidates = await search_by_vector({ vector, with_payload: ['t', 'l', 'n', 'q'], filter: { must: payload_filter }, limit: Math.min(500, cap * 10) });
+		candidates = await search_by_vector({
+			vector,
+			with_payload: ['t', 'l', 'n', 'q'],
+			filter: { must: payload_filter },
+			limit: Math.min(500, cap * 10)
+		});
 	} else {
-		candidates = await search_by_payload(payload_filter, ['t', 'l', 'n', 'q'], Math.min(500, cap * 10));
+		candidates = await search_by_payload(
+			payload_filter,
+			['t', 'l', 'n', 'q'],
+			Math.min(500, cap * 10)
+		);
 	}
 	const within = candidates
 		.map((it) => ({
 			...it,
-			dist: typeof it.l === 'number' && typeof it.n === 'number' ? haversine_m(lat, lon, it.l, it.n) : Number.MAX_VALUE
+			dist:
+				typeof it.l === 'number' && typeof it.n === 'number'
+					? haversine_m(lat, lon, it.l, it.n)
+					: Number.MAX_VALUE
 		}))
 		.filter((it) => it.dist <= radius_m)
 		.sort((a, b) => a.dist - b.dist)
 		.slice(0, cap);
 	return json(within);
 };
-

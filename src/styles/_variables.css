@@ -1,12 +1,12 @@
 /* CSS Custom Properties for Light/Dark Mode */
 :root {
 	/* New Color Palette */
-	--color-theme-1: #B637FA; /* Purple-magenta */
-	--color-theme-2: #FA378B; /* Pink-magenta */
-	--color-theme-3: #F737FA; /* Bright magenta */
-	--color-theme-4: #7837FA; /* Deep purple */
-	--color-theme-5: #FA3A2F; /* Red-orange */
-	--color-theme-6: #F889FA; /* Light magenta */
+	--color-theme-1: #b637fa; /* Purple-magenta */
+	--color-theme-2: #fa378b; /* Pink-magenta */
+	--color-theme-3: #f737fa; /* Bright magenta */
+	--color-theme-4: #7837fa; /* Deep purple */
+	--color-theme-5: #fa3a2f; /* Red-orange */
+	--color-theme-6: #f889fa; /* Light magenta */
 
 	/* Background colors - simplified, no gradients */
 	--bg-primary: transparent;
@@ -67,8 +67,6 @@
 	--bg-input: #1a1a1a;
 	--bg-overlay: rgba(0, 0, 0, 0.9);
 
-	
-
 	/* Text colors with new palette for dark theme */
 	--text-primary: #f9fafb;
 	--text-secondary: #d1d5db;
@@ -104,5 +102,3 @@
 	--shadow-xl: none;
 	--shadow-2xl: none;
 }
-
-

@@ -30,7 +30,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 				second: '2-digit'
 			}),
 			message_text: m.m,
-			room_name_or_tag: m.t,
+			room_name_or_tag: m.t
 		}),
 		m.i
 	);
@@ -41,7 +41,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 			type: 'message',
 			i,
 			...(locals.user ? { x: locals.user.t } : {}),
-			m: m.m,
+			m: m.m
 		} satisfies ChatMessage & { type: string })
 	});
 

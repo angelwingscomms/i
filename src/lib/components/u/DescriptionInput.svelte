@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	let { mode, description = $bindable() }: { mode: 'profile' | 'custom'; description: string } = $props();
+	import { page } from '$app/state';
+	let { mode, description = $bindable() }: { mode: 'profile' | 'custom'; description: string } =
+		$props();
 </script>
 
-{#if !$page.data.user || mode === 'custom'}
+{#if !page.data.user || mode === 'custom'}
 	<div class="mt-3">
 		<input
 			class="input-rect w-full"

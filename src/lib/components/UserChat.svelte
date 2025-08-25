@@ -5,4 +5,3 @@
 </script>
 
 <ChatBox {messages} {onsend} />
-

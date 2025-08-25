@@ -96,11 +96,7 @@
 </div>
 
 {#if showImageModal}
-	<ImageModal
-		images={allImages}
-		currentIndex={currentImageIndex}
-		onClose={closeImageModal}
-	/>
+	<ImageModal images={allImages} currentIndex={currentImageIndex} onClose={closeImageModal} />
 {/if}
 
 <style>

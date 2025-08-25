@@ -23,4 +23,3 @@ const heuristic = (s: string): number => {
 	const chars = s.length;
 	return Math.max(1, Math.round(chars / 4) + Math.round(words * 0.2));
 };
-

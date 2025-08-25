@@ -1,22 +1,35 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import { countries } from '$lib/constants';
 
-	export let value = '';
-	export let id = '';
-	export let name = '';
-	export let required = false;
-	export let disabled = false;
-	export let placeholder = 'Enter your phone number';
-	export let error = '';
-	export let success = '';
-	export let formatAsWhatsAppLink = false;
+	let {
+		value = '',
+		id = '',
+		name = '',
+		required = false,
+		disabled = false,
+		placeholder = 'Enter your phone number',
+		formatAsWhatsAppLink = false,
+		onChange,
+		onInput
+	}: {
+		value?: string;
+		id?: string;
+		name?: string;
+		required?: boolean;
+		disabled?: boolean;
+		placeholder?: string;
+		formatAsWhatsAppLink?: boolean;
+		onChange?: (detail: any) => void;
+		onInput?: (detail: any) => void;
+	} = $props();
 
 	let selectedCountryCode = '+1';
 	let localNumber = '';
 	let isDropdownOpen = false;
 	let dropdownRef: HTMLDivElement;
 	let inputRef: HTMLInputElement;
+	let error = '';
+	let success = '';
 
 	$: {
 		// Update the combined value when components change
@@ -34,8 +47,6 @@
 		}
 	}
 
-	const dispatch = createEventDispatcher();
-
 	function toggleDropdown() {
 		isDropdownOpen = !isDropdownOpen;
 	}
@@ -44,7 +55,7 @@
 		selectedCountryCode = code;
 		isDropdownOpen = false;
 		validatePhoneNumber();
-		dispatch('change', { value });
+		onChange?.({ value });
 		inputRef.focus();
 	}
 
@@ -53,7 +64,7 @@
 		// Only allow numbers, spaces, parentheses, hyphens
 		localNumber = target.value.replace(/[^\d\s\(\)\-]/g, '');
 		validatePhoneNumber();
-		dispatch('input', { value });
+		onInput?.({ value });
 	}
 
 	// function handleBlur() {

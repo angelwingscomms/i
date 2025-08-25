@@ -1,7 +1,14 @@
 <script lang="ts">
 	import axios from 'axios';
+	import { v7 } from 'uuid';
 
-	let { onsend = (t: string, files?: string[]) => {}, placeholder = 'Type a message…', receiver = '' } = $props();
+	let {
+		onsend = (data: FormData | string, files?: string[]) => {},
+		placeholder = 'Type a message…',
+		receiver = '',
+		c = '', // cloudflare ID
+		t = ''  // receiver tag
+	} = $props();
 	let text = $state('');
 	let inputEl: HTMLInputElement | null = null;
 	let isRecording = $state(false);
@@ -9,7 +16,6 @@
 	let mediaRecorder: MediaRecorder | null = null;
 	let audioChunks: Blob[] = [];
 	let selectedFiles = $state<File[]>([]);
-	let isUploading = $state(false);
 	let fileInputEl: HTMLInputElement | null = null;
 
 	$effect(() => {
@@ -91,7 +97,7 @@
 
 		// Filter out files that are too large (e.g., 50MB limit)
 		const maxSize = 50 * 1024 * 1024; // 50MB
-		const validFiles = files.filter(file => {
+		const validFiles = files.filter((file) => {
 			if (file.size > maxSize) {
 				console.warn(`File ${file.name} is too large (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
 				return false;
@@ -107,54 +113,33 @@
 		}
 	}
 
-	async function uploadFiles(): Promise<string[]> {
-		if (selectedFiles.length === 0) return [];
 
-		isUploading = true;
-		try {
-			const formData = new FormData();
-			selectedFiles.forEach(file => {
-				formData.append('files', file);
-			});
-
-			const response = await axios.post('/i/upload', formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}
-			});
-
-			return response.data.x || [];
-		} catch (error) {
-			console.error('File upload error:', error);
-			return [];
-		} finally {
-			isUploading = false;
-		}
-	}
 
 	function removeFile(index: number) {
 		selectedFiles = selectedFiles.filter((_, i) => i !== index);
 	}
 
 	function send() {
-		const t = text.trim();
-		if (!t && selectedFiles.length === 0) return;
+		const messageText = text.trim();
+		if (!messageText && selectedFiles.length === 0) return;
 
-		// Send immediately if no files to upload
-		if (selectedFiles.length === 0) {
-			onsend(t);
-			text = '';
-			return;
-		}
+		// Create FormData with message data and files
+		const formData = new FormData();
+		formData.append('m', messageText); // message text
+		formData.append('c', c); // cloudflare ID
+		formData.append('t', t); // receiver tag
+		formData.append('d', Date.now().toString()); // timestamp
+		formData.append('i', v7()); // unique message ID
 
-		// Upload files first, then send message
-		uploadFiles().then(fileUrls => {
-			onsend(t, fileUrls);
-			text = '';
-			selectedFiles = [];
-		}).catch(error => {
-			console.error('Error sending message with files:', error);
+		// Add files if present
+		selectedFiles.forEach((file) => {
+			formData.append('files', file);
 		});
+
+		// Call onsend with FormData - parent component will handle the HTTP request
+		onsend(formData);
+		text = '';
+		selectedFiles = [];
 	}
 </script>
 
@@ -174,25 +159,37 @@
 		</div>
 	{/if}
 
-	<input class="message-input" bind:this={inputEl} bind:value={text} onkeydown={(e) => e.key === 'Enter' && send()} {placeholder} disabled={isRecording || isTranscribing || isUploading} />
+	<input
+		class="message-input"
+		bind:this={inputEl}
+		bind:value={text}
+		onkeydown={(e) => e.key === 'Enter' && send()}
+		{placeholder}
+		disabled={isRecording || isTranscribing}
+	/>
 
 	<!-- Voice Recording Controls -->
 	{#if !isRecording && !isTranscribing}
 		<button class="voice-button" title="Start voice recording" onclick={startRecording}>
 			<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-				<path d="M12 2C13.1 2 14 2.9 14 4V12C14 13.1 13.1 14 12 14C10.9 14 10 13.1 10 12V4C10 2.9 10.9 2 12 2M19 12C19 16.2 15.8 19.2 12 19.2S5 16.2 5 12H7C7 15.1 9.5 17.6 12 17.6S17 15.1 17 12H19Z"/>
+				<path
+					d="M12 2C13.1 2 14 2.9 14 4V12C14 13.1 13.1 14 12 14C10.9 14 10 13.1 10 12V4C10 2.9 10.9 2 12 2M19 12C19 16.2 15.8 19.2 12 19.2S5 16.2 5 12H7C7 15.1 9.5 17.6 12 17.6S17 15.1 17 12H19Z"
+				/>
 			</svg>
 		</button>
 	{:else if isRecording}
 		<button class="voice-button recording" title="Stop recording" onclick={stopRecording}>
 			<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-				<path d="M6 6H18V18H6V6Z"/>
+				<path d="M6 6H18V18H6V6Z" />
 			</svg>
 		</button>
 	{:else}
 		<button class="voice-button transcribing" title="Transcribing..." disabled>
 			<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-				<path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" style="animation: spin 1s linear infinite;"/>
+				<path
+					d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
+					style="animation: spin 1s linear infinite;"
+				/>
 			</svg>
 		</button>
 	{/if}
@@ -210,27 +207,36 @@
 		class="file-button"
 		title="Attach files"
 		onclick={() => fileInputEl?.click()}
-		disabled={isRecording || isTranscribing || isUploading}
+		disabled={isRecording || isTranscribing}
 	>
 		<i class="fas fa-paperclip"></i>
 	</button>
 
-	<button class="send-button" title="AI suggest" onclick={suggest} disabled={isRecording || isTranscribing || isUploading}>
+	<button
+		class="send-button"
+		title="AI suggest"
+		onclick={suggest}
+		disabled={isRecording || isTranscribing}
+	>
 		<i class="fas fa-magic"></i>
 	</button>
-	<button class="send-button" onclick={send} disabled={isRecording || isTranscribing || isUploading}>
-		{#if isUploading}
-			<i class="fas fa-spinner fa-spin"></i>
-		{:else}
-			Send
-		{/if}
+	<button
+		class="send-button"
+		onclick={send}
+		disabled={isRecording || isTranscribing}
+	>
+		Send
 	</button>
 </div>
 
 <style>
 	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	.voice-button {
@@ -268,8 +274,13 @@
 	}
 
 	@keyframes pulse {
-		0%, 100% { opacity: 1; }
-		50% { opacity: 0.6; }
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.6;
+		}
 	}
 
 	.voice-button:disabled {
@@ -374,4 +385,3 @@
 		cursor: not-allowed;
 	}
 </style>
-

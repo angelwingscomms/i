@@ -54,13 +54,13 @@
 		if (browser) {
 			const savedQuery = localStorage.getItem('user_search_query');
 			if (savedQuery) {
-				const { g, n, x, m, d, s } = JSON.parse(savedQuery);
-				gender = g;
-				minAge = n;
-				maxAge = x;
-				mode = m;
-				description = d;
-				sort = s;
+				const parsed = JSON.parse(savedQuery);
+				gender = parsed.g;
+				minAge = typeof parsed.n === 'number' && parsed.n >= 0 && parsed.n <= 144 ? parsed.n : 0;
+				maxAge = typeof parsed.x === 'number' && parsed.x >= 0 && parsed.x <= 144 ? parsed.x : 144;
+				mode = parsed.m;
+				description = parsed.d ?? '';
+				sort = parsed.s ?? 'match';
 				search(); // Trigger search with loaded query
 			} else {
 				// If no saved query, fetch most recently joined users.

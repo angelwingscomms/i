@@ -88,7 +88,7 @@ export interface SessionWithToken extends Session {
 	t: string;
 }
 
-interface Session {
+interface Session extends Record<string, unknown> {
 	s: string;
 	i: string;
 	u: string;

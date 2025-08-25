@@ -84,10 +84,12 @@ export async function ensurePushSubscribed(userId: string) {
 			console.log('🔔 Push notification subscription created:', {
 				userId,
 				endpoint: sub.endpoint,
-				keys: sub.getKey ? {
-					p256dh: sub.getKey('p256dh') ? 'present' : 'missing',
-					auth: sub.getKey('auth') ? 'present' : 'missing'
-				} : 'getKey not available',
+				keys: sub.getKey
+					? {
+							p256dh: sub.getKey('p256dh') ? 'present' : 'missing',
+							auth: sub.getKey('auth') ? 'present' : 'missing'
+						}
+					: 'getKey not available',
 				timestamp: new Date().toISOString()
 			});
 		} else {

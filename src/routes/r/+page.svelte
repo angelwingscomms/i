@@ -36,7 +36,7 @@
 			const res = await fetch('/r', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ t: tag, d: desc })
+				body: JSON.stringify({ t: tag, a: desc })
 			});
 			if (!res.ok) throw new Error('create failed');
 			const id = await res.text();

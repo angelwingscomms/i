@@ -21,4 +21,3 @@
 <div class="chat-layout">
 	<ChatBox {messages} {onsend} />
 </div>
-

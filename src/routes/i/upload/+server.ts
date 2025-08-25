@@ -2,6 +2,12 @@ import type { RequestHandler } from './$types';
 import { json, error } from '@sveltejs/kit';
 import { upload_image } from '$lib/integrations/r2_storage';
 
+/**
+ * DEPRECATED: This endpoint is deprecated for chat message file uploads.
+ * Use the message route directly for chat files. This endpoint is still
+ * used for other file uploads (e.g., profile pictures, user creation).
+ */
+
 export const POST: RequestHandler = async ({ request, locals, platform }) => {
 	if (!locals.user) throw error(401, 'Unauthorized');
 	const form = await request.formData();
@@ -25,4 +31,3 @@ export const POST: RequestHandler = async ({ request, locals, platform }) => {
 	}
 	return json({ x: urls });
 };
-

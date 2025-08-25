@@ -55,7 +55,9 @@
 	font-size: 14px;
 	border-radius: 8px;
 	cursor: pointer;
-	transition: background-color 0.2s ease, color 0.2s ease;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
 }
 
 .dropdown-item:hover {
@@ -69,7 +71,12 @@
 }
 
 /* allow small size variations via composition if needed */
-@utility dropdown-sm { min-width: 180px; }
-@utility dropdown-md { min-width: 220px; }
-@utility dropdown-lg { min-width: 280px; }
-
+@utility dropdown-sm {
+	min-width: 180px;
+}
+@utility dropdown-md {
+	min-width: 220px;
+}
+@utility dropdown-lg {
+	min-width: 280px;
+}

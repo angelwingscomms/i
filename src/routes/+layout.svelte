@@ -30,6 +30,27 @@
 	};
 
 	onMount(() => {
+		// Add global error handling for navigation issues
+		window.addEventListener('error', (event) => {
+			console.error('Global error caught:', event.error);
+			if (
+				event.error?.message?.includes('navigation') ||
+				event.error?.message?.includes('redirect')
+			) {
+				console.error('Navigation-related error detected:', event.error);
+			}
+		});
+
+		window.addEventListener('unhandledrejection', (event) => {
+			console.error('Unhandled promise rejection:', event.reason);
+			if (
+				event.reason?.message?.includes('navigation') ||
+				event.reason?.message?.includes('redirect')
+			) {
+				console.error('Navigation-related promise rejection:', event.reason);
+			}
+		});
+
 		themeStore.init();
 		if (data?.user?.i) {
 			ensurePushSubscribed(data.user.i).then((res) => {
@@ -99,13 +120,17 @@
 </div>
 
 <Navbar user={data?.user as any} on:menutoggle={() => (is_sidebar_open = !is_sidebar_open)} />
-<MobileSidebar bind:is_open={is_sidebar_open} user={data?.user as any} />
+<MobileSidebar
+	is_open={is_sidebar_open}
+	user={data?.user as any}
+	onClose={() => (is_sidebar_open = false)}
+/>
 {@render children()}
 
 <PushNotificationBanner userId={data?.user?.i} />
 
 <div class="pointer-events-none fixed top-4 right-4 z-[1000] flex flex-col gap-2">
-	{#each $toasts as toastItem (toastItem.id)}
+	{#each toasts as toastItem (toastItem.id)}
 		<div
 			class="pointer-events-auto flex max-w-md min-w-[250px] items-center justify-between rounded-xl p-4 text-white backdrop-blur-lg
 			{toastItem.type === 'success' ? 'success-card' : ''}

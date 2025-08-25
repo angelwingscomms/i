@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 						s: 'r'
 					},
 					['t', 'l', 'm'],
-					54,
+					54
 					// {
 					// 	key: 'a',
 					// 	direction: 'desc'

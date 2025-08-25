@@ -1,26 +1,40 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import axios from 'axios';
 	import { debounce } from '$lib/util/debounce';
 
-	export let value = '';
-	export let id = 'username';
-	export let name = 'tag';
-	export let required = true;
-	export let disabled = false;
-	export let placeholder = 'Enter your unique tag';
-	export let minLength = 3;
-	export let maxLength = 30;
-	export let validationEndpoint = '/api/validate-username';
-	export let initiallyValid = false;
+	let {
+		value = '',
+		id = 'username',
+		name = 'tag',
+		required = true,
+		disabled = false,
+		placeholder = 'Enter your unique tag',
+		minLength = 3,
+		maxLength = 30,
+		validationEndpoint = '/api/validate-username',
+		initiallyValid = false,
+		onValidation,
+		onInput
+	}: {
+		value?: string;
+		id?: string;
+		name?: string;
+		required?: boolean;
+		disabled?: boolean;
+		placeholder?: string;
+		minLength?: number;
+		maxLength?: number;
+		validationEndpoint?: string;
+		initiallyValid?: boolean;
+		onValidation?: (detail: any) => void;
+		onInput?: (detail: any) => void;
+	} = $props();
 
 	let isValidating = false;
 	let isValid = initiallyValid;
 	let error = '';
 	let touched = false;
 	let lastValidatedValue = '';
-
-	const dispatch = createEventDispatcher();
 
 	// Use debounce to avoid too many API calls while typing
 	const debouncedValidate = debounce(validateUsername, 300);
@@ -29,7 +43,7 @@
 		if (!value || value.length < minLength) {
 			error = `Username must be at least ${minLength} characters`;
 			isValid = false;
-			dispatch('validation', { isValid, error });
+			onValidation?.({ isValid, error });
 			return;
 		}
 
@@ -52,11 +66,11 @@
 			}
 
 			lastValidatedValue = value;
-			dispatch('validation', { isValid, error });
+			onValidation?.({ isValid, error });
 		} catch (err: any) {
 			isValid = false;
 			error = err.response?.data?.error || 'Unable to validate username';
-			dispatch('validation', { isValid, error });
+			onValidation?.({ isValid, error });
 		} finally {
 			isValidating = false;
 		}
@@ -72,7 +86,7 @@
 			isValid = false;
 		}
 
-		dispatch('input', { value });
+		onInput?.({ value });
 	}
 </script>
 

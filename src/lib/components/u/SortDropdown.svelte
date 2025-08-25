@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	let { sort = $bindable(), sort_open = $bindable(), sort_ref = $bindable() }: { sort: 'match' | 'age'; sort_open: boolean; sort_ref: HTMLDivElement | null } = $props();
+	let {
+		sort = $bindable(),
+		sort_open = $bindable(),
+		sort_ref = $bindable()
+	}: { sort: 'match' | 'age'; sort_open: boolean; sort_ref: HTMLDivElement | null } = $props();
 	const dispatch = createEventDispatcher();
 
 	function handle_sort_click(s: 'match' | 'age') {

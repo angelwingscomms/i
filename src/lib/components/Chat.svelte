@@ -30,8 +30,13 @@
 	let messageInputEl: HTMLInputElement | null = null;
 
 	// Define onsend function for ChatInput
-	const onsend = (text: string, files?: string[]) => {
-		send_message(text, files);
+	const onsend = (data: FormData | string, files?: string[]) => {
+		if (data instanceof FormData) {
+			send_message_with_formdata(data);
+		} else {
+			// Handle legacy string format for backward compatibility
+			send_message(data, files);
+		}
 	};
 
 	// function animate_in(el: HTMLElement) {
@@ -123,6 +128,42 @@
 		}
 		// ChatInput handles its own focus
 	});
+
+	function send_message_with_formdata(formData: FormData) {
+		// Extract data from FormData for optimistic UI update
+		const messageText = formData.get('m') as string;
+		const messageId = formData.get('i') as string;
+		const timestamp = parseInt(formData.get('d') as string);
+
+		// Get files from FormData for optimistic UI
+		const files = formData.getAll('files').filter(f => f instanceof File) as File[];
+
+		if (messageText || files.length > 0) {
+			// Add message to UI immediately for optimistic update
+			chat_messages.push({
+				m: messageText,
+				i: messageId,
+				x: page.data.user.t,
+				saved: false,
+				// Note: We can't show file URLs until server processes them
+				// Files will be updated via websocket when server responds
+			});
+
+			message_text = '';
+			console.log('Sending message with FormData to:', page.url.pathname);
+
+			// Send FormData to message route
+			axios.post(page.url.pathname, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			}).catch((error) => {
+				console.error('Error sending message:', error);
+				// Remove optimistic message on error
+				chat_messages = chat_messages.filter(msg => msg.i !== messageId);
+			});
+		}
+	}
 
 	function send_message(text?: string, fileUrls?: string[]) {
 		const messageText = text || message_text;
@@ -224,7 +265,7 @@
 		{/each}
 	</div>
 	<div class="input-area">
-		<ChatInput {onsend} placeholder="Type a message..." />
+		<ChatInput {onsend} placeholder="Type a message..." {c} {t} />
 	</div>
 </div>
 

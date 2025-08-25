@@ -25,4 +25,3 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	return { m: msgs, s: await s() };
 };
-

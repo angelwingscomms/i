@@ -10,17 +10,17 @@ export async function POST({ request, locals, platform }) {
 		throw error(401, 'Unauthorized');
 	}
 
-	const { t, d } = await request.json();
+	const { t, a } = await request.json();
 	if (!t) error(400, 'missing room tag in request body');
 	const c: string = await (await cf(platform)('http' + PUBLIC_WORKER + '/i' + (await s()))).text();
 
 	const room_payload: Omit<Room, 'i'> & { s: 'r' } = {
 		s: 'r', // tenant ID for rooms
 		t: t.trim(), // room tag
-		d: d.trim(), // description
+		a: a.trim(), // about room
 		c,
 		u: locals.user.i, // creator user id
-		a: new Date().toISOString() // creation timestamp
+		d: Date.now() // creation timestamp
 	};
 
 	try {
@@ -29,7 +29,7 @@ export async function POST({ request, locals, platform }) {
 			JSON.stringify({
 				room_name_or_tag: room_payload.t,
 				room_created_by: locals.user?.t,
-				room_description: room_payload.d
+				room_description: room_payload.a
 			})
 		);
 

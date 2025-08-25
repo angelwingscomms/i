@@ -4,7 +4,7 @@
 	import ModeSelection from './ModeSelection.svelte';
 	import SortDropdown from './SortDropdown.svelte';
 	import DescriptionInput from './DescriptionInput.svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	let {
 		gender = $bindable(),
@@ -40,9 +40,9 @@
 <div class="search-filters mx-auto max-w-4xl px-4 pb-8 opacity-0">
 	<div class="rounded-3xl p-8 sm:p-6" style=" border: 3px solid var(--color-theme-6);">
 		<div class="flex flex-wrap items-center gap-6 sm:flex-col sm:items-stretch">
-			<button 
-				class="flex items-center gap-2 text-sm font-medium" 
-				onclick={() => showAdvanced = !showAdvanced}
+			<button
+				class="flex items-center gap-2 text-sm font-medium"
+				onclick={() => (showAdvanced = !showAdvanced)}
 			>
 				<svg
 					class="transform transition-transform {showAdvanced ? 'rotate-180' : ''}"
@@ -60,11 +60,17 @@
 				<GenderSelection bind:gender />
 				<AgeRange bind:minAge bind:maxAge />
 			{/if}
-			
+
 			<ModeSelection bind:mode />
 
 			<div class="ml-auto flex items-center gap-3">
-				<SortDropdown bind:sort bind:sort_open bind:sort_ref on:sort={e => onSort(e.detail)} on:click_outside={onClickOutside} />
+				<SortDropdown
+					bind:sort
+					bind:sort_open
+					bind:sort_ref
+					on:sort={(e) => onSort(e.detail)}
+					on:click_outside={onClickOutside}
+				/>
 				<button class="btn-primary btn-md" onclick={search} disabled={loading}
 					>{loading ? 'searching…' : 'search'}</button
 				>

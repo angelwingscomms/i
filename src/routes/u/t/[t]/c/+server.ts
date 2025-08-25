@@ -12,4 +12,3 @@ export const GET: RequestHandler = async ({ params }) => {
 
 	throw redirect(302, `/u/${u.i}/c`);
 };
-

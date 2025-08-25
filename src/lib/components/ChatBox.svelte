@@ -25,4 +25,3 @@
 		<button class="send-button" onclick={send}>Send</button>
 	</div>
 </div>
-

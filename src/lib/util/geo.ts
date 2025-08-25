@@ -26,4 +26,3 @@ export function haversine_m(lat1: number, lon1: number, lat2: number, lon2: numb
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return EARTH_RADIUS_M * c;
 }
-

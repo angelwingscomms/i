@@ -1,0 +1,4 @@
+Room.o string ("" is false, "." is true) // if room is private
+on r/:i load, if room.p and no room entry w user and room, error401
+Room.o string style boolean too // open
+user one on one chats are stored as Rooms

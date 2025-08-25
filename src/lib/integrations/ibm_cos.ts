@@ -26,17 +26,18 @@ export async function upload_image(file: File, key?: string, platform?: Platform
 		// Upload to R2
 		await bucket.put(objectKey, uint8Array, {
 			httpMetadata: {
-				contentType: file.type || 'application/octet-stream',
-			},
+				contentType: file.type || 'application/octet-stream'
+			}
 		});
 
 		// Return the public URL for the uploaded file
 		// In production, this should use your domain's R2 public URL
 		return `https://pub-${crypto.randomUUID()}.r2.dev/${objectKey}`;
-
 	} catch (error) {
 		console.error('R2 upload error:', error);
-		throw new Error(`Failed to upload file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		throw new Error(
+			`Failed to upload file: ${error instanceof Error ? error.message : 'Unknown error'}`
+		);
 	}
 }
 
@@ -51,7 +52,9 @@ export async function delete_image(key: string, platform?: Platform): Promise<vo
 		await bucket.delete(key);
 	} catch (error) {
 		console.error('R2 delete error:', error);
-		throw new Error(`Failed to delete file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		throw new Error(
+			`Failed to delete file: ${error instanceof Error ? error.message : 'Unknown error'}`
+		);
 	}
 }
 
@@ -70,4 +73,3 @@ export async function get_image_info(key: string, platform?: Platform): Promise<
 		return null;
 	}
 }
-

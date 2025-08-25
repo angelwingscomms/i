@@ -7,7 +7,7 @@ import { PUBLIC_WORKER } from '$env/static/public';
 import { s } from '$lib/util/s';
 
 export const load: PageServerLoad = async ({ locals, cookies, params, platform }) => {
-	let u = locals.user?.i
+	let u = locals.user?.i;
 	if (!u) {
 		u = v7();
 		cookies.set('u', u, { path: '/' });

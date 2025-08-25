@@ -28,10 +28,7 @@
 	// Reactive statement to sync search query to localStorage
 	$effect(() => {
 		if (browser) {
-			localStorage.setItem(
-				'item_search_query',
-				JSON.stringify({ query, kind, sort })
-			);
+			localStorage.setItem('item_search_query', JSON.stringify({ query, kind, sort }));
 		}
 	});
 
@@ -96,13 +93,13 @@
 	<meta name="description" content="Find products and services in your community" />
 </svelte:head>
 
-<div class="min-h-screen bg-gradient-to-br from-background to-surface">
+<div class="from-background to-surface min-h-screen bg-gradient-to-br">
 	<!-- Header -->
-	<div class="bg-gradient-to-r from-theme-1 to-theme-2 text-white">
-		<div class="max-w-4xl mx-auto px-4 py-8">
+	<div class="from-theme-1 to-theme-2 bg-gradient-to-r text-white">
+		<div class="mx-auto max-w-4xl px-4 py-8">
 			<div class="flex items-center justify-between">
 				<div>
-					<h1 class="text-4xl font-bold mb-2">Search Items</h1>
+					<h1 class="mb-2 text-4xl font-bold">Search Items</h1>
 					<p class="text-white/80">Find products and services in your community</p>
 				</div>
 				{#if user}
@@ -123,12 +120,19 @@
 	</div>
 
 	<!-- Search Form -->
-	<div class="max-w-4xl mx-auto px-4 py-8">
-		<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8" style="border: 2px solid var(--color-theme-6);">
+	<div class="mx-auto max-w-4xl px-4 py-8">
+		<div
+			class="mb-8 rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800"
+			style="border: 2px solid var(--color-theme-6);"
+		>
 			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
 				<!-- Search Query -->
 				<div class="md:col-span-2">
-					<label for="query" class="block text-sm font-medium mb-2" style="color: var(--color-theme-4);">
+					<label
+						for="query"
+						class="mb-2 block text-sm font-medium"
+						style="color: var(--color-theme-4);"
+					>
 						Search
 					</label>
 					<div class="relative">
@@ -138,17 +142,25 @@
 							bind:value={query}
 							oninput={debouncedSearch}
 							placeholder="Search for items..."
-							class="w-full px-4 py-3 pr-12 rounded-xl border-2 transition-colors"
+							class="w-full rounded-xl border-2 px-4 py-3 pr-12 transition-colors"
 							style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
 						/>
 						{#if query}
 							<button
 								onclick={clearSearch}
-								class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+								class="absolute top-1/2 right-3 -translate-y-1/2 transform text-gray-400 hover:text-gray-600"
 								aria-label="Clear search"
 							>
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-									<path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+								<svg
+									width="20"
+									height="20"
+									viewBox="0 0 24 24"
+									fill="currentColor"
+									aria-hidden="true"
+								>
+									<path
+										d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+									/>
 								</svg>
 							</button>
 						{/if}
@@ -157,14 +169,18 @@
 
 				<!-- Item Type -->
 				<div>
-					<label for="kind" class="block text-sm font-medium mb-2" style="color: var(--color-theme-4);">
+					<label
+						for="kind"
+						class="mb-2 block text-sm font-medium"
+						style="color: var(--color-theme-4);"
+					>
 						Type
 					</label>
 					<select
 						id="kind"
 						bind:value={kind}
 						onchange={search}
-						class="w-full px-4 py-3 rounded-xl border-2 transition-colors"
+						class="w-full rounded-xl border-2 px-4 py-3 transition-colors"
 						style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
 					>
 						<option value={undefined}>All Items</option>
@@ -175,14 +191,18 @@
 
 				<!-- Sort -->
 				<div>
-					<label for="sort" class="block text-sm font-medium mb-2" style="color: var(--color-theme-4);">
+					<label
+						for="sort"
+						class="mb-2 block text-sm font-medium"
+						style="color: var(--color-theme-4);"
+					>
 						Sort by
 					</label>
 					<select
 						id="sort"
 						bind:value={sort}
 						onchange={search}
-						class="w-full px-4 py-3 rounded-xl border-2 transition-colors"
+						class="w-full rounded-xl border-2 px-4 py-3 transition-colors"
 						style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
 					>
 						<option value="relevance">Relevance</option>
@@ -196,7 +216,9 @@
 			{#if loading}
 				<div class="mt-4 text-center">
 					<div class="inline-flex items-center gap-2 text-sm" style="color: var(--color-theme-1);">
-						<div class="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent"></div>
+						<div
+							class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+						></div>
 						Searching...
 					</div>
 				</div>

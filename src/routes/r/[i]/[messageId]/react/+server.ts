@@ -26,7 +26,7 @@ export const POST: RequestHandler = async ({ request, params, locals }) => {
 
 		// Check if user already reacted with this emoji
 		const existingReactionIndex = message.re.findIndex(
-			r => r.u === locals.user.i && r.e === emoji
+			(r) => r.u === locals.user.i && r.e === emoji
 		);
 
 		if (existingReactionIndex >= 0) {

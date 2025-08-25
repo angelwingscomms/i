@@ -44,7 +44,7 @@
 				{/if}
 			</div>
 			<!-- Item Type Badge -->
-			<div class="absolute -bottom-1 -right-1">
+			<div class="absolute -right-1 -bottom-1">
 				<span
 					class="rounded-full px-2 py-1 text-xs font-medium"
 					style="background: var(--color-theme-{item.k === 0 ? '1' : '2'}); color: white;"
@@ -74,7 +74,7 @@
 
 					<!-- Quick Summary -->
 					{#if item.q}
-						<p class="mt-1 text-xs italic text-gray-500">
+						<p class="mt-1 text-xs text-gray-500 italic">
 							{item.q}
 						</p>
 					{/if}
@@ -83,7 +83,7 @@
 				<!-- Match Score -->
 				{#if p !== null}
 					<span
-						class="ml-2 rounded-full px-2 py-1 text-xs font-bold flex-shrink-0"
+						class="ml-2 flex-shrink-0 rounded-full px-2 py-1 text-xs font-bold"
 						style="background: transparent; border: 1px solid {p >= 80
 							? 'var(--color-theme-1)'
 							: p >= 60

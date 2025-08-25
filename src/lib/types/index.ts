@@ -57,7 +57,6 @@ export interface Message {
 	c: string; // cf id
 	h: number; // has reply
 	z?: string; // chat id
-	a?: string; // anonymous
 	t: string; // receiver's (room/user) tag
 	s?: 'm'; // tenant id for messages
 	u?: string; // user ID
@@ -67,13 +66,16 @@ export interface Message {
 }
 
 export interface Room {
+	s: 'r'; // tenant id for rooms
 	i: string; // room id
 	t: string; // room tag/name
-	d?: string; // room description
-	u: string; // creator user id
-	r?: string; // receiver id - for anon chats
+	a?: string; // about room
+	u?: string; // creator user id
+	r?: string; // receiver id
 	c: string; // cloudflare id
-	a?: string; // creation timestamp
+	d?: number; // creation timestamp
 	m?: number; // number of members
 	l?: number; // time of last message
+	x?: string[]; // member user ids
+	o?: ',' | '.' | '-' | '|';  // room type: - is anon, `|` is one one one (dm), `,` is private, `.` is open 
 }

@@ -4,7 +4,12 @@ import { embed } from '$lib/util/embed';
 import { search_by_payload, search_by_vector } from '$lib/db';
 
 export const POST: RequestHandler = async ({ request }) => {
-	const { q, kind, limit = 50, sort = 'relevance' } = (await request.json()) as {
+	const {
+		q,
+		kind,
+		limit = 50,
+		sort = 'relevance'
+	} = (await request.json()) as {
 		q?: string;
 		kind?: 0 | 1;
 		limit?: number;
@@ -20,7 +25,15 @@ export const POST: RequestHandler = async ({ request }) => {
 		...(kind !== undefined ? { k: kind } : {})
 	};
 
-	let candidates: Array<{ i: string; t?: string; d?: string; k?: number; a?: number; q?: string; x?: string[] }> = [];
+	let candidates: Array<{
+		i: string;
+		t?: string;
+		d?: string;
+		k?: number;
+		a?: number;
+		q?: string;
+		x?: string[];
+	}> = [];
 
 	if (q && q.trim()) {
 		const vector = await embed(q);
