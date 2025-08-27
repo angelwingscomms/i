@@ -7,13 +7,14 @@ import { s } from '$lib/util/s';
 export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!params.i) error(400, 'missing room id');
 
-	const r = await get<Pick<Room, 't' | 'c' | '_' | 'u' | 'r'>>(params.i, [
+	const r = await get<Pick<Room, 't' | 'c' | '_' | 'u' | 'r' | 'x'>>(params.i, [
 		't',
 		'c',
 		'o',
 		'_',
 		'u',
-		'r'
+		'r',
+		'x'
 	]);
 	console.log('r', r);
 	if (!r) error(404, 'room not found');
@@ -29,13 +30,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 				break;
 			}
 			case '|': {
-				r.t =
-					r.u === locals.user.i ? (await get<string>(r.r!, 't'))! : (await get<string>(r.r!, 't'))!;
+				if (!r.x?.includes(locals.user.i)) error(403, 'you do not belong to this room');
+				r.t = r.x?.find((x) => x !== locals.user?.i) || '';
 				break;
 			}
 			case '-': {
-				const tag = await get<string>(r.r!, 't');
-				r.t = tag ?? '';
+				r.t = locals.user.i === r.r ? '' : (await get<string>(r.r!, 't')) || '';
 				delete r.r;
 				break;
 			}

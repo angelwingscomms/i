@@ -19,8 +19,8 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 			must: [
 				{ key: 's', match: { value: 'r' } },
 				{ key: '_', match: { value: '|' } },
-				{ key: 'r', match: { any: [locals.user.i, params.i] } },
-				{ key: 'u', match: { any: [locals.user.i, params.i] } }
+				{ key: 'x', match: { value: locals.user.i } },
+				{ key: 'x', match: { value: params.i } },
 			]
 		},
 		with_payload: true,
@@ -40,41 +40,16 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 		c,
 		d: Date.now(),
 		_: '|',
-		r: params.i,
-		u: locals.user.i
+		x: [locals.user.i, params.i]
 	};
 
 	const r = await create(
 		{ ...room_payload, s: 'r' },
 		JSON.stringify({
-			room_members: [locals.user?.t, t],
+			room_members: room_payload.x,
 			room_type: `direct message`
 		})
 	);
-
-	// Add room ID to both users' .r arrays
-	const auth_rooms: string[] = (await get(locals.user.i, 'r')) || [];
-	const user_rooms: string[] = (await get(params.i, 'r')) || [];
-
-	// Update current user's room list
-	if (!auth_rooms.includes(r)) {
-		await qdrant.setPayload(collection, {
-			wait: true,
-			payload: { r: [...auth_rooms, r] },
-			points: [locals.user.i]
-		});
-	}
-
-	// Update target user's room list
-	const targetUserRooms = user_rooms?.r || [];
-	if (!targetUserRooms.includes(r)) {
-		await qdrant.setPayload(collection, {
-			wait: true,
-			payload: { r: [...targetUserRooms, r] },
-			points: [params.i]
-		});
-	}
-
 	// Redirect to the newly created room
 	redirect(302, `/r/${r}`);
 };
