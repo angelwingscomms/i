@@ -104,7 +104,7 @@
 					<span class="text-accent font-sans text-4xl font-bold">
 						{#if navigating}
 							<!-- Debug: Show navigation details -->
-							<svg
+							<!-- <svg
 								class="h-9 w-9 animate-spin"
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
@@ -125,7 +125,7 @@
 									fill="currentColor"
 									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 								></path>
-							</svg>
+							</svg> -->
 						{:else}
 							<span class="wdxl">144</span>
 						{/if}
@@ -201,6 +201,18 @@
 
 				{#if user}
 					<div class="flex items-center gap-4">
+						<a
+							href="/settings"
+							class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
+							style="color: var(--color-theme-1); border: 1px solid var(--color-theme-1);"
+						>
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+								<path
+									d="M12,8A4,4 0 1,0 16,12A4,4 0 0,0 12,8M4.93,6.14L3.5,4.71L2.09,6.12L3.5,7.53L4.93,6.14M19.07,6.14L20.5,7.53L21.91,6.12L20.5,4.71L19.07,6.14M12,2H12A1,1 0 0,1 13,3V5A1,1 0 0,1 12,6A1,1 0 0,1 11,5V3A1,1 0 0,1 12,2M12,18A1,1 0 0,1 13,19V21A1,1 0 0,1 12,22A1,1 0 0,1 11,21V19A1,1 0 0,1 12,18M2,12A1,1 0 0,1 3,11H5A1,1 0 0,1 6,12A1,1 0 0,1 5,13H3A1,1 0 0,1 2,12M18,12A1,1 0 0,1 19,11H21A1,1 0 0,1 22,12A1,1 0 0,1 21,13H19A1,1 0 0,1 18,12Z"
+								/>
+							</svg>
+							Settings
+						</a>
 						<a
 							href="/edit_user"
 							class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"

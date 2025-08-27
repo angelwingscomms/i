@@ -33,10 +33,10 @@
 	let audioChunks: Blob[] = [];
 	let charCount = value.length;
 
-	$: {
+	$effect(() => {
 		// Update char count when value changes
 		charCount = value?.length || 0;
-	}
+	});
 
 	// async function handleBlur() {
 	// 	if (autoUpdate && value !== originalValue) {

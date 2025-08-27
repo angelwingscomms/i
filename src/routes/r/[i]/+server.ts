@@ -19,7 +19,6 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		const messageText = (formData.get('m') as string) || '';
 		const cloudflareId = (formData.get('c') as string) || '';
 		const receiverTag = (formData.get('t') as string) || '';
-		const timestamp = parseInt((formData.get('d') as string) || `${Date.now()}`);
 		const messageId = (formData.get('i') as string) || crypto.randomUUID();
 		const anonymous = formData.get('a') as string | null;
 
@@ -48,7 +47,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 			m: messageText,
 			c: cloudflareId,
 			t: receiverTag,
-			d: timestamp,
+			d: Date.now(),
 			i: messageId,
 			...(anonymous ? { a: anonymous } : {}),
 			...(fileUrls.length > 0 ? { f: fileUrls } : {})

@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev --port 1440 --host",
+		"devo": "vite dev --port 1440 --host --open",
 		"build": "vite build",
 		"preview": "vite preview --port 4320",
 		"prepare": "svelte-kit sync || echo ''",
