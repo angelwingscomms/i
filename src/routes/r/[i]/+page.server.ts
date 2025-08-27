@@ -31,7 +31,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			}
 			case '|': {
 				if (!r.x?.includes(locals.user.i)) error(403, 'you do not belong to this room');
-				r.t = r.x?.find((x) => x !== locals.user?.i) || '';
+				r.t = (await get<string>(r.x?.find(x => x !== locals.user?.i) || '', 't')) || '';
 				break;
 			}
 			case '-': {
