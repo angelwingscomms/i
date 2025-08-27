@@ -1,7 +1,8 @@
 import type { PageServerLoad } from './$types';
 import { json, error } from '@sveltejs/kit';
-import { get, search_by_payload, search_by_vector } from '$lib/db';
+import { get, qdrant, search_by_payload, search_by_vector } from '$lib/db';
 import type { Room } from '$lib/types';
+import { collection } from '$lib/constants';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	try {
@@ -19,18 +20,27 @@ export const load: PageServerLoad = async ({ locals }) => {
 		}
 		return {
 			r: (
-				await search_by_payload<Room>(
-					{
-						s: 'r'
+				await qdrant.scroll(collection, {
+					filter: {
+						must: [
+							{
+								key: 's',
+								match: {
+									value: 'r'
+								}
+							},
+							{
+								key: '_',
+								match: {
+									any: ['.', ',']
+								}
+							}
+						]
 					},
-					['t', 'l', 'm'],
-					54
-					// {
-					// 	key: 'a',
-					// 	direction: 'desc'
-					// }
-				)
-			).map((r) => ({ i: r.i, t: r.t, l: r.l, m: r.m }))
+					with_payload: ['t', 'l', 'm'],
+					limit: 54
+				}).then(result => result.points || [])
+			).map((r) => ({ i: r.id, t: r.payload?.t, l: r.payload?.l, m: r.payload?.m }))
 		};
 	} catch {
 		error(500, 'Failed to load rooms');

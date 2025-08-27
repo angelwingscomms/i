@@ -251,6 +251,13 @@
 					</div>
 				{:else}
 					<a
+						href="/login"
+						class="group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
+						style="color: var(--color-theme-1); border: 1px solid var(--color-theme-1);"
+					>
+						Login w/ Username
+					</a>
+					<a
 						href="/google"
 						class="group flex items-center gap-3 rounded-full px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
 						style="background: var(--color-theme-2);"
