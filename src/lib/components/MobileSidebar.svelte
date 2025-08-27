@@ -39,6 +39,7 @@
 				<a href="/u/{user.i}" class="sidebar-nav-link" onclick={close_sidebar}>{user.t}</a>
 				<a href="/logout" class="sidebar-nav-link text-error" onclick={close_sidebar}>logout</a>
 			{:else}
+				<a href="/login" class="sidebar-nav-link" onclick={close_sidebar}>login w username</a>
 				<a href="/google" class="sidebar-nav-link" onclick={close_sidebar}>login w Google</a>
 			{/if}
 		</nav>
@@ -125,11 +126,5 @@
 		visibility: visible;
 	}
 
-	/* Hide on larger screens */
-	@media (min-width: 768px) {
-		.mobile-sidebar,
-		.overlay {
-			display: none;
-		}
-	}
+	/* Sidebar is now available on all screen sizes */
 </style>

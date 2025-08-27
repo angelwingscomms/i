@@ -133,7 +133,7 @@
 				</a>
 			</div>
 
-			<div class="md:hidden">
+			<div>
 				<button class="btn-icon" onclick={toggle_menu} aria-label="Toggle menu">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
