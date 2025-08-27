@@ -1,23 +1,88 @@
 import { create } from '$lib/db';
 import type { RequestHandler } from './$types';
-import type { ChatMessage, DBChatMessage, SendChatMessage } from '$lib/types';
+import type { ChatMessage, DBChatMessage, SendChatMessage, Message } from '$lib/types';
 import { s } from '$lib/util/s';
 import { cf } from '$lib/util/cf';
 import { PUBLIC_WORKER } from '$env/static/public';
+import { upload_image } from '$lib/integrations/r2_storage';
+import { process_message } from '$lib/util/chat/process_message';
+type R2Bucket = unknown;
 
 export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
-	const m: SendChatMessage = await request.json();
+	// Accept multipart/form-data (from Chat.svelte/ChatInput) with JSON fallback
+	const contentType = request.headers.get('content-type') || '';
+	let m: SendChatMessage;
+	let fileUrls: string[] = [];
 
-	const messageData = {
-		...(locals.user && m.a ? { u: locals.user.i } : {}),
-		s: 'm',
-		d: m.d,
+	if (contentType.includes('multipart/form-data')) {
+		const formData = await request.formData();
+		const messageText = (formData.get('m') as string) || '';
+		const cloudflareId = (formData.get('c') as string) || '';
+		const receiverTag = (formData.get('t') as string) || '';
+		const timestamp = parseInt((formData.get('d') as string) || `${Date.now()}`);
+		const messageId = (formData.get('i') as string) || crypto.randomUUID();
+		const anonymous = formData.get('a') as string | null;
+
+		const files = formData
+			.getAll('files')
+			.filter((f): f is File => f instanceof File && f.size > 0);
+		// Narrow platform type for lint without leaking 'any'
+		type PlatformWithR2 = { env?: { R2?: R2Bucket } };
+		const p = platform as PlatformWithR2;
+		if (files.length > 0 && p?.env?.R2) {
+			for (const file of files) {
+				try {
+					const url = await upload_image(
+						file,
+						undefined,
+						platform as unknown as { env: { R2: R2Bucket; [key: string]: unknown } }
+					);
+					fileUrls.push(url);
+				} catch (e) {
+					console.error('R2 upload error during message send:', e);
+				}
+			}
+		}
+
+		m = {
+			m: messageText,
+			c: cloudflareId,
+			t: receiverTag,
+			d: timestamp,
+			i: messageId,
+			...(anonymous ? { a: anonymous } : {}),
+			...(fileUrls.length > 0 ? { f: fileUrls } : {})
+		};
+	} else {
+		m = (await request.json()) as SendChatMessage;
+		fileUrls = m.f ?? [];
+	}
+
+	const base: Message = {
 		m: m.m,
-		r: params.i
-	} satisfies DBChatMessage;
+		d: m.d,
+		i: m.i,
+		c: m.c,
+		h: 0,
+		t: m.t,
+		r: params.i,
+		s: 'm',
+		...(m.a ? { a: m.a } : {}),
+		...(fileUrls.length > 0 ? { f: fileUrls } : {}),
+		...(locals.user ? { u: locals.user.i } : {})
+	};
+	const with_tc = await process_message(base);
 
 	const i = await create(
-		messageData,
+		{
+			...(locals.user ? { u: locals.user.i } : {}),
+			s: 'm',
+			d: with_tc.d,
+			m: with_tc.m,
+			r: params.i,
+			tc: with_tc.tc,
+			...(fileUrls.length > 0 ? { f: fileUrls } : {})
+		} satisfies DBChatMessage & { tc?: number; f?: string[] },
 		JSON.stringify({
 			...(locals.user ? { sender: locals.user.t } : {}),
 			sent_at: new Date(m.d).toLocaleString(undefined, {
@@ -30,7 +95,8 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 				second: '2-digit'
 			}),
 			message_text: m.m,
-			room_name_or_tag: m.t
+			room_name_or_tag: m.t,
+			...(fileUrls.length > 0 ? { files: fileUrls } : {})
 		}),
 		m.i
 	);
@@ -38,28 +104,12 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 	cf(platform)('http' + PUBLIC_WORKER + '/send/' + m.c + (await s()), {
 		method: 'POST',
 		body: JSON.stringify({
-			type: 'message',
 			i,
 			...(locals.user ? { x: locals.user.t } : {}),
-			m: m.m
-		} satisfies ChatMessage & { type: string })
+			m: m.m,
+			...(fileUrls.length > 0 ? { f: fileUrls } : {})
+		} satisfies ChatMessage)
 	});
-
-	// // Server-side push notification: resolve recipient by tag and notify if found
-	// try {
-	// 	if (m.t) {
-	// 		const recipient = await find_user_by_tag(m.t);
-	// 		if (recipient?.i) {
-	// 			await fetch('/push_notif', {
-	// 				method: 'POST',
-	// 				headers: { 'Content-Type': 'application/json' },
-	// 				body: JSON.stringify({ u: recipient.i, t: `New message in ${m.t}`, m: m.m, k: i })
-	// 			});
-	// 		}
-	// 	}
-	// } catch (err) {
-	// 	console.error('push notif error', err);
-	// }
 
 	return new Response();
 };

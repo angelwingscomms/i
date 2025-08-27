@@ -2,12 +2,11 @@
 	import { page } from '$app/state';
 	import { v7 } from 'uuid';
 	import { fade } from 'svelte/transition';
-	import type { SendChatMessage, ChatMessage } from '$lib/types'; // Import the new type
+	import type { SendChatMessage, ChatMessage, Room } from '$lib/types'; // Import the new type
 	import { toast } from '$lib/util/toast';
 	import { PUBLIC_WORKER } from '$env/static/public';
 	import axios from 'axios';
 	import { animate, stagger } from 'animejs';
-	import { tick } from 'svelte';
 	import FileWidget from './FileWidget.svelte';
 	import ChatInput from './ChatInput.svelte';
 	let {
@@ -15,14 +14,11 @@
 		s,
 		c,
 		t,
-		r,
+		_,
 		n,
-		children
-	}: { n?: number; m: ChatMessage[]; s: string; c: string; t: string; r: boolean; children?: any } =
+	}: { n?: number; m: ChatMessage[]; s: string; c: string; t: string; _: Room['_'] } =
 		$props();
 
-	console.log('r:', r);
-	console.log('t:', t);
 	let chat_messages: ChatMessage[] = $state(m);
 	let message_text = $state('');
 	let websocket: WebSocket | undefined;
@@ -175,6 +171,7 @@
 			t,
 			d: Date.now(),
 			i: v7(),
+			...(_ === '-' ? { a: '1' } : {}),
 			...(files.length > 0 && { f: files })
 		};
 
@@ -195,12 +192,12 @@
 
 <div class="chat-layout">
 	<div class="chat-header">
-		<h1 class="chat-title">{r ? `anon chat ${n} with ${t}` : t}</h1>
+		<h1 class="chat-title">{n ? `anon chat ${n} with ${t}` : t}</h1>
 		<!-- {#if children}{@render children()}{/if} -->
 	</div>
 	<div class="messages-container" bind:this={messagesEl}>
 		{#each chat_messages as msg, i (msg.i)}
-			{#if r}
+			{#if _}
 				<a
 					class="chat_item"
 					in:fade={{ duration: 150, delay: 0 }}

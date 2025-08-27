@@ -44,7 +44,10 @@ export interface NotificationSubscription {
 
 export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>;
 
-export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't' | 'a' | 'f'>;
+// Client-to-server payload when sending a chat message. "a" is an optional
+// flag used by anon rooms; it is not part of the persisted Message payload.
+export type SendChatMessage =
+  Pick<Message, 'saved' | 'm' | 'i' | 'c' | 'd' | 't' | 'f'> & { a?: string };
 
 export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x' | 'f'>;
 
