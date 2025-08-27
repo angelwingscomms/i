@@ -20,26 +20,28 @@ export const load: PageServerLoad = async ({ locals }) => {
 		}
 		return {
 			r: (
-				await qdrant.scroll(collection, {
-					filter: {
-						must: [
-							{
-								key: 's',
-								match: {
-									value: 'r'
+				await qdrant
+					.scroll(collection, {
+						filter: {
+							must: [
+								{
+									key: 's',
+									match: {
+										value: 'r'
+									}
+								},
+								{
+									key: '_',
+									match: {
+										value: '.'
+									}
 								}
-							},
-							{
-								key: '_',
-								match: {
-									any: ['.', ',']
-								}
-							}
-						]
-					},
-					with_payload: ['t', 'l', 'm'],
-					limit: 54
-				}).then(result => result.points || [])
+							]
+						},
+						with_payload: ['t', 'l', 'm'],
+						limit: 54
+					})
+					.then((result) => result.points || [])
 			).map((r) => ({ i: r.id, t: r.payload?.t, l: r.payload?.l, m: r.payload?.m }))
 		};
 	} catch {
