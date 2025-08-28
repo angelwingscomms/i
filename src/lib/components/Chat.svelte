@@ -193,6 +193,7 @@
 <div class="chat-layout">
 	<div class="chat-header">
 		<h1 class="chat-title">{n ? `anon chat ${n} with ${t}` : t}</h1>
+		<div class="chat-id">c: {c}</div>
 		<!-- {#if children}{@render children()}{/if} -->
 	</div>
 	<div class="messages-container" bind:this={messagesEl}>

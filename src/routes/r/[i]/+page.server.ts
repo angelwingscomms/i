@@ -35,8 +35,14 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 				break;
 			}
 			case '-': {
-				r.t = locals.user.i === r.r ? '' : (await get<string>(r.r!, 't')) || '';
-				delete r.r;
+				if (!r.u || !r.r || (locals.user.i !== r.u && locals.user.i !== r.r)) {
+					error(403, 'you do not belong to this room');
+				}
+				if (locals.user.i === r.u) {
+					r.t = (await get<string>(r.r!, 't')) || '';
+				} else if (locals.user.i === r.r) {
+					r.t = '';
+				}
 				break;
 			}
 		}
@@ -60,6 +66,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			}))
 		)) satisfies ChatMessage[],
 		s: await s(),
-		...r
+		t: r.t,
+		c: r.c,
+		_: r._
 	};
 };

@@ -1,26 +1,56 @@
-import { create, get, search_by_payload } from '$lib/db';
-import { redirect } from '@sveltejs/kit';
+import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { v7 } from 'uuid';
+import { create, get, qdrant, update_point } from '$lib/db';
+import { s } from '$lib/util/s';
 import { cf } from '$lib/util/cf';
 import { PUBLIC_WORKER } from '$env/static/public';
-import { s } from '$lib/util/s';
+import type { Room } from '$lib/types';
+import { collection } from '$lib/constants';
 
-export const load: PageServerLoad = async ({ locals, cookies, params, platform }) => {
-	let u = locals.user?.i;
-	if (!u) {
-		u = v7();
-		cookies.set('u', u, { path: '/' });
+export const load: PageServerLoad = async ({ locals, params, platform }) => {
+	const t: string | null = await get(params.i, 't');
+	if (!t) error(404, 'user not found');
+	if (!locals.user) {
+		redirect(302, `/google?next=/u/${params.i}/c`);
 	}
-	const chats = await search_by_payload({ s: 'r', u, r: params.i }, ['a']);
-	console.log('ch', chats);
-	if (!chats.length) {
-		const c: string = await (
-			await cf(platform)('http' + PUBLIC_WORKER + '/i' + (await s()))
-		).text();
 
-		const i = await create({ s: 'r', c, u, r: params.i, a: Date.now() }, '');
-		redirect(302, `/r/${i}`);
+	const existing_room = await qdrant.scroll(collection, {
+		filter: {
+			must: [
+				{ key: 's', match: { value: 'r' } },
+				{ key: '_', match: { value: '-' } },
+				{ key: 'u', match: { value: locals.user.i } },
+				{ key: 'r', match: { value: params.i } },
+			]
+		},
+		with_payload: true,
+		limit: 1
+	});
+
+	// If room exists, redirect to room page
+	if (existing_room.points.length > 0) {
+		const room_id = existing_room.points[0].id;
+		redirect(302, `/r/${room_id}`);
 	}
-	return { c: chats, t: await get(params.i, 't') };
+
+	const c: string = await (await cf(platform)('http' + PUBLIC_WORKER + '/i' + (await s()))).text();
+
+	const room_payload: Pick<Room, 'x' | 's' | 'c' | 'd' | '_' | 'r' | 'u'> = {
+		s: 'r',
+		c,
+		d: Date.now(),
+		_: '-',
+		u: locals.user.i,
+		r: params.i,
+	};
+
+	const r = await create(
+		{ ...room_payload, s: 'r' },
+		JSON.stringify({
+			room_members: room_payload.x,
+			room_type: `direct message`
+		})
+	);
+	// Redirect to the newly created room
+	redirect(302, `/r/${r}`);
 };
