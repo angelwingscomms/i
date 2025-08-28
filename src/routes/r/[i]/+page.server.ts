@@ -7,6 +7,8 @@ import { s } from '$lib/util/s';
 export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!params.i) error(400, 'missing room id');
 
+	let anon = 0;
+
 	const r = await get<Pick<Room, 't' | 'c' | '_' | 'u' | 'r' | 'x'>>(params.i, [
 		't',
 		'c',
@@ -39,6 +41,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 					error(403, 'you do not belong to this room');
 				}
 				if (locals.user.i === r.u) {
+					anon = 1;
 					r.t = (await get<string>(r.r!, 't')) || '';
 				} else if (locals.user.i === r.r) {
 					r.t = '';
@@ -68,6 +71,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		s: await s(),
 		t: r.t,
 		c: r.c,
-		_: r._
+		_: r._,
+		a: anon
 	};
 };

@@ -16,7 +16,8 @@
 		t,
 		_,
 		n,
-	}: { n?: number; m: ChatMessage[]; s: string; c: string; t: string; _: Room['_'] } =
+		a
+	}: { n?: number; a?: number; m: ChatMessage[]; s: string; c: string; t: string; _: Room['_'] } =
 		$props();
 
 	let chat_messages: ChatMessage[] = $state(m);
@@ -132,7 +133,7 @@
 		const timestamp = parseInt(formData.get('d') as string);
 
 		// Get files from FormData for optimistic UI
-		const files = formData.getAll('files').filter(f => f instanceof File) as File[];
+		const files = formData.getAll('files').filter((f) => f instanceof File) as File[];
 
 		if (messageText || files.length > 0) {
 			// Add message to UI immediately for optimistic update
@@ -140,7 +141,7 @@
 				m: messageText,
 				i: messageId,
 				x: page.data.user.t,
-				saved: false,
+				saved: false
 				// Note: We can't show file URLs until server processes them
 				// Files will be updated via websocket when server responds
 			});
@@ -149,15 +150,17 @@
 			console.log('Sending message with FormData to:', page.url.pathname);
 
 			// Send FormData to message route
-			axios.post(page.url.pathname, formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}
-			}).catch((error) => {
-				console.error('Error sending message:', error);
-				// Remove optimistic message on error
-				chat_messages = chat_messages.filter(msg => msg.i !== messageId);
-			});
+			axios
+				.post(page.url.pathname, formData, {
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
+				})
+				.catch((error) => {
+					console.error('Error sending message:', error);
+					// Remove optimistic message on error
+					chat_messages = chat_messages.filter((msg) => msg.i !== messageId);
+				});
 		}
 	}
 
@@ -192,7 +195,17 @@
 
 <div class="chat-layout">
 	<div class="chat-header">
-		<h1 class="chat-title">{n ? `anon chat ${n} with ${t}` : t}</h1>
+		{#if _ === '-'}
+			{#if a}
+				<h1 class="chat-title">anon chat {n} with {t}</h1>
+			{:else}
+				<h1 class="chat-title">
+					anon chat {n} with <span class="font-light text-gray-500 italic">anonymous user</span>
+				</h1>
+			{/if}
+		{:else}
+			<h1 class="chat-title">{t}</h1>
+		{/if}
 		<div class="chat-id">c: {c}</div>
 		<!-- {#if children}{@render children()}{/if} -->
 	</div>
