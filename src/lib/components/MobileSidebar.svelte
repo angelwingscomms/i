@@ -33,6 +33,7 @@
 		<nav class="sidebar-nav">
 			{#if user}
 				<a href="/r" class="sidebar-nav-link" onclick={close_sidebar}>search chatrooms</a>
+				<a href="/chats" class="sidebar-nav-link" onclick={close_sidebar}>chats</a>
 				<a href="/u" class="sidebar-nav-link" onclick={close_sidebar}>search users</a>
 				<a href="/settings" class="sidebar-nav-link" onclick={close_sidebar}>settings</a>
 				<a href="/edit_user" class="sidebar-nav-link" onclick={close_sidebar}>edit profile</a>

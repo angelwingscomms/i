@@ -23,7 +23,7 @@ export interface User {
 	x?: string[]; // contact links
 	r?: string[]; // saved room ids
 	isAdmin?: boolean; // whether user is an admin
-	ps?: PushSubscription; // push subscription
+	ps?: PushSubscription[]; // push subscription
 }
 
 export interface Group {
