@@ -25,6 +25,7 @@
 			const response = await fetch(`/u/${userId}/push_notifications/check_subscription`);
 			const data = await response.json();
 			if (data.subscribed) {
+				console.log('User already has a push notification subscription');
 				return;
 			}
 		} catch (e) {

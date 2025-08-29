@@ -1,6 +1,8 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exists, set } from '$lib/db';
+import { exists, get, set } from '$lib/db';
+import type { User } from '$lib/types';
+import type { PushSubscription } from 'web-push';
 
 export const POST: RequestHandler = async ({ params, request }) => {
 	const { i } = params;
@@ -11,7 +13,17 @@ export const POST: RequestHandler = async ({ params, request }) => {
 		const sub = await request.json();
 		if (!sub || !sub.endpoint) return json({ error: 'invalid subscription' }, { status: 400 });
 
-		await set(i, { ps: sub });
+		// Load existing subscriptions and merge/deduplicate by endpoint
+		const existing = (await get<User['ps']>(i, 'ps')) || [];
+		const list: PushSubscription[] = Array.isArray(existing)
+			? (existing as PushSubscription[])
+			: existing
+				? [existing as unknown as PushSubscription]
+				: [];
+		const withoutDupes = list.filter((s) => s && s.endpoint !== sub.endpoint);
+		const updated = [...withoutDupes, sub];
+
+		await set(i, { ps: updated });
 
 		// Log successful subscription save
 		console.log('🔔 Push notification subscription saved on server:', {

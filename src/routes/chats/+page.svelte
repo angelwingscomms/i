@@ -26,13 +26,14 @@
 					<a class="link" href={`/r/${r.i}`}>
 						<div class="row space-between v-center">
 							<div>
-								<div class="result-title">{r.t}</div>
-								{#if r._ === '|'}
-									<div class="result-meta muted">{r.t}</div>
-								{:else if r._ === '-'}
-									<div class="result-meta muted italic">anonymous user</div>
+								{#if r._ === '-'}
+									{#if r.t}
+										<div class="result-meta muted italic">{r.t}</div>
+									{:else}
+										<div class="result-meta muted italic">anonymous user</div>
+									{/if}
 								{:else}
-									<div class="result-meta muted">{r.m ?? 0} members</div>
+									<div class="result-meta muted">{r.t}</div>
 								{/if}
 							</div>
 						</div>

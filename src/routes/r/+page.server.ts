@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
-import { json, error } from '@sveltejs/kit';
-import { get, qdrant, search_by_payload, search_by_vector } from '$lib/db';
+import { error } from '@sveltejs/kit';
+import { get, qdrant, search_by_vector } from '$lib/db';
 import type { Room } from '$lib/types';
 import { collection } from '$lib/constants';
 

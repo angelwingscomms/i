@@ -197,16 +197,13 @@
 	<div class="chat-header">
 		{#if _ === '-'}
 			{#if a}
-				<h1 class="chat-title">anon chat {n} with {t}</h1>
+				<h1 class="chat-title font-light text-gray-500 italic">anon chat {n} with {t}</h1>
 			{:else}
-				<h1 class="chat-title">
-					anon chat {n} with <span class="font-light text-gray-500 italic">anonymous user</span>
-				</h1>
+				<h1 class="chat-title font-light text-gray-500 italic">anonymous user</h1>
 			{/if}
 		{:else}
 			<h1 class="chat-title">{t}</h1>
 		{/if}
-		<div class="chat-id">c: {c}</div>
 		<!-- {#if children}{@render children()}{/if} -->
 	</div>
 	<div class="messages-container" bind:this={messagesEl}>

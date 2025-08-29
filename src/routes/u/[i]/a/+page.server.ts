@@ -47,7 +47,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 	const r = await create(
 		{ ...room_payload, s: 'r' },
 		JSON.stringify({
-			room_members: room_payload.x,
+			room_members: [room_payload.u, room_payload.r],
 			room_type: `direct message`
 		})
 	);

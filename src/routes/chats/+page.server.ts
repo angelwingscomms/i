@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { get, qdrant, search_by_payload } from '$lib/db';
+import { get, qdrant } from '$lib/db';
 import { redirect } from '@sveltejs/kit';
 import { collection } from '$lib/constants';
 
@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const userRooms = (await get(locals.user.i, 'r')) as string[];
 	console.log('userRooms', userRooms);
 
-	const r =  await Promise.all((
+	const rr =  await (
 		await qdrant.scroll(collection, {
 			filter: {
 				must: [{ key: 's', match: { value: 'r' } }],
@@ -25,7 +25,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 			with_payload: ['t', 'l', '_', 'u', 'x'],
 			limit: 144
 		})
-	).points.map(async (p) => {
+	)
+	console.log('rr', rr);
+	const r = await Promise.all(rr.points.map(async (p) => {
         console.log('p', p);
 		if (p.payload?._ === '-') {
             if (p.payload.u === locals.user?.i) {
@@ -40,7 +42,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		return { i: p.id, ...p.payload }
 	}));
 
-	console.log('r', r);
+	console.log('rooms.length', r.length);
 
 	return { r };
 };
