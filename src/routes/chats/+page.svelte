@@ -27,7 +27,13 @@
 						<div class="row space-between v-center">
 							<div>
 								<div class="result-title">{r.t}</div>
-								<div class="result-meta muted">{r.m ?? 0} members</div>
+								{#if r._ === '|'}
+									<div class="result-meta muted">{r.t}</div>
+								{:else if r._ === '-'}
+									<div class="result-meta muted italic">anonymous user</div>
+								{:else}
+									<div class="result-meta muted">{r.m ?? 0} members</div>
+								{/if}
 							</div>
 						</div>
 					</a>

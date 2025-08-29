@@ -20,10 +20,17 @@ export const GET: RequestHandler = async () => {
 	// 	]
 	// };
 
-	// await qdrant.delete(collection, {
-	// 	wait: true,
-	// 	filter
-	// });
+	await qdrant.delete(collection, {
+		wait: true,
+		filter: {
+			must: {
+				key: 's',
+				match: {
+					value: 'r'
+				}
+			}
+		}
+	});
 
 	return new Response('.');
 };

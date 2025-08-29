@@ -1,6 +1,5 @@
 import type { PageServerLoad } from './$types';
 import { get, qdrant, search_by_payload } from '$lib/db';
-import type { Room } from '$lib/types';
 import { redirect } from '@sveltejs/kit';
 import { collection } from '$lib/constants';
 
@@ -23,10 +22,11 @@ export const load: PageServerLoad = async ({ locals }) => {
 					{ key: 'x', match: { value: locals.user.i } }
 				]
 			},
-			with_payload: ['t', 'l', '_', 'u'],
+			with_payload: ['t', 'l', '_', 'u', 'x'],
 			limit: 144
 		})
 	).points.map(async (p) => {
+        console.log('p', p);
 		if (p.payload?._ === '-') {
             if (p.payload.u === locals.user?.i) {
                 p.payload.t = await get<string>(p.payload.r as string, 't')

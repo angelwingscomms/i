@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 				{ key: 's', match: { value: 'r' } },
 				{ key: '_', match: { value: '|' } },
 				{ key: 'x', match: { value: locals.user.i } },
-				{ key: 'x', match: { value: params.i } },
+				{ key: 'x', match: { value: params.i } }
 			]
 		},
 		with_payload: true,
@@ -29,6 +29,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 
 	// If room exists, redirect to room page
 	if (existing_room.points.length > 0) {
+		console.log('existing room', existing_room.points[0]);
 		const room_id = existing_room.points[0].id;
 		redirect(302, `/r/${room_id}`);
 	}
@@ -44,12 +45,13 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 	};
 
 	const r = await create(
-		{ ...room_payload, s: 'r' },
+		room_payload,
 		JSON.stringify({
 			room_members: room_payload.x,
 			room_type: `direct message`
 		})
 	);
+	console.log('new room', r, room_payload);
 	// Redirect to the newly created room
 	redirect(302, `/r/${r}`);
 };
