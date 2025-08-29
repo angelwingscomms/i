@@ -19,6 +19,7 @@ export async function POST({ request, locals, platform }) {
 		t: t.trim(), // room tag
 		a: a.trim(), // about room
 		c,
+		_: '.', // public room
 		u: locals.user.i, // creator user id
 		d: Date.now() // creation timestamp
 	};
@@ -29,7 +30,8 @@ export async function POST({ request, locals, platform }) {
 			JSON.stringify({
 				room_name_or_tag: room_payload.t,
 				room_created_by: locals.user?.t,
-				room_description: room_payload.a
+				room_description: room_payload.a,
+				room_type: 'public'
 			})
 		);
 

@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			if (vector) {
 				let rooms = await search_by_vector<Room>({
 					vector: vector.vector,
-					filter: { must: { s: 'r' } },
+					filter: { must: { s: 'r', _: '.' } },
 					with_payload: ['t', 'l', 'm'],
 					limit: 54
 				});
