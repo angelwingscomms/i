@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const userRooms = (await get(locals.user.i, 'r')) as string[];
 	console.log('userRooms', userRooms);
 
-	const r = (
+	const r =  await Promise.all((
 		await qdrant.scroll(collection, {
 			filter: {
 				must: [{ key: 's', match: { value: 'r' } }],
@@ -38,7 +38,7 @@ export const load: PageServerLoad = async ({ locals }) => {
             p.payload.t = await get<string>((p.payload.x as string[])?.find(x => x !== locals.user?.i) as string, 't')
         }
 		return { i: p.id, ...p.payload }
-	});
+	}));
 
 	console.log('r', r);
 
