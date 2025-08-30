@@ -139,3 +139,10 @@
 .btn-icon:active {
 	transform: scale(0.95);
 }
+
+@utility btn-search-icon {
+	@apply btn-icon;
+	width: 40px; /* Adjust as needed */
+	height: 40px; /* Adjust as needed */
+	padding: 0; /* Remove padding */
+}

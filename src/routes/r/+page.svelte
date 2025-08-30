@@ -61,23 +61,28 @@
 </script>
 
 <div class="page pad">
-	<div class="row space-between v-center">
+	<div class="row space-between v-center mb-md">
 		<h1 class="title">search chatrooms</h1>
 		<button class="btn-primary btn-wide" onclick={() => (creating = true)}>add chatroom</button>
 	</div>
 
 	<div class="card gap">
-		<input
-			class="input-underline"
-			placeholder="Search chatrooms..."
-			id="room_search"
-			bind:value={q}
-			onkeydown={on_key}
-			style="background: transparent; border: 1px solid var(--color-theme-6);"
-		/>
-		<button class="btn-primary btn-compact" onclick={search_rooms} disabled={loading}
-			>{loading ? 'searching…' : 'search'}</button
-		>
+		<div class="search-input-group">
+			<input
+				class="input-underline expand"
+				placeholder="Search chatrooms..."
+				id="room_search"
+				bind:value={q}
+				onkeydown={on_key}
+			/>
+			<button class="btn-primary btn-search-icon" onclick={search_rooms} disabled={loading}>
+				{#if loading}
+					<i class="fas fa-spinner fa-spin"></i>
+				{:else}
+					<i class="fas fa-magnifying-glass"></i>
+				{/if}
+			</button>
+		</div>
 	</div>
 
 	{#if results.length}
@@ -240,5 +245,15 @@
 		color: white;
 		font-weight: 700;
 		font-size: 12px;
+	}
+
+	.search-input-group {
+		display: flex;
+		align-items: center;
+		gap: 8px; /* Adjust gap as needed */
+	}
+
+	.expand {
+		flex-grow: 1; /* Allows the input to take up available space */
 	}
 </style>
