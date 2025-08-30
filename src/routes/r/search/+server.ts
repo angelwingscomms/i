@@ -1,6 +1,6 @@
-import { error, json } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { embed } from '$lib/util/embed';
-import { search_by_vector } from '$lib/db';
+import { count, search_by_payload, search_by_vector } from '$lib/db';
 import type { RequestHandler } from './$types';
 
 type SearchBody = {
@@ -13,18 +13,31 @@ type SearchBody = {
 export const POST: RequestHandler = async ({ request }) => {
 	const body = (await request.json()) as SearchBody;
 
-	const q = body?.q as string;
+	const q = (body?.q as string) || '';
+	const limit = Math.min(Math.max(body?.l || 24, 1), 144);
+	const payload_filter: Record<string, unknown> = { s: 'r', _: '.' };
+	console.log('count', await count({s: 'r'}));
+	// const payload_filter: Record<string, unknown> = { s: 'r', _: '.', ...(body?.f || {}) };
 
-	// Vectorize query
-	const vector = await embed(q);
-
-	// Fetch room tag and optional metadata
-	const results = await search_by_vector<{ t?: string; l?: number; m?: number }>({
-		vector,
-		with_payload: ['t', 'l', 'm'],
-		limit: Math.min(Math.max(body?.l || 24, 1), 144),
-		filter: { must: { s: 'r', ...(body?.f || {}) } }
-	});
-
-	return json(results);
+	if (q.trim()) {
+		// Vector search when query provided
+		const vector = await embed(q.trim());
+		const results = await search_by_vector<{ t?: string; l?: number; m?: number }>({
+			vector,
+			with_payload: ['t', 'l', 'm'],
+			limit,
+			filter: { must: payload_filter }
+		});
+		console.log('Server-side search results (vector):', results);
+		return json(results);
+	} else {
+		// No query: payload-only search
+		const results = await search_by_payload<{ t?: string; l?: number; m?: number }>(
+			payload_filter,
+			['t', 'l', 'm'],
+			limit
+		);
+		console.log('Server-side search results (payload):', results);
+		return json(results);
+	}
 };

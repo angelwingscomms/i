@@ -1,12 +1,12 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { json } from '@sveltejs/kit';
-import { GOOGLE_API_KEY } from '$env/static/private';
+import { GEMINI } from '$env/static/private';
 
 let model: ReturnType<GoogleGenerativeAI['getGenerativeModel']> | undefined;
 
-if (GOOGLE_API_KEY) {
+if (GEMINI) {
 	try {
-		const ai = new GoogleGenerativeAI(GOOGLE_API_KEY);
+		const ai = new GoogleGenerativeAI(GEMINI);
 		model = ai.getGenerativeModel({ model: 'gemini-1.5-flash' });
 	} catch (e) {
 		console.error('Error initializing GoogleGenerativeAI:', e);

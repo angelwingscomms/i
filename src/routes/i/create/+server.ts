@@ -1,15 +1,15 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { create } from '$lib/db';
-import { GOOGLE_API_KEY } from '$env/static/private';
+import { GEMINI } from '$env/static/private';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { Item } from '$lib/types/item';
 
 async function summarize(d: string): Promise<string | undefined> {
 	if (!d?.trim()) return undefined;
 	try {
-		if (!GOOGLE_API_KEY) return d.slice(0, 160);
-		const ai = new GoogleGenerativeAI(GOOGLE_API_KEY);
+		if (!GEMINI) return d.slice(0, 160);
+		const ai = new GoogleGenerativeAI(GEMINI);
 		const model = ai.getGenerativeModel({ model: 'gemini-1.5-flash' });
 		const prompt = `Summarize the following description into one concise sentence (<= 30 words), keep it neutral and helpful, no emojis.\n\n"""${d}"""`;
 		const res = await model.generateContent({

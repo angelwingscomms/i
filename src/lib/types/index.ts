@@ -80,5 +80,16 @@ export interface Room {
 	m?: number; // number of members
 	l?: number; // time of last message
 	x?: string[]; // member user ids
-	_?: ',' | '.' | '-' | '|';  // room type: - is anon, `|` is one one one (dm), `,` is private, `.` is open 
+	_?: ',' | '.' | '-' | '|'; // room type: - is anon, `|` is one one one (dm), `,` is private, `.` is open
+}
+
+// Preset type for /pink feature
+export interface Preset {
+	s: 'p'; // tenant id for preset
+	i: string; // preset id
+	n: string; // name
+	p?: string; // prompt
+	a?: string; // about
+	d?: number; // created at timestamp
+	x?: string[]; // image urls for preset (using x to avoid 'i' collision)
 }

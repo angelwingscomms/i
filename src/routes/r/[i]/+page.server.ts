@@ -58,10 +58,10 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 					{ s: 'm', r: params.i },
 					['m', 'u', 'd', 'f'],
 					72,
-					{
-						key: 'd',
-						direction: 'desc'
-					}
+					// {
+					// 	key: 'd',
+					// 	direction: 'desc'
+					// }
 				)
 			).map(async (m) => ({
 				...m,

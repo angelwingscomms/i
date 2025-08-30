@@ -6,7 +6,7 @@ export const embed = async (contents: string): Promise<number[]> => {
 	const embeddings = (
 		await ai.models.embedContent({
 			model: 'gemini-embedding-001',
-			contents
+			contents: [contents]
 		})
 	).embeddings;
 	if (embeddings && embeddings[0].values) {

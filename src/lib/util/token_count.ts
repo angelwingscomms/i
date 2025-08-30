@@ -1,12 +1,12 @@
-import { GOOGLE_API_KEY } from '$env/static/private';
+import { GEMINI } from '$env/static/private';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Server-only token count. Falls back to heuristic if API key/model unavailable.
 export const token_count = async (t: string): Promise<number> => {
 	if (!t) return 0;
 	try {
-		if (GOOGLE_API_KEY) {
-			const ai = new GoogleGenerativeAI(GOOGLE_API_KEY);
+		if (GEMINI) {
+			const ai = new GoogleGenerativeAI(GEMINI);
 			const model = ai.getGenerativeModel({ model: 'gemini-1.5-flash' });
 			const res = await model.countTokens({ contents: [{ role: 'user', parts: [{ text: t }] }] });
 			return typeof res.totalTokens === 'number' ? res.totalTokens : heuristic(t);

@@ -18,6 +18,7 @@
 		loading = true;
 		try {
 			({ data: results } = await axios.post('/r/search', { q, f: { s: 'r' } }));
+			console.log('Client-side search results:', results);
 		} catch (e) {
 			toast.error('Search failed. Try again.');
 		} finally {

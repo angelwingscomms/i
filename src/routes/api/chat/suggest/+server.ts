@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 import { search_by_payload } from '$lib/db';
 import type { Message } from '$lib/types';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { GOOGLE_API_KEY } from '$env/static/private';
+import { GEMINI } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const { r } = (await request.json()) as { r: string };
@@ -14,12 +14,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		})
 	)[0];
 
-	if (!GOOGLE_API_KEY) {
+	if (!GEMINI) {
 		const suggestion = last?.m ? `You could reply: "${last.m.slice(0, 64)}..."` : 'Say hello 👋';
 		return json({ s: suggestion });
 	}
 
-	const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
+	const genAI = new GoogleGenerativeAI(GEMINI);
 	const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 	let prompt = "Suggest a short, concise, and natural-sounding reply for a chat conversation. ";

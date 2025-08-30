@@ -207,7 +207,7 @@
 		<!-- {#if children}{@render children()}{/if} -->
 	</div>
 	<div class="messages-container" bind:this={messagesEl}>
-		{#each [...chat_messages].reverse() as msg, i (msg.i)}
+		{#each [...chat_messages] as msg, i (msg.i)}
 			{#if _}
 				<a
 					class="chat_item"
