@@ -7,7 +7,7 @@ declare global {
 	namespace App {
 		interface Platform {
 			env: {
-				R: DurableObjectNamespace;
+				r: DurableObjectNamespace;
 			};
 		}
 		interface Locals {
