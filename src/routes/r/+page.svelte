@@ -12,10 +12,12 @@
 	let t = $state('');
 	let d = $state('');
 	let loading = $state(false);
+	let searched = $state(false);
 
 	// minimal fetch wrappers
 	async function search_rooms() {
 		loading = true;
+		searched = true;
 		try {
 			({ data: results } = await axios.post('/r/search', { q, f: { s: 'r' } }));
 			console.log('Client-side search results:', results);
@@ -39,6 +41,10 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ t: tag, a: desc })
 			});
+			if (res.status === 401) {
+				toast.error('Unauthorized: Please log in to create a room.');
+				return;
+			}
 			if (!res.ok) throw new Error('create failed');
 			const id = await res.text();
 			toast.success('Room created');
@@ -103,6 +109,8 @@
 				</li>
 			{/each}
 		</ul>
+	{:else if searched}
+		<p class="muted">No results found.</p>
 	{:else}
 		<p class="muted">Try searching for a chatroom.</p>
 	{/if}

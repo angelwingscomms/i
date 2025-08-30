@@ -18,8 +18,8 @@
 }
 
 .input-underline:focus {
-	border-bottom: 3px solid var(--color-theme-1);
-	border-bottom-color: var(--color-theme-1);
+	outline: none !important;
+	box-shadow: none !important;
 }
 
 .input:focus {

@@ -88,5 +88,5 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	if (next && next.startsWith('/')) {
 		return new Response(null, { status: 302, headers: { Location: next } });
 	}
-	redirect(302, '/edit_user');
+	redirect(302, '/');
 }

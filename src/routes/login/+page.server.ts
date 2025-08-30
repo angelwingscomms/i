@@ -49,6 +49,10 @@ export const actions: Actions = {
 			auth.setSessionJwtCookie(event, jwt);
 		} catch {}
 
+		const next = event.cookies.get('login_next');
+		if (next && next.startsWith('/')) {
+			return redirect(302, next);
+		}
 		return redirect(302, '/');
 	},
 
@@ -87,6 +91,10 @@ export const actions: Actions = {
 			} catch {}
 		} catch {
 			return fail(500, { message: 'An error has occurred' });
+		}
+		const next = event.cookies.get('login_next');
+		if (next && next.startsWith('/')) {
+			return redirect(302, next);
 		}
 		return redirect(302, '/');
 	}
