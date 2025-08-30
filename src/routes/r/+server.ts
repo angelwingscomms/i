@@ -12,7 +12,7 @@ export async function POST({ request, locals, platform }) {
 
 	const { t, a } = await request.json();
 	if (!t) error(400, 'missing room tag in request body');
-	const c: string = await (await cf(platform)('https://' + PUBLIC_WORKER + '/i' + (await s()))).text();
+	const c: string = await (await cf(platform)('http' + PUBLIC_WORKER + '/i' + (await s()))).text();
 
 	const room_payload: Omit<Room, 'i'> & { s: 'r' } = {
 		s: 'r', // tenant ID for rooms

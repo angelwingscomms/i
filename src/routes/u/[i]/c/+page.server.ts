@@ -34,7 +34,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 		redirect(302, `/r/${room_id}`);
 	}
 
-	const c: string = await (await cf(platform)('https://' + PUBLIC_WORKER + '/i' + (await s()))).text();
+	const c: string = await (await cf(platform)('http' + PUBLIC_WORKER + '/i' + (await s()))).text();
 
 	const room_payload: Pick<Room, 'x' | 's' | 'c' | 'd' | '_' | 'r' | 'u'> = {
 		s: 'r',

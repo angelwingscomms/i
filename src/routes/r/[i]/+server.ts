@@ -101,7 +101,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		m.i
 	);
 
-	cf(platform)('https://' + PUBLIC_WORKER + '/send/' + m.c + (await s()), {
+	cf(platform)('http' + PUBLIC_WORKER + '/send/' + m.c + (await s()), {
 		method: 'POST',
 		body: JSON.stringify({
 			i,
