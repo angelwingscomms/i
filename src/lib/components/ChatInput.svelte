@@ -201,6 +201,7 @@
 	{/if}
 
 	<!-- File Upload Button -->
+	<!--
 	<input
 		type="file"
 		bind:this={fileInputEl}
@@ -217,7 +218,10 @@
 	>
 		<i class="fas fa-paperclip"></i>
 	</button>
+	-->
 
+	<!-- AI Suggest Button -->
+	<!--
 	<button
 		class="send-button"
 		title="AI suggest"
@@ -230,12 +234,13 @@
 			<i class="fas fa-magic"></i>
 		{/if}
 	</button>
+	-->
 	<button
-		class="send-button"
+		class="voice-button"
 		onclick={send}
 		disabled={isRecording || isTranscribing}
 	>
-		Send
+		<i class="fas fa-paper-plane"></i>
 	</button>
 </div>
 
