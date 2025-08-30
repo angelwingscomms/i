@@ -60,7 +60,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 					72,
 					{
 						key: 'd',
-						direction: 'asc'
+						direction: 'desc'
 					}
 				)
 			).map(async (m) => ({

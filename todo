@@ -4,11 +4,13 @@ voice message in public room
 picture in public room
 video in public room
 voice message in public room
+chat input attach button shows menu, items: voice note, media
+let AI suggest button in chat input have loading state
 
-
-1. Chats search w anon chats
-2. anon chat notif.
-3. Correct anon chat message order.
-4. Push anon chat notif to phone.
-5. Enable anon chat link share via WhatsApp.
+recent anon chats
+Chats search w anon chats
+anon chat notif.
+Correct anon chat message order.
+Push anon chat notif to phone.
+Enable anon chat link share via WhatsApp.
    Deadline: 30 mins.

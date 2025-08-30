@@ -207,7 +207,7 @@
 		<!-- {#if children}{@render children()}{/if} -->
 	</div>
 	<div class="messages-container" bind:this={messagesEl}>
-		{#each chat_messages as msg, i (msg.i)}
+		{#each [...chat_messages].reverse() as msg, i (msg.i)}
 			{#if _}
 				<a
 					class="chat_item"
@@ -221,7 +221,7 @@
 						class="chat_meta"
 						style={`justify-content:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
 					>
-						{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x}
+						{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x && _ !== '|' && _ !== '-'}
 							<div class="chat_username">{msg.x}</div>
 						{/if}
 					</div>
@@ -251,7 +251,7 @@
 						class="chat_meta"
 						style={`justify-content:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
 					>
-						{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x}
+						{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x && _ !== '|' && _ !== '-'}
 							<div class="chat_username">{msg.x}</div>
 						{/if}
 					</div>

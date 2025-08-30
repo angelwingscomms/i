@@ -54,6 +54,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		};
 	} else {
 		m = (await request.json()) as SendChatMessage;
+		m.d = Date.now();
 		fileUrls = m.f ?? [];
 	}
 

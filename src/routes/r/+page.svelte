@@ -87,7 +87,7 @@
 						<div class="row space-between v-center">
 							<div>
 								<div class="result-title">{r.t}</div>
-								<div class="result-meta muted">{r.m ?? 0} members</div>
+								<!-- <div class="result-meta muted">{r.m ?? 0} members</div> -->
 							</div>
 							{#if r.score !== undefined}
 								<div class="badge">{Math.round(Math.max(0, Math.min(1, r.score)) * 100)}%</div>

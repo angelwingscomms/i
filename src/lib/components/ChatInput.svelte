@@ -13,6 +13,7 @@
 	let inputEl: HTMLInputElement | null = null;
 	let isRecording = $state(false);
 	let isTranscribing = $state(false);
+	let isSuggesting = $state(false);
 	let mediaRecorder: MediaRecorder | null = null;
 	let audioChunks: Blob[] = [];
 	let selectedFiles = $state<File[]>([]);
@@ -23,6 +24,7 @@
 	});
 
 	async function suggest() {
+		isSuggesting = true;
 		try {
 			const res = await fetch('/api/chat/suggest', {
 				method: 'POST',
@@ -33,7 +35,11 @@
 				const { s } = await res.json();
 				text = s || text;
 			}
-		} catch {}
+		} catch (e) {
+			console.error('AI suggest error', e);
+		} finally {
+			isSuggesting = false;
+		}
 	}
 
 	async function startRecording() {
@@ -216,9 +222,13 @@
 		class="send-button"
 		title="AI suggest"
 		onclick={suggest}
-		disabled={isRecording || isTranscribing}
+		disabled={isRecording || isTranscribing || isSuggesting}
 	>
-		<i class="fas fa-magic"></i>
+		{#if isSuggesting}
+			<i class="fas fa-spinner" style="animation: spin 1s linear infinite;"></i>
+		{:else}
+			<i class="fas fa-magic"></i>
+		{/if}
 	</button>
 	<button
 		class="send-button"
