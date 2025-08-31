@@ -30,7 +30,7 @@ export function addToast(
 
 	toasts.update((currentToasts) => [...currentToasts, newToast]);
 
-	console.log('s', get(toasts));
+	
 
 	// Automatically remove the toast after its duration
 	setTimeout(() => {

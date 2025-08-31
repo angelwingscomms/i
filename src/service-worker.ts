@@ -28,7 +28,7 @@ self.addEventListener('push', (event: Event) => {
 		userTag = data.userTag || 'someone';
 		chatId = data.chatId || '';
 	} catch (e) {
-		console.log('Push data parse error:', e);
+		
 		userTag = 'someone';
 	}
 

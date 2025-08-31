@@ -9,5 +9,5 @@ export const delete_all_users = async () => {
 		if (!userToDelete.i) continue;
 		await deleteById(userToDelete.i);
 	}
-	console.log('All users deleted.');
+	
 };

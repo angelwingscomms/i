@@ -214,9 +214,7 @@ export async function search_by_vector<T>({
 			score: (point as any).score
 		}));
 	} catch (error) {
-		console.error('Error in search_by_vector:', error);
-		console.error('Vector length:', vector.length);
-		console.error('--Filter:', filter);
+		
 		throw error;
 	}
 }

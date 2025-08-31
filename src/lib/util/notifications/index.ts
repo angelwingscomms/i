@@ -147,7 +147,7 @@ export async function sendPushToUser(userId: string, title: string, body: string
 			body: JSON.stringify({ t: title, m: body, k: tag })
 		});
 	} catch (e) {
-		console.error('sendPushToUser error', e);
+		
 	}
 }
 

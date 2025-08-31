@@ -6,6 +6,6 @@ webpush.setVapidDetails('mailto:edge37@outlook.com', PUBLIC_VAPID_KEY, VAPID_PRI
 
 export const send_push_notif = async (subscription: PushSubscription, body: object) => {
 	const res = await webpush.sendNotification(subscription, JSON.stringify(body));
-	console.log('push notif res', res);
+	
 	return res;
 };

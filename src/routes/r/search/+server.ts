@@ -37,7 +37,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			['t', 'l', 'm'],
 			limit
 		);
-		console.log('Server-side search results (payload):', results);
+		
 		return json(results);
 	}
 };

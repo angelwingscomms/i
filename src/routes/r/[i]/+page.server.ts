@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		'r',
 		'x'
 	]);
-	console.log('r', r);
+	
 	if (!r) error(404, 'room not found');
 
 	// Check if user has access to this room

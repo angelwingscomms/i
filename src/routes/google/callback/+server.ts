@@ -63,7 +63,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	}
 
 	if (!user_id) {
-		console.error('failed to create user after succesful Google Auth', {
+		
 			code,
 			state,
 			storedState,

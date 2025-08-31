@@ -3,7 +3,7 @@ import { key } from './key';
 export const s = async () => {
 	const iv = crypto.getRandomValues(new Uint8Array(12));
 	const d = Date.now() + 30 * 1000 + '';
-	console.log('d', d);
+	
 	const e = await crypto.subtle.encrypt(
 		{ name: 'AES-GCM', iv },
 		await key(),

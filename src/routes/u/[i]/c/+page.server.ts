@@ -34,7 +34,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 		redirect(302, `/r/${room_id}`);
 	}
 
-	const c: string = await (await cf(platform)('http' + PUBLIC_WORKER + '/i' + (await s()))).text();
+	const c: string = await (await platform.env.r.fetch('http' + PUBLIC_WORKER + '/i' + (await s()))).text();
 
 	const room_payload: Pick<Room, 'x' | 's' | 'c' | 'd' | '_' | 'r' | 'u'> = {
 		s: 'r',
@@ -51,7 +51,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 			room_type: `direct message`
 		})
 	);
-	console.log('new room', r, room_payload);
+	
 	// Redirect to the newly created room
 	redirect(302, `/r/${r}`);
 };

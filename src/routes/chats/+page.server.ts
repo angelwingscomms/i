@@ -42,7 +42,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		return { i: p.id, ...p.payload }
 	}));
 
-	console.log('rooms.length', r.length);
+	
 
 	return { r };
 };
