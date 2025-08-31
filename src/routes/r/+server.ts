@@ -1,8 +1,6 @@
 import { error, text } from '@sveltejs/kit';
 import { create } from '$lib/db';
 import type { Room } from '$lib/types';
-import { cf } from '$lib/util/cf.js';
-import { PUBLIC_WORKER } from '$env/static/public';
 import { s } from '$lib/util/s.js';
 
 export async function POST({ request, locals, platform }) {

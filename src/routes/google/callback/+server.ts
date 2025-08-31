@@ -63,14 +63,6 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	}
 
 	if (!user_id) {
-		
-			code,
-			state,
-			storedState,
-			codeVerifier,
-			res,
-			existingUsers
-		});
 		redirect(302, '/google');
 	}
 
