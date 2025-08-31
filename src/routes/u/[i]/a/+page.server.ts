@@ -1,9 +1,7 @@
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { create, get, qdrant, update_point } from '$lib/db';
+import { create, get, qdrant } from '$lib/db';
 import { s } from '$lib/util/s';
-import { cf } from '$lib/util/cf';
-import { PUBLIC_WORKER } from '$env/static/public';
 import type { Room } from '$lib/types';
 import { collection } from '$lib/constants';
 
@@ -33,7 +31,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 		redirect(302, `/r/${room_id}`);
 	}
 
-	const c: string = await (await platform.env.r.fetch('http' + PUBLIC_WORKER + '/i' + (await s()))).text();
+	const c: string = await (await platform.env.r.fetch('http://./i' + (await s()))).text();
 
 	const room_payload: Pick<Room, 'x' | 's' | 'c' | 'd' | '_' | 'r' | 'u'> = {
 		s: 'r',

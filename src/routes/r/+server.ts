@@ -12,7 +12,7 @@ export async function POST({ request, locals, platform }) {
 
 	const { t, a } = await request.json();
 	if (!t) error(400, 'missing room tag in request body');
-	const fetchResult = await platform?.env.r.fetch('http' + PUBLIC_WORKER + '/i' + (await s()));
+	const fetchResult = await platform?.env.r.fetch('http://./i' + (await s()));
 	console.log('Fetch result:', fetchResult);
 	const c: string = await fetchResult.text();
 

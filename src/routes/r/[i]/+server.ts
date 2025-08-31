@@ -2,8 +2,6 @@ import { create } from '$lib/db';
 import type { RequestHandler } from './$types';
 import type { ChatMessage, DBChatMessage, SendChatMessage, Message } from '$lib/types';
 import { s } from '$lib/util/s';
-import { cf } from '$lib/util/cf';
-import { PUBLIC_WORKER } from '$env/static/public';
 import { upload_image } from '$lib/integrations/r2_storage';
 import { process_message } from '$lib/util/chat/process_message';
 type R2Bucket = unknown;
@@ -101,7 +99,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		m.i
 	);
 
-	platform.env.r.fetch('http' + PUBLIC_WORKER + '/send/' + m.c + (await s()), {
+	platform.env.r.fetch('http://./send/' + m.c + (await s()), {
 		method: 'POST',
 		body: JSON.stringify({
 			i,
