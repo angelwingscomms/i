@@ -3,6 +3,7 @@
 
 	interface ModalProps {
 		open?: boolean;
+		fixed?: boolean;
 		children: any;
 		title?: string;
 		showClose?: boolean;
@@ -15,6 +16,7 @@
 	let { 
 		open = $bindable(false), 
 		children,
+		fixed,
 		title = '',
 		showClose = true,
 		closeOnBackdrop = true,
@@ -24,6 +26,7 @@
 	}: ModalProps = $props();
 
 	function handleClose() {
+		if (fixed) return
 		open = false;
 	}
 

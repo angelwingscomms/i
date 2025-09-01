@@ -21,7 +21,6 @@
 		a?: number;
 		m: ChatMessage[];
 		s: string;
-		c: string;
 		t: string;
 		_: Room['_'];
 	} = $props();
@@ -31,7 +30,7 @@
 	let message_text = $state('');
 	let messages = $state([])
 	let messagesEl: HTMLElement | null = null;
-	let liveOpen = $state(false);
+	let liveOpen = $state(true);
 
 	let meeting: RealtimeKitClient | undefined = $state(undefined);
 
