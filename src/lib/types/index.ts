@@ -3,6 +3,7 @@ import type { PushSubscription } from 'web-push';
 export interface LocalsUser {
 	t: string;
 	i: string;
+	p?: string;
 }
 
 export interface User {
@@ -19,6 +20,8 @@ export interface User {
 	p?: string; // password hash
 	i?: string; // user id
 	dc?: number; // date created
+	on?: number; // last online timestamp (ms)
+	ic?: boolean; // currently in call
 	c: Record<string, string>;
 	x?: string[]; // contact links
 	r?: string[]; // saved room ids
@@ -75,9 +78,11 @@ export interface Room {
 	a?: string; // about room
 	u?: string; // creator user id
 	r?: string; // receiver id
-	c: string; // cloudflare id
+	c: string; // cloudflare id (text chat WS id)
+	o?: string; // optional: realtime/AV room id
 	d?: number; // creation timestamp
 	m?: number; // number of members
+	q?: string; // realtime meeting id
 	l?: number; // time of last message
 	x?: string[]; // member user ids
 	_?: ',' | '.' | '-' | '|'; // room type: - is anon, `|` is one one one (dm), `,` is private, `.` is open

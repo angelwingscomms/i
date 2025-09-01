@@ -71,6 +71,9 @@
 		"wrangler": "^4.28.1"
 	},
 	"dependencies": {
+		"@cloudflare/realtimekit": "^1.1.7",
+		"@cloudflare/realtimekit-recording-sdk": "^0.0.1",
+		"@cloudflare/realtimekit-ui": "^1.0.5",
 		"@fortawesome/free-regular-svg-icons": "^7.0.0",
 		"@google/genai": "^1.13.0",
 		"@google/generative-ai": "^0.24.1",

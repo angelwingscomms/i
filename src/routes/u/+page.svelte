@@ -25,6 +25,8 @@
 
 	let sort_open = $state(false);
 	let sort_ref = $state<HTMLDivElement | null>(null);
+	let onlineOnly = $state(false);
+	let inCallOnly = $state(false);
 
 	function apply_sort(s: 'match' | 'age') {
 		sort = s;
@@ -126,7 +128,7 @@
 		if (minAge > maxAge) return; // TODO notify
 		loading = true;
 		try {
-			const payload: Record<string, unknown> = { g: gender ?? null, n: minAge, x: maxAge };
+			const payload: Record<string, unknown> = { g: gender ?? null, n: minAge, x: maxAge, on: onlineOnly, ic: inCallOnly };
 			if (mode === 'custom' || !user) {
 				if (description?.trim()) payload.d = description.trim();
 			}

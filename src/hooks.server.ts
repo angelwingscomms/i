@@ -62,6 +62,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	// Refresh long-lived cookie and also mint a new short-lived JWT for next requests
 	setSessionTokenCookie(event, sessionToken);
+
+		// Presence: update user.on every ~60s
+		try {
+			const now = Date.now();
+			const last = (event.locals.session as any)?.l ?? 0;
+			if (now - last > 60_000) {
+				const { set } = await import('$lib/db');
+				await set(event.locals.user!.i, { on: now });
+			}
+		} catch {}
+
 	try {
 		const sessionId = sessionToken.split('.')[0] || '';
 		const jwt = await createSessionJWT({ id: sessionId, createdAt: new Date(session.c) });

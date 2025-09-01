@@ -1,5 +1,14 @@
 <script lang="ts">
-	type Result = { i: string; t: string; a?: number; g?: number; av?: string; score?: number };
+	type Result = {
+		i: string;
+		t: string;
+		a?: number;
+		g?: number;
+		av?: string;
+		score?: number;
+		on?: number;
+		ic?: boolean;
+	};
 
 	let { u } = $props<{ u: Result }>();
 

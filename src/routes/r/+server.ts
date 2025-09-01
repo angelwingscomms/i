@@ -2,30 +2,47 @@ import { error, text } from '@sveltejs/kit';
 import { create } from '$lib/db';
 import type { Room } from '$lib/types';
 import { s } from '$lib/util/s.js';
+import { realtime } from '$lib/util/realtime.js';
 
 export async function POST({ request, locals, platform }) {
 	if (!locals.user || !locals.user.i) {
 		throw error(401, 'Unauthorized');
 	}
 
-	const { t, a } = await request.json();
+	let { t, a } = await request.json();
 	if (!t) error(400, 'missing room tag in request body');
-	const fetchResult = await platform?.env.r.fetch('http://./i' + (await s()));
-	console.log('Fetch result:', fetchResult);
-	const c: string = await fetchResult.text();
+	// const c = await (await platform?.env.r.fetch('http://./i' + (await s()))).text();
+	t = t.trim();
+
+	let create_meeting_res;
+
+	try {
+		create_meeting_res = await realtime.post('meetings', { title: t });
+		if (!create_meeting_res || create_meeting_res?.statusText === 'OK')
+			throw new Error('Failed to create meeting');
+		console.log('create_meeting_res', create_meeting_res);
+	} catch (err) {
+		console.error('create cloudflare realtime meeting error: ', err);
+		throw error(500, 'Failed to create room due to an internal server error. Please try again.');
+	}
 
 	const room_payload: Omit<Room, 'i'> & { s: 'r' } = {
 		s: 'r', // tenant ID for rooms
 		t: t.trim(), // room tag
 		a: a.trim(), // about room
-		c,
+		c: '',
+		q: create_meeting_res.data.data.id,
 		_: '.', // public room
 		u: locals.user.i, // creator user id
 		d: Date.now() // creation timestamp
 	};
 
+	let room_id = undefined;
+
+	console.log('room_payload', room_payload)
+
 	try {
-		const id = await create(
+		room_id = await create(
 			room_payload,
 			JSON.stringify({
 				room_name_or_tag: room_payload.t,
@@ -34,10 +51,10 @@ export async function POST({ request, locals, platform }) {
 				room_type: 'public'
 			})
 		);
-
-		return text(id);
 	} catch (e) {
 		console.error('Error creating room in database:', e);
 		throw error(500, 'Failed to create room due to an internal server error. Please try again.');
 	}
+
+	return text(room_id);
 }

@@ -10,8 +10,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			g: genderFilter,
 			n: ageMin,
 			x: ageMax,
-			d: description
-		} = (await request.json()) as { g: number; n: number; x: number; d: string };
+			d: description,
+			on: onlineOnly,
+			ic: inCallOnly
+		} = (await request.json()) as { g: number; n: number; x: number; d: string; on?: boolean; ic?: boolean };
 
 		// Check if it's an empty search query (i.e., no specific filters applied)
 		const is_empty_query = !description && ageMin === 18 && ageMax === 99 && genderFilter === null;
@@ -25,9 +27,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			}
 			const recentUsers = await search_by_payload<User>(
 				filter.must,
-				['t', 'a', 'g', 'av', 'dc'], // Include dc for potential display/sorting on client
-				20, // Limit to 20 most recent users
-				{ key: 'dc', direction: 'desc' } // Sort by date created descending
+				['t', 'a', 'g', 'av', 'dc', 'on', 'ic'],
+				20,
+				{ key: 'dc', direction: 'desc' }
 			);
 			return json(recentUsers);
 		}
@@ -62,6 +64,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 						gte: ageMin,
 						lte: ageMax
 					}
+
+			// Presence filters
+			if (onlineOnly) {
+				(filter.must as Record<string, unknown>).on = { range: { gte: Date.now() - 60_000 } };
+			}
+			if (inCallOnly) {
+				(filter.must as Record<string, unknown>).ic = true;
+			}
+
 				}
 			}
 		};
@@ -80,7 +91,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		const searchResults = await search_by_vector<User>({
 			vector,
 			filter,
-			with_payload: ['t', 'a', 'g', 'av']
+			with_payload: ['t', 'a', 'g', 'av', 'on', 'ic']
 		});
 
 		return json(searchResults);

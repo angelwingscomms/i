@@ -1,6 +1,6 @@
-# sv
+# i
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+SvelteKit app with AI features (Gemini), Qdrant search, and tools like a YouTube video summarizer.
 
 ## Creating a project
 
@@ -39,3 +39,32 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+## Environment variables
+
+Place secrets in the appropriate SvelteKit env locations.
+
+- GEMINI: Google API key for Gemini (used across features)
+- YOUTUBE_API_KEY: YouTube Data API v3 key (used by /api/youtube/search)
+
+For local dev, you can add to .env (not committed):
+
+```
+GEMINI=your_gemini_api_key
+YOUTUBE_API_KEY=your_youtube_api_key
+```
+
+SvelteKit reading conventions in this project:
+- Server routes use $env/static/private or $env/dynamic/private
+- We use $env/dynamic/private.env.YOUTUBE_API_KEY in /api/youtube/search
+
+## New: YouTube Video Summarizer Tool
+
+- UI: /tools/youtube-video-summarize-tool
+- API:
+  - POST /api/youtube/search
+  - POST /api/youtube/transcript
+  - POST /api/youtube/summarize
+  - POST /api/youtube/chat
+
+Add your keys and visit the page to use the tool.

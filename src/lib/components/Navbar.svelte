@@ -197,6 +197,19 @@
 						</svg>
 						Rooms
 					</a>
+					<a
+						href="/tools/youtube-video-summarize-tool"
+						class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
+						style="color: var(--color-theme-4); border: 1px solid var(--color-theme-4);"
+						aria-label="YouTube Summarizer"
+					>
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+							<path
+								d="M10,16.5L16,12L10,7.5V16.5M21.8,8S21.2,5.7,20,4.7C18.5,3.5,16.8,3.5,16.1,3.4C12.4,3,12,3,12,3H12C12,3,11.6,3,7.9,3.4C7.2,3.5,5.5,3.5,4,4.7C2.8,5.7,2.2,8,2.2,8S2,10.4,2,12.7V13.2C2,15.5,2.2,17.9,2.2,17.9S2.8,20.2,4,21.2C5.5,22.4,7.7,22.3,8.5,22.5C10.1,22.6,12,22.7,12,22.7C12,22.7,15.6,22.7,16.1,22.5C16.9,22.3,19.1,22.4,20.6,21.2C21.8,20.2,22.4,17.9,22.4,17.9S22.6,15.5,22.6,13.2V12.7C22.6,10.4,22.4,8,22.4,8H21.8Z"
+							/>
+						</svg>
+						YouTube Summarizer
+					</a>
 				</div>
 
 				{#if user}

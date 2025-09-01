@@ -4,32 +4,26 @@ import { qdrant } from '$lib/db';
 import { format_filter } from '$lib/db';
 import { collection } from '$lib/constants';
 
-export const load: PageServerLoad = async ({ locals }) => {
-	// if (!locals.user) {
-	// 	redirect(302, '/google');
-	// }
+export const load: PageServerLoad = async ({ locals, parent, url }) => {
+	const { seo: parent_seo } = await parent();
 
-	// delete all users except the whitelist
-	// try {
-	// const filter = {
-	// 	must: [{ key: 's', match: { value: 'u' } }],
-	// 	must_not: [
-	// 		{
-	// 			should: [
-	// 				{ key: 't', match: { value: 'joyahayo07' } },
-	// 				{ key: 't', match: { value: 'Zia' } },
-	// 				{ key: 't', match: { value: 'eniolaw84' } }
-	// 			]
-	// 		}
-	// 	]
-	// };
-
-	// 	await qdrant.delete(collection, { wait: true, filter });
-	// } catch (e) {
-	// 	console.error('delete users error', e);
-	// }
+	const page_title = "Angel Wings Communications - Homepage";
+	const page_description = "Welcome to Angel Wings Communications, connecting people seamlessly through innovative communication solutions.";
+	const page_image = `${url.origin}/homepage-og-image.jpg`; // Specific image for homepage
 
 	return {
-		user: locals.user
+		user: locals.user,
+		seo: {
+			...parent_seo, // Spread parent SEO to inherit defaults
+			title: page_title,
+			description: page_description,
+			og_title: page_title,
+			og_description: page_description,
+			og_image: page_image,
+			og_url: url.href,
+			twitter_title: page_title,
+			twitter_description: page_description,
+			twitter_image: page_image,
+		},
 	};
 };

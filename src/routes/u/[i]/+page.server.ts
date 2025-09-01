@@ -24,7 +24,9 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 			age: user.a,
 			gender: user.g,
 			description: user.d,
-			socialLinks: user.x || []
+			socialLinks: user.x || [],
+			on: (user as any).on,
+			ic: (user as any).ic
 		};
 
 		// If current user is logged in, compare descriptions

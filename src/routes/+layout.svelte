@@ -9,6 +9,9 @@
 	import { onMount } from 'svelte';
 	import { ensurePushSubscribed } from '$lib/util/notifications';
 	import { animate, createTimeline, stagger, utils } from 'animejs';
+	import { defineCustomElements } from '@cloudflare/realtimekit-ui/loader';
+
+	defineCustomElements()
 
 	let { children, data } = $props();
 	let is_sidebar_open = $state(false);
@@ -86,6 +89,24 @@
 
 <svelte:head>
 	<meta name="theme-color" content="#000000" />
+	{#if data.seo}
+		<title>{data.seo.title}</title>
+		<meta name="description" content={data.seo.description} />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={data.seo.og_url} />
+		<meta property="og:title" content={data.seo.og_title} />
+		<meta property="og:description" content={data.seo.og_description} />
+		<meta property="og:image" content={data.seo.og_image} />
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content={data.seo.twitter_card} />
+		<meta property="twitter:url" content={data.seo.og_url} />
+		<meta property="twitter:title" content={data.seo.twitter_title} />
+		<meta property="twitter:description" content={data.seo.twitter_description} />
+		<meta property="twitter:image" content={data.seo.twitter_image} />
+	{/if}
 </svelte:head>
 
 <div class="fixed inset-0 -z-10 min-h-screen overflow-hidden">

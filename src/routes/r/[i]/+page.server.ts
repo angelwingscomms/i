@@ -3,22 +3,25 @@ import { error } from '@sveltejs/kit';
 import { get, search_by_payload } from '$lib/db';
 import type { ChatMessage, DBChatMessage, Room } from '$lib/types';
 import { s } from '$lib/util/s';
+import {v7} from 'uuid'
+import { realtime } from '$lib/util/realtime';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!params.i) error(400, 'missing room id');
 
 	let anon = 0;
 
-	const r = await get<Pick<Room, 't' | 'c' | '_' | 'u' | 'r' | 'x'>>(params.i, [
+	const r = await get<Pick<Room, 't' | 'c' | '_' | 'u' | 'r' | 'x' | 'q'>>(params.i, [
 		't',
-		'c',
+		// 'c',
 		'o',
 		'_',
 		'u',
+		'q',
 		'r',
 		'x'
 	]);
-	
+
 	if (!r) error(404, 'room not found');
 
 	// Check if user has access to this room
@@ -33,7 +36,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			}
 			case '|': {
 				if (!r.x?.includes(locals.user.i)) error(403, 'you do not belong to this room');
-				r.t = (await get<string>(r.x?.find(x => x !== locals.user?.i) || '', 't')) || '';
+				r.t = (await get<string>(r.x?.find((x) => x !== locals.user?.i) || '', 't')) || '';
 				break;
 			}
 			case '-': {
@@ -51,13 +54,22 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		}
 	}
 
+	console.log('room', r);
+
+	const realtime_res = await realtime.post('meetings/' + r.q + '/participants', {
+		name: locals.user?.t || 'Anonymous',
+		// picture: locals.user?.p || '',
+		preset_name: 'group_call_participant',
+		custom_participant_id: locals.user?.i || v7()
+	});
+
 	return {
 		m: (await Promise.all(
 			(
 				await search_by_payload<DBChatMessage & { i: string; f?: string[] }>(
 					{ s: 'm', r: params.i },
 					['m', 'u', 'd', 'f'],
-					72,
+					72
 					// {
 					// 	key: 'd',
 					// 	direction: 'desc'
@@ -70,8 +82,9 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		)) satisfies ChatMessage[],
 		s: await s(),
 		t: r.t,
-		c: r.c,
+		c: '', // r.c,
 		_: r._,
-		a: anon
+		a: anon,
+		q: realtime_res.data.data.token
 	};
 };

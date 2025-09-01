@@ -9,6 +9,7 @@
 	import { animate, stagger } from 'animejs';
 	import FileWidget from './FileWidget.svelte';
 	import ChatInput from './ChatInput.svelte';
+	import LiveModal from './LiveModal.svelte';
 	let {
 		m,
 		s,
@@ -16,15 +17,20 @@
 		t,
 		_,
 		n,
-		a
-	}: { n?: number; a?: number; m: ChatMessage[]; s: string; c: string; t: string; _: Room['_'] } =
+		a,
+		authToken
+	}: { authToken: string, n?: number; a?: number; m: ChatMessage[]; s: string; c: string; t: string; _: Room['_'] } =
 		$props();
+	const roomId: string = page.url.pathname.split('/')[2] || '';
 
 	let chat_messages: ChatMessage[] = $state(m);
 	let message_text = $state('');
 	let websocket: WebSocket | undefined;
 	let messagesEl: HTMLElement | null = null;
-	let messageInputEl: HTMLInputElement | null = null;
+	let liveOpen = $state(false);
+	let forceAudio = $state(false);
+
+	import { onMount } from 'svelte';
 
 	// Define onsend function for ChatInput
 	const onsend = (data: FormData | string, files?: string[]) => {
@@ -70,50 +76,50 @@
 		return () => mo.disconnect();
 	}
 
-	$effect(() => {
-		console.log('c', c);
-		websocket = new WebSocket('ws' + PUBLIC_WORKER + '/' + c + s);
+	// $effect(() => {
+	// 	console.log('c', c);
+	// 	websocket = new WebSocket('ws' + PUBLIC_WORKER + '/' + c + s);
 
-		websocket.onopen = () => {
-			console.log('WebSocket connection opened.');
-		};
+	// 	websocket.onopen = () => {
+	// 		console.log('WebSocket connection opened.');
+	// 	};
 
-		// Listen for messages
-		websocket.onmessage = (event) => {
-			console.log('event', event);
-			try {
-				const message: ChatMessage = JSON.parse(event.data);
-				let sent_message = chat_messages.find((m) => m.i === message.i);
-				if (sent_message) {
-					sent_message.saved = true;
-				} else {
-					chat_messages = [...chat_messages, { ...message, saved: true }];
-				}
-			} catch (e) {
-				console.error('Error parsing message data', e);
-				toast.error('Error receiving message.');
-			}
-		};
+	// 	// Listen for messages
+	// 	websocket.onmessage = (event) => {
+	// 		console.log('event', event);
+	// 		try {
+	// 			const message: ChatMessage = JSON.parse(event.data);
+	// 			let sent_message = chat_messages.find((m) => m.i === message.i);
+	// 			if (sent_message) {
+	// 				sent_message.saved = true;
+	// 			} else {
+	// 				chat_messages = [...chat_messages, { ...message, saved: true }];
+	// 			}
+	// 		} catch (e) {
+	// 			console.error('Error parsing message data', e);
+	// 			toast.error('Error receiving message.');
+	// 		}
+	// 	};
 
-		// Connection closed
-		websocket.addEventListener('close', (event) => {
-			console.log('WebSocket connection closed.', event.code, event.reason);
-			toast.error('Chat connection lost.');
-		});
+	// 	// Connection closed
+	// 	websocket.addEventListener('close', (event) => {
+	// 		console.log('WebSocket connection closed.', event.code, event.reason);
+	// 		toast.error('Chat connection lost.');
+	// 	});
 
-		// Connection error
-		websocket.addEventListener('error', (err) => {
-			console.error('WebSocket error:', err);
-			toast.error('WebSocket error.');
-		});
+	// 	// Connection error
+	// 	websocket.addEventListener('error', (err) => {
+	// 		console.error('WebSocket error:', err);
+	// 		toast.error('WebSocket error.');
+	// 	});
 
-		return () => {
-			if (websocket) {
-				websocket.close();
-				websocket = undefined; // Clear the socket reference
-			}
-		};
-	});
+	// 	return () => {
+	// 		if (websocket) {
+	// 			websocket.close();
+	// 			websocket = undefined; // Clear the socket reference
+	// 		}
+	// 	};
+	// });
 
 	$effect(() => {
 		if (messagesEl) {
@@ -130,7 +136,6 @@
 		// Extract data from FormData for optimistic UI update
 		const messageText = formData.get('m') as string;
 		const messageId = formData.get('i') as string;
-		const timestamp = parseInt(formData.get('d') as string);
 
 		// Get files from FormData for optimistic UI
 		const files = formData.getAll('files').filter((f) => f instanceof File) as File[];
@@ -204,7 +209,14 @@
 		{:else}
 			<h1 class="chat-title">{t}</h1>
 		{/if}
-		<!-- {#if children}{@render children()}{/if} -->
+		<div class="row gap">
+			<button
+				class="btn"
+				aria-haspopup="dialog"
+				aria-controls="live-modal"
+				onclick={() => (liveOpen = true)}>LIVE</button
+			>
+		</div>
 	</div>
 	<div class="messages-container" bind:this={messagesEl}>
 		{#each [...chat_messages] as msg, i (msg.i)}
@@ -276,6 +288,8 @@
 		<ChatInput {onsend} placeholder="Type a message..." {c} {t} />
 	</div>
 </div>
+
+<LiveModal {authToken} bind:open={liveOpen} />
 
 <style>
 	.message-files {
