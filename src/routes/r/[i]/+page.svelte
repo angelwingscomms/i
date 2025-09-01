@@ -4,4 +4,4 @@
 	const { data }: PageProps = $props();
 </script>
 
-<Chat authToken={data.q} s={data.s} m={data.m} t={data.t} c={data.c} _={data._} a={data.a} />
+<Chat authToken={data.q} s={data.s} m={data.m} t={data.t} _={data._} a={data.a} />

@@ -82,7 +82,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		)) satisfies ChatMessage[],
 		s: await s(),
 		t: r.t,
-		c: '', // r.c,
+		// c: '', // r.c,
 		_: r._,
 		a: anon,
 		q: realtime_res.data.data.token

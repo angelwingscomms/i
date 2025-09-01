@@ -111,7 +111,7 @@
 			return true;
 		});
 
-		selectedFiles = [...selectedFiles, ...validFiles];
+		selectedFiles = validFiles.slice(0, 1); // Only accept the first valid file
 
 		// Reset file input
 		if (fileInputEl) {
@@ -119,31 +119,26 @@
 		}
 	}
 
-
-
 	function removeFile(index: number) {
 		selectedFiles = selectedFiles.filter((_, i) => i !== index);
 	}
 
 	function send() {
 		const messageText = text.trim();
-		if (!messageText && selectedFiles.length === 0) return;
 
-		// Create FormData with message data and files
-		const formData = new FormData();
-		formData.append('m', messageText); // message text
-		formData.append('c', c); // cloudflare ID
-		formData.append('t', t); // receiver tag
-		formData.append('d', Date.now().toString()); // timestamp
-		formData.append('i', v7()); // unique message ID
+		if (selectedFiles.length === 1 && messageText === '') {
+			onsend(selectedFiles[0]); // Send the File object directly
+		} else if (messageText !== '' && selectedFiles.length === 0) {
+			onsend(messageText);
+		} else if (selectedFiles.length === 1 && messageText !== '') {
+			// If both file and text are present, prioritize the file as per the prompt's implication
+			// Or, if the user wants to send both, they can send the text and then the file separately.
+			// For now, I'll send the file and clear the text.
+			onsend(selectedFiles[0]); // Send the File object directly
+		} else {
+			return; // No text and no file, or multiple files (which shouldn't happen with the new logic)
+		}
 
-		// Add files if present
-		selectedFiles.forEach((file) => {
-			formData.append('files', file);
-		});
-
-		// Call onsend with FormData - parent component will handle the HTTP request
-		onsend(formData);
 		text = '';
 		selectedFiles = [];
 	}
@@ -201,12 +196,10 @@
 	{/if}
 
 	<!-- File Upload Button -->
-	<!--
 	<input
 		type="file"
 		bind:this={fileInputEl}
 		onchange={handleFileSelect}
-		multiple
 		accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.txt,.csv,.zip"
 		style="display: none;"
 	/>
@@ -218,7 +211,6 @@
 	>
 		<i class="fas fa-paperclip"></i>
 	</button>
-	-->
 
 	<!-- AI Suggest Button -->
 	<!--

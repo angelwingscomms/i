@@ -3,8 +3,6 @@
 	import { v7 } from 'uuid';
 	import { fade } from 'svelte/transition';
 	import type { SendChatMessage, ChatMessage, Room } from '$lib/types'; // Import the new type
-	import { toast } from '$lib/util/toast';
-	import { PUBLIC_WORKER } from '$env/static/public';
 	import axios from 'axios';
 	import { animate, stagger } from 'animejs';
 	import FileWidget from './FileWidget.svelte';
@@ -12,33 +10,40 @@
 	import LiveModal from './LiveModal.svelte';
 	let {
 		m,
-		s,
-		c,
 		t,
 		_,
 		n,
 		a,
 		authToken
-	}: { authToken: string, n?: number; a?: number; m: ChatMessage[]; s: string; c: string; t: string; _: Room['_'] } =
-		$props();
+	}: {
+		authToken: string;
+		n?: number;
+		a?: number;
+		m: ChatMessage[];
+		s: string;
+		c: string;
+		t: string;
+		_: Room['_'];
+	} = $props();
 	const roomId: string = page.url.pathname.split('/')[2] || '';
 
 	let chat_messages: ChatMessage[] = $state(m);
 	let message_text = $state('');
-	let websocket: WebSocket | undefined;
+	let messages = $state([])
 	let messagesEl: HTMLElement | null = null;
 	let liveOpen = $state(false);
-	let forceAudio = $state(false);
+
+	let meeting: RealtimeKitClient | undefined = $state(undefined);
 
 	import { onMount } from 'svelte';
+	import RealtimeKitClient from '@cloudflare/realtimekit';
 
 	// Define onsend function for ChatInput
-	const onsend = (data: FormData | string, files?: string[]) => {
-		if (data instanceof FormData) {
-			send_message_with_formdata(data);
+	const onsend = (data: File | string, files?: string[]) => {
+		if (data instanceof File) {
+			meeting?.chat.sendFileMessage(data);
 		} else {
-			// Handle legacy string format for backward compatibility
-			send_message(data, files);
+			meeting?.chat.sendTextMessage(data);
 		}
 	};
 
@@ -132,6 +137,28 @@
 		// ChatInput handles its own focus
 	});
 
+	$effect(() => {
+		JSON.stringify(meeting?.chat.messages);
+		console.log('msgs', meeting?.chat.messages)
+	})
+
+	onMount(async () => {
+		meeting = await RealtimeKitClient.init({
+			authToken,
+			defaults: {
+				audio: false,
+				video: false
+			}
+		});
+
+		meeting.joinRoom();
+
+		meeting.chat.on('chatUpdate', ({ message, ms }) => {
+			console.log(`Received message ${message}`);
+			messages = [...messages, message];
+		});
+	});
+
 	function send_message_with_formdata(formData: FormData) {
 		// Extract data from FormData for optimistic UI update
 		const messageText = formData.get('m') as string;
@@ -175,7 +202,6 @@
 
 		let m: SendChatMessage = {
 			m: messageText,
-			c,
 			t,
 			d: Date.now(),
 			i: v7(),
@@ -219,77 +245,80 @@
 		</div>
 	</div>
 	<div class="messages-container" bind:this={messagesEl}>
-		{#each [...chat_messages] as msg, i (msg.i)}
-			{#if _}
-				<a
-					class="chat_item"
-					in:fade={{ duration: 150, delay: 0 }}
-					out:fade={{ duration: 150 }}
-					href={page.url.pathname.split('/').slice(0, -1).join('/') + '/' + msg.i}
-					data-msg-id={msg.i}
-					style={`align-items:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
-				>
-					<div
-						class="chat_meta"
-						style={`justify-content:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
+		{#if meeting?.chat.messages}
+			{#each messages as msg, i (msg.id)}
+			{msg.message}
+				{#if _}
+					<a
+						class="chat_item"
+						in:fade={{ duration: 150, delay: 0 }}
+						out:fade={{ duration: 150 }}
+						href={page.url.pathname.split('/').slice(0, -1).join('/') + '/' + msg.i}
+						data-msg-id={msg.id}
+						style={`align-items:${msg.userId === page.data.user?.i ? 'flex-end' : 'flex-start'}`}
 					>
-						{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x && _ !== '|' && _ !== '-'}
-							<div class="chat_username">{msg.x}</div>
-						{/if}
-					</div>
+						<div
+							class="chat_meta"
+							style={`justify-content:${msg.userId === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
+						>
+							{#if msg.displayName && msg.displayName !== page.data.user?.t && chat_messages[i - 1]?.displayName !== msg.displayName && _ !== '|' && _ !== '-'}
+								<div class="chat_username">{msg.displayName}</div>
+							{/if}
+						</div>
+						<div
+							class={`chat_bubble ${msg.displayName === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.displayName ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
+							style={`max-width: 90%; ${msg.displayName === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
+						>
+							<span class="message-text">{msg.m}</span>
+							{#if msg.link}
+								<div class="message-files">
+									<!-- {#each msg.f as fileUrl} -->
+									<FileWidget url={msg.link} />
+									<!-- {/each} -->
+								</div>
+							{/if}
+						</div>
+					</a>
+				{:else}
 					<div
-						class={`chat_bubble ${msg.x === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.x ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
-						style={`max-width: 90%; ${msg.x === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
+						class="chat_item"
+						in:fade={{ duration: 150, delay: 0 }}
+						out:fade={{ duration: 150 }}
+						data-msg-id={msg.i}
+						style={`align-items:${msg.displayName === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
 					>
-						<span class="message-text">{msg.m}</span>
-						{#if msg.f && msg.f.length > 0}
-							<div class="message-files">
-								{#each msg.f as fileUrl}
-									<FileWidget url={fileUrl} />
-								{/each}
-							</div>
-						{/if}
+						<div
+							class="chat_meta"
+							style={`justify-content:${msg.displayName === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
+						>
+							{#if msg.displayName && msg.displayName !== page.data.user?.t && chat_messages[i - 1]?.displayName !== msg.displayName && _ !== '|' && _ !== '-'}
+								<div class="chat_username">{msg.displayName}</div>
+							{/if}
+						</div>
+						<div
+							class={`chat_bubble ${msg.displayName === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.displayName ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
+							style={`max-width: 90%; ${msg.displayName === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
+						>
+							<span class="message-text">{msg.message}</span>
+							{#if msg.f && msg.f.length > 0}
+								<div class="message-files">
+									{#each msg.f as fileUrl}
+										<FileWidget url={fileUrl} />
+									{/each}
+								</div>
+							{/if}
+						</div>
 					</div>
-				</a>
-			{:else}
-				<div
-					class="chat_item"
-					in:fade={{ duration: 150, delay: 0 }}
-					out:fade={{ duration: 150 }}
-					data-msg-id={msg.i}
-					style={`align-items:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
-				>
-					<div
-						class="chat_meta"
-						style={`justify-content:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
-					>
-						{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x && _ !== '|' && _ !== '-'}
-							<div class="chat_username">{msg.x}</div>
-						{/if}
-					</div>
-					<div
-						class={`chat_bubble ${msg.x === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.x ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
-						style={`max-width: 90%; ${msg.x === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
-					>
-						<span class="message-text">{msg.m}</span>
-						{#if msg.f && msg.f.length > 0}
-							<div class="message-files">
-								{#each msg.f as fileUrl}
-									<FileWidget url={fileUrl} />
-								{/each}
-							</div>
-						{/if}
-					</div>
-				</div>
-			{/if}
-		{/each}
+				{/if}
+			{/each}
+		{/if}
 	</div>
 	<div class="input-area">
-		<ChatInput {onsend} placeholder="Type a message..." {c} {t} />
+		<ChatInput {onsend} placeholder="Type a message..." {t} />
 	</div>
 </div>
 
-<LiveModal {authToken} bind:open={liveOpen} />
+<LiveModal {meeting} bind:open={liveOpen} />
 
 <style>
 	.message-files {
