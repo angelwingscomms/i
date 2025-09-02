@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createBubbler } from 'svelte/legacy';
 	import { fade } from 'svelte/transition';
 
 	interface ModalProps {
@@ -42,15 +43,14 @@
 		class="modal-backdrop"
 		role="dialog"
 		tabindex="-1"
-		on:click={() => closeOnBackdrop && handleClose()}
-		on:keydown={handleKeydown}
+		onclick={() => closeOnBackdrop && handleClose()}
+		onkeydown={handleKeydown}
 		in:fade={{ duration: 200 }}
 		out:fade={{ duration: 150 }}
 	>
 		<div 
 			class="modal"
 			style="width: {width}; height: {height};"
-			on:click|stopPropagation
 			in:fade={{ duration: 200, delay: 50 }}
 			out:fade={{ duration: 150 }}
 		>
@@ -62,7 +62,7 @@
 					{#if showClose}
 						<button 
 							class="modal-close"
-							on:click={handleClose}
+							onclick={handleClose}
 							aria-label="Close modal"
 						>
 							×

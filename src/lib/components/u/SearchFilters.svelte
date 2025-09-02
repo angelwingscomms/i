@@ -79,7 +79,7 @@
 					bind:sort_open
 					bind:sort_ref
 					on:sort={(e) => onSort(e.detail)}
-					on:click_outside={onClickOutside}
+					onclick_outside={onClickOutside}
 				/>
 				<button class="btn-primary btn-md" onclick={search} disabled={loading}
 					>{loading ? 'searching…' : 'search'}</button

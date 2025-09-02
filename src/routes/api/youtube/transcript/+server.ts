@@ -4,7 +4,7 @@ import axios from 'axios';
 
 interface Body { id: string }
 
-export function parseTimedTextToPlainText(xml: string): string {
+function parseTimedTextToPlainText(xml: string): string {
   // Very lightweight parse: strip tags and decode basic entities
   // This avoids bringing in an XML parser dependency.
   const lines = xml

@@ -66,12 +66,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					}
 
 			// Presence filters
-			if (onlineOnly) {
-				(filter.must as Record<string, unknown>).on = { range: { gte: Date.now() - 60_000 } };
-			}
-			if (inCallOnly) {
-				(filter.must as Record<string, unknown>).ic = true;
-			}
+			// if (onlineOnly) {
+			// 	(filter.must as Record<string, unknown>).on = { range: { gte: Date.now() - 60_000 } };
+			// }
+			// if (inCallOnly) {
+			// 	(filter.must as Record<string, unknown>).ic = true;
+			// }
 
 				}
 			}
