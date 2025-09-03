@@ -1,47 +1,11 @@
 // import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { get, qdrant, set } from '$lib/db';
-import { collection } from '$lib/constants';
-import { redirect } from '@sveltejs/kit';
+import { set } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
 
 export const load: PageServerLoad = async ({ locals, parent, url }) => {
-	if (!locals.user) redirect(302, '/f');
-	let r;
-	const res = await qdrant.query(collection, {
-		filter: {
-			must: { key: 'f', match: { value: 1 } }
-		},
-		query:
-			(await get<{ vector: number[] }>(locals.user.i, false, true))?.vector ||
-			new Array(3072).fill(0),
-		with_payload: true,
-		limit: 1
-	});
-	console.log('search res', res.points);
-	if (res.points.length && res.points[0].payload?.r) {
-		set(res.points[0].id as string, { f: '' });
-		set(locals.user.i, { f: '' });
-		r = (
-			await realtime.post('meetings/' + res.points[0].payload?.r + '/participants', {
-				name: locals.user?.t || 'Anonymous',
-				// picture: locals.user?.p || '',
-				preset_name: 'group_call_participant',
-				custom_participant_id: locals.user?.i
-			})
-		).data.data.token;
-	} else {
-		const create_meeting_res = (await realtime.post('meetings', { title: 't' })).data.data.id;
-		await set(locals.user.i, { r: create_meeting_res });
-		await set(locals.user.i, { f: 1 });
-		r = (
-			await realtime.post('meetings/' + create_meeting_res + '/participants', {
-				name: locals.user?.t || 'Anonymous',
-				// picture: locals.user?.p || '',
-				preset_name: 'group_call_participant',
-				custom_participant_id: locals.user?.i
-			})
-		).data.data.token;
+	if (locals.user?.i) {
+		await set(locals.user.i, { r: (await realtime.post('meetings', { title: 't' })).data.data.id });
 	}
 	const { seo: parent_seo } = await parent();
 
@@ -52,7 +16,6 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 
 	return {
 		user: locals.user,
-		r,
 		seo: {
 			...parent_seo, // Spread parent SEO to inherit defaults
 			title: page_title,
