@@ -1,12 +1,7 @@
 // import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { set } from '$lib/db';
-import { realtime } from '$lib/util/realtime';
 
 export const load: PageServerLoad = async ({ locals, parent, url }) => {
-	if (locals.user?.i) {
-		await set(locals.user.i, { r: (await realtime.post('meetings', { title: 't' })).data.data.id });
-	}
 	const { seo: parent_seo } = await parent();
 
 	const page_title = 'Angel Wings Communications - Homepage';

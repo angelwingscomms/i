@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex-1">
-	<div class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">Age Range</div>
+	<div class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">age range search</div>
 	<div class="space-y-4">
 		<div class="flex items-center gap-4">
 			<span class="text-sm font-medium" style="color: var(--color-theme-1);">Min: {minAge}</span>

@@ -1,15 +1,19 @@
 <script lang="ts">
-	let { gender = $bindable() }: { gender: number | undefined } = $props();
+	let { gender = $bindable(0), head = 'Searching for', onchange }: { gender?: number | undefined, head?: string, onchange?: (gender: number | undefined) => void } = $props();
+
+	$effect(() => {
+		if (onchange) onchange(gender)
+	})
 </script>
 
 <div class="flex-1">
 	<fieldset>
 		<legend class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);"
-			>Gender Preference</legend
+			>{head}</legend
 		>
 		<div class="flex gap-2">
 			<label class="flex-1">
-				<input type="radio" class="sr-only" bind:group={gender} value={undefined} />
+				<input type="radio" class="sr-only" bind:group={gender} value={-1} />
 				<div
 					class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ==
 					null
@@ -19,7 +23,7 @@
 						? `background: transparent; border: 2px solid var(--color-theme-6);`
 						: 'background: transparent; border: 2px solid var(--color-theme-6);'}
 				>
-					Any
+					All
 				</div>
 			</label>
 			<label class="flex-1">

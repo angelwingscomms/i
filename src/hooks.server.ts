@@ -41,9 +41,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 			if (vs.id) {
 				const session = await getDb<MinimalSession>(vs.id);
 				if (session) {
-					const user = await getDb<User>(session.u);
+					const user = await getDb<User>(session.u, ['t', 'av', 'd', 'a', 'g', 'l', 'n', 'r', 'rt']);
 					if (user) {
-						event.locals.user = { i: session.u, t: user.t };
+						event.locals.user = { i: session.u, t: user.t, d: user.d, av: user.av };
 						event.locals.session = { ...session, i: vs.id } as unknown as App.Locals['session'];
 						return resolve(event);
 					}
@@ -81,7 +81,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		console.debug('createSessionJWT error (fallback)', e);
 	}
 
-	event.locals.user = { i: session.u, t: user.t };
+	event.locals.user = { i: session.u, t: user.t, d: user.d, av: user.av };
 	event.locals.session = session as unknown as App.Locals['session'];
 	return resolve(event);
 };

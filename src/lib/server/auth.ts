@@ -95,7 +95,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 
 		// Get user
 		// console.log(`[validateSessionToken] - Attempting to get user by ID: ${session.u}.`);
-		const user = await get<User>(session.u);
+		const user = await get<User>(session.u, ['t', 'av', 'd', 'a', 'g', 'l', 'n', 'r', 'rt']);
 		// console.log('session--', session)
 		// console.log(`[validateSessionToken] - User retrieved: ${user ? 'found' : 'not found'}.`);
 		if (!user) {

@@ -1,23 +1,17 @@
 <script lang="ts">
 	import axios from 'axios';
+	import type { DescriptionInputProps } from '$lib/types';
 
 	let {
-		value = '',
+		value = $bindable(''),
 		editable = true,
 		endpoint = '/api/update-description',
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
 		rows = 6,
 		onUpdate,
-		onInput
-	}: {
-		value?: string;
-		editable?: boolean;
-		endpoint?: string;
-		placeholder?: string;
-		rows?: number;
-		onUpdate?: (detail: any) => void;
-		onInput?: (detail: any) => void;
-	} = $props();
+		onInput,
+		label
+	}: DescriptionInputProps = $props();
 
 	// Constants
 	const maxLength = 500;
@@ -148,6 +142,9 @@
 </script>
 
 <div class="description-container">
+	{#if label}
+		<label for="description" class="label-text">{label}</label>
+	{/if}
 	<textarea
 		id="description"
 		name="description"
@@ -174,7 +171,7 @@
 								d="M12 2C13.1 2 14 2.9 14 4V12C14 13.1 13.1 14 12 14C10.9 14 10 13.1 10 12V4C10 2.9 10.9 2 12 2M19 12C19 16.2 15.8 19.2 12 19.2S5 16.2 5 12H7C7 15.1 9.5 17.6 12 17.6S17 15.1 17 12H19Z"
 							/>
 						</svg>
-						Start Recording
+						Voice typing
 					</button>
 				{:else if isRecording}
 					<button type="button" class="voice-btn-recording rounded-full" onclick={stopRecording}>

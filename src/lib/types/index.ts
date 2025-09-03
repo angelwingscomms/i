@@ -3,7 +3,8 @@ import type { PushSubscription } from 'web-push';
 export interface LocalsUser {
 	t: string;
 	i: string;
-	p?: string;
+	d?: string;
+	av?: string;
 }
 
 export interface User {
@@ -22,8 +23,10 @@ export interface User {
 	dc?: number; // date created
 	on?: number; // last online timestamp (ms)
 	ic?: boolean; // currently in call
+	r?: string; // realtime meeting id
 	c: Record<string, string>;
-	x?: string[]; // contact links
+	x?: string[]; // contact links,
+	rt?: string; // realtime room token
 	isAdmin?: boolean; // whether user is an admin
 	ps?: PushSubscription[]; // push subscription
 }
@@ -95,4 +98,15 @@ export interface Preset {
 	a?: string; // about
 	d?: number; // created at timestamp
 	x?: string[]; // image urls for preset (using x to avoid 'i' collision)
+}
+
+export interface DescriptionInputProps {
+	value?: string;
+	editable?: boolean;
+	endpoint?: string;
+	placeholder?: string;
+	rows?: number;
+	onUpdate?: (detail: any) => void;
+	onInput?: (detail: any) => void;
+	label?: string;
 }

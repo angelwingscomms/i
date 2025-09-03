@@ -19,6 +19,5 @@
 		meeting.join();
 	});
 </script>
-t
 
 <LiveModal {meeting} bind:open={liveOpen} />

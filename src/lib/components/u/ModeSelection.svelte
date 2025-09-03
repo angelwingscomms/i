@@ -11,7 +11,7 @@
 		>
 		<button
 			class={mode === 'custom' ? 'choice-btn-active' : 'choice-btn-inactive'}
-			onclick={() => (mode = 'custom')}>custom search query</button
+			onclick={() => (mode = 'custom')}>custom search</button
 		>
 	</div>
 {/if}

@@ -89,7 +89,7 @@
 </script>
 
 <svelte:head>
-	<title>Search Items - AngelWings</title>
+	<title>Search Items - Apexlinks</title>
 	<meta name="description" content="Find products and services in your community" />
 </svelte:head>
 

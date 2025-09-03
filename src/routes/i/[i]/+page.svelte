@@ -80,7 +80,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
-	<title>{item.t || 'Item Details'} - AngelWings</title>
+	<title>{item.t || 'Item Details'} - Apexlinks</title>
 	<meta name="description" content={item.d || 'View item details and connect with the owner'} />
 </svelte:head>
 

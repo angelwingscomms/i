@@ -191,8 +191,8 @@
 						type="number"
 						bind:value={age}
 						class="input-rect w-full border-0"
-						min="18"
-						max="120"
+						min="0"
+						max="144"
 						required
 					/>
 				</div>

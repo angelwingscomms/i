@@ -8,7 +8,8 @@ export const GET: RequestHandler = async ({ locals }) => {
 	if (!locals.user) error(401, 'Unauthorized');
 	const res = await qdrant.query(collection, {
 		filter: {
-			must: { key: 'f', match: { value: 1 } }
+			must: { key: 'f', match: { value: 1 } },
+			must_not: { has_id: [locals.user.i] }
 		},
 		query:
 			(await get<{ vector: number[] }>(locals.user.i, false, true))?.vector ||
@@ -31,11 +32,10 @@ export const GET: RequestHandler = async ({ locals }) => {
 			).data.data.token
 		);
 	} else {
-		await set(locals.user.i, { r: create_meeting_res });
 		await set(locals.user.i, { f: 1 });
 		return text(
 			(
-				await realtime.post('meetings/' + create_meeting_res + '/participants', {
+				await realtime.post('meetings/' + (await get(locals.user?.i, 'r')) + '/participants', {
 					name: locals.user?.t || 'Anonymous',
 					// picture: locals.user?.p || '',
 					preset_name: 'group_call_participant',
