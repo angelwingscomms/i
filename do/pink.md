@@ -11,6 +11,7 @@ allows user to search presets using SearchPresets modal
 if using preset, and `match preset images` is true, make sure the user uploads exactly the number of images to match preset.i.length
 
 example:
+
 ```TypeScript
 import {
   GoogleGenAI,
@@ -83,20 +84,20 @@ main();
 
 new db type 'preset', tenant-id: 'p'
 Preset {
-  n: //name,
-  p: //prompt
-  a: //about
-  d: //date number
-  i: //string[]
-} 
+n: //name,
+p: //prompt
+a: //about
+d: //date number
+i: //string[]
+}
 
 SearchPresets components
-  allows user to search presets
-  has create button
-  (just like /r)
+allows user to search presets
+has create button
+(just like /r)
 
 /pink/presets
-  just renders SearchPresets
+just renders SearchPresets
 
 /pink/preset/:i
 detail page for a preset

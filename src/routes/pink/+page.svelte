@@ -80,7 +80,13 @@
 
 	<div class="card gap" in:fade>
 		<label class="label" for="prompt">prompt</label>
-		<textarea id="prompt" class="input-underline" rows="3" bind:value={prompt} placeholder="Describe what to generate..."></textarea>
+		<textarea
+			id="prompt"
+			class="input-underline"
+			rows="3"
+			bind:value={prompt}
+			placeholder="Describe what to generate..."
+		></textarea>
 
 		<div class="row gap v-center">
 			<button class="btn" onclick={() => (show_presets = true)}>search presets</button>
@@ -98,14 +104,22 @@
 		</div>
 
 		<label class="label" for="file-upload">images</label>
-		<input id="file-upload" type="file" multiple accept="image/*" onchange={(e) => (files = (e.target as HTMLInputElement).files)} />
+		<input
+			id="file-upload"
+			type="file"
+			multiple
+			accept="image/*"
+			onchange={(e) => (files = (e.target as HTMLInputElement).files)}
+		/>
 
 		{#if selected_preset && match_images}
 			<p class="muted">Preset expects {selected_preset.x?.length ?? 0} image(s).</p>
 		{/if}
 
 		<div class="row gap">
-			<button class="btn-primary" onclick={generate} disabled={generating}>{generating ? 'generating…' : 'generate'}</button>
+			<button class="btn-primary" onclick={generate} disabled={generating}
+				>{generating ? 'generating…' : 'generate'}</button
+			>
 			{#if error}<span class="text-error">{error}</span>{/if}
 		</div>
 	</div>
@@ -114,9 +128,16 @@
 		<div class="card gap" in:fade>
 			<h2 class="subtitle">results</h2>
 			{#if generated_images.length}
-				<div class="grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px;">
+				<div
+					class="grid"
+					style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px;"
+				>
 					{#each generated_images as src, idx}
-						<img src={src} alt={`generated-${idx}`} style="width:100%; border-radius: 10px; border:1px solid var(--color-theme-6);" />
+						<img
+							{src}
+							alt={`generated-${idx}`}
+							style="width:100%; border-radius: 10px; border:1px solid var(--color-theme-6);"
+						/>
 					{/each}
 				</div>
 			{/if}
@@ -132,6 +153,9 @@
 {/if}
 
 <style>
-	.toggle { display:flex; align-items:center; gap: 8px; }
+	.toggle {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
 </style>
-

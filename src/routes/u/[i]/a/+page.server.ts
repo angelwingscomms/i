@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 				{ key: 's', match: { value: 'r' } },
 				{ key: '_', match: { value: '-' } },
 				{ key: 'u', match: { value: locals.user.i } },
-				{ key: 'r', match: { value: params.i } },
+				{ key: 'r', match: { value: params.i } }
 			]
 		},
 		with_payload: true,
@@ -39,7 +39,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 		d: Date.now(),
 		_: '-',
 		u: locals.user.i,
-		r: params.i,
+		r: params.i
 	};
 
 	const r = await create(

@@ -12,8 +12,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		x?: string[];
 	};
 	if (!n?.trim()) throw error(400, 'missing name');
-	const payload: Preset = { s: 'p', i: '', n: n.trim(), ...(a?.trim() ? { a: a.trim() } : {}), ...(p?.trim() ? { p: p.trim() } : {}), ...(x?.length ? { x } : {}), d: Date.now() } as any;
+	const payload: Preset = {
+		s: 'p',
+		i: '',
+		n: n.trim(),
+		...(a?.trim() ? { a: a.trim() } : {}),
+		...(p?.trim() ? { p: p.trim() } : {}),
+		...(x?.length ? { x } : {}),
+		d: Date.now()
+	} as any;
 	const i = await create(payload, [n, a, p].filter(Boolean).join(' '));
 	return json({ i });
 };
-

@@ -24,7 +24,6 @@ export interface User {
 	ic?: boolean; // currently in call
 	c: Record<string, string>;
 	x?: string[]; // contact links
-	r?: string[]; // saved room ids
 	isAdmin?: boolean; // whether user is an admin
 	ps?: PushSubscription[]; // push subscription
 }
@@ -49,8 +48,7 @@ export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>;
 
 // Client-to-server payload when sending a chat message. "a" is an optional
 // flag used by anon rooms; it is not part of the persisted Message payload.
-export type SendChatMessage =
-  Pick<Message, 'saved' | 'm' | 'i' | 'd' | 't' | 'f'> & { a?: string };
+export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'd' | 't' | 'f'> & { a?: string };
 
 export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x' | 'f'>;
 

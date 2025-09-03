@@ -7,8 +7,9 @@ import { collection } from '$lib/constants';
 export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const { seo: parent_seo } = await parent();
 
-	const page_title = "Angel Wings Communications - Homepage";
-	const page_description = "Welcome to Angel Wings Communications, connecting people seamlessly through innovative communication solutions.";
+	const page_title = 'Angel Wings Communications - Homepage';
+	const page_description =
+		'Welcome to Angel Wings Communications, connecting people seamlessly through innovative communication solutions.';
 	const page_image = `${url.origin}/homepage-og-image.jpg`; // Specific image for homepage
 
 	return {
@@ -23,7 +24,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 			og_url: url.href,
 			twitter_title: page_title,
 			twitter_description: page_description,
-			twitter_image: page_image,
-		},
+			twitter_image: page_image
+		}
 	};
 };

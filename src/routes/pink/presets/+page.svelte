@@ -10,4 +10,3 @@
 		<SearchPresets onSelect={on_select} />
 	</div>
 </div>
-

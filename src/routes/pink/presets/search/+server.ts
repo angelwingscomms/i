@@ -28,4 +28,3 @@ export const POST: RequestHandler = async ({ request }) => {
 	);
 	return json(results);
 };
-

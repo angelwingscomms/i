@@ -146,9 +146,7 @@ export async function sendPushToUser(userId: string, title: string, body: string
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ t: title, m: body, k: tag })
 		});
-	} catch (e) {
-		
-	}
+	} catch (e) {}
 }
 
 function urlBase64ToUint8Array(base64String: string) {

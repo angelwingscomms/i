@@ -28,7 +28,7 @@
 
 	let chat_messages: ChatMessage[] = $state(m);
 	let message_text = $state('');
-	let messages = $state([])
+	let messages = $state([]);
 	let messagesEl: HTMLElement | null = null;
 	let liveOpen = $state(true);
 
@@ -138,8 +138,8 @@
 
 	$effect(() => {
 		JSON.stringify(meeting?.chat.messages);
-		console.log('msgs', meeting?.chat.messages)
-	})
+		console.log('msgs', meeting?.chat.messages);
+	});
 
 	onMount(async () => {
 		meeting = await RealtimeKitClient.init({
@@ -246,7 +246,7 @@
 	<div class="messages-container" bind:this={messagesEl}>
 		{#if meeting?.chat.messages}
 			{#each messages as msg, i (msg.id)}
-			{msg.message}
+				{msg.message}
 				{#if _}
 					<a
 						class="chat_item"

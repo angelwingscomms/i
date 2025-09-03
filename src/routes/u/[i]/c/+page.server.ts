@@ -49,7 +49,7 @@ export const load: PageServerLoad = async ({ locals, params, platform }) => {
 			room_type: `direct message`
 		})
 	);
-	
+
 	// Redirect to the newly created room
 	redirect(302, `/r/${r}`);
 };

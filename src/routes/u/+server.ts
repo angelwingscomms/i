@@ -13,7 +13,14 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			d: description,
 			on: onlineOnly,
 			ic: inCallOnly
-		} = (await request.json()) as { g: number; n: number; x: number; d: string; on?: boolean; ic?: boolean };
+		} = (await request.json()) as {
+			g: number;
+			n: number;
+			x: number;
+			d: string;
+			on?: boolean;
+			ic?: boolean;
+		};
 
 		// Check if it's an empty search query (i.e., no specific filters applied)
 		const is_empty_query = !description && ageMin === 18 && ageMax === 99 && genderFilter === null;
@@ -65,14 +72,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 						lte: ageMax
 					}
 
-			// Presence filters
-			// if (onlineOnly) {
-			// 	(filter.must as Record<string, unknown>).on = { range: { gte: Date.now() - 60_000 } };
-			// }
-			// if (inCallOnly) {
-			// 	(filter.must as Record<string, unknown>).ic = true;
-			// }
-
+					// Presence filters
+					// if (onlineOnly) {
+					// 	(filter.must as Record<string, unknown>).on = { range: { gte: Date.now() - 60_000 } };
+					// }
+					// if (inCallOnly) {
+					// 	(filter.must as Record<string, unknown>).ic = true;
+					// }
 				}
 			}
 		};

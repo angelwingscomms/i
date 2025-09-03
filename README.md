@@ -55,6 +55,7 @@ YOUTUBE_API_KEY=your_youtube_api_key
 ```
 
 SvelteKit reading conventions in this project:
+
 - Server routes use $env/static/private or $env/dynamic/private
 - We use $env/dynamic/private.env.YOUTUBE_API_KEY in /api/youtube/search
 

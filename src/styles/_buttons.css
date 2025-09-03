@@ -146,3 +146,37 @@
 	height: 40px; /* Adjust as needed */
 	padding: 0; /* Remove padding */
 }
+
+/* Hero CTA Button */
+@utility btn-hero-cta {
+	@apply relative overflow-hidden rounded-full font-bold transition-all;
+	padding: 1.5rem 3rem; /* px-12 py-6 */
+	font-size: 1.5rem; /* text-2xl */
+	background: transparent;
+	border: 2px solid var(--color-theme-1);
+	color: var(--color-theme-1);
+}
+
+@media (max-width: 640px) {
+	/* sm breakpoint */
+	.btn-hero-cta {
+		padding: 1rem 2rem; /* sm:px-8 sm:py-4 */
+		font-size: 1.125rem; /* sm:text-lg */
+	}
+}
+
+@utility btn-hero-cta-hover-overlay {
+	@apply absolute inset-0 bg-white opacity-0 transition-opacity;
+}
+
+@utility btn-hero-cta-content {
+	@apply relative flex items-center gap-3;
+}
+
+@utility btn-icon-only {
+	@apply px-6 py-6;
+}
+
+.btn-icon-only .btn-hero-cta-content {
+	@apply gap-0;
+}

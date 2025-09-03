@@ -19,12 +19,18 @@
 	{#if p.x?.length}
 		<div class="card">
 			<h3 class="subtitle">images</h3>
-			<div class="grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px;">
+			<div
+				class="grid"
+				style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px;"
+			>
 				{#each p.x as src, idx}
-					<img src={src} alt={`preset-${idx}`} style="width:100%; border-radius: 10px; border:1px solid var(--color-theme-6);" />
+					<img
+						{src}
+						alt={`preset-${idx}`}
+						style="width:100%; border-radius: 10px; border:1px solid var(--color-theme-6);"
+					/>
 				{/each}
 			</div>
 		</div>
 	{/if}
 </div>
-

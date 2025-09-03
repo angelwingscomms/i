@@ -18,7 +18,7 @@ export const POST: RequestHandler = async ({ params, locals, platform }) => {
 		'_',
 		'u',
 		'r',
-    'q',
+		'q',
 		'x',
 		'o'
 	]);
@@ -47,15 +47,12 @@ export const POST: RequestHandler = async ({ params, locals, platform }) => {
 
 	// Try to delegate to the bound Cloudflare service (preferred):
 	try {
-		const response = await realtime.post(
-			'meetings/' + r.q + '/participants',
-			{
-				name: locals.user.t || 'Anonymous',
-				picture: locals.user.p || '',
-				preset_name: 'group_call_host',
-				custom_participant_id: locals.user.i
-			}
-		);
+		const response = await realtime.post('meetings/' + r.q + '/participants', {
+			name: locals.user.t || 'Anonymous',
+			picture: locals.user.p || '',
+			preset_name: 'group_call_host',
+			custom_participant_id: locals.user.i
+		});
 
 		if (!response?.ok) throw new Error('Failed to get token');
 		const data = await response.json();

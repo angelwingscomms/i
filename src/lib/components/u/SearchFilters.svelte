@@ -34,7 +34,6 @@
 		onClickOutside: () => void;
 	} = $props();
 
-
 	let onlineOnly = $state(false);
 	let inCallOnly = $state(false);
 
@@ -65,11 +64,14 @@
 				<AgeRange bind:minAge bind:maxAge />
 			{/if}
 
-				<div class="row gap-4 items-center">
-					<label class="inline-flex items-center gap-2"><input type="checkbox" bind:checked={onlineOnly} /> online only</label>
-					<label class="inline-flex items-center gap-2"><input type="checkbox" bind:checked={inCallOnly} /> in call</label>
-				</div>
-
+			<div class="row items-center gap-4">
+				<label class="inline-flex items-center gap-2"
+					><input type="checkbox" bind:checked={onlineOnly} /> online only</label
+				>
+				<label class="inline-flex items-center gap-2"
+					><input type="checkbox" bind:checked={inCallOnly} /> in call</label
+				>
+			</div>
 
 			<ModeSelection bind:mode />
 

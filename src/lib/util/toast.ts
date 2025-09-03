@@ -30,8 +30,6 @@ export function addToast(
 
 	toasts.update((currentToasts) => [...currentToasts, newToast]);
 
-	
-
 	// Automatically remove the toast after its duration
 	setTimeout(() => {
 		removeToast(id);

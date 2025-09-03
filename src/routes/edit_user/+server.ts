@@ -145,7 +145,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			message: 'Profile updated successfully'
 		});
 	} catch (err) {
-		
 		return json({ error: 'Failed to update profile' }, { status: 500 });
 	}
 };

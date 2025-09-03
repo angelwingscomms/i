@@ -14,8 +14,8 @@
 		height?: string;
 	}
 
-	let { 
-		open = $bindable(false), 
+	let {
+		open = $bindable(false),
 		children,
 		fixed,
 		title = '',
@@ -27,7 +27,7 @@
 	}: ModalProps = $props();
 
 	function handleClose() {
-		if (fixed) return
+		if (fixed) return;
 		open = false;
 	}
 
@@ -48,7 +48,7 @@
 		in:fade={{ duration: 200 }}
 		out:fade={{ duration: 150 }}
 	>
-		<div 
+		<div
 			class="modal"
 			style="width: {width}; height: {height};"
 			in:fade={{ duration: 200, delay: 50 }}
@@ -60,13 +60,7 @@
 						<h2 class="modal-title">{title}</h2>
 					{/if}
 					{#if showClose}
-						<button 
-							class="modal-close"
-							onclick={handleClose}
-							aria-label="Close modal"
-						>
-							×
-						</button>
+						<button class="modal-close" onclick={handleClose} aria-label="Close modal"> × </button>
 					{/if}
 				</div>
 			{/if}

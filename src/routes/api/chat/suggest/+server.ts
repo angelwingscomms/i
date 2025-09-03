@@ -20,13 +20,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	const genAI = new GoogleGenerativeAI(GEMINI);
-	const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+	const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
-	let prompt = "Suggest a short, concise, and natural-sounding reply for a chat conversation. ";
+	let prompt = 'Suggest a short, concise, and natural-sounding reply for a chat conversation. ';
 	if (last?.m) {
 		prompt += `The last message in the conversation was: "${last.m}"`;
 	} else {
-		prompt += "Start a new conversation.";
+		prompt += 'Start a new conversation.';
 	}
 
 	try {
@@ -35,7 +35,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		const text = response.text();
 		return json({ s: text });
 	} catch (e) {
-		console.error("Gemini API error:", e);
+		console.error('Gemini API error:', e);
 		const suggestion = last?.m ? `You could reply: "${last.m.slice(0, 64)}..."` : 'Say hello 👋';
 		return json({ s: suggestion });
 	}

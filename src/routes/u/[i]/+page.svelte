@@ -214,11 +214,16 @@
 							class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
 							style="background: var(--color-theme-2);"
 						>
-
-					<div class="mt-2 flex items-center justify-center gap-3">
-						<span class="badge" title="online status">{data.u?.on && Date.now() - (data.u.on as any) < 60_000 ? 'online' : 'offline'}</span>
-						<span class="badge" title="in call status">{(data.u as any)?.ic ? 'in call' : 'not in call'}</span>
-					</div>
+							<div class="mt-2 flex items-center justify-center gap-3">
+								<span class="badge" title="online status"
+									>{data.u?.on && Date.now() - (data.u.on as any) < 60_000
+										? 'online'
+										: 'offline'}</span
+								>
+								<span class="badge" title="in call status"
+									>{(data.u as any)?.ic ? 'in call' : 'not in call'}</span
+								>
+							</div>
 
 							{user.gender === 0 ? 'Male' : 'Female'}
 						</span>
@@ -324,15 +329,22 @@
 					</a>
 				</div>
 
-					<div class="mb-12 flex justify-center gap-4">
-						<a href="/u/{user.i}/c?call=audio" class="action-button rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl" style="background: var(--color-theme-3);">
-							Audio call
-						</a>
-						<a href="/u/{user.i}/c?call=video" class="action-button rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl" style="background: var(--color-theme-1);">
-							Video call
-						</a>
-					</div>
-
+				<div class="mb-12 flex justify-center gap-4">
+					<a
+						href="/u/{user.i}/c?call=audio"
+						class="action-button rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl"
+						style="background: var(--color-theme-3);"
+					>
+						Audio call
+					</a>
+					<a
+						href="/u/{user.i}/c?call=video"
+						class="action-button rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl"
+						style="background: var(--color-theme-1);"
+					>
+						Video call
+					</a>
+				</div>
 			{:else if is_own_profile}
 				<!-- Edit Profile Action -->
 				<div class="mb-12 flex justify-center">

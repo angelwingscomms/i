@@ -74,7 +74,8 @@
 			role="button"
 			tabindex="0"
 			onclick={() => (open = false)}
-			onkeydown={(e) => (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') && (open = false)}
+			onkeydown={(e) =>
+				(e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') && (open = false)}
 			in:fade
 		></div>
 	{/if}
@@ -139,7 +140,16 @@
 {/if}
 
 <style>
-	.modal_backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); }
-	.modal { position: fixed; left:50%; top:50%; transform: translate(-50%,-50%); width: min(720px, 92vw); }
+	.modal_backdrop {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.4);
+	}
+	.modal {
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: min(720px, 92vw);
+	}
 </style>
-

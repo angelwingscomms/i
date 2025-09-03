@@ -16,7 +16,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	const q = (body?.q as string) || '';
 	const limit = Math.min(Math.max(body?.l || 24, 1), 144);
 	const payload_filter: Record<string, unknown> = { s: 'r', _: '.' };
-	console.log('count', await count({s: 'r'}));
+	console.log('count', await count({ s: 'r' }));
 	// const payload_filter: Record<string, unknown> = { s: 'r', _: '.', ...(body?.f || {}) };
 
 	if (q.trim()) {
@@ -37,7 +37,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			['t', 'l', 'm'],
 			limit
 		);
-		
+
 		return json(results);
 	}
 };

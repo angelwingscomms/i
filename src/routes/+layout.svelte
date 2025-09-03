@@ -11,7 +11,7 @@
 	import { animate, createTimeline, stagger, utils } from 'animejs';
 	import { defineCustomElements } from '@cloudflare/realtimekit-ui/loader';
 
-	defineCustomElements()
+	defineCustomElements();
 
 	let { children, data } = $props();
 	let is_sidebar_open = $state(false);

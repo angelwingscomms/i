@@ -47,17 +47,56 @@
 </div>
 
 <style>
-	.page { max-width: 720px; margin: 0 auto; }
-	.pad { padding: 16px; }
-	.row { display: flex; gap: 8px; }
-	.space-between { justify-content: space-between; }
-	.v-center { align-items: center; }
-	.title { font-size: 22px; font-weight: 700; }
-	.list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
-	.item { padding: 10px 12px; border: 1px solid var(--color-theme-6); border-radius: 10px; background: transparent; }
-	.link { color: var(--link); text-decoration: none; font-weight: 600; }
-	.muted { color: var(--muted); padding: 8px 0; }
-	.btn { background: var(--btn); color: var(--btn-text); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; font-weight: 600; cursor: pointer; }
+	.page {
+		max-width: 720px;
+		margin: 0 auto;
+	}
+	.pad {
+		padding: 16px;
+	}
+	.row {
+		display: flex;
+		gap: 8px;
+	}
+	.space-between {
+		justify-content: space-between;
+	}
+	.v-center {
+		align-items: center;
+	}
+	.title {
+		font-size: 22px;
+		font-weight: 700;
+	}
+	.list {
+		list-style: none;
+		padding: 0;
+		margin: 12px 0 0;
+		display: grid;
+		gap: 8px;
+	}
+	.item {
+		padding: 10px 12px;
+		border: 1px solid var(--color-theme-6);
+		border-radius: 10px;
+		background: transparent;
+	}
+	.link {
+		color: var(--link);
+		text-decoration: none;
+		font-weight: 600;
+	}
+	.muted {
+		color: var(--muted);
+		padding: 8px 0;
+	}
+	.btn {
+		background: var(--btn);
+		color: var(--btn-text);
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		padding: 8px 12px;
+		font-weight: 600;
+		cursor: pointer;
+	}
 </style>
-
-

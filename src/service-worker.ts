@@ -28,7 +28,6 @@ self.addEventListener('push', (event: Event) => {
 		userTag = data.userTag || 'someone';
 		chatId = data.chatId || '';
 	} catch (e) {
-		
 		userTag = 'someone';
 	}
 

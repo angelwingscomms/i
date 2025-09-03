@@ -1,17 +1,15 @@
 import { error, text } from '@sveltejs/kit';
 import { create } from '$lib/db';
 import type { Room } from '$lib/types';
-import { s } from '$lib/util/s.js';
 import { realtime } from '$lib/util/realtime.js';
 
-export async function POST({ request, locals, platform }) {
+export async function POST({ request, locals }) {
 	if (!locals.user || !locals.user.i) {
 		throw error(401, 'Unauthorized');
 	}
 
 	let { t, a } = await request.json();
 	if (!t) error(400, 'missing room tag in request body');
-	// const c = await (await platform?.env.r.fetch('http://./i' + (await s()))).text();
 	t = t.trim();
 
 	let create_meeting_res;
@@ -39,7 +37,7 @@ export async function POST({ request, locals, platform }) {
 
 	let room_id = undefined;
 
-	console.log('room_payload', room_payload)
+	console.log('room_payload', room_payload);
 
 	try {
 		room_id = await create(

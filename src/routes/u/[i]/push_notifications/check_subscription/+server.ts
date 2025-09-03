@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ params }) => {
 		if (!(await exists(i))) return json({ error: 'user not found' }, { status: 404 });
 
 		// Check if user has any push subscription
-		const ps = (await get<User['ps']>(i, 'ps'));
+		const ps = await get<User['ps']>(i, 'ps');
 		const list = Array.isArray(ps) ? ps : ps ? [ps as any] : [];
 		const subscribed = list.length > 0;
 

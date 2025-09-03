@@ -9,4 +9,3 @@ export const load: PageServerLoad = async ({ params }) => {
 	if (!p || p.s !== 'p') error(404, 'preset not found');
 	return { p: { ...p, i: params.i } };
 };
-

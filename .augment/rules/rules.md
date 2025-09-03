@@ -3,6 +3,7 @@ ALWAYS CODE AS CONCISELY AS POSSIBLE
 For ALL styling, always use the design system defined in src/app.css. ALWAYS use tailwind ONLY. ALWAYS use custom utility classes defined in src/app.css. NEVER use tailwind utility classes directly on elements. ONLY create new custom utility classes if absolutely necessary. Always think about styling deeply, like you're Steve Jobs and Jony Ive. Like you have years of expert experience creating beautiful UI and design. Like you work at a high brow creative studio with high brow clients like Apple.
 
 Codebase conventions:
+
 - naming: always snake_case for vars/functions; db payload keys are 1-2 letters (e.g., s,t,u,i,a,g,d)
 - types: define in src/lib/types; prefer minimal, optional fields; export interfaces
 - ids: use uuid v7; i is the primary id everywhere
@@ -14,10 +15,12 @@ SvelteKit patterns:
 - endpoints: always use +server.ts API routes for client-server data flow
 
 UI:
+
 - toasts: use src/lib/util/toast.ts
 - avoid inline styles and style blocks; only use design system utilities
 
 Testing:
+
 - always write 100% coverage unit and e2e for new features; cover happy path + edge cases; keep tests minimal
 
 - for each task, extremely use as little code as possible to fittingly and satisfyingly complete the task. ALWAYS CODE AS CONCISELY AS POSSIBLE This rule does not apply to styling. go extreme for styling and subtle animejs effects. Always think like a pro designer at a renowned creative studio working for Apple, think like Jony Ive.
@@ -33,7 +36,7 @@ Testing:
 - auth: user in `locals.user { i, t }`; sessions via httpOnly cookie; refresh activity on requests
 - always include `s` field in db queries/filters; omit null/undefined/'' in filters
 - always validate input client-side and server-side; provide clear messages
-- embeddings: use `src/lib/util/embed.ts`; 
+- embeddings: use `src/lib/util/embed.ts`;
 - all constants in `src/lib/constants.ts`;
 - for editing points, `always use qdrant.setpayload`;
 

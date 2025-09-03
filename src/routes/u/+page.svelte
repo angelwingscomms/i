@@ -128,7 +128,13 @@
 		if (minAge > maxAge) return; // TODO notify
 		loading = true;
 		try {
-			const payload: Record<string, unknown> = { g: gender ?? null, n: minAge, x: maxAge, on: onlineOnly, ic: inCallOnly };
+			const payload: Record<string, unknown> = {
+				g: gender ?? null,
+				n: minAge,
+				x: maxAge,
+				on: onlineOnly,
+				ic: inCallOnly
+			};
 			if (mode === 'custom' || !user) {
 				if (description?.trim()) payload.d = description.trim();
 			}

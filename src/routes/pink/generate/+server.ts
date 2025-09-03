@@ -70,4 +70,3 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	return json({ images, text });
 };
-

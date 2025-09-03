@@ -214,7 +214,6 @@ export async function search_by_vector<T>({
 			score: (point as any).score
 		}));
 	} catch (error) {
-		
 		throw error;
 	}
 }

@@ -35,13 +35,21 @@
 				<a href="/r" class="sidebar-nav-link" onclick={close_sidebar}>search chatrooms</a>
 				<a href="/chats" class="sidebar-nav-link" onclick={close_sidebar}>chats</a>
 				<a href="/u" class="sidebar-nav-link" onclick={close_sidebar}>search users</a>
-				<a href="/tools/youtube-video-summarize-tool" class="sidebar-nav-link" onclick={close_sidebar}>youtube summarizer</a>
+				<a
+					href="/tools/youtube-video-summarize-tool"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>youtube summarizer</a
+				>
 				<a href="/settings" class="sidebar-nav-link" onclick={close_sidebar}>settings</a>
 				<a href="/edit_user" class="sidebar-nav-link" onclick={close_sidebar}>edit profile</a>
 				<a href="/u/{user.i}" class="sidebar-nav-link" onclick={close_sidebar}>{user.t}</a>
 				<a href="/logout" class="sidebar-nav-link text-error" onclick={close_sidebar}>logout</a>
 			{:else}
-				<a href="/tools/youtube-video-summarize-tool" class="sidebar-nav-link" onclick={close_sidebar}>youtube summarizer</a>
+				<a
+					href="/tools/youtube-video-summarize-tool"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>youtube summarizer</a
+				>
 				<a href="/login" class="sidebar-nav-link" onclick={close_sidebar}>login w username</a>
 				<a href="/google" class="sidebar-nav-link" onclick={close_sidebar}>login w Google</a>
 			{/if}

@@ -3,7 +3,7 @@ import { error } from '@sveltejs/kit';
 import { get, search_by_payload } from '$lib/db';
 import type { ChatMessage, DBChatMessage, Room } from '$lib/types';
 import { s } from '$lib/util/s';
-import {v7} from 'uuid'
+import { v7 } from 'uuid';
 import { realtime } from '$lib/util/realtime';
 
 export const load: PageServerLoad = async ({ params, locals }) => {

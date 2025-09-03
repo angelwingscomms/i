@@ -22,7 +22,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 		return json({ success: true, cleared: true });
 	}
 
-	const ps = (await get<User['ps']>(i, 'ps'));
+	const ps = await get<User['ps']>(i, 'ps');
 	const list = Array.isArray(ps) ? ps : ps ? [ps as any] : [];
 	const updated = list.filter((s) => s && s.endpoint !== endpoint);
 	await set(i, { ps: updated.length ? updated : null });

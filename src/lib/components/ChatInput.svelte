@@ -7,7 +7,7 @@
 		placeholder = 'Type a message…',
 		receiver = '',
 		c = '', // cloudflare ID
-		t = ''  // receiver tag
+		t = '' // receiver tag
 	} = $props();
 	let text = $state('');
 	let inputEl: HTMLInputElement | null = null;
@@ -227,11 +227,7 @@
 		{/if}
 	</button>
 	-->
-	<button
-		class="voice-button"
-		onclick={send}
-		disabled={isRecording || isTranscribing}
-	>
+	<button class="voice-button" onclick={send} disabled={isRecording || isTranscribing}>
 		<i class="fas fa-paper-plane"></i>
 	</button>
 </div>
