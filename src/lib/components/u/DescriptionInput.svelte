@@ -41,6 +41,6 @@
 	</div>
 {:else} -->
 	<div class="mt-3">
-		<DescriptionInput label="what kind of person are you?" bind:value={user_description} />
+		<DescriptionInput label="interests, beliefs, hobbies, stuff you like to talk about" bind:value={user_description} />
 	</div>
 <!-- {/if} -->

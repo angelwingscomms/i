@@ -149,7 +149,7 @@
 		id="description"
 		name="description"
 		bind:value
-		class="description-textarea border-0"
+		class="description-textarea border-1"
 		{placeholder}
 		{rows}
 		required
@@ -165,13 +165,13 @@
 		{#if editable}
 			<div class="voice-controls">
 				{#if !isRecording && !isTranscribing}
-					<button type="button" class="voice-btn rounded-full" onclick={startRecording}>
+					<button type="button" class="voice-btn rounded-full border-1 border-fuchsia-500" onclick={startRecording}>
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
 							<path
 								d="M12 2C13.1 2 14 2.9 14 4V12C14 13.1 13.1 14 12 14C10.9 14 10 13.1 10 12V4C10 2.9 10.9 2 12 2M19 12C19 16.2 15.8 19.2 12 19.2S5 16.2 5 12H7C7 15.1 9.5 17.6 12 17.6S17 15.1 17 12H19Z"
 							/>
 						</svg>
-						Voice typing
+						use voice typing
 					</button>
 				{:else if isRecording}
 					<button type="button" class="voice-btn-recording rounded-full" onclick={stopRecording}>

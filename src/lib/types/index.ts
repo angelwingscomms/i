@@ -5,6 +5,8 @@ export interface LocalsUser {
 	i: string;
 	d?: string;
 	av?: string;
+	a?: number;
+	g?: number;
 }
 
 export interface User {

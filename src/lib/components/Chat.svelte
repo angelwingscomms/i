@@ -235,11 +235,12 @@
 			<h1 class="chat-title">{t}</h1>
 		{/if}
 		<div class="row gap">
-			<button
+			<a
+				href="{page.url}/live"
 				class="btn"
 				aria-haspopup="dialog"
 				aria-controls="live-modal"
-				onclick={() => (liveOpen = true)}>LIVE</button
+				onclick={() => (liveOpen = true)}>LIVE</a
 			>
 		</div>
 	</div>
@@ -316,8 +317,6 @@
 		<ChatInput {onsend} placeholder="Type a message..." {t} />
 	</div>
 </div>
-
-<LiveModal {meeting} bind:open={liveOpen} />
 
 <style>
 	.message-files {

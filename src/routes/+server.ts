@@ -2,6 +2,7 @@ import { collection } from '$lib/constants';
 import { get, qdrant, set } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
 import { error, text } from '@sveltejs/kit';
+import { v7 } from 'uuid';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ locals, request }) => {
@@ -50,6 +51,54 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 	if (res.points.length && res.points[0].payload?.r) {
 		set(res.points[0].id as string, { f: '' });
 		set(locals.user.i, { f: '' });
+		const other_user = await get<{ a: number; g: number; vector: number[] }>(res.points[0].id as string, ['a', 'g'], true);
+		const self = await get<{ a: number; g: number; vector: number[] }>(locals.user.i, ['a', 'g'], true);
+		if (!other_user) return error(500, 'otf');
+		if (!self) return error(500, 'stf');
+		await qdrant.upsert(collection, {
+			points: [
+				{
+					id: v7(),
+					payload: {
+						s: 'j',
+						u: locals.user.i,
+						r: res.points[0].id as string,
+						d: Date.now(),
+						a: other_user.a,
+						g: other_user.g
+					},
+					vector: other_user.vector
+				},
+				{
+					id: v7(),
+					payload: {
+						s: 'j',
+						u: res.points[0].id,
+						r: locals.user.i,
+						d: Date.now(),
+						a: self.a,
+						g: self.g
+					},
+					vector: self.vector
+				}
+			],
+			wait: true
+		});
+		// Get current friends lists
+		const [self_friends, other_friends] = await Promise.all([
+			get<{f: string[]}>(locals.user.i, ['f']),
+			get<{f: string[]}>(res.points[0].id as string, ['f'])
+		]);
+
+		// Update friends lists with new connections
+		const updated_self_friends = [...(self_friends?.f || []), res.points[0].id];
+		const updated_other_friends = [...(other_friends?.f || []), locals.user.i];
+
+		// Set updated friends lists
+		await Promise.all([
+			set(locals.user.i, { f: updated_self_friends }),
+			set(res.points[0].id as string, { f: updated_other_friends })
+		]);
 		return text(
 			(
 				await realtime.post('meetings/' + res.points[0].payload?.r + '/participants', {

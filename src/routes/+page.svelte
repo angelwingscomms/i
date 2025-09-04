@@ -34,7 +34,6 @@
 		meeting.join();
 
 		meeting.participants.joined.on('participantJoined', (participant) => {
-			
 			joined = true;
 		});
 	};
