@@ -6,7 +6,10 @@ import { v7 } from 'uuid';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ locals, request }) => {
-	console.log('🔥 GET request started', { locals, request: { url: request.url, headers: Object.fromEntries(request.headers) } });
+	console.log('🔥 GET request started', {
+		locals,
+		request: { url: request.url, headers: Object.fromEntries(request.headers) }
+	});
 	try {
 		console.log('👤 Checking user authentication');
 		if (!locals.user) {
@@ -22,14 +25,17 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 			try {
 				console.log('📊 Fetching user vector from database');
 				const userData = await get<{ vector: number[] }>(locals.user.i, false, true);
-				console.log('📊 User data received:', { userId: locals.user.i, hasVector: !!userData?.vector });
+				console.log('📊 User data received:', {
+					userId: locals.user.i,
+					hasVector: !!userData?.vector
+				});
 				userVector = userData?.vector;
 			} catch (err) {
 				console.error('💥 CRITICAL: User vector fetch failed:', err);
 				console.log('⚠️ Using fallback zero vector');
 				userVector = new Array(3072).fill(0);
 			}
-			
+
 			console.log('🔍 Querying Qdrant with params:', {
 				collection,
 				userId: locals.user.i,
@@ -51,7 +57,10 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 			throw error(500, 'Failed to query database');
 		}
 
-		console.log('🔄 Processing query results:', { hasPoints: !!res.points.length, firstPoint: res.points[0] });
+		console.log('🔄 Processing query results:', {
+			hasPoints: !!res.points.length,
+			firstPoint: res.points[0]
+		});
 		if (res.points.length && res.points[0].payload?.r) {
 			console.log('🤝 Match found! Processing match data');
 			try {
@@ -71,7 +80,11 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 			try {
 				console.log('👥 Fetching both users data');
 				[other_user, self] = await Promise.all([
-					get<{ a: number; g: number; vector: number[] }>(res.points[0].id as string, ['a', 'g'], true),
+					get<{ a: number; g: number; vector: number[] }>(
+						res.points[0].id as string,
+						['a', 'g'],
+						true
+					),
 					get<{ a: number; g: number; vector: number[] }>(locals.user.i, ['a', 'g'], true)
 				]);
 				console.log('📊 Users data retrieved:', {
@@ -89,7 +102,7 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 				const point1Id = v7();
 				const point2Id = v7();
 				console.log('Generated UUIDs:', { point1Id, point2Id });
-				
+
 				await qdrant.upsert(collection, {
 					points: [
 						{
@@ -130,14 +143,14 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 			try {
 				console.log('👥 Fetching friends lists');
 				[self_friends, other_friends] = await Promise.all([
-					get<{f: string[]}>(locals.user.i, ['f']),
-					get<{f: string[]}>(res.points[0].id as string, ['f'])
+					get<{ f: string[] }>(locals.user.i, ['f']),
+					get<{ f: string[] }>(res.points[0].id as string, ['f'])
 				]);
 				console.log('Current friends lists:', { self_friends, other_friends });
 			} catch (err) {
 				console.error('💥 Failed to get friends lists:', err);
 				console.error('Error details:', err.stack);
-                throw error(500, 'Failed to fetch friends data');
+				throw error(500, 'Failed to fetch friends data');
 			}
 
 			const updated_self_friends = [...(self_friends?.f || []), res.points[0].id];
@@ -161,7 +174,7 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 				console.log('🎥 Creating realtime meeting');
 				const meetingEndpoint = 'meetings/' + res.points[0].payload?.r + '/participants';
 				console.log('Meeting endpoint:', meetingEndpoint);
-				
+
 				const realtimeResponse = await realtime.post(meetingEndpoint, {
 					name: locals.user?.t || 'Anonymous',
 					preset_name: 'group_call_participant',
@@ -180,16 +193,29 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 			try {
 				console.log('📝 Setting user f status to 1');
 				await set(locals.user.i, { f: 1 });
-				
-				const userRoom = await get(locals.user?.i, 'r');
-				console.log('User room:', userRoom);
-				
+
+				let userRoom = await get(locals.user?.i, 'r');
+				console.log('User room:', typeof userRoom, userRoom);
+				if (!userRoom) {
+					console.log('🏠 Creating new room for user');
+					const newRoom = (await realtime.post('meetings', { title: locals.user.t })).data.data.id;
+					await set(locals.user.i, { r: newRoom });
+					console.log('✅ Room created:', newRoom);
+					userRoom = newRoom;
+				}
+
 				console.log('🎥 Creating solo realtime meeting');
-				const realtimeResponse = await realtime.post('meetings/' + userRoom + '/participants', {
-					name: locals.user?.t || 'Anonymous',
-					preset_name: 'group_call_participant',
-					custom_participant_id: locals.user?.i
-				});
+				let realtimeResponse;
+				try {
+					realtimeResponse = await realtime.post('meetings/' + userRoom + '/participants', {
+						name: locals.user?.t || 'Anonymous',
+						preset_name: 'group_call_participant',
+						custom_participant_id: locals.user?.i
+					});
+				} catch (err) {
+					console.error('💥 Failed to create solo realtime meeting:', err);
+					throw error(500, 'Failed to create solo meeting');
+				}
 				console.log('✅ Solo meeting created:', realtimeResponse.data);
 				return text(realtimeResponse.data.data.token);
 			} catch (err) {
