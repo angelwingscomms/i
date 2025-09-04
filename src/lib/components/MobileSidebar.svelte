@@ -31,6 +31,7 @@
 			</svg>
 		</button>
 		<nav class="sidebar-nav">
+			<a href="/" class="sidebar-nav-link" onclick={close_sidebar}>Home</a>
 			{#if user}
 				<a href="/r" class="sidebar-nav-link" onclick={close_sidebar}>search chatrooms</a>
 				<a href="/chats" class="sidebar-nav-link" onclick={close_sidebar}>chats</a>
