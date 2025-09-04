@@ -23,6 +23,7 @@
 		let authToken;
 		
 		try {
+			console.log('searching', maxAge, minAge, gender);
 			const response = await axios.get('/', {
 				params: {
 					...(maxAge !== undefined && { x: maxAge }),
