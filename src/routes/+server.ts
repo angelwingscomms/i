@@ -5,7 +5,12 @@ import { error, text } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ locals, request }) => {
-	const deets: { n: number; x: number; g: number } = await request.json();
+	const url = new URL(request.url);
+	const deets = {
+		n: Number(url.searchParams.get('n')),
+		x: Number(url.searchParams.get('x')),
+		g: Number(url.searchParams.get('g'))
+	};
 	if (!locals.user) error(401, 'Unauthorized');
 	const must = [{ key: 'f', match: { value: 1 } }];
 

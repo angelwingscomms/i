@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { gender = $bindable(0), head = 'Searching for', onchange }: { gender?: number | undefined, head?: string, onchange?: (gender: number | undefined) => void } = $props();
+	let { gender = $bindable(1), head = 'Searching for', onchange }: { gender?: number | undefined, head?: string, onchange?: (gender: number | undefined) => void } = $props();
 
 	$effect(() => {
 		if (onchange) onchange(gender)

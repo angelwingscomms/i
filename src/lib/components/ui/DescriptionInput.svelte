@@ -143,7 +143,7 @@
 
 <div class="description-container">
 	{#if label}
-		<label for="description" class="label-text">{label}</label>
+		<label for="description" class="color-3">{label}</label>
 	{/if}
 	<textarea
 		id="description"

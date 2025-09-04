@@ -46,7 +46,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			return json({ error: 'Invalid age range' }, { status: 400 });
 		}
 
-		if (genderFilter !== null && genderFilter !== 0 && genderFilter !== 1) {
+		if (genderFilter != null && genderFilter !== 0 && genderFilter !== 1) {
 			return json({ error: 'Invalid gender filter' }, { status: 400 });
 		}
 
