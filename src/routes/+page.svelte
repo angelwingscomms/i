@@ -20,15 +20,25 @@
 
 	const search = async () => {
 		searching = true; // Set searching to true when search starts
+		let authToken;
+		
 		try {
-			const { data: authToken } = await axios.get('/', {
+			const response = await axios.get('/', {
 				params: {
 					...(maxAge !== undefined && { x: maxAge }),
 					...(minAge !== undefined && { n: minAge }),
 					...(gender !== undefined && { g: gender })
 				}
 			});
+			authToken = response.data;
 			console.log('authToken', authToken);
+		} catch (e) {
+			console.error('Failed to get auth token', e);
+			searching = false;
+			return;
+		}
+
+		try {
 			meeting = await RealtimeKitClient.init({
 				authToken,
 				defaults: {
@@ -51,7 +61,7 @@
 			// Handle cases where no participant joins after a timeout or error
 			// This might require a timeout mechanism or checking for meeting state changes
 		} catch (e) {
-			console.error('Failed to join meeting', e);
+			console.error('Failed to initialize or join meeting', e);
 			searching = false; // Reset searching on error
 		}
 	};
