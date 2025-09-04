@@ -52,7 +52,7 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 			if (url.searchParams.has('g')) {
 				deets.g = Number(url.searchParams.get('g'));
 			}
-			console.log('deets', deets)
+			console.debug('deets', deets)
 			const must = [{ key: 'f', match: { value: 1 } }];
 
 			if (deets.g != null) {
@@ -78,7 +78,7 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 				must.push({ key: 'a', range: age_range });
 			}
 
-			console.log('must', must)
+			console.debug('must', must)
 
 			res = await qdrant.query(collection, {
 				filter: {
