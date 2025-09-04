@@ -58,8 +58,8 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 		set(locals.user.i, { f: '' });
 		const other_user = await get<{ a: number; g: number; vector: number[] }>(res.points[0].id as string, ['a', 'g'], true);
 		const self = await get<{ a: number; g: number; vector: number[] }>(locals.user.i, ['a', 'g'], true);
-		if (!other_user) return error(500, 'otf');
-		if (!self) return error(500, 'stf');
+		// if (!other_user) return error(500, 'otf');
+		// if (!self) return error(500, 'stf');
 		await qdrant.upsert(collection, {
 			points: [
 				{
