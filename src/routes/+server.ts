@@ -5,7 +5,7 @@ import { error, text } from '@sveltejs/kit';
 import { v7 } from 'uuid';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ locals, request }) => {
+export const GET: RequestHandler = async ({ locals, request, url }) => {
 	console.log('🔥 GET request started', {
 		locals,
 		request: { url: request.url, headers: Object.fromEntries(request.headers) }
@@ -42,9 +42,46 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 				vectorLength: userVector?.length
 			});
 
+			const deets: { n?: number; x?: number; g?: number } = {};
+			if (url.searchParams.has('n')) {
+				deets.n = Number(url.searchParams.get('n'));
+			}
+			if (url.searchParams.has('x')) {
+				deets.x = Number(url.searchParams.get('x'));
+			}
+			if (url.searchParams.has('g')) {
+				deets.g = Number(url.searchParams.get('g'));
+			}
+			if (!locals.user) error(401, 'Unauthorized');
+			const must = [{ key: 'f', match: { value: 1 } }];
+
+			if (deets.g != null) {
+				if (deets.g !== 0 && deets.g !== 1) {
+					return error(400, 'Invalid gender');
+				}
+				must.push({ key: 'g', match: { value: deets.g } });
+			}
+			const age_range: { gte?: number; lte?: number } = {};
+			if (deets.x != null) {
+				if (isNaN(deets.x)) {
+					return error(400, 'Invalid max age');
+				}
+				age_range.lte = deets.x;
+			}
+			if (deets.n != null) {
+				if (isNaN(deets.n)) {
+					return error(400, 'Invalid min age');
+				}
+				age_range.gte = deets.n;
+			}
+			if (Object.keys(age_range).length) {
+				must.push({ key: 'a', range: age_range });
+			}
+
 			res = await qdrant.query(collection, {
 				filter: {
-					must_not: { has_id: [locals.user.i] }
+					must_not: { has_id: [locals.user.i] },
+					must
 				},
 				query: userVector,
 				with_payload: ['r'],
