@@ -5,11 +5,11 @@
 	import { toast } from '$lib/util/toast';
 
 	let {
-		mode,
+		// mode,
 		custom_description = $bindable(''),
 	}: {
-		mode: 'profile' | 'custom';
-		custom_description: string;
+		mode?: 'profile' | 'custom';
+		custom_description?: string;
 	} = $props();
 
 	let user_description = $derived(page.data.user?.d || '');
@@ -27,20 +27,20 @@
 					toast.error('Failed to update description.');
 					console.error(err);
 				});
-			}, 500); // 500ms throttle delay
+			}, 1440); // 500ms throttle delay
 		}
 	});
 </script>
 
-{#if !page.data.user || mode === 'custom'}
+<!-- {#if !page.data.user || mode === 'custom'}
 	<div class="mt-3">
 		<DescriptionInput
 			label="what kind of person are you searching for?"
 			bind:value={custom_description}
 		/>
 	</div>
-{:else}
+{:else} -->
 	<div class="mt-3">
 		<DescriptionInput label="what kind of person are you?" bind:value={user_description} />
 	</div>
-{/if}
+<!-- {/if} -->

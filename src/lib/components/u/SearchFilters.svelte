@@ -100,7 +100,7 @@
 				>
 			</div> -->
 
-			<ModeSelection bind:mode />
+			<!-- <ModeSelection bind:mode /> -->
 
 			<!-- TODO-PUTBACK -->
 			<!-- <div class="ml-auto flex items-center gap-3">
@@ -117,6 +117,6 @@
 			</div> -->
 		</div>
 
-		<DescriptionInput {mode} bind:description />
+		<DescriptionInput {mode} />
 	</div>
 </div>

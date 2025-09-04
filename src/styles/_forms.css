@@ -66,7 +66,7 @@
 
 /* Description Input Specific */
 @utility description-container {
-	@apply relative w-full;
+	@apply relative w-full flex flex-col items-start gap-1;
 }
 
 @utility description-textarea {

@@ -4,11 +4,36 @@ import { realtime } from '$lib/util/realtime';
 import { error, text } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ locals }) => {
+export const GET: RequestHandler = async ({ locals, request }) => {
+	const deets: { n: number; x: number; g: number } = await request.json();
 	if (!locals.user) error(401, 'Unauthorized');
+	const must = [{ key: 'f', match: { value: 1 } }];
+
+	if (deets.g != null) {
+		if (deets.g !== 0 && deets.g !== 1) {
+			return error(400, 'Invalid gender');
+		}
+		must.push({ key: 'g', match: { value: deets.g } });
+	}
+	const age_range: { gte?: number; lte?: number } = {};
+	if (deets.x != null) {
+		if (isNaN(deets.x)) {
+			return error(400, 'Invalid max age');
+		}
+		age_range.lte = deets.x;
+	}
+	if (deets.n != null) {
+		if (isNaN(deets.n)) {
+			return error(400, 'Invalid min age');
+		}
+		age_range.gte = deets.n;
+	}
+	if (Object.keys(age_range).length) {
+		must.push({ key: 'a', range: age_range });
+	}
 	const res = await qdrant.query(collection, {
 		filter: {
-			must: { key: 'f', match: { value: 1 } },
+			must,
 			must_not: { has_id: [locals.user.i] }
 		},
 		query:
@@ -17,7 +42,6 @@ export const GET: RequestHandler = async ({ locals }) => {
 		with_payload: ['r'],
 		limit: 1
 	});
-	console.log('search res', res.points);
 	if (res.points.length && res.points[0].payload?.r) {
 		set(res.points[0].id as string, { f: '' });
 		set(locals.user.i, { f: '' });

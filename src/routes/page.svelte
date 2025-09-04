@@ -6,6 +6,8 @@
 	let liveOpen = $state(true);
 
 	let meeting: RealtimeKitClient | undefined = $state(undefined);
+
+	
 	
 	onMount(async () => {
 		meeting = await RealtimeKitClient.init({
