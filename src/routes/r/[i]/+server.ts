@@ -1,7 +1,6 @@
 import { create } from '$lib/db';
 import type { RequestHandler } from './$types';
-import type { ChatMessage, DBChatMessage, SendChatMessage, Message } from '$lib/types';
-import { s } from '$lib/util/s';
+import type { DBChatMessage, SendChatMessage, Message } from '$lib/types';
 import { upload_image } from '$lib/integrations/r2_storage';
 import { process_message } from '$lib/util/chat/process_message';
 type R2Bucket = unknown;
@@ -15,7 +14,6 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 	if (contentType.includes('multipart/form-data')) {
 		const formData = await request.formData();
 		const messageText = (formData.get('m') as string) || '';
-		const cloudflareId = (formData.get('c') as string) || '';
 		const receiverTag = (formData.get('t') as string) || '';
 		const messageId = (formData.get('i') as string) || crypto.randomUUID();
 		const anonymous = formData.get('a') as string | null;
@@ -43,7 +41,6 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 
 		m = {
 			m: messageText,
-			c: cloudflareId,
 			t: receiverTag,
 			d: Date.now(),
 			i: messageId,
@@ -60,7 +57,6 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		m: m.m,
 		d: m.d,
 		i: m.i,
-		c: m.c,
 		h: 0,
 		t: m.t,
 		r: params.i,
@@ -71,7 +67,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 	};
 	const with_tc = await process_message(base);
 
-	const i = await create(
+	await create(
 		{
 			...(locals.user ? { u: locals.user.i } : {}),
 			s: 'm',
@@ -99,15 +95,15 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		m.i
 	);
 
-	platform.env.r.fetch('http://./send/' + m.c + (await s()), {
-		method: 'POST',
-		body: JSON.stringify({
-			i,
-			...(locals.user ? { x: locals.user.t } : {}),
-			m: m.m,
-			...(fileUrls.length > 0 ? { f: fileUrls } : {})
-		} satisfies ChatMessage)
-	});
+	// platform.env.r.fetch('http://./send/' + m.c + (await s()), {
+	// 	method: 'POST',
+	// 	body: JSON.stringify({
+	// 		i,
+	// 		...(locals.user ? { x: locals.user.t } : {}),
+	// 		m: m.m,
+	// 		...(fileUrls.length > 0 ? { f: fileUrls } : {})
+	// 	} satisfies ChatMessage)
+	// });
 
 	return new Response();
 };

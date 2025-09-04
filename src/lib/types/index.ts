@@ -63,7 +63,6 @@ export interface Message {
 	i: string; //id
 	x?: string; // sender user tag,
 	d: number; // date
-	c: string; // cf id
 	h: number; // has reply
 	z?: string; // chat id
 	t: string; // receiver's (room/user) tag
@@ -108,7 +107,5 @@ export interface DescriptionInputProps {
 	endpoint?: string;
 	placeholder?: string;
 	rows?: number;
-	onUpdate?: (detail: any) => void;
-	onInput?: (detail: any) => void;
 	label?: string;
 }

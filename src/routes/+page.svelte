@@ -7,35 +7,63 @@
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 
-	let meeting: RealtimeKitClient | undefined = $state(undefined),
-		joined = $state(false),
-		maxAge = $state(144),
-		minAge = $state(0),
-		gender = $state<number | undefined>(0);
+	let meeting: RealtimeKitClient | undefined = $state(undefined);
+	let joined = $state(false);
+	let maxAge = $state(144);
+	let minAge = $state(0);
+	let gender = $state<number | undefined>(0);
+	let searching = $state(false); // New state variable
 
-	onMount(() => {
-		if (meeting) {
-		}
-	});
+	// onMount(() => {
+	// 	// No existing onMount logic to preserve, so it's empty
+	// });
 
 	const search = async () => {
-		const { data: authToken } = await axios.get('/', {
-			params: { x: maxAge, n: minAge, g: gender }
-		});
-		console.log('authToken', authToken);
-		meeting = await RealtimeKitClient.init({
-			authToken,
-			defaults: {
-				audio: true,
-				video: true
-			}
-		});
+		searching = true; // Set searching to true when search starts
+		try {
+			const { data: authToken } = await axios.get('/', {
+				params: {
+					...(maxAge !== undefined && { x: maxAge }),
+					...(minAge !== undefined && { n: minAge }),
+					...(gender !== undefined && { g: gender })
+				}
+			});
+			console.log('authToken', authToken);
+			meeting = await RealtimeKitClient.init({
+				authToken,
+				defaults: {
+					audio: true,
+					video: true
+				}
+			});
 
-		meeting.join();
+			meeting.join();
 
-		meeting.participants.joined.on('participantJoined', (participant) => {
-			joined = true;
-		});
+			meeting.participants.joined.on('participantJoined', (participant) => {
+				joined = true;
+				searching = false; // Stop searching when a participant joins
+			});
+
+			meeting.self.on('roomLeft', () => {
+				window.location.reload(); //TODO-UX
+			});
+
+			// Handle cases where no participant joins after a timeout or error
+			// This might require a timeout mechanism or checking for meeting state changes
+		} catch (e) {
+			console.error('Failed to join meeting', e);
+			searching = false; // Reset searching on error
+		}
+	};
+
+	const stop_search = async () => {
+		searching = false; // Set searching to false
+		try {
+			await axios.post('/edit_user', { f: 0 }); // Make POST request to set f to 0
+		} catch (error) {
+			console.error('Error updating user status or leaving meeting:', error);
+			// Handle error, maybe show a toast
+		}
 	};
 
 	$inspect(meeting);
@@ -66,14 +94,21 @@
 		/>
 
 		<div class="mt-8">
+			{#if searching && !joined}
+				<p class="searching-text">Searching for a match...</p>
+			{/if}
 			<button
 				onclick={() => {
-					page.data.user ? search() : goto('/google');
+					if (searching) {
+						stop_search();
+					} else {
+						page.data.user ? search() : goto('/google');
+					}
 				}}
 				class="group flex items-center gap-3 rounded-full px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
 				style="background: var(--color-theme-2);"
 			>
-				Start searching
+				{searching ? 'Stop searching' : 'Start searching'}
 			</button>
 		</div>
 	</div>
@@ -82,3 +117,11 @@
 {#if joined}
 	<LiveModal {meeting} open={true} />
 {/if}
+
+<style>
+	.searching-text {
+		margin-bottom: 1rem;
+		font-size: 1.2rem;
+		color: var(--color-primary); /* Assuming this is defined in app.css or similar */
+	}
+</style>

@@ -41,8 +41,14 @@
 	const onsend = (data: File | string, files?: string[]) => {
 		if (data instanceof File) {
 			meeting?.chat.sendFileMessage(data);
+			const formData = new FormData();
+			formData.append('files', data);
+			formData.append('m', ''); // Generate a message ID
+			formData.append('i', v7()); // Generate a message ID
+			save_message_with_formdata(formData);
 		} else {
 			meeting?.chat.sendTextMessage(data);
+			save_message(data);
 		}
 	};
 
@@ -158,7 +164,7 @@
 		});
 	});
 
-	function send_message_with_formdata(formData: FormData) {
+	function save_message_with_formdata(formData: FormData) {
 		// Extract data from FormData for optimistic UI update
 		const messageText = formData.get('m') as string;
 		const messageId = formData.get('i') as string;
@@ -168,16 +174,16 @@
 
 		if (messageText || files.length > 0) {
 			// Add message to UI immediately for optimistic update
-			chat_messages.push({
-				m: messageText,
-				i: messageId,
-				x: page.data.user.t,
-				saved: false
-				// Note: We can't show file URLs until server processes them
-				// Files will be updated via websocket when server responds
-			});
+			// chat_messages.push({
+			// 	m: messageText,
+			// 	i: messageId,
+			// 	x: page.data.user.t,
+			// 	saved: false
+			// 	// Note: We can't show file URLs until server processes them
+			// 	// Files will be updated via websocket when server responds
+			// });
 
-			message_text = '';
+			// message_text = '';
 			console.log('Sending message with FormData to:', page.url.pathname);
 
 			// Send FormData to message route
@@ -195,7 +201,7 @@
 		}
 	}
 
-	function send_message(text?: string, fileUrls?: string[]) {
+	function save_message(text?: string, fileUrls?: string[]) {
 		const messageText = text || message_text;
 		const files = fileUrls || [];
 

@@ -73,7 +73,7 @@
 					}}
 					head="Your Gender"
 				/>
-				<GenderSelection bind:gender />
+				<GenderSelection show_all bind:gender />
 				<div class="flex-1">
 						<label for="age" class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">your age (optional)</label>
 
