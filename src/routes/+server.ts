@@ -196,7 +196,7 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 
 				let userRoom = await get(locals.user?.i, 'r');
 				console.log('User room:', typeof userRoom, userRoom);
-				if (!userRoom) {
+				if (!userRoom || typeof userRoom !== 'string') {
 					console.log('🏠 Creating new room for user');
 					const newRoom = (await realtime.post('meetings', { title: locals.user.t })).data.data.id;
 					await set(locals.user.i, { r: newRoom });
