@@ -78,7 +78,15 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 				must.push({ key: 'a', range: age_range });
 			}
 
-			console.debug('must', must)
+			console.debug('all', collection, JSON.stringify({
+				filter: {
+					must_not: { has_id: [locals.user.i] },
+					must
+				},
+				query: userVector,
+				with_payload: ['r'],
+				limit: 1
+			}))
 
 			res = await qdrant.query(collection, {
 				filter: {
