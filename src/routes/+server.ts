@@ -45,15 +45,22 @@ export const GET: RequestHandler = async ({ locals, request }) => {
 		}
 
 		let res;
+		console.log('must', must)
 		try {
+			let userVector;
+			try {
+				userVector = (await get<{ vector: number[] }>(locals.user.i, false, true))?.vector;
+			} catch (err) {
+				console.error('Failed to get user vector:', err);
+				userVector = new Array(3072).fill(0);
+			}
+			
 			res = await qdrant.query(collection, {
 				filter: {
 					must,
 					must_not: { has_id: [locals.user.i] }
 				},
-				query:
-					(await get<{ vector: number[] }>(locals.user.i, false, true))?.vector ||
-					new Array(3072).fill(0),
+				query: userVector,
 				with_payload: ['r'],
 				limit: 1
 			});
