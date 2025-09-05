@@ -39,6 +39,10 @@
 	@apply input rounded-lg;
 }
 
+@utility input-rect-center {
+	@apply input-rect text-center;
+}
+
 /* Text Areas */
 @utility textarea {
 	@apply input min-h-[120px] rounded-lg;
@@ -118,4 +122,15 @@
 
 @utility phone-input {
 	@apply input-rect w-full;
+}
+
+/* Custom Checkbox for Filter by Age */
+@utility checkbox-round-outer {
+	@apply w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer;
+    border-color: var(--color-theme-1); /* Use theme color for border */
+}
+
+@utility checkbox-round-inner-filled {
+	@apply w-3 h-3 rounded-full;
+    background-color: var(--color-theme-1); /* Use theme color for fill */
 }

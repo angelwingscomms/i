@@ -13,6 +13,7 @@ SvelteKit patterns:
 
 - data loading: always fetch all page data in +page.server.ts load
 - endpoints: always use +server.ts API routes for client-server data flow
+- reactivity: always use `$derived` or `$effect` for reactive statements; never use `$:`.
 
 UI:
 

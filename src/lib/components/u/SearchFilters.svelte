@@ -10,14 +10,14 @@
 	let {
 		gender = $bindable(),
 		minAge = $bindable(),
-		maxAge = $bindable(),
+		maxAge = $bindable(), // This will be the prop passed to parent
 		mode = $bindable('profile'),
 		description = $bindable(),
 		loading = $bindable(),
 		search = $bindable(),
 		sort = $bindable(),
 		showAdvanced = $bindable(true),
-		user_age = $bindable(),
+		user_age = $bindable(0),
 		sort_open = $bindable(),
 		lock_more = $bindable(false),
 		sort_ref = $bindable(undefined),
@@ -25,11 +25,11 @@
 		onClickOutside = $bindable(undefined)
 	}: {
 		gender: number | undefined;
-		minAge: number;
-		maxAge: number;
+		minAge: number | undefined; // Make them optional
+		maxAge: number | undefined; // Make them optional
 		showAdvanced?: boolean;
 		mode?: 'profile' | 'custom';
-		user_age?: number,
+		user_age?: number;
 		description: string;
 		loading: boolean;
 		search: () => Promise<void>;
@@ -43,6 +43,21 @@
 
 	let onlineOnly = $state(false);
 	let inCallOnly = $state(false);
+
+	// New state for age filtering
+	let filter_by_age = $state(false);
+	let _minAge = $state(0); // Local state for AgeRange component
+	let _maxAge = $state(144); // Local state for AgeRange component
+
+	$effect(() => {
+		if (filter_by_age) {
+			minAge = _minAge;
+			maxAge = _maxAge;
+		} else {
+			minAge = undefined;
+			maxAge = undefined;
+		}
+	});
 </script>
 
 <div class="search-filters mx-auto max-w-4xl px-4 pb-8">
@@ -75,20 +90,32 @@
 				/>
 				<GenderSelection show_all bind:gender />
 				<div class="flex-1">
-						<label for="age" class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">your age (optional)</label>
+					<label for="age" class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">your age</label>
 
 					<input
 						id="age"
 						name="age"
 						type="number"
 						bind:value={user_age}
-						class="rounded-full input-rect w-min border-1"
+						class="rounded-full input-rect-center w-min border-1"
 						min="0"
 						max="144"
 						required
 					/>
 				</div>
-				<AgeRange bind:minAge bind:maxAge />
+
+				<!-- Filter by Age Toggle Switch -->
+				<label class="toggle-switch-container">
+					<input type="checkbox" class="toggle-switch-input" bind:checked={filter_by_age} />
+					<div class="toggle-switch-track" class:toggle-switch-track-checked={filter_by_age}>
+						<div class="toggle-switch-thumb" class:toggle-switch-thumb-checked={filter_by_age}></div>
+					</div>
+					<span class="ml-3 text-sm font-medium cursor-pointer">Filter by Age ({filter_by_age ? 'on' : 'off'})</span>
+				</label>
+
+				{#if filter_by_age}
+					<AgeRange bind:minAge={_minAge} bind:maxAge={_maxAge} />
+				{/if}
 			{/if}
 
 			<!-- <div class="row items-center gap-4">
