@@ -55,7 +55,7 @@ export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>;
 // flag used by anon rooms; it is not part of the persisted Message payload.
 export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'd' | 't' | 'f'> & { a?: string };
 
-export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x' | 'f'>;
+export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x' | 'f' | 'u'>;
 
 export interface Message {
 	saved?: boolean; // if client has received websocket event for this message, meaning message has been saved to db

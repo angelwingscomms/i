@@ -28,7 +28,7 @@
 
 	let chat_messages: ChatMessage[] = $state(m);
 	let message_text = $state('');
-	let messages = $state([]);
+	let messages = $state(m.map(chat_msg => ({ id: chat_msg.i, message: chat_msg.m, displayName: chat_msg.x, userId: chat_msg.u, m: chat_msg.m, link: chat_msg.f && chat_msg.f.length > 0 ? chat_msg.f[0] : undefined, f: chat_msg.f, saved: true })));
 	let messagesEl: HTMLElement | null = null;
 	let liveOpen = $state(true);
 
@@ -158,7 +158,7 @@
 
 		meeting.joinRoom();
 
-		meeting.chat.on('chatUpdate', ({ message, ms }) => {
+		meeting.chat.on('chatUpdate', ({ message }) => {
 			console.log(`Received message ${message}`);
 			messages = [...messages, message];
 		});
