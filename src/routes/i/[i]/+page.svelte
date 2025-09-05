@@ -209,18 +209,22 @@
 						<!-- Action Buttons -->
 						<div class="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
 							<div class="flex-1 sm:flex-none">
-								<ChatWithButton href="/u/{item.u}/c" text="💬 Chat with Owner" />
+								{#if item.u}
+									<ChatWithButton href="/u/{item.u}/c" text="💬 Chat with Owner" />
+								{/if}
 							</div>
-							<div class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row">
-								<a href="/u/{item.u}" class="btn btn-secondary group">
-									<span class="transition-transform duration-200 group-hover:scale-110">👤</span>
-									<span>View Owner Profile</span>
-								</a>
-								<a href="/u/{item.u}/i" class="btn btn-secondary group">
-									<span class="transition-transform duration-200 group-hover:scale-110">🛍️</span>
-									<span>More from Owner</span>
-								</a>
-							</div>
+							{#if item.u}
+								<div class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row">
+									<a href="/u/{item.u}" class="btn btn-secondary group">
+										<span class="transition-transform duration-200 group-hover:scale-110">👤</span>
+										<span>View Owner Profile</span>
+									</a>
+									<a href="/u/{item.u}/i" class="btn btn-secondary group">
+										<span class="transition-transform duration-200 group-hover:scale-110">🛍️</span>
+										<span>More from Owner</span>
+									</a>
+								</div>
+							{/if}
 						</div>
 
 						<!-- Additional Action -->
@@ -467,10 +471,10 @@
 										<div class="flex items-center justify-between">
 											<span
 												class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
-												>Price/Quantity</span
+												>Price</span
 											>
 											<span class="font-bold" style="color: var(--color-theme-1);">
-												{item.q}
+												{item.v ? `${item.v}` : 'Price not available'}
 											</span>
 										</div>
 									</div>
@@ -577,18 +581,8 @@
 							</div>
 
 							<div class="space-y-4">
-								<div
-									class="flex items-center justify-between rounded-xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-3 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
-								>
-									<span class="text-sm font-medium text-gray-600 dark:text-gray-400">Views</span>
-									<span class="font-bold text-gray-900 dark:text-gray-100">—</span>
-								</div>
-								<div
-									class="flex items-center justify-between rounded-xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-3 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
-								>
-									<span class="text-sm font-medium text-gray-600 dark:text-gray-400">Saves</span>
-									<span class="font-bold text-gray-900 dark:text-gray-100">—</span>
-								</div>
+
+
 								<div
 									class="flex items-center justify-between rounded-xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-3 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
 								>
