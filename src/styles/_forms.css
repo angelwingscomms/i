@@ -74,7 +74,7 @@
 }
 
 @utility description-textarea {
-	@apply textarea w-full;
+	@apply textarea w-full pb-16;
 }
 
 @utility description-controls {
@@ -92,13 +92,14 @@
 }
 
 @utility voice-controls {
-	@apply flex gap-2;
+	@apply flex gap-2 absolute bottom-6 left-2;
 }
 
 @utility voice-btn {
 	@apply btn-sm flex items-center gap-2 transition-all duration-300;
 	background: transparent;
 	color: var(--text-primary);
+	border: 2px solid var(--color-theme-6); /* Add this line */
 }
 
 .voice-btn:hover:not(:disabled) {

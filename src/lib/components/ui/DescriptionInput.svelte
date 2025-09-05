@@ -26,10 +26,17 @@
 	let mediaRecorder: MediaRecorder | null = null;
 	let audioChunks: Blob[] = [];
 	let charCount = value.length;
+	let textareaRef: HTMLTextAreaElement;
 
 	$effect(() => {
 		// Update char count when value changes
 		charCount = value?.length || 0;
+
+		// Auto-resize textarea
+		if (textareaRef) {
+			textareaRef.style.height = 'auto';
+			textareaRef.style.height = textareaRef.scrollHeight + 'px';
+		}
 	});
 
 	// async function handleBlur() {
@@ -151,10 +158,10 @@
 		bind:value
 		class="description-textarea border-1"
 		{placeholder}
-		{rows}
 		required
 		disabled={!editable || isSaving || isTranscribing}
 		readonly={!editable}
+		bind:this={textareaRef}
 	></textarea>
 
 	<div class="description-controls">
@@ -165,7 +172,7 @@
 		{#if editable}
 			<div class="voice-controls">
 				{#if !isRecording && !isTranscribing}
-					<button type="button" class="voice-btn rounded-full border-1 border-fuchsia-500" onclick={startRecording}>
+					<button type="button" class="voice-btn rounded-full" onclick={startRecording}>
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
 							<path
 								d="M12 2C13.1 2 14 2.9 14 4V12C14 13.1 13.1 14 12 14C10.9 14 10 13.1 10 12V4C10 2.9 10.9 2 12 2M19 12C19 16.2 15.8 19.2 12 19.2S5 16.2 5 12H7C7 15.1 9.5 17.6 12 17.6S17 15.1 17 12H19Z"
