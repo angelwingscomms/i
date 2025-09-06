@@ -11,7 +11,8 @@
 	import { animate, stagger } from 'animejs';
 	import FileWidget from './FileWidget.svelte';
 	import ChatInput from './ChatInput.svelte';
-	import LiveModal from './LiveModal.svelte';
+	import RoomNameModal from './RoomNameModal.svelte';
+	import { ROOM_NAME_DISPLAY_LIMIT } from '$lib/constants';
 	let {
 		m,
 		t,
@@ -38,10 +39,25 @@
 
 	let messagesEl: HTMLElement | null = null;
 	let liveOpen = $state(true);
+	let show_room_name_modal = $state(false);
 	console.log('mm', m);
 
 	let meeting: RealtimeKitClient | undefined =
 		$state(undefined);
+
+	let display_room_name = $state('');
+	let show_full_room_name_button = $state(false);
+
+	$effect(() => {
+		if (t.length > ROOM_NAME_DISPLAY_LIMIT) {
+			display_room_name =
+				t.slice(0, ROOM_NAME_DISPLAY_LIMIT) + '...';
+			show_full_room_name_button = true;
+		} else {
+			display_room_name = t;
+			show_full_room_name_button = false;
+		}
+	});
 
 	import { onMount } from 'svelte';
 	import RealtimeKitClient from '@cloudflare/realtimekit';
@@ -186,7 +202,9 @@
 					m: message.message,
 					x: message.displayName,
 					u: message.userId,
-					f: [message.link]
+					...(message.link
+						? { f: [message.link] }
+						: {})
 				}
 			];
 		});
@@ -259,34 +277,48 @@
 		};
 
 		if (messageText || files.length > 0) {
-			chat_messages.push({
-				m: m.m,
-				i: m.i,
-				x: page.data.user.t,
-				saved: false,
-				...(files.length > 0 && { f: files })
-			});
-			message_text = '';
 			axios.post(page.url.pathname, m);
 		}
 	}
 </script>
 
 <div class="chat-layout">
-	<div class="chat-header">
+	<div class="chat-header chat-header-layout">
 		{#if r}
-			<h1
-				class="chat-title font-light text-fuchsia-400 italic"
-			>
-				replies to <span class="text-white">{t}</span>
-			</h1>
+			<div class="chat-title-group">
+				<h1
+					class="chat-title flex-shrink-min font-light text-fuchsia-400 italic"
+				>
+					replies to <span class="text-white"
+						>{display_room_name}</span
+					>
+				</h1>
+				{#if show_full_room_name_button}
+					<button
+						class="btn"
+						onclick={() =>
+							(show_room_name_modal = true)}
+						>{r ? 'show full message' : 'show full room name'}</button
+					>
+				{/if}
+			</div>
 		{:else if _ === '-'}
 			{#if a}
-				<h1
-					class="chat-title font-light text-gray-500 italic"
-				>
-					anon chat {n} with {t}
-				</h1>
+				<div class="chat-title-group">
+					<h1
+						class="chat-title flex-shrink-min font-light text-gray-500 italic"
+					>
+						anon chat {n} with {display_room_name}
+					</h1>
+					{#if show_full_room_name_button}
+						<button
+							class="btn"
+							onclick={() =>
+								(show_room_name_modal = true)}
+							>{r ? 'show full message' : 'show full room name'}</button
+						>
+					{/if}
+				</div>
 			{:else}
 				<h1
 					class="chat-title font-light text-gray-500 italic"
@@ -295,17 +327,27 @@
 				</h1>
 			{/if}
 		{:else}
-			<h1 class="chat-title">{t}</h1>
+			<div class="chat-title-group">
+				<h1 class="chat-title flex-shrink-min">
+					{display_room_name}
+				</h1>
+				{#if show_full_room_name_button}
+					<button
+						class="btn"
+						onclick={() =>
+							(show_room_name_modal = true)}
+						>{r ? 'show full message' : 'show full room name'}</button
+					>
+				{/if}
+			</div>
 		{/if}
-		<div class="row gap">
-			<a
-				href="{page.url}/live"
-				class="btn"
-				aria-haspopup="dialog"
-				aria-controls="live-modal"
-				onclick={() => (liveOpen = true)}>video chat</a
-			>
-		</div>
+		<a
+			href="{page.url}/live"
+			class="btn"
+			aria-haspopup="dialog"
+			aria-controls="live-modal"
+			onclick={() => (liveOpen = true)}>video chat</a
+		>
 	</div>
 	<div
 		class="messages-container"
@@ -361,6 +403,13 @@
 			{t}
 		/>
 	</div>
+
+	{#if show_room_name_modal}
+		<RoomNameModal
+			full_room_name={t}
+			onClose={() => (show_room_name_modal = false)}
+		/>
+	{/if}
 </div>
 
 <style>

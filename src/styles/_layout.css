@@ -18,3 +18,15 @@
 @utility section-spacing-lg {
 	@apply space-y-8;
 }
+
+@utility chat-header-layout {
+	@apply flex justify-between items-center flex-nowrap;
+}
+
+@utility chat-title-group {
+	@apply flex items-center gap-2;
+}
+
+@utility flex-shrink-min {
+	@apply flex-shrink min-w-0;
+}

@@ -1,4 +1,5 @@
 export const chat_store_id = '019887af-c6af-734f-b414-695dc0b5d319';
+export const ROOM_NAME_DISPLAY_LIMIT = 15;
 export const collection = 'i';
 export const countries = [
 	{ code: '+93', name: 'Afghanistan', flag: '🇦🇫' },
