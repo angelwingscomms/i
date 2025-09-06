@@ -12,6 +12,7 @@
 		m,
 		t,
 		_,
+		r,
 		n,
 		a,
 		authToken
@@ -19,6 +20,7 @@
 		authToken: string;
 		n?: number;
 		a?: number;
+		r?: number | undefined;
 		m: ChatMessage[];
 		s: string;
 		t: string;
@@ -42,7 +44,7 @@
 	);
 	let messagesEl: HTMLElement | null = null;
 	let liveOpen = $state(true);
-	console.log('mm', m)
+	console.log('mm', m);
 
 	let meeting: RealtimeKitClient | undefined = $state(undefined);
 
@@ -241,12 +243,14 @@
 		}
 	}
 
-	$inspect(messages)
+	$inspect(messages);
 </script>
 
 <div class="chat-layout">
 	<div class="chat-header">
-		{#if _ === '-'}
+		{#if r}
+			<h1 class="chat-title font-light text-fuchsia-400 italic">replies to <span class="text-white">{t}</span></h1>
+		{:else if _ === '-'}
 			{#if a}
 				<h1 class="chat-title font-light text-gray-500 italic">anon chat {n} with {t}</h1>
 			{:else}
@@ -273,7 +277,7 @@
 						class="chat_item"
 						in:fade={{ duration: 150, delay: 0 }}
 						out:fade={{ duration: 150 }}
-						href={page.url.pathname.split('/').slice(0, -1).join('/') + '/' + msg.i}
+						href={page.url.pathname.split('/').slice(0, -1).join('/') + '/' + msg.id}
 						data-msg-id={msg.id}
 						style={`align-items:${msg.userId === page.data.user?.i ? 'flex-end' : 'flex-start'}`}
 					>

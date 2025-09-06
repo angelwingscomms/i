@@ -11,13 +11,14 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	let anon = 0;
 
-	const r = await get<Pick<Room, 't' | 'c' | '_' | 'u' | 'r' | 'x' | 'q'>>(params.i, [
+	const r = await get<Pick<Room, 't' | 'c' | '_' | 'u' | 'r' | 'x' | 'q' | 'm'>>(params.i, [
 		't',
 		// 'c',
 		'o',
 		'_',
 		'u',
 		'q',
+		'm',
 		'r',
 		'x'
 	]);
@@ -63,6 +64,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		custom_participant_id: locals.user?.i || v7()
 	});
 
+	console.log('rrr', r)
+
 	return {
 		m: (await Promise.all(
 			(
@@ -81,7 +84,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			}))
 		)) satisfies ChatMessage[],
 		s: await s(),
-		t: r.t,
+		t: r.t ?? r.m,
+		...(r.m ? { r: 1 } : {}),
 		// c: '', // r.c,
 		_: r._,
 		a: anon,

@@ -3,6 +3,8 @@ import type { RequestHandler } from './$types';
 import type { DBChatMessage, SendChatMessage, Message } from '$lib/types';
 import { upload_image } from '$lib/integrations/r2_storage';
 import { process_message } from '$lib/util/chat/process_message';
+import { error } from 'console';
+import { realtime } from '$lib/util/realtime';
 type R2Bucket = unknown;
 
 export const POST: RequestHandler = async ({ platform, request, params, locals }) => {
@@ -67,12 +69,25 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 	};
 	const with_tc = await process_message(base);
 
+	let create_meeting_res;
+
+	try {
+		create_meeting_res = await realtime.post('meetings', { title: m.t });
+		if (!create_meeting_res || create_meeting_res?.statusText === 'OK')
+			throw new Error('Failed to create meeting');
+		console.log('create_meeting_res', create_meeting_res);
+	} catch (err) {
+		console.error('create cloudflare realtime meeting error: ', err);
+		throw error(500, 'Failed to create room due to an internal server error. Please try again.');
+	}
+
 	await create(
 		{
 			...(locals.user ? { u: locals.user.i } : {}),
 			s: 'm',
 			d: with_tc.d,
 			m: with_tc.m,
+			q: create_meeting_res.data.data.id,
 			r: params.i,
 			tc: with_tc.tc,
 			...(fileUrls.length > 0 ? { f: fileUrls } : {})

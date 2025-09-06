@@ -65,7 +65,7 @@
 		<div class="flex flex-wrap items-center gap-6 sm:flex-col sm:items-stretch">
 			{#if !lock_more}
 				<button
-					class="flex items-center gap-2 text-sm font-medium"
+					class="flex items-center gap-2 text-sm font-medium text-secondary"
 					onclick={() => (showAdvanced = !showAdvanced)}
 				>
 					<svg
@@ -84,13 +84,13 @@
 			{#if showAdvanced}
 				<GenderSelection
 					onchange={(gender) => {
-						axios.put('/edit_user', { gender });
+						axios.post('/edit_user', { gender });
 					}}
 					head="Your Gender"
 				/>
 				<GenderSelection show_all bind:gender />
 				<div class="flex-1">
-					<label for="age" class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">your age</label>
+					<label for="age" class="mb-3 block text-sm font-bold text-accent">your age</label>
 
 					<input
 						id="age"
@@ -110,7 +110,7 @@
 					<div class="toggle-switch-track" class:toggle-switch-track-checked={filter_by_age}>
 						<div class="toggle-switch-thumb" class:toggle-switch-thumb-checked={filter_by_age}></div>
 					</div>
-					<span class="ml-3 text-sm font-medium cursor-pointer">Filter by Age ({filter_by_age ? 'on' : 'off'})</span>
+					<span class="ml-3 text-sm font-medium cursor-pointer text-secondary">Filter by Age ({filter_by_age ? 'on' : 'off'})</span>
 				</label>
 
 				{#if filter_by_age}

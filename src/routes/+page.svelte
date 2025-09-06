@@ -87,8 +87,8 @@
 
 <div class="flex min-h-screen flex-col items-center justify-center">
 	<div class="max-w-2xl px-4 text-center">
-		<h1 class="text-white-800 mb-4 text-4xl font-bold">Meet Friends like you</h1>
-		<p class="text-white-600 mb-8 text-xl">
+		<h1 class="mb-4 text-4xl font-bold" style="color: var(--color-theme-2);">Meet Friends like you</h1>
+		<p class="text-accent mb-8 text-xl">
 			like Omegle. connect with people who share your interests. Filter by gender and age
 		</p>
 
@@ -116,8 +116,7 @@
 						page.data.user ? search() : goto('/google');
 					}
 				}}
-				class="group flex items-center gap-3 rounded-full px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
-				style="background: var(--color-theme-2);"
+				class="btn-outline group flex items-center gap-3 rounded-full px-6 py-3 font-bold shadow-lg transition-all hover:scale-105 mx-auto"
 			>
 				{searching ? 'Stop searching' : 'Start searching'}
 			</button>
@@ -133,6 +132,6 @@
 	.searching-text {
 		margin-bottom: 1rem;
 		font-size: 1.2rem;
-		color: var(--color-primary); /* Assuming this is defined in app.css or similar */
+		color: var(--text-accent); /* Assuming this is defined in app.css or similar */
 	}
 </style>

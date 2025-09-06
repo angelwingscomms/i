@@ -94,6 +94,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			return error(500);
 		}
 
+		console.log('updated_user', updatedUser)
+
 		await qdrant.setPayload('i', {
 			wait: true,
 			payload: updatedUser, // example: updating a username

@@ -49,7 +49,7 @@ export interface NotificationSubscription {
 	sub: PushSubscription;
 }
 
-export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r'>;
+export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r' | 'q'>;
 
 // Client-to-server payload when sending a chat message. "a" is an optional
 // flag used by anon rooms; it is not part of the persisted Message payload.
@@ -65,6 +65,7 @@ export interface Message {
 	d: number; // date
 	h: number; // has reply
 	z?: string; // chat id
+	q?: string; // realtime meeting id
 	t: string; // receiver's (room/user) tag
 	s?: 'm'; // tenant id for messages
 	u?: string; // user ID
@@ -89,6 +90,18 @@ export interface Room {
 	x?: string[]; // member user ids
 	_?: ',' | '.' | '-' | '|'; // room type: - is anon, `|` is one one one (dm), `,` is private, `.` is open
 }
+
+// Meme entity (tenant 'e')
+export interface Meme {
+	s: 'e'; // tenant id for memes
+	u?: string; // uploader user id
+	l: string; // image link (R2 URL)
+	p: number; // upvotes
+	a?: string; // gemini-generated summary used for search/alt text
+	d?: number; // created at timestamp
+	r?: string; // associated chatroom id
+}
+
 
 // Preset type for /pink feature
 export interface Preset {
