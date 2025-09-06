@@ -44,6 +44,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		m = {
 			m: messageText,
 			t: receiverTag,
+			_: formData.get('_') as string,
 			d: Date.now(),
 			i: messageId,
 			...(anonymous ? { a: anonymous } : {}),
@@ -59,6 +60,7 @@ export const POST: RequestHandler = async ({ platform, request, params, locals }
 		m: m.m,
 		d: m.d,
 		i: m.i,
+		_: m._,
 		h: 0,
 		t: m.t,
 		r: params.i,
