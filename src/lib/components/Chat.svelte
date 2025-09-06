@@ -35,21 +35,7 @@
 
 	let chat_messages: ChatMessage[] = $state(m);
 	let message_text = $state('');
-	let messages = $state(
-		m.map((chat_msg) => ({
-			id: chat_msg.i,
-			message: chat_msg.m,
-			displayName: chat_msg.x,
-			userId: chat_msg.u,
-			m: chat_msg.m,
-			link:
-				chat_msg.f && chat_msg.f.length > 0
-					? chat_msg.f[0]
-					: undefined,
-			f: chat_msg.f,
-			saved: true
-		}))
-	);
+
 	let messagesEl: HTMLElement | null = null;
 	let liveOpen = $state(true);
 	console.log('mm', m);
@@ -178,11 +164,6 @@
 		// ChatInput handles its own focus
 	});
 
-	$effect(() => {
-		JSON.stringify(meeting?.chat.messages);
-		console.log('msgs', meeting?.chat.messages);
-	});
-
 	onMount(async () => {
 		meeting = await RealtimeKitClient.init({
 			authToken,
@@ -192,14 +173,22 @@
 			}
 		});
 
-		console.log('am', $state.snapshot(messages));
 		meeting.joinRoom();
 
 		meeting.chat.on('chatUpdate', ({ message }) => {
 			console.log(
 				`Received message ${JSON.stringify(message, null, 2)}`
 			);
-			messages = [...messages, message];
+			chat_messages = [
+				...chat_messages,
+				{
+					i: message.id,
+					m: message.message,
+					x: message.displayName,
+					u: message.userId,
+					f: [message.link]
+				}
+			];
 		});
 	});
 
@@ -281,8 +270,6 @@
 			axios.post(page.url.pathname, m);
 		}
 	}
-
-	$inspect(messages);
 </script>
 
 <div class="chat-layout">
@@ -316,7 +303,7 @@
 				class="btn"
 				aria-haspopup="dialog"
 				aria-controls="live-modal"
-				onclick={() => (liveOpen = true)}>LIVE</a
+				onclick={() => (liveOpen = true)}>video chat</a
 			>
 		</div>
 	</div>
@@ -325,7 +312,7 @@
 		bind:this={messagesEl}
 	>
 		{#if meeting?.chat.messages}
-			{#each messages as msg, i (msg.id)}
+			{#each chat_messages as msg, i (msg.i)}
 				<!-- {#if _} -->
 				<a
 					class="chat_item"
@@ -336,65 +323,34 @@
 						.slice(0, -1)
 						.join('/') +
 						'/' +
-						msg.id}
-					data-msg-id={msg.id}
-					style={`align-items:${msg.userId === page.data.user?.i ? 'flex-end' : 'flex-start'}`}
+						msg.i}
+					data-msg-id={msg.i}
+					style={`align-items:${msg.u === page.data.user?.i ? 'flex-end' : 'flex-start'}`}
 				>
 					<div
 						class="chat_meta"
-						style={`justify-content:${msg.userId === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
+						style={`justify-content:${msg.x === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
 					>
-						{#if msg.displayName && msg.displayName !== page.data.user?.t && chat_messages[i - 1]?.displayName !== msg.displayName && _ !== '|' && _ !== '-'}
+						{#if msg.x && msg.x !== page.data.user?.t && chat_messages[i - 1]?.x !== msg.x && _ !== '|' && _ !== '-'}
 							<div class="chat_username">
-								{msg.displayName}
+								{msg.x}
 							</div>
 						{/if}
 					</div>
 					<div
-						class={`chat_bubble ${msg.displayName === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.displayName ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
-						style={`max-width: 90%; ${msg.displayName === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
+						class={`chat_bubble ${msg.x === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.x ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
+						style={`max-width: 90%; ${msg.x === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
 					>
-						<span class="message-text">{msg.message}</span>
-						{#if msg.link}
+						<span class="message-text">{msg.m}</span>
+						{#if msg.f && msg.f.length > 0}
 							<div class="message-files">
 								<!-- {#each msg.f as fileUrl} -->
-								<FileWidget url={msg.link} />
+								<FileWidget url={msg.f[0]} />
 								<!-- {/each} -->
 							</div>
 						{/if}
 					</div>
 				</a>
-				<!-- {:else}
-					<div
-						class="chat_item"
-						in:fade={{ duration: 150, delay: 0 }}
-						out:fade={{ duration: 150 }}
-						data-msg-id={msg.i}
-						style={`align-items:${msg.displayName === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
-					>
-						<div
-							class="chat_meta"
-							style={`justify-content:${msg.displayName === page.data.user?.t ? 'flex-end' : 'flex-start'}`}
-						>
-							{#if msg.displayName && msg.displayName !== page.data.user?.t && chat_messages[i - 1]?.displayName !== msg.displayName && _ !== '|' && _ !== '-'}
-								<div class="chat_username">{msg.displayName}</div>
-							{/if}
-						</div>
-						<div
-							class={`chat_bubble ${msg.displayName === page.data.user?.t ? 'chat_bubble--self' : ''} ${msg.displayName ? '' : 'chat_bubble--anon'} ${msg.saved ? '' : 'chat_bubble--pending'}`}
-							style={`max-width: 90%; ${msg.displayName === page.data.user?.t ? 'margin-left:auto;' : 'margin-right:auto;'}`}
-						>
-							<span class="message-text">{msg.message}</span>
-							{#if msg.f && msg.f.length > 0}
-								<div class="message-files">
-									{#each msg.f as fileUrl}
-										<FileWidget url={fileUrl} />
-									{/each}
-								</div>
-							{/if}
-						</div>
-					</div>
-				{/if} -->
 			{/each}
 		{/if}
 	</div>
