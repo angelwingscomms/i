@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
 	import { onMount, onDestroy } from 'svelte'; // Rule: import/export syntax (e.g., import { onMount, onDestroy } from 'svelte')
 	import type { Room, Message } from '$lib/types';
 	import Example from '$lib/components/Example.svelte'; // Integrate the Example component

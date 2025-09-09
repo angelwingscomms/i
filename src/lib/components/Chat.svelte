@@ -48,6 +48,7 @@
 	let display_room_name = $state('');
 	let show_full_room_name_button = $state(false);
 
+	// Rule: $effect for side effects including those to run when a variable changes, never use `$:`
 	$effect(() => {
 		if (t.length > ROOM_NAME_DISPLAY_LIMIT) {
 			display_room_name =

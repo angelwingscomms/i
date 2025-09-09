@@ -1,137 +1,117 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
-	import LiveModal from '$lib/components/LiveModal.svelte';
-	import SearchFilters from '$lib/components/u/SearchFilters.svelte';
-	import RealtimeKitClient from '@cloudflare/realtimekit';
-	import axios from 'axios';
+	import Navbar from '$lib/components/Navbar.svelte';
+	import Button from '$lib/components/Button.svelte';
 	import { onMount } from 'svelte';
 
-	let meeting: RealtimeKitClient | undefined = $state(undefined);
-	let joined = $state(false);
-	let maxAge = $state(144);
-	let minAge = $state(0);
-	let gender = $state<number | undefined>(0);
-	let searching = $state(false); // New state variable
-
-	// onMount(() => {
-	// 	// No existing onMount logic to preserve, so it's empty
-	// });
-
-	const search = async () => {
-		searching = true; // Set searching to true when search starts
-		let authToken;
-		
-		try {
-			console.log('searching', maxAge, minAge, gender);
-			const response = await axios.get('/', {
-				params: {
-					...(maxAge !== undefined && { x: maxAge }),
-					...(minAge !== undefined && { n: minAge }),
-					...(gender !== undefined && { g: gender })
+	onMount(() => {
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('visible');
 				}
 			});
-			authToken = response.data;
-			console.log('authToken', authToken);
-		} catch (e) {
-			console.error('Failed to get auth token', e);
-			searching = false;
-			return;
-		}
-
-		try {
-			meeting = await RealtimeKitClient.init({
-				authToken,
-				defaults: {
-					audio: true,
-					video: true
-				}
-			});
-
-			meeting.join();
-
-			meeting.participants.joined.on('participantJoined', (participant) => {
-				joined = true;
-				searching = false; // Stop searching when a participant joins
-			});
-
-			meeting.self.on('roomLeft', () => {
-				window.location.reload(); //TODO-UX
-			});
-
-			// Handle cases where no participant joins after a timeout or error
-			// This might require a timeout mechanism or checking for meeting state changes
-		} catch (e) {
-			console.error('Failed to initialize or join meeting', e);
-			searching = false; // Reset searching on error
-		}
-	};
-
-	const stop_search = async () => {
-		searching = false; // Set searching to false
-		try {
-			await axios.post('/edit_user', { f: 0 }); // Make POST request to set f to 0
-		} catch (error) {
-			console.error('Error updating user status or leaving meeting:', error);
-			// Handle error, maybe show a toast
-		}
-	};
-
-	$inspect(meeting);
+		});
+		document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
+	});
 </script>
 
 <svelte:head>
-	<title>Apexlinks - Omegle Alternative</title>
-	<meta name="description" content="Meet friends like you. Filter by gender" />
+	<title>Apexlinks - Connect Genuinely</title>
+	<meta name="description" content="Discover real chats, rooms, AI tools – anonymous and fun. Filter by age, gender, location for effortless connections." />
 </svelte:head>
 
-<div class="flex min-h-screen flex-col items-center justify-center">
-	<div class="max-w-2xl px-4 text-center">
-		<h1 class="mb-4 text-4xl font-bold" style="color: var(--color-theme-2);">Meet Friends like you</h1>
-		<p class="text-accent mb-8 text-xl">
-			like Omegle. connect with people who share your interests. Filter by gender and age
-		</p>
+<Navbar />
 
-		<SearchFilters
-			lock_more
-			bind:minAge
-			bind:maxAge
-			bind:gender
-			description=""
-			loading
-			{search}
-			sort="match"
-			sort_open
-		/>
-
-		<div class="mt-8">
-			{#if searching && !joined}
-				<p class="searching-text">Searching for a match...</p>
-			{/if}
-			<button
-				onclick={() => {
-					if (searching) {
-						stop_search();
-					} else {
-						page.data.user ? search() : goto('/google');
-					}
-				}}
-				class="btn-outline group flex items-center gap-3 rounded-full px-6 py-3 font-bold shadow-lg transition-all hover:scale-105 mx-auto"
-			>
-				{searching ? 'Stop searching' : 'Start searching'}
-			</button>
+<!-- Hero Section -->
+<section class="flex min-h-screen flex-col items-center justify-center text-center px-4">
+	<div class="max-w-4xl">
+		<h1 class="hero-title mb-4">Connect genuinely, discover effortlessly.</h1>
+		<p class="hero-subtitle mb-8">Tired of endless swiping on apps that feel fake? Here, you can jump into real chats – video or text – with people who vibe with you. Filter by age, gender, or location, all while staying totally anonymous if you want. No pressure, just fun connections that happen fast.</p>
+		<div class="flex flex-col sm:flex-row gap-4 justify-center">
+			<a href="/find" class="btn-primary">Start Matching Now</a>
+			<a href="/google" class="btn-outline">Sign Up Free</a>
 		</div>
 	</div>
-</div>
+	<!-- Animated background orbs -->
+	<div class="hero-background-orb fixed top-20 left-10 w-64 h-64 bg-[var(--color-theme-6)] opacity-20 animate-float"></div>
+	<div class="hero-background-orb fixed bottom-20 right-10 w-48 h-48 bg-[var(--color-theme-2)] opacity-10 animate-float" style="animation-delay: -3s;"></div>
+</section>
 
-{#if joined}
-	<LiveModal {meeting} open={true} />
-{/if}
+<!-- Features Section -->
+<section class="features-grid py-16">
+	<div class="feature-card animate-on-scroll">
+		<div class="feature-icon bg-[var(--color-theme-2)]">
+			<i class="fa fa-video-camera"></i>
+		</div>
+		<h3 class="feature-title">Video Chat Matching</h3>
+		<p class="feature-description">Live video chats with smart filters. Pick age range or gender, hit search, and boom – you're talking to someone cool in seconds. Perfect for that spontaneous 'hey, what's up?' vibe. Privacy first: End anytime, no traces.</p>
+		<a href="/find" class="feature-link">Try Video Chat <i class="fa fa-arrow-right"></i></a>
+	</div>
+
+	<div class="feature-card animate-on-scroll" style="animation-delay: 0.1s;">
+		<div class="feature-icon bg-[var(--color-theme-4)]">
+			<i class="fa fa-comment"></i>
+		</div>
+		<h3 class="feature-title">Anonymous Text Chats</h3>
+		<p class="feature-description">Chat without showing your face or name. Share thoughts, memes, whatever – keep it light and private. Great for testing the waters before going live. Easy as sending a text, but way more exciting.</p>
+		<a href="/chats" class="feature-link">Start Anon Chat <i class="fa fa-arrow-right"></i></a>
+	</div>
+
+	<div class="feature-card animate-on-scroll" style="animation-delay: 0.2s;">
+		<div class="feature-icon bg-[var(--color-theme-1)]">
+			<i class="fa fa-users"></i>
+		</div>
+		<h3 class="feature-title">Create & Join Rooms</h3>
+		<p class="feature-description">Build your own group hangout or join existing ones on topics like gaming, music, or random fun. Invite friends anonymously or discover new crews. It's like a cozy online party, minus the awkward intros.</p>
+		<a href="/r" class="feature-link">Explore Rooms <i class="fa fa-arrow-right"></i></a>
+	</div>
+
+	<div class="feature-card animate-on-scroll" style="animation-delay: 0.3s;">
+		<div class="feature-icon bg-[var(--color-theme-5)]">
+			<i class="fa fa-user"></i>
+		</div>
+		<h3 class="feature-title">Build Profile & Search Nearby</h3>
+		<p class="feature-description">Create a simple profile with interests and pics, then search locals by location. Find event buddies or chat partners nearby – all filtered to match your style. Super easy setup, total control on what you share.</p>
+		<a href="/i/create" class="feature-link">Build Profile <i class="fa fa-arrow-right"></i></a>
+	</div>
+
+	<div class="feature-card animate-on-scroll" style="animation-delay: 0.4s;">
+		<div class="feature-icon bg-[var(--color-theme-3)]">
+			<i class="fa fa-palette"></i>
+		</div>
+		<h3 class="feature-title">AI Image Generator (Pink)</h3>
+		<p class="feature-description">Whip up custom images from prompts or presets – think fun avatars or creative visuals. Upload refs for style-matching, generate in a snap. Privacy note: Your ideas stay yours, no sharing required. Get artsy without the hassle.</p>
+		<a href="/pink" class="feature-link">Generate Images <i class="fa fa-arrow-right"></i></a>
+	</div>
+
+	<div class="feature-card animate-on-scroll" style="animation-delay: 0.5s;">
+		<div class="feature-icon bg-[var(--color-theme-6)]">
+			<i class="fa fa-play-circle"></i>
+		</div>
+		<h3 class="feature-title">YouTube Summarizer</h3>
+		<p class="feature-description">Search videos, get instant summaries, and chat about them with AI. Dive deep without watching hours – ask questions, get insights. Fun for learning or debating clips, all in one spot. Quick, smart, and zero spoilers if you want.</p>
+		<a href="/tools/youtube-video-summarize-tool" class="feature-link">Summarize Videos <i class="fa fa-arrow-right"></i></a>
+	</div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-[var(--bg-secondary)] py-8 px-4 text-center border-t border-[var(--border-primary)]">
+	<div class="max-w-4xl mx-auto">
+		<p class="text-[var(--text-secondary)] mb-4">Quick jumps: <a href="/find" class="feature-link mx-1">Find Matches</a> | <a href="/chats" class="feature-link mx-1">Start Chats</a> | <a href="/r" class="feature-link mx-1">Create Rooms</a> | <a href="/pink" class="feature-link mx-1">AI Generator</a> | <a href="/tools/youtube-video-summarize-tool" class="feature-link mx-1">YouTube Tool</a> | <a href="/google" class="feature-link mx-1">Sign In</a> | <a href="/privacy" class="feature-link mx-1">Privacy Policy</a> – We keep your data safe and anonymous.</p>
+		<p class="text-[var(--text-tertiary)]">Made for real connections. Join the fun today. © 2025 Apexlinks.</p>
+	</div>
+</footer>
 
 <style>
-	.searching-text {
-		margin-bottom: 1rem;
-		font-size: 1.2rem;
-		color: var(--text-accent); /* Assuming this is defined in app.css or similar */
+	/* Simple visibility observer for animate-on-scroll */
+	.animate-on-scroll {
+		opacity: 0;
+		transform: translateY(30px);
+		transition: all 0.6s ease;
+	}
+	.animate-on-scroll.visible {
+		opacity: 1;
+		transform: translateY(0);
 	}
 </style>

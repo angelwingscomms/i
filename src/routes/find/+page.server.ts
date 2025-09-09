@@ -1,12 +1,13 @@
+// import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const { seo: parent_seo } = await parent();
 
-	const page_title = 'Apexlinks - Connect Genuinely';
+	const page_title = 'Apexlinks - Find Matches';
 	const page_description =
-		'Discover real chats, rooms, AI tools – anonymous and fun. Filter by age, gender, location for effortless connections.';
-	const page_image = `${url.origin}/landing-og-image.jpg`; // Specific image for landing page
+		'Live video matching with age and gender filters, like Omegle but better. Connect anonymously and discover real conversations.';
+	const page_image = `${url.origin}/matching-og-image.jpg`; // Specific image for find page
 
 	return {
 		user: locals.user,
