@@ -1,17 +1,8 @@
 import type { RequestHandler } from './$types';
-import { json, error, text } from '@sveltejs/kit';
-import { create, search_by_payload, search_by_vector } from '$lib/db';
+import { json } from '@sveltejs/kit';
+import { search_by_payload, search_by_vector } from '$lib/db';
 import { embed } from '$lib/util/embed';
-import type { Meme, Room } from '$lib/types';
-import { upload_image } from '$lib/integrations/r2_storage';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { GEMINI } from '$env/static/private';
-import { realtime } from '$lib/util/realtime';
-
-export const POST: RequestHandler = async ({ request, locals }) => {
-	// Not used; reserved for future actions
-	return json({ ok: true });
-};
+import type { Meme } from '$lib/types';
 
 export const GET: RequestHandler = async () => {
 	// Optional: list latest memes
@@ -30,7 +21,7 @@ export const PATCH: RequestHandler = async ({ request }) => {
 };
 
 // /m/search
-export const POST_search: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request }) => {
 	const { q } = (await request.json()) as { q?: string };
 	if (!q) {
 		const items = await search_by_payload<Meme>({ s: 'e' }, ['l', 'p', 'a', 'r'], 60, { key: 'd', direction: 'desc' } as any);

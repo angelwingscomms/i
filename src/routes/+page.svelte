@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import Navbar from '$lib/components/Navbar.svelte';
-	import Button from '$lib/components/Button.svelte';
 	import { onMount } from 'svelte';
 
 	onMount(() => {
@@ -25,7 +22,7 @@
 <section class="flex min-h-screen flex-col items-center justify-center text-center px-4">
 	<div class="max-w-4xl">
 		<h1 class="hero-title animate-on-scroll mb-4">Connect genuinely, discover effortlessly.</h1>
-		<p class="hero-subtitle animate-on-scroll mb-8">Tired of endless swiping on apps that feel fake? Here, you can jump into real chats – video or text – with people who vibe with you. Filter by age, gender, or location, all while staying totally anonymous if you want. No pressure, just fun connections that happen fast.</p>
+		<p class="hero-subtitle animate-on-scroll mb-8">Connect directly with real people through video or text chats, join vibrant chatrooms for group discussions or video meetings, and discover local products & services. Filter by age, gender, location – all anonymous, effortless, and fun.</p>
 		<div class="flex flex-col sm:flex-row gap-4 justify-center animate-on-scroll" style="animation-delay: 0.3s;">
 			<a href="/find" class="btn-primary">Start Matching Now</a>
 			<a href="/google" class="btn-outline">Sign Up Free</a>
@@ -100,7 +97,7 @@
 <!-- Footer -->
 <footer class="bg-[var(--bg-secondary)] py-8 px-4 text-center border-t border-[var(--border-primary)]">
 	<div class="max-w-4xl mx-auto">
-		<p class="text-[var(--text-secondary)] mb-4">Quick jumps: <a href="/find" class="feature-link mx-1">Find Matches</a> | <a href="/chats" class="feature-link mx-1">Start Chats</a> | <a href="/r" class="feature-link mx-1">Create Rooms</a> | <a href="/pink" class="feature-link mx-1">AI Generator</a> | <a href="/tools/youtube-video-summarize-tool" class="feature-link mx-1">YouTube Tool</a> | <a href="/google" class="feature-link mx-1">Sign In</a> | <a href="/privacy" class="feature-link mx-1">Privacy Policy</a> – We keep your data safe and anonymous.</p>
+		<p class="text-[var(--text-secondary)] mb-4">Quick jumps: <a href="/find" class="feature-link mx-1">Find Matches</a> | <a href="/chats" class="feature-link mx-1">Start Chats</a> | <a href="/r" class="feature-link mx-1">Create Rooms</a> | <a href="/i/create" class="feature-link mx-1">List Item</a> | <a href="/google" class="feature-link mx-1">Sign In</a> | <a href="/privacy" class="feature-link mx-1">Privacy Policy</a> – We keep your data safe and anonymous.</p>
 		<p class="text-[var(--text-tertiary)]">Made for real connections. Join the fun today. © 2025 Apexlinks.</p>
 	</div>
 </footer>

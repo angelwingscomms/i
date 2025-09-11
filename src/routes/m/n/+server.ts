@@ -32,7 +32,7 @@ export const POST: RequestHandler = async ({ request, locals, platform }) => {
 			const prompt = `Create an opinionated summary of this meme image. This summary will be embedded and used for search functionality.`;
 			const res = await model.generateContent({
 				contents: [
-					{ role: 'user', parts: [{ text: prompt }, { text: url }] // simple: provide URL reference
+					{ role: 'user', parts: [{ text: prompt }, { text: url }] }// simple: provide URL reference
 				]
 			});
 			summary = res.response.text().trim();
