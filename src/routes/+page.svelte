@@ -21,14 +21,12 @@
 	<meta name="description" content="Discover real chats, rooms, AI tools – anonymous and fun. Filter by age, gender, location for effortless connections." />
 </svelte:head>
 
-<Navbar />
-
 <!-- Hero Section -->
 <section class="flex min-h-screen flex-col items-center justify-center text-center px-4">
 	<div class="max-w-4xl">
-		<h1 class="hero-title mb-4">Connect genuinely, discover effortlessly.</h1>
-		<p class="hero-subtitle mb-8">Tired of endless swiping on apps that feel fake? Here, you can jump into real chats – video or text – with people who vibe with you. Filter by age, gender, or location, all while staying totally anonymous if you want. No pressure, just fun connections that happen fast.</p>
-		<div class="flex flex-col sm:flex-row gap-4 justify-center">
+		<h1 class="hero-title animate-on-scroll mb-4">Connect genuinely, discover effortlessly.</h1>
+		<p class="hero-subtitle animate-on-scroll mb-8">Tired of endless swiping on apps that feel fake? Here, you can jump into real chats – video or text – with people who vibe with you. Filter by age, gender, or location, all while staying totally anonymous if you want. No pressure, just fun connections that happen fast.</p>
+		<div class="flex flex-col sm:flex-row gap-4 justify-center animate-on-scroll" style="animation-delay: 0.3s;">
 			<a href="/find" class="btn-primary">Start Matching Now</a>
 			<a href="/google" class="btn-outline">Sign Up Free</a>
 		</div>
@@ -41,6 +39,15 @@
 <!-- Features Section -->
 <section class="features-grid py-16">
 	<div class="feature-card animate-on-scroll">
+		<div class="feature-icon bg-[var(--color-theme-1)]">
+			<i class="fa fa-users"></i>
+		</div>
+		<h3 class="feature-title">Create & Join Rooms</h3>
+		<p class="feature-description">Build your own group hangout or join existing ones on topics like gaming, music, or random fun. Chat via text or video meetings just like Zoom or Google Meet. Invite friends anonymously or discover new crews. It's like a cozy online party, minus the awkward intros.</p>
+		<a href="/r" class="feature-link">Explore Rooms <i class="fa fa-arrow-right"></i></a>
+	</div>
+
+	<div class="feature-card animate-on-scroll" style="animation-delay: 0.1s;">
 		<div class="feature-icon bg-[var(--color-theme-2)]">
 			<i class="fa fa-video-camera"></i>
 		</div>
@@ -49,22 +56,13 @@
 		<a href="/find" class="feature-link">Try Video Chat <i class="fa fa-arrow-right"></i></a>
 	</div>
 
-	<div class="feature-card animate-on-scroll" style="animation-delay: 0.1s;">
+	<div class="feature-card animate-on-scroll" style="animation-delay: 0.2s;">
 		<div class="feature-icon bg-[var(--color-theme-4)]">
 			<i class="fa fa-comment"></i>
 		</div>
 		<h3 class="feature-title">Anonymous Text Chats</h3>
 		<p class="feature-description">Chat without showing your face or name. Share thoughts, memes, whatever – keep it light and private. Great for testing the waters before going live. Easy as sending a text, but way more exciting.</p>
 		<a href="/chats" class="feature-link">Start Anon Chat <i class="fa fa-arrow-right"></i></a>
-	</div>
-
-	<div class="feature-card animate-on-scroll" style="animation-delay: 0.2s;">
-		<div class="feature-icon bg-[var(--color-theme-1)]">
-			<i class="fa fa-users"></i>
-		</div>
-		<h3 class="feature-title">Create & Join Rooms</h3>
-		<p class="feature-description">Build your own group hangout or join existing ones on topics like gaming, music, or random fun. Invite friends anonymously or discover new crews. It's like a cozy online party, minus the awkward intros.</p>
-		<a href="/r" class="feature-link">Explore Rooms <i class="fa fa-arrow-right"></i></a>
 	</div>
 
 	<div class="feature-card animate-on-scroll" style="animation-delay: 0.3s;">
@@ -76,6 +74,7 @@
 		<a href="/i/create" class="feature-link">Build Profile <i class="fa fa-arrow-right"></i></a>
 	</div>
 
+	<!--
 	<div class="feature-card animate-on-scroll" style="animation-delay: 0.4s;">
 		<div class="feature-icon bg-[var(--color-theme-3)]">
 			<i class="fa fa-palette"></i>
@@ -84,7 +83,9 @@
 		<p class="feature-description">Whip up custom images from prompts or presets – think fun avatars or creative visuals. Upload refs for style-matching, generate in a snap. Privacy note: Your ideas stay yours, no sharing required. Get artsy without the hassle.</p>
 		<a href="/pink" class="feature-link">Generate Images <i class="fa fa-arrow-right"></i></a>
 	</div>
+	-->
 
+	<!--
 	<div class="feature-card animate-on-scroll" style="animation-delay: 0.5s;">
 		<div class="feature-icon bg-[var(--color-theme-6)]">
 			<i class="fa fa-play-circle"></i>
@@ -93,6 +94,7 @@
 		<p class="feature-description">Search videos, get instant summaries, and chat about them with AI. Dive deep without watching hours – ask questions, get insights. Fun for learning or debating clips, all in one spot. Quick, smart, and zero spoilers if you want.</p>
 		<a href="/tools/youtube-video-summarize-tool" class="feature-link">Summarize Videos <i class="fa fa-arrow-right"></i></a>
 	</div>
+	-->
 </section>
 
 <!-- Footer -->
