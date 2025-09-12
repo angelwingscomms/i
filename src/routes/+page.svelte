@@ -22,9 +22,10 @@
 <section class="flex min-h-screen flex-col items-center justify-center text-center px-4">
 	<div class="max-w-4xl">
 		<h1 class="hero-title animate-on-scroll mb-4">Connect genuinely, discover effortlessly.</h1>
-		<p class="hero-subtitle animate-on-scroll mb-8">Connect directly with real people through video or text chats, join vibrant chatrooms for group discussions or video meetings, and discover local products & services. Filter by age, gender, location – all anonymous, effortless, and fun.</p>
+		<p class="hero-subtitle animate-on-scroll mb-8">find chatrooms with AI. find users with AI. chat in chatrooms and with users anonymously if you want. list products and services</p>
+		<!-- <p class="hero-subtitle animate-on-scroll mb-8">Connect directly with real people through video or text chats, join vibrant chatrooms for group discussions or video meetings, and discover local products & services. Filter by age, gender, location – all anonymous, effortless, and fun.</p> -->
 		<div class="flex flex-col sm:flex-row gap-4 justify-center animate-on-scroll" style="animation-delay: 0.3s;">
-			<a href="/find" class="btn-primary">Start Matching Now</a>
+			<a href="/r" class="btn-primary">Find chat rooms</a>
 			<a href="/google" class="btn-outline">Sign Up Free</a>
 		</div>
 	</div>

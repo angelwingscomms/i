@@ -122,3 +122,8 @@ export interface DescriptionInputProps {
 	rows?: number;
 	label?: string;
 }
+
+export interface Recording {
+	id: string; // recording id from RealtimeKit
+	// Add fields like start_time, duration if needed for display
+}

@@ -46,17 +46,17 @@
 		$state(undefined);
 
 	let display_room_name = $state('');
-	let show_full_room_name_button = $state(false);
+	let show_full_room_name_button = $state(true);
 
 	// Rule: $effect for side effects including those to run when a variable changes, never use `$:`
 	$effect(() => {
 		if (t.length > ROOM_NAME_DISPLAY_LIMIT) {
 			display_room_name =
 				t.slice(0, ROOM_NAME_DISPLAY_LIMIT) + '...';
-			show_full_room_name_button = true;
+			// show_full_room_name_button = true;
 		} else {
 			display_room_name = t;
-			show_full_room_name_button = false;
+			// show_full_room_name_button = false;
 		}
 	});
 
@@ -408,6 +408,8 @@
 	{#if show_room_name_modal}
 		<RoomNameModal
 			full_room_name={t}
+			meeting={meeting}
+			i={roomId}
 			onClose={() => (show_room_name_modal = false)}
 		/>
 	{/if}
