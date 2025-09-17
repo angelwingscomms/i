@@ -29,7 +29,7 @@ export const PUT: RequestHandler = async ({
 		);
 	}
 
-	const { h } = await request.json();
+	const h = await request.text();
 
 	await edit_point(params.i, {
 		h,
