@@ -1,4 +1,5 @@
 import {
+	error,
 	json,
 	type RequestHandler
 } from '@sveltejs/kit';
@@ -23,10 +24,7 @@ export const PUT: RequestHandler = async ({
 		resume.s !== 'e' ||
 		resume.u !== locals.user.i
 	) {
-		return json(
-			{ error: 'forbidden' },
-			{ status: 403 }
-		);
+		return error(403, 'no');
 	}
 
 	const h = await request.text();
