@@ -1,7 +1,0 @@
-{
-	"name": "show see this user's products and services",
-	"conditions": {
-		"not_self": "show 'See their products and services'",
-		"self": "show 'See your products and services'"
-	}
-}

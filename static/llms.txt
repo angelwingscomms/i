@@ -1,0 +1,92 @@
+# i - AI-Powered Social Discovery Platform
+
+## Overview
+
+**i** is a modern web application built with SvelteKit, designed as a social discovery platform that leverages AI (Google Gemini), vector database search (Qdrant), and real-time features. It enables users to create profiles, discover others nearby, engage in chats and rooms, manage posts and resumes, and utilize AI tools for content summarization and interaction. The app supports progressive web app (PWA) capabilities for offline use and push notifications.
+
+Key goals:
+- Facilitate meaningful connections through location-based and AI-enhanced discovery.
+- Provide seamless real-time communication and content sharing.
+- Integrate AI for productivity, such as summarizing YouTube videos or editing resumes.
+
+The app is deployed as a Cloudflare Worker for serverless execution, with static assets and client-side rendering.
+
+## Core Features
+
+### User Authentication and Profiles
+- **Registration/Login**: Email/password signup, Google OAuth integration. Secure HTTP-only cookies store user sessions (`locals.user` with `i` for ID and `t` for token).
+- **Profile Management**: Users create/edit profiles including username, description, age range, gender, location (lat/lon). Profiles stored in Qdrant collection 'i' with payload keys like `u` (user ID), `d` (description), `g` (gender), `l` (location), `a` (age).
+- **Validation**: Username uniqueness check via `/api/validate-username`. Authorization enforced with 403 errors for unauthorized access.
+- **Settings**: Dedicated `/settings` page for profile updates.
+
+### Social Discovery and Search
+- **User Search**: Filter by location (`/u/search_nearby`), age range, gender. Uses Qdrant `search_by_payload` with geo filtering via `src/lib/util/geo.ts`.
+- **Results Display**: Card-based UI (`UserCard.svelte`) with sorting and filters (`SearchFilters.svelte`, `SortDropdown.svelte`).
+- **Item and Post Search**: Similar vector search for user-generated content (`/i/search`, `/posts/search`).
+
+### Chat and Real-Time Communication
+- **One-on-One Chats**: Initiate via user profiles (`/u/[i]/c`). Real-time messaging using WebSockets or polling (`src/lib/util/realtime.ts`).
+- **Group Rooms**: Create/join rooms (`/r/[i]`) with membership plans (`room_membership_plan.md`). Live sessions (`/r/[i]/live`) support audio/video? (recording links via `/r/[i]/get-recording-download-link`).
+- **Chat UI**: Components like `Chat.svelte`, `ChatInput.svelte`, `UserChat.svelte`. AI suggestions (`/api/chat/suggest`) using Gemini.
+- **Presence**: Track online status (`/me/presence`).
+
+### Content Creation and Management
+- **Posts**: Create/edit posts (`/posts/[i]/edit`) with AI assistance (`/posts/[i]/edit/gemini`). Searchable via Qdrant.
+- **Items**: Upload and manage personal items (`/i/create`, `/i/[i]`), possibly media/files. Embeddings for semantic search.
+- **Resumes**: Build/edit resumes (`/resume/[i]`) with Gemini integration for content generation/editing (`/resume/[i]/edit/gemini`).
+
+### AI-Powered Tools
+- **Gemini Integration**: Used across the app for:
+  - Chat message processing/suggestions (`src/lib/util/chat/process_message.ts`).
+  - Content summarization and editing (posts, resumes).
+  - Token counting (`src/lib/util/chat/token.ts`, `/count_tokens`).
+- **YouTube Tools** (`/tools/youtube-video-summarize-tool`):
+  - Search videos (`/api/youtube/search`).
+  - Fetch transcripts (`/api/youtube/transcript`).
+  - Summarize videos (`/api/youtube/summarize`).
+  - Chat with video content (`/api/youtube/chat`).
+- **Other AI**: Embeddings generation (`src/lib/util/embed.ts`) for Qdrant search. Config in `src/lib/ai/config.ts`.
+
+### Notifications and Engagement
+- **Push Notifications**: Subscribe/unsubscribe (`/u/[i]/push_notifications`), send via `src/lib/util/send_push_notif.ts`. Banner UI (`PushNotificationBanner.svelte`).
+- **Toasts**: User feedback via `src/lib/util/toast.ts`.
+
+### Media and Utilities
+- **Uploads**: File handling (`/i/upload`, `FileWidget.svelte`) to Cloudflare R2 or IBM COS (`src/lib/integrations/r2_storage.ts`, `ibm_cos.ts`).
+- **Audio/Video**: Player component (`AudioPlayer.svelte`), live modals (`LiveModal.svelte`).
+- **UI Components**: Reusable elements like `Modal.svelte`, `Navbar.svelte`, `ImageModal.svelte`. Themed with Tailwind CSS (dark/light mode via `src/lib/stores/theme.ts`).
+- **Presets**: Pink-themed preset generation/search (`/pink/preset/[i]`, `/pink/generate`).
+
+### Advanced Features
+- **Real-Time Rooms**: Live sessions with recording download links.
+- **SAM Integration**: Possible image masking/scaling (`src/lib/sam/`), though usage unclear.
+- **Dev Tools**: Transcribe API (`/api/transcribe`), though implementation details sparse.
+- **Offline Support**: Service worker (`service-worker.ts`), manifest (`manifest.webmanifest`), offline page.
+
+## Technical Architecture
+- **Framework**: SvelteKit for SSR/CSR, routing (`+page.svelte`, `+page.server.ts`).
+- **Database**: Single Qdrant collection 'i' for all entities (filter by `s` type: user, post, room, etc.). Payloads use single-letter keys (e.g., `i` for ID, `t` for text).
+- **Search**: Vector search with embeddings; scroll/paginate results.
+- **Auth**: Custom server-side auth (`src/lib/server/auth.ts`), locals.user injection in layouts.
+- **Styling**: Tailwind CSS only (`src/styles/`), no inline styles. Variables in `_variables.css`.
+- **Types**: Defined in `src/lib/types/index.ts` with minimal interfaces.
+- **Reactivity**: Svelte stores (`src/lib/stores/`), $derived/$effect preferred.
+- **Data Loading**: Centralized in `+page.server.ts` loads, returning single-letter keys (e.g., `{ u: user }`).
+- **Security**: Input validation, no secrets in code, 403 redirects for auth failures. Redirect to `/login` if unauthenticated.
+- **Testing**: Vitest (`*.test.ts`), Playwright E2E (`e2e/` specs for core flows like login, search, rooms).
+- **Deployment**: Vite build, Cloudflare adapter? Env vars for GEMINI and YOUTUBE_API_KEY.
+
+## API Endpoints
+- **Auth**: `/login`, `/logout`, `/google/callback`.
+- **Users**: `/u/[i]`, `/u/search_nearby`, `/u/[i]/push_notif`.
+- **Chats/Rooms**: `/chats`, `/r/[i]/live`, `/api/notifications/*`.
+- **AI/Tools**: `/api/youtube/*`, `/api/transcribe`, `/count_tokens`.
+- **Search**: Various `/search` routes.
+
+## Usage Notes
+- All copy is lowercase.
+- Event handlers: `onclick` (no colon).
+- Window events: `<svelte:window onkeydown>`.
+- No npm commands run automatically.
+
+This document is optimized for LLMs: structured, concise, with key terms and paths for easy parsing/reference.

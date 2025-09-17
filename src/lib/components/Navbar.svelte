@@ -281,7 +281,7 @@
 							<a
 								href="/u/{user.i}"
 								class="text-sm font-bold transition-all hover:scale-105"
-								style="color: var(--color-theme-4);"
+								style="color: var(--color-theme-1);"
 								>{user.t}</a
 							>
 							<a

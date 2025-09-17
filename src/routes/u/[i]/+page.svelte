@@ -834,7 +834,7 @@
 							class="feature-link inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition-all"
 							style="background: var(--color-theme-4);"
 						>
-							Search Users
+							explore Users
 							<svg
 								width="16"
 								height="16"

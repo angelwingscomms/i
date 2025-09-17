@@ -63,7 +63,7 @@
 
 <div class="page pad">
 	<div class="row space-between v-center mb-md">
-		<h1 class="title">search posts</h1>
+		<h1 class="title">posts</h1>
 		<button
 			class="btn-primary btn-wide"
 			onclick={create}
@@ -108,19 +108,7 @@
 						<div class="row space-between v-center">
 							<div>
 								<div class="result-title">{p.t}</div>
-								<!-- <div class="result-meta muted">{r.m ?? 0} members</div> -->
 							</div>
-							<!-- TODO score -->
-							<!-- {#if p.score !== undefined}
-								<div class="badge">
-									{Math.round(
-										Math.max(
-											0,
-											Math.min(1, p.score)
-										) * 100
-									)}%
-								</div>
-							{/if} -->
 						</div>
 					</a>
 				</li>
@@ -200,8 +188,8 @@
 		gap: 8px;
 	}
 	.item {
-		padding: 10px 12px;
-		border: 1px solid var(--color-theme-6);
+		border-left: 1px solid var(--color-theme-6);
+		border-bottom: 1px solid var(--color-theme-6);
 		border-radius: 10px;
 		background: transparent;
 	}
@@ -209,6 +197,10 @@
 		color: var(--link);
 		text-decoration: none;
 		font-weight: 600;
+		display: block;
+		padding: 10px 12px;
+		width: 100%;
+		height: 100%;
 	}
 	.muted {
 		color: var(--muted);

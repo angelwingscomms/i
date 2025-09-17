@@ -46,17 +46,14 @@
 		$state(undefined);
 
 	let display_room_name = $state('');
-	let show_full_room_name_button = $state(true);
 
 	// Rule: $effect for side effects including those to run when a variable changes, never use `$:`
 	$effect(() => {
 		if (t.length > ROOM_NAME_DISPLAY_LIMIT) {
 			display_room_name =
 				t.slice(0, ROOM_NAME_DISPLAY_LIMIT) + '...';
-			// show_full_room_name_button = true;
 		} else {
 			display_room_name = t;
-			// show_full_room_name_button = false;
 		}
 	});
 
@@ -286,7 +283,7 @@
 <div class="chat-layout">
 	<div class="chat-header chat-header-layout">
 		{#if r}
-			<div class="chat-title-group">
+			<div class="chat-title-group flex items-center gap-2">
 				<h1
 					class="chat-title flex-shrink-min font-light text-fuchsia-400 italic"
 				>
@@ -294,35 +291,25 @@
 						>{display_room_name}</span
 					>
 				</h1>
-				{#if show_full_room_name_button}
-					<button
-						class="btn"
-						onclick={() =>
-							(show_room_name_modal = true)}
-						>{r
-							? 'show full message'
-							: 'show full room name'}</button
-					>
-				{/if}
+				<button
+					class="ml-2 text-gray-400 hover:text-white self-center p-1 rounded focus:outline-none"
+					onclick={() =>
+						(show_room_name_modal = true)}
+				><i class="fas fa-info-circle"></i></button>
 			</div>
 		{:else if _ === '-'}
 			{#if a}
-				<div class="chat-title-group">
+				<div class="chat-title-group flex items-center gap-2">
 					<h1
 						class="chat-title flex-shrink-min font-light text-gray-500 italic"
 					>
 						anon chat {n} with {display_room_name}
 					</h1>
-					{#if show_full_room_name_button}
-						<button
-							class="btn"
-							onclick={() =>
-								(show_room_name_modal = true)}
-							>{r
-								? 'show full message'
-								: 'show full room name'}</button
-						>
-					{/if}
+					<button
+						class="ml-2 text-gray-400 hover:text-white self-center p-1 rounded focus:outline-none"
+						onclick={() =>
+							(show_room_name_modal = true)}
+					><i class="fas fa-info-circle"></i></button>
 				</div>
 			{:else}
 				<h1
@@ -332,20 +319,15 @@
 				</h1>
 			{/if}
 		{:else}
-			<div class="chat-title-group">
+			<div class="chat-title-group flex items-center gap-2">
 				<h1 class="chat-title flex-shrink-min">
 					{display_room_name}
 				</h1>
-				{#if show_full_room_name_button}
-					<button
-						class="btn"
-						onclick={() =>
-							(show_room_name_modal = true)}
-						>{r
-							? 'show full message'
-							: 'show full room name'}</button
-					>
-				{/if}
+				<button
+					class="ml-2 text-gray-400 hover:text-white self-center p-1 rounded focus:outline-none"
+					onclick={() =>
+						(show_room_name_modal = true)}
+				><i class="fas fa-info-circle"></i></button>
 			</div>
 		{/if}
 		<a

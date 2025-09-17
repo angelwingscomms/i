@@ -42,77 +42,131 @@
 			<a
 				href="/"
 				class="sidebar-nav-link"
-				onclick={close_sidebar}>Home</a
+				style="color: var(--color-theme-1);"
+				onclick={close_sidebar}
 			>
+				<i class="far fa-house mr-2"></i>
+				Home
+			</a>
 			{#if user}
 				<a
 					href="/r"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>search chatrooms</a
+					style="color: var(--color-theme-3);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-comments mr-2"></i>
+					search chatrooms
+				</a>
 				<a
 					href="/posts"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>search posts</a
+					style="color: var(--color-theme-2);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-file-alt mr-2"></i>
+					posts
+				</a>
 				<a
 					href="/chats"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>chats</a
+					style="color: var(--color-theme-4);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-comment-dots mr-2"></i>
+					chats
+				</a>
 				<a
 					href="/u"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>search users</a
+					style="color: var(--color-theme-6);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-users mr-2"></i>
+					users
+				</a>
 				<a
 					href="/tools/youtube-video-summarize-tool"
 					class="sidebar-nav-link"
+					style="color: var(--color-theme-1);"
 					onclick={close_sidebar}
-					>youtube summarizer</a
 				>
+					<i class="far fa-play-circle mr-2"></i>
+					youtube summarizer
+				</a>
 				<a
 					href="/settings"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>settings</a
+					style="color: var(--color-theme-4);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-cog mr-2"></i>
+					settings
+				</a>
 				<a
 					href="/edit_user"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>edit profile</a
+					style="color: var(--color-theme-6);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-user-edit mr-2"></i>
+					edit profile
+				</a>
 				<a
 					href="/resume"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>resume</a
+					style="color: var(--color-theme-2);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-file-alt mr-2"></i>
+					resume
+				</a>
 				<a
 					href="/u/{user.i}"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>{user.t}</a
+					style="color: var(--color-theme-4);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-user mr-2"></i>
+					{user.t}
+				</a>
 				<a
 					href="/logout"
 					class="sidebar-nav-link text-error"
-					onclick={close_sidebar}>logout</a
+					style="color: var(--color-theme-5);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-sign-out-alt mr-2"></i>
+					logout
+				</a>
 			{:else}
 				<a
 					href="/tools/youtube-video-summarize-tool"
 					class="sidebar-nav-link"
+					style="color: var(--color-theme-1);"
 					onclick={close_sidebar}
-					>youtube summarizer</a
 				>
+					<i class="far fa-play-circle mr-2"></i>
+					youtube summarizer
+				</a>
 				<a
 					href="/login"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>login w username</a
+					style="color: var(--color-theme-1);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-user mr-2"></i>
+					login w username
+				</a>
 				<a
 					href="/google"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>login w Google</a
+					style="color: var(--color-theme-2);"
+					onclick={close_sidebar}
 				>
+					<i class="far fa-sign-in-alt mr-2"></i>
+					login w Google
+				</a>
 			{/if}
 		</nav>
 	</div>
@@ -174,6 +228,8 @@
 		font-size: 1.1em;
 		padding: 10px 0;
 		border-bottom: 1px solid var(--border-primary);
+		display: flex;
+		align-items: center;
 	}
 
 	.sidebar-nav-link:hover {

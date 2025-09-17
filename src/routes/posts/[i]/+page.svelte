@@ -2,6 +2,8 @@
 	import type { Post } from '$lib/types';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
+	import { marked } from 'marked';
+	import Chat from '$lib/components/Chat.svelte';
 
 	let { data } = $props();
 	let post: Post = data.p;
@@ -19,6 +21,12 @@
 			>&larr; Back to posts</a
 		>
 	</div>
+
+	<div class="mb-8">
+		<h1 class="text-3xl font-bold text-[var(--accent-primary)]">{post.t}</h1>
+		<p class="text-sm text-[var(--text-secondary)]">Posted {new Date(post.d).toLocaleDateString()}</p>
+	</div>
+
 	<article
 		class="overflow-hidden rounded-lg bg-[var(--bg-card)]"
 	>
@@ -29,22 +37,12 @@
 				class="h-64 w-full object-cover md:h-96"
 			/>
 		{/if}
-		<h1
-			class="mb-4 px-6 pt-6 text-3xl font-bold text-[var(--text-primary)] md:text-4xl"
-		>
-			{post.t}
-		</h1>
-		<div class="prose prose-invert prose-lg mb-8 max-w-none px-6">
-			{@html post.b}
+		<div class="prose prose-invert prose-lg max-w-none px-6 pt-6">
+			{@html marked.parse(post.b)}
 		</div>
 		<div
-			class="flex items-center justify-between px-6 pb-6 text-sm text-[var(--text-secondary)]"
+			class="flex items-center justify-end px-6 pb-6"
 		>
-			<span
-				>Posted {new Date(
-					post.d
-				).toLocaleDateString()}</span
-			>
 			<div class="flex items-center gap-4">
 				<Button
 					text={data.user?.i === post.u
@@ -58,4 +56,15 @@
 			</div>
 		</div>
 	</article>
+
+	{#if data.messages && data.messages.length > 0 || data.user}
+		<div class="mt-8">
+			<Chat 
+				m={data.messages} 
+				t={data.t} 
+				_={data._} 
+				authToken={data.user ? data.user.i : undefined} 
+			/>
+		</div>
+	{/if}
 </div>

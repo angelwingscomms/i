@@ -51,6 +51,7 @@
 			Connect with people just like you
 		</h1>
 		<p class="hero-subtitle mb-8">
+			Start a blog. Create and share posts.
 			Find people and chatrooms that share your
 			interests, values and beliefs. Connect with
 			people just like you through anonymous video or
@@ -60,11 +61,11 @@
 		<div
 			class="flex flex-col justify-center gap-4 sm:flex-row"
 		>
-			<a href="/r" class="btn-primary"
-				>Find chat rooms</a
+			<a href="/posts" class="btn-primary"
+				>explore posts</a
 			>
-			<a href="/google" class="btn-outline"
-				>Sign Up Free</a
+			<a href="/r" class="btn-outline"
+				>explore chatrooms</a
 			>
 		</div>
 	</div>
