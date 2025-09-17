@@ -14,7 +14,9 @@ self.addEventListener('install', (event: Event) => {
 
 self.addEventListener('activate', (event: Event) => {
 	console.log('🚀 Service worker activating...');
-	(event as any).waitUntil((self as any).clients.claim());
+	(event as any).waitUntil(
+		(self as any).clients.claim()
+	);
 });
 
 self.addEventListener('push', (event: Event) => {
@@ -24,7 +26,9 @@ self.addEventListener('push', (event: Event) => {
 
 	try {
 		const pushEvent = event as any;
-		const data = pushEvent.data ? pushEvent.data.json() : {};
+		const data = pushEvent.data
+			? pushEvent.data.json()
+			: {};
 		userTag = data.userTag || 'someone';
 		chatId = data.chatId || '';
 	} catch (e) {
@@ -37,28 +41,40 @@ self.addEventListener('push', (event: Event) => {
 		data: { chatId, userTag }
 	};
 
-	(event as any).waitUntil((self as any).registration.showNotification(title, options));
-});
-
-self.addEventListener('notificationclick', (event: any) => {
-	event.notification.close();
-	const chatId = event.notification.data?.chatId;
-	const url = chatId ? `/u/${chatId}` : '/';
-
 	(event as any).waitUntil(
-		(async () => {
-			const allClients = await (self as any).clients.matchAll({
-				includeUncontrolled: true,
-				type: 'window'
-			});
-			const client = allClients.find((c: any) => c.url.includes(url));
-
-			if (client) {
-				client.focus();
-				client.navigate(url);
-			} else {
-				await (self as any).clients.openWindow(url);
-			}
-		})()
+		(self as any).registration.showNotification(
+			title,
+			options
+		)
 	);
 });
+
+self.addEventListener(
+	'notificationclick',
+	(event: any) => {
+		event.notification.close();
+		const chatId = event.notification.data?.chatId;
+		const url = chatId ? `/u/${chatId}` : '/';
+
+		(event as any).waitUntil(
+			(async () => {
+				const allClients = await (
+					self as any
+				).clients.matchAll({
+					includeUncontrolled: true,
+					type: 'window'
+				});
+				const client = allClients.find((c: any) =>
+					c.url.includes(url)
+				);
+
+				if (client) {
+					client.focus();
+					client.navigate(url);
+				} else {
+					await (self as any).clients.openWindow(url);
+				}
+			})()
+		);
+	}
+);

@@ -1,9 +1,14 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { embed } from '$lib/util/embed';
-import { search_by_payload, search_by_vector } from '$lib/db';
+import {
+	search_by_payload,
+	search_by_vector
+} from '$lib/db';
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({
+	request
+}) => {
 	const {
 		q,
 		kind,
@@ -16,7 +21,11 @@ export const POST: RequestHandler = async ({ request }) => {
 		sort?: 'relevance' | 'newest' | 'oldest';
 	};
 
-	if (typeof limit !== 'number' || limit < 1 || limit > 200) {
+	if (
+		typeof limit !== 'number' ||
+		limit < 1 ||
+		limit > 200
+	) {
 		throw error(400, 'invalid limit (1-200)');
 	}
 
@@ -55,17 +64,23 @@ export const POST: RequestHandler = async ({ request }) => {
 	// Sort results based on criteria
 	switch (sort) {
 		case 'newest':
-			candidates.sort((a, b) => (b.a || 0) - (a.a || 0));
+			candidates.sort(
+				(a, b) => (b.a || 0) - (a.a || 0)
+			);
 			break;
 		case 'oldest':
-			candidates.sort((a, b) => (a.a || 0) - (b.a || 0));
+			candidates.sort(
+				(a, b) => (a.a || 0) - (b.a || 0)
+			);
 			break;
 		case 'relevance':
 		default:
 			// For vector search, results are already sorted by relevance (score)
 			// For payload search, maintain insertion order or sort by newest
 			if (!q || !q.trim()) {
-				candidates.sort((a, b) => (b.a || 0) - (a.a || 0));
+				candidates.sort(
+					(a, b) => (b.a || 0) - (a.a || 0)
+				);
 			}
 			break;
 	}

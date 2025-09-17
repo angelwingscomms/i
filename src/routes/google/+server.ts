@@ -1,13 +1,30 @@
-import { generateState, generateCodeVerifier, Google } from 'arctic';
+import {
+	generateState,
+	generateCodeVerifier,
+	Google
+} from 'arctic';
 
 import type { RequestEvent } from '@sveltejs/kit';
-import { GOOGLE_ID, GOOGLE_SECRET } from '$env/static/private';
+import {
+	GOOGLE_ID,
+	GOOGLE_SECRET
+} from '$env/static/private';
 
-export async function GET(event: RequestEvent): Promise<Response> {
+export async function GET(
+	event: RequestEvent
+): Promise<Response> {
 	const state = generateState();
 	const codeVerifier = generateCodeVerifier();
-	const google = new Google(GOOGLE_ID, GOOGLE_SECRET, `${event.url.origin}/google/callback`);
-	const url = google.createAuthorizationURL(state, codeVerifier, ['openid', 'profile', 'email']);
+	const google = new Google(
+		GOOGLE_ID,
+		GOOGLE_SECRET,
+		`${event.url.origin}/google/callback`
+	);
+	const url = google.createAuthorizationURL(
+		state,
+		codeVerifier,
+		['openid', 'profile', 'email']
+	);
 
 	// Capture intended redirect after login
 	const next = event.url.searchParams.get('next');
@@ -26,12 +43,16 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		maxAge: 432000 * 90,
 		sameSite: 'lax'
 	});
-	event.cookies.set('google_code_verifier', codeVerifier, {
-		path: '/',
-		httpOnly: true,
-		maxAge: 432000 * 90,
-		sameSite: 'lax'
-	});
+	event.cookies.set(
+		'google_code_verifier',
+		codeVerifier,
+		{
+			path: '/',
+			httpOnly: true,
+			maxAge: 432000 * 90,
+			sameSite: 'lax'
+		}
+	);
 
 	return new Response(null, {
 		status: 302,

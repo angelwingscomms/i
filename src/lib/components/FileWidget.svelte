@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { getFileInfo, getFilenameFromUrl, isImage, isAudio } from '$lib/util/file';
+	import {
+		getFileInfo,
+		getFilenameFromUrl,
+		isImage,
+		isAudio
+	} from '$lib/util/file';
 	import AudioPlayer from './AudioPlayer.svelte';
 	import ImageModal from './ImageModal.svelte';
 
@@ -49,15 +54,24 @@
 <div class="file-widget">
 	{#if isImage(url, mimeType)}
 		<!-- Image Widget -->
-		<div class="file-widget-content image-widget" onclick={openImageModal}>
+		<div
+			class="file-widget-content image-widget"
+			onclick={openImageModal}
+		>
 			<div class="file-icon">
 				<i class="fas {fileInfo.icon}"></i>
 			</div>
 			<div class="file-info">
 				<div class="filename">{filename}</div>
-				<div class="file-extension">.{fileInfo.extension}</div>
+				<div class="file-extension">
+					.{fileInfo.extension}
+				</div>
 			</div>
-			<button class="download-btn" onclick={downloadFile} aria-label="Download">
+			<button
+				class="download-btn"
+				onclick={downloadFile}
+				aria-label="Download"
+			>
 				<i class="fas fa-download"></i>
 			</button>
 		</div>
@@ -69,12 +83,18 @@
 			</div>
 			<div class="file-info">
 				<div class="filename">{filename}</div>
-				<div class="file-extension">.{fileInfo.extension}</div>
+				<div class="file-extension">
+					.{fileInfo.extension}
+				</div>
 			</div>
 			<div class="audio-player-container">
 				<AudioPlayer {url} />
 			</div>
-			<button class="download-btn" onclick={downloadFile} aria-label="Download">
+			<button
+				class="download-btn"
+				onclick={downloadFile}
+				aria-label="Download"
+			>
 				<i class="fas fa-download"></i>
 			</button>
 		</div>
@@ -86,9 +106,15 @@
 			</div>
 			<div class="file-info">
 				<div class="filename">{filename}</div>
-				<div class="file-extension">.{fileInfo.extension}</div>
+				<div class="file-extension">
+					.{fileInfo.extension}
+				</div>
 			</div>
-			<button class="download-btn" onclick={downloadFile} aria-label="Download">
+			<button
+				class="download-btn"
+				onclick={downloadFile}
+				aria-label="Download"
+			>
 				<i class="fas fa-download"></i>
 			</button>
 		</div>
@@ -96,7 +122,11 @@
 </div>
 
 {#if showImageModal}
-	<ImageModal images={allImages} currentIndex={currentImageIndex} onClose={closeImageModal} />
+	<ImageModal
+		images={allImages}
+		currentIndex={currentImageIndex}
+		onClose={closeImageModal}
+	/>
 {/if}
 
 <style>

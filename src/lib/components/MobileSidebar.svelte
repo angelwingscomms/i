@@ -5,7 +5,11 @@
 		is_open,
 		user = null,
 		onClose
-	}: { is_open: boolean; user: User | null; onClose?: () => void } = $props();
+	}: {
+		is_open: boolean;
+		user: User | null;
+		onClose?: () => void;
+	} = $props();
 
 	function close_sidebar() {
 		is_open = false;
@@ -15,7 +19,11 @@
 
 <aside class="mobile-sidebar" class:is-open={is_open}>
 	<div class="sidebar-content">
-		<button class="close-button" onclick={close_sidebar} aria-label="Close sidebar">
+		<button
+			class="close-button"
+			onclick={close_sidebar}
+			aria-label="Close sidebar"
+		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 24 24"
@@ -31,29 +39,75 @@
 			</svg>
 		</button>
 		<nav class="sidebar-nav">
-			<a href="/" class="sidebar-nav-link" onclick={close_sidebar}>Home</a>
+			<a
+				href="/"
+				class="sidebar-nav-link"
+				onclick={close_sidebar}>Home</a
+			>
 			{#if user}
-				<a href="/r" class="sidebar-nav-link" onclick={close_sidebar}>search chatrooms</a>
-				<a href="/p" class="sidebar-nav-link" onclick={close_sidebar}>search posts</a>
-				<a href="/chats" class="sidebar-nav-link" onclick={close_sidebar}>chats</a>
-				<a href="/u" class="sidebar-nav-link" onclick={close_sidebar}>search users</a>
+				<a
+					href="/r"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>search chatrooms</a
+				>
+				<a
+					href="/p"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>search posts</a
+				>
+				<a
+					href="/chats"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>chats</a
+				>
+				<a
+					href="/u"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>search users</a
+				>
 				<a
 					href="/tools/youtube-video-summarize-tool"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>youtube summarizer</a
+					onclick={close_sidebar}
+					>youtube summarizer</a
 				>
-				<a href="/settings" class="sidebar-nav-link" onclick={close_sidebar}>settings</a>
-				<a href="/edit_user" class="sidebar-nav-link" onclick={close_sidebar}>edit profile</a>
-				<a href="/u/{user.i}" class="sidebar-nav-link" onclick={close_sidebar}>{user.t}</a>
-				<a href="/logout" class="sidebar-nav-link text-error" onclick={close_sidebar}>logout</a>
+				<a
+					href="/settings"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>settings</a
+				>
+				<a
+					href="/edit_user"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>edit profile</a
+				>
+				<a
+					href="/u/{user.i}"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>{user.t}</a
+				>
+				<a
+					href="/logout"
+					class="sidebar-nav-link text-error"
+					onclick={close_sidebar}>logout</a
+				>
 			{:else}
 				<a
 					href="/tools/youtube-video-summarize-tool"
 					class="sidebar-nav-link"
-					onclick={close_sidebar}>youtube summarizer</a
+					onclick={close_sidebar}
+					>youtube summarizer</a
 				>
-				<a href="/login" class="sidebar-nav-link" onclick={close_sidebar}>login w username</a>
-				<a href="/google" class="sidebar-nav-link" onclick={close_sidebar}>login w Google</a>
+				<a
+					href="/login"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>login w username</a
+				>
+				<a
+					href="/google"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>login w Google</a
+				>
 			{/if}
 		</nav>
 	</div>
@@ -65,7 +119,9 @@
 	onclick={close_sidebar}
 	role="button"
 	tabindex="0"
-	onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && close_sidebar()}
+	onkeydown={(e) =>
+		(e.key === 'Enter' || e.key === ' ') &&
+		close_sidebar()}
 	aria-label="Close sidebar overlay"
 ></div>
 

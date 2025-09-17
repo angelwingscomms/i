@@ -1,6 +1,13 @@
 <script lang="ts">
 	import UserCard from './UserCard.svelte';
-	type Result = { i: string; t: string; a?: number; g?: number; av?: string; score?: number };
+	type Result = {
+		i: string;
+		t: string;
+		a?: number;
+		g?: number;
+		av?: string;
+		score?: number;
+	};
 
 	let { results } = $props<{ results: Result[] }>();
 </script>

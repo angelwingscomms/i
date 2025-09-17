@@ -19,21 +19,36 @@
 	};
 
 	let { data }: PageProps = $props();
-	let { i: item, relatedItems } = data as unknown as { i: Item; relatedItems?: Item[] };
+	let { i: item, relatedItems } = data as unknown as {
+		i: Item;
+		relatedItems?: Item[];
+	};
 	let selectedImageIndex = $state(0);
 	let showImageModal = $state(false);
 
 	onMount(() => {
 		// Add smooth scroll behavior for anchor links
-		document.querySelectorAll('a[href^="#"]').forEach((anchor: Element) => {
-			anchor.addEventListener('click', function (this: HTMLAnchorElement, e: Event) {
-				e.preventDefault();
-				const target = document.querySelector(this.getAttribute('href')!);
-				if (target) {
-					target.scrollIntoView({ behavior: 'smooth' });
-				}
+		document
+			.querySelectorAll('a[href^="#"]')
+			.forEach((anchor: Element) => {
+				anchor.addEventListener(
+					'click',
+					function (
+						this: HTMLAnchorElement,
+						e: Event
+					) {
+						e.preventDefault();
+						const target = document.querySelector(
+							this.getAttribute('href')!
+						);
+						if (target) {
+							target.scrollIntoView({
+								behavior: 'smooth'
+							});
+						}
+					}
+				);
 			});
-		});
 	});
 
 	function openImageModal(index: number) {
@@ -49,13 +64,17 @@
 
 	function nextImage() {
 		if (item.x && item.x.length > 0) {
-			selectedImageIndex = (selectedImageIndex + 1) % item.x.length;
+			selectedImageIndex =
+				(selectedImageIndex + 1) % item.x.length;
 		}
 	}
 
 	function prevImage() {
 		if (item.x && item.x.length > 0) {
-			selectedImageIndex = selectedImageIndex === 0 ? item.x.length - 1 : selectedImageIndex - 1;
+			selectedImageIndex =
+				selectedImageIndex === 0
+					? item.x.length - 1
+					: selectedImageIndex - 1;
 		}
 	}
 
@@ -80,11 +99,19 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
-	<title>{item.t || 'Item Details'} - Apexlinks</title>
-	<meta name="description" content={item.d || 'View item details and connect with the owner'} />
+	<title>{item.t || 'Item Details'} - Apexlinks</title
+	>
+	<meta
+		name="description"
+		content={item.d ||
+			'View item details and connect with the owner'}
+	/>
 </svelte:head>
 
-<div class="min-h-screen" style="background: var(--bg-primary);">
+<div
+	class="min-h-screen"
+	style="background: var(--bg-primary);"
+>
 	<!-- Hero Section with Image Gallery -->
 	{#if item.x && item.x.length > 0}
 		<div
@@ -105,8 +132,12 @@
 			<div
 				class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"
 			></div>
-			<div class="relative mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24">
-				<div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+			<div
+				class="relative mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24"
+			>
+				<div
+					class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16"
+				>
 					<!-- Main Image -->
 					<div class="order-2 lg:order-1">
 						<div class="group relative">
@@ -116,7 +147,10 @@
 								tabindex="0"
 								onclick={() => openImageModal(0)}
 								onkeydown={(e) => {
-									if (e.key === 'Enter' || e.key === ' ') {
+									if (
+										e.key === 'Enter' ||
+										e.key === ' '
+									) {
 										e.preventDefault();
 										openImageModal(0);
 									}
@@ -164,7 +198,8 @@
 										index
 											? 'border-white shadow-lg shadow-purple-500/30'
 											: 'border-white/30 hover:border-white/50'}"
-										onclick={() => (selectedImageIndex = index)}
+										onclick={() =>
+											(selectedImageIndex = index)}
 									>
 										<img
 											src={image}
@@ -178,16 +213,26 @@
 					</div>
 
 					<!-- Item Header Info -->
-					<div class="order-1 text-center lg:order-2 lg:text-left">
-						<div class="mb-6 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+					<div
+						class="order-1 text-center lg:order-2 lg:text-left"
+					>
+						<div
+							class="mb-6 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+						>
 							<span
 								class="rounded-2xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 backdrop-blur-md"
 							>
-								{item.k === 0 ? '🛍️ PRODUCT' : '⚡ SERVICE'}
+								{item.k === 0
+									? '🛍️ PRODUCT'
+									: '⚡ SERVICE'}
 							</span>
-							<span class="text-sm font-medium text-white/70">
+							<span
+								class="text-sm font-medium text-white/70"
+							>
 								{item.a
-									? new Date(item.a).toLocaleDateString('en-US', {
+									? new Date(
+											item.a
+										).toLocaleDateString('en-US', {
 											year: 'numeric',
 											month: 'long',
 											day: 'numeric'
@@ -196,31 +241,54 @@
 							</span>
 						</div>
 
-						<h1 class="mb-6 text-4xl leading-tight font-bold tracking-tight text-white lg:text-6xl">
+						<h1
+							class="mb-6 text-4xl leading-tight font-bold tracking-tight text-white lg:text-6xl"
+						>
 							{item.t}
 						</h1>
 
 						{#if item.q}
-							<div class="mb-8 text-xl leading-relaxed font-semibold text-white/90 lg:text-2xl">
+							<div
+								class="mb-8 text-xl leading-relaxed font-semibold text-white/90 lg:text-2xl"
+							>
 								{item.q}
 							</div>
 						{/if}
 
 						<!-- Action Buttons -->
-						<div class="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
+						<div
+							class="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start"
+						>
 							<div class="flex-1 sm:flex-none">
 								{#if item.u}
-									<ChatWithButton href="/u/{item.u}/c" text="💬 Chat with Owner" />
+									<ChatWithButton
+										href="/u/{item.u}/c"
+										text="💬 Chat with Owner"
+									/>
 								{/if}
 							</div>
 							{#if item.u}
-								<div class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row">
-									<a href="/u/{item.u}" class="btn btn-secondary group">
-										<span class="transition-transform duration-200 group-hover:scale-110">👤</span>
+								<div
+									class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row"
+								>
+									<a
+										href="/u/{item.u}"
+										class="btn btn-secondary group"
+									>
+										<span
+											class="transition-transform duration-200 group-hover:scale-110"
+											>👤</span
+										>
 										<span>View Owner Profile</span>
 									</a>
-									<a href="/u/{item.u}/i" class="btn btn-secondary group">
-										<span class="transition-transform duration-200 group-hover:scale-110">🛍️</span>
+									<a
+										href="/u/{item.u}/i"
+										class="btn btn-secondary group"
+									>
+										<span
+											class="transition-transform duration-200 group-hover:scale-110"
+											>🛍️</span
+										>
 										<span>More from Owner</span>
 									</a>
 								</div>
@@ -228,7 +296,9 @@
 						</div>
 
 						<!-- Additional Action -->
-						<div class="mt-6 border-t border-white/10 pt-6">
+						<div
+							class="mt-6 border-t border-white/10 pt-6"
+						>
 							<a
 								href="/i/{item.i}/c"
 								class="group inline-flex items-center gap-3 text-white/80 transition-colors duration-200 hover:text-white"
@@ -238,7 +308,9 @@
 								>
 									<span class="text-sm">🤖</span>
 								</div>
-								<span class="font-medium">Ask AI About This Item</span>
+								<span class="font-medium"
+									>Ask AI About This Item</span
+								>
 								<svg
 									class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
 									fill="none"
@@ -278,32 +350,47 @@
 			<div
 				class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"
 			></div>
-			<div class="relative mx-auto max-w-4xl px-6 py-20 text-center lg:px-8 lg:py-28">
+			<div
+				class="relative mx-auto max-w-4xl px-6 py-20 text-center lg:px-8 lg:py-28"
+			>
 				<!-- Decorative icon -->
 				<div
 					class="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-2xl ring-1 shadow-purple-500/30 ring-white/20"
 				>
-					<span class="text-4xl">{item.k === 0 ? '🛍️' : '⚡'}</span>
+					<span class="text-4xl"
+						>{item.k === 0 ? '🛍️' : '⚡'}</span
+					>
 				</div>
 
-				<div class="mb-8 flex flex-wrap items-center justify-center gap-3">
+				<div
+					class="mb-8 flex flex-wrap items-center justify-center gap-3"
+				>
 					<span
 						class="rounded-2xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 backdrop-blur-md"
 					>
-						{item.k === 0 ? '🛍️ PRODUCT' : '⚡ SERVICE'}
+						{item.k === 0
+							? '🛍️ PRODUCT'
+							: '⚡ SERVICE'}
 					</span>
-					<span class="text-sm font-medium text-white/70">
+					<span
+						class="text-sm font-medium text-white/70"
+					>
 						{item.a
-							? new Date(item.a).toLocaleDateString('en-US', {
-									year: 'numeric',
-									month: 'long',
-									day: 'numeric'
-								})
+							? new Date(item.a).toLocaleDateString(
+									'en-US',
+									{
+										year: 'numeric',
+										month: 'long',
+										day: 'numeric'
+									}
+								)
 							: 'Date not available'}
 					</span>
 				</div>
 
-				<h1 class="mb-6 text-5xl leading-tight font-bold tracking-tight text-white lg:text-6xl">
+				<h1
+					class="mb-6 text-5xl leading-tight font-bold tracking-tight text-white lg:text-6xl"
+				>
 					{item.t}
 				</h1>
 
@@ -315,24 +402,45 @@
 					</div>
 				{/if}
 
-				<div class="mx-auto flex max-w-2xl flex-col justify-center gap-4 sm:flex-row">
+				<div
+					class="mx-auto flex max-w-2xl flex-col justify-center gap-4 sm:flex-row"
+				>
 					<div class="flex-1 sm:flex-none">
-						<ChatWithButton href="/u/{item.u}/c" text="💬 Chat with Owner" />
+						<ChatWithButton
+							href="/u/{item.u}/c"
+							text="💬 Chat with Owner"
+						/>
 					</div>
-					<div class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row">
-						<a href="/u/{item.u}" class="btn btn-secondary group">
-							<span class="transition-transform duration-200 group-hover:scale-110">👤</span>
+					<div
+						class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row"
+					>
+						<a
+							href="/u/{item.u}"
+							class="btn btn-secondary group"
+						>
+							<span
+								class="transition-transform duration-200 group-hover:scale-110"
+								>👤</span
+							>
 							<span>View Owner Profile</span>
 						</a>
-						<a href="/u/{item.u}/i" class="btn btn-secondary group">
-							<span class="transition-transform duration-200 group-hover:scale-110">🛍️</span>
+						<a
+							href="/u/{item.u}/i"
+							class="btn btn-secondary group"
+						>
+							<span
+								class="transition-transform duration-200 group-hover:scale-110"
+								>🛍️</span
+							>
 							<span>More from Owner</span>
 						</a>
 					</div>
 				</div>
 
 				<!-- Additional Action -->
-				<div class="mt-8 border-t border-white/10 pt-8">
+				<div
+					class="mt-8 border-t border-white/10 pt-8"
+				>
 					<a
 						href="/i/{item.i}/c"
 						class="group inline-flex items-center gap-3 text-white/80 transition-colors duration-200 hover:text-white"
@@ -342,14 +450,20 @@
 						>
 							<span class="text-sm">🤖</span>
 						</div>
-						<span class="font-medium">Ask AI About This Item</span>
+						<span class="font-medium"
+							>Ask AI About This Item</span
+						>
 						<svg
 							class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
 						>
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 5l7 7-7 7"
 							></path>
 						</svg>
 					</a>
@@ -364,12 +478,18 @@
 		<div
 			class="absolute inset-0 -z-10 bg-gradient-to-br from-slate-50/50 via-transparent to-purple-50/30"
 		></div>
-		<div class="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-20">
-			<div class="grid gap-12 lg:grid-cols-3 lg:gap-16">
+		<div
+			class="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-20"
+		>
+			<div
+				class="grid gap-12 lg:grid-cols-3 lg:gap-16"
+			>
 				<!-- Left Column - Description -->
 				<div class="space-y-8 lg:col-span-2">
 					<div class="card-normal group">
-						<div class="mb-8 flex items-center justify-between">
+						<div
+							class="mb-8 flex items-center justify-between"
+						>
 							<h2
 								class="flex items-center gap-3 text-2xl font-bold lg:text-3xl"
 								style="color: var(--color-theme-4);"
@@ -381,7 +501,9 @@
 								</div>
 								Description
 							</h2>
-							<div class="h-8 w-px bg-gradient-to-b from-purple-500/20 to-transparent"></div>
+							<div
+								class="h-8 w-px bg-gradient-to-b from-purple-500/20 to-transparent"
+							></div>
 						</div>
 
 						{#if item.d}
@@ -397,11 +519,16 @@
 								>
 									<span class="text-3xl">📝</span>
 								</div>
-								<h3 class="mb-2 text-lg font-semibold text-gray-600 dark:text-gray-400">
+								<h3
+									class="mb-2 text-lg font-semibold text-gray-600 dark:text-gray-400"
+								>
 									No description provided
 								</h3>
-								<p class="text-gray-500 dark:text-gray-500">
-									The owner hasn't added a description for this item yet.
+								<p
+									class="text-gray-500 dark:text-gray-500"
+								>
+									The owner hasn't added a description
+									for this item yet.
 								</p>
 							</div>
 						{/if}
@@ -409,7 +536,9 @@
 
 					<!-- Additional Information -->
 					<div class="card-normal group">
-						<div class="mb-8 flex items-center justify-between">
+						<div
+							class="mb-8 flex items-center justify-between"
+						>
 							<h2
 								class="flex items-center gap-3 text-2xl font-bold lg:text-3xl"
 								style="color: var(--color-theme-4);"
@@ -421,7 +550,9 @@
 								</div>
 								Details
 							</h2>
-							<div class="h-8 w-px bg-gradient-to-b from-blue-500/20 to-transparent"></div>
+							<div
+								class="h-8 w-px bg-gradient-to-b from-blue-500/20 to-transparent"
+							></div>
 						</div>
 
 						<div class="grid gap-8 md:grid-cols-2">
@@ -429,7 +560,9 @@
 								<div
 									class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
 								>
-									<div class="flex items-center justify-between">
+									<div
+										class="flex items-center justify-between"
+									>
 										<span
 											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
 											>Type</span
@@ -437,7 +570,9 @@
 										<div
 											class="rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 text-xs font-bold text-white shadow-lg shadow-purple-500/30"
 										>
-											{item.k === 0 ? '🛍️ Product' : '⚡ Service'}
+											{item.k === 0
+												? '🛍️ Product'
+												: '⚡ Service'}
 										</div>
 									</div>
 								</div>
@@ -445,18 +580,27 @@
 								<div
 									class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
 								>
-									<div class="flex items-center justify-between">
+									<div
+										class="flex items-center justify-between"
+									>
 										<span
 											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
 											>Posted</span
 										>
-										<span class="font-bold text-gray-900 dark:text-gray-100">
+										<span
+											class="font-bold text-gray-900 dark:text-gray-100"
+										>
 											{item.a
-												? new Date(item.a).toLocaleDateString('en-US', {
-														year: 'numeric',
-														month: 'long',
-														day: 'numeric'
-													})
+												? new Date(
+														item.a
+													).toLocaleDateString(
+														'en-US',
+														{
+															year: 'numeric',
+															month: 'long',
+															day: 'numeric'
+														}
+													)
 												: 'Date not available'}
 										</span>
 									</div>
@@ -468,13 +612,20 @@
 									<div
 										class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
 									>
-										<div class="flex items-center justify-between">
+										<div
+											class="flex items-center justify-between"
+										>
 											<span
 												class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
 												>Price</span
 											>
-											<span class="font-bold" style="color: var(--color-theme-1);">
-												{item.v ? `${item.v}` : 'Price not available'}
+											<span
+												class="font-bold"
+												style="color: var(--color-theme-1);"
+											>
+												{item.v
+													? `${item.v}`
+													: 'Price not available'}
 											</span>
 										</div>
 									</div>
@@ -483,7 +634,9 @@
 								<div
 									class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
 								>
-									<div class="flex items-center justify-between">
+									<div
+										class="flex items-center justify-between"
+									>
 										<span
 											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
 											>Item ID</span
@@ -505,7 +658,9 @@
 					<div class="sticky top-8 space-y-8">
 						<!-- Quick Actions Card -->
 						<div class="card-normal group">
-							<div class="mb-6 flex items-center justify-between">
+							<div
+								class="mb-6 flex items-center justify-between"
+							>
 								<h3
 									class="flex items-center gap-3 text-xl font-bold lg:text-2xl"
 									style="color: var(--color-theme-4);"
@@ -517,26 +672,46 @@
 									</div>
 									Quick Actions
 								</h3>
-								<div class="h-8 w-px bg-gradient-to-b from-green-500/20 to-transparent"></div>
+								<div
+									class="h-8 w-px bg-gradient-to-b from-green-500/20 to-transparent"
+								></div>
 							</div>
 
 							<div class="space-y-4">
-								<ChatWithButton href="/u/{item.u}/c" text="💬 Chat with Owner" />
+								<ChatWithButton
+									href="/u/{item.u}/c"
+									text="💬 Chat with Owner"
+								/>
 
-								<a href="/u/{item.u}" class="btn btn-secondary group/btn w-full">
-									<span class="transition-transform duration-200 group-hover/btn:scale-110">👤</span
+								<a
+									href="/u/{item.u}"
+									class="btn btn-secondary group/btn w-full"
+								>
+									<span
+										class="transition-transform duration-200 group-hover/btn:scale-110"
+										>👤</span
 									>
 									<span>View Owner Profile</span>
 								</a>
 
-								<a href="/u/{item.u}/i" class="btn btn-secondary group/btn w-full">
-									<span class="transition-transform duration-200 group-hover/btn:scale-110">🛍️</span
+								<a
+									href="/u/{item.u}/i"
+									class="btn btn-secondary group/btn w-full"
+								>
+									<span
+										class="transition-transform duration-200 group-hover/btn:scale-110"
+										>🛍️</span
 									>
 									<span>More from Owner</span>
 								</a>
 
-								<a href="/i/{item.i}/c" class="btn btn-secondary group/btn w-full">
-									<span class="transition-transform duration-200 group-hover/btn:scale-110">🤖</span
+								<a
+									href="/i/{item.i}/c"
+									class="btn btn-secondary group/btn w-full"
+								>
+									<span
+										class="transition-transform duration-200 group-hover/btn:scale-110"
+										>🤖</span
 									>
 									<span>Ask AI About This</span>
 								</a>
@@ -553,10 +728,14 @@
 											})
 											.catch(() => {
 												// Fallback to clipboard
-												navigator.clipboard.writeText(window.location.href);
+												navigator.clipboard.writeText(
+													window.location.href
+												);
 											})}
 								>
-									<span class="transition-transform duration-200 group-hover/btn:scale-110">📤</span
+									<span
+										class="transition-transform duration-200 group-hover/btn:scale-110"
+										>📤</span
 									>
 									<span>Share Item</span>
 								</button>
@@ -565,7 +744,9 @@
 
 						<!-- Item Stats Card -->
 						<div class="card-normal group">
-							<div class="mb-6 flex items-center justify-between">
+							<div
+								class="mb-6 flex items-center justify-between"
+							>
 								<h4
 									class="flex items-center gap-3 text-lg font-bold"
 									style="color: var(--color-theme-4);"
@@ -577,18 +758,28 @@
 									</div>
 									Stats
 								</h4>
-								<div class="h-6 w-px bg-gradient-to-b from-orange-500/20 to-transparent"></div>
+								<div
+									class="h-6 w-px bg-gradient-to-b from-orange-500/20 to-transparent"
+								></div>
 							</div>
 
 							<div class="space-y-4">
-
-
 								<div
 									class="flex items-center justify-between rounded-xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-3 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
 								>
-									<span class="text-sm font-medium text-gray-600 dark:text-gray-400">Age</span>
-									<span class="font-bold text-gray-900 dark:text-gray-100">
-										{item.a ? Math.ceil((Date.now() - item.a) / (1000 * 60 * 60 * 24)) : '—'}d
+									<span
+										class="text-sm font-medium text-gray-600 dark:text-gray-400"
+										>Age</span
+									>
+									<span
+										class="font-bold text-gray-900 dark:text-gray-100"
+									>
+										{item.a
+											? Math.ceil(
+													(Date.now() - item.a) /
+														(1000 * 60 * 60 * 24)
+												)
+											: '—'}d
 									</span>
 								</div>
 							</div>
@@ -601,7 +792,9 @@
 			{#if relatedItems && relatedItems.length > 0}
 				<div class="mt-20 lg:mt-24">
 					<div class="card-normal group">
-						<div class="mb-10 flex items-center justify-between">
+						<div
+							class="mb-10 flex items-center justify-between"
+						>
 							<h2
 								class="flex items-center gap-3 text-2xl font-bold lg:text-3xl"
 								style="color: var(--color-theme-4);"
@@ -613,12 +806,19 @@
 								</div>
 								More from This Seller
 							</h2>
-							<div class="h-10 w-px bg-gradient-to-b from-teal-500/20 to-transparent"></div>
+							<div
+								class="h-10 w-px bg-gradient-to-b from-teal-500/20 to-transparent"
+							></div>
 						</div>
 
-						<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+						<div
+							class="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+						>
 							{#each relatedItems as relatedItem (relatedItem.i)}
-								<a href="/i/{relatedItem.i}" class="group block no-underline">
+								<a
+									href="/i/{relatedItem.i}"
+									class="group block no-underline"
+								>
 									<div
 										class="card-hover bg-gradient-to-br from-white to-gray-50/50 p-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-500/10 dark:from-gray-800/50 dark:to-gray-700/20"
 									>
@@ -637,20 +837,30 @@
 													<div
 														class="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50 text-4xl dark:from-purple-900/20 dark:to-pink-900/20"
 													>
-														{relatedItem.t?.charAt(0).toUpperCase() ?? '📦'}
+														{relatedItem.t
+															?.charAt(0)
+															.toUpperCase() ?? '📦'}
 													</div>
 												{/if}
 											</div>
 
 											<!-- Item Type Badge -->
-											<div class="absolute -top-2 -right-2">
+											<div
+												class="absolute -top-2 -right-2"
+											>
 												<div
 													class="rounded-2xl border border-white/20 px-3 py-1 text-xs font-bold shadow-lg backdrop-blur-sm"
-													style="background: var(--color-theme-{relatedItem.k === 0
+													style="background: var(--color-theme-{relatedItem.k ===
+													0
 														? '1'
-														: '2'})30; color: var(--color-theme-{relatedItem.k === 0 ? '1' : '2'});"
+														: '2'})30; color: var(--color-theme-{relatedItem.k ===
+													0
+														? '1'
+														: '2'});"
 												>
-													{relatedItem.k === 0 ? '🛍️ Product' : '⚡ Service'}
+													{relatedItem.k === 0
+														? '🛍️ Product'
+														: '⚡ Service'}
 												</div>
 											</div>
 
@@ -666,7 +876,8 @@
 												class="line-clamp-2 text-xl leading-tight font-bold transition-colors duration-200 group-hover:text-purple-600 dark:group-hover:text-purple-400"
 												style="color: var(--color-theme-4);"
 											>
-												{relatedItem.t ?? 'Untitled Item'}
+												{relatedItem.t ??
+													'Untitled Item'}
 											</h3>
 
 											{#if relatedItem.d}
@@ -677,18 +888,30 @@
 												</p>
 											{/if}
 
-											<div class="flex items-center justify-between pt-2">
+											<div
+												class="flex items-center justify-between pt-2"
+											>
 												{#if relatedItem.q}
-													<span class="text-lg font-bold" style="color: var(--color-theme-1);">
+													<span
+														class="text-lg font-bold"
+														style="color: var(--color-theme-1);"
+													>
 														{relatedItem.q}
 													</span>
 												{/if}
-												<span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+												<span
+													class="text-sm font-medium text-gray-500 dark:text-gray-400"
+												>
 													{relatedItem.a
-														? new Date(relatedItem.a).toLocaleDateString('en-US', {
-																month: 'short',
-																day: 'numeric'
-															})
+														? new Date(
+																relatedItem.a
+															).toLocaleDateString(
+																'en-US',
+																{
+																	month: 'short',
+																	day: 'numeric'
+																}
+															)
 														: ''}
 												</span>
 											</div>
@@ -704,8 +927,13 @@
 									href="/u/{item.u}/i"
 									class="btn btn-secondary group inline-flex items-center gap-3"
 								>
-									<span class="transition-transform duration-200 group-hover:scale-110">👀</span>
-									<span>View All Items from This Seller</span>
+									<span
+										class="transition-transform duration-200 group-hover:scale-110"
+										>👀</span
+									>
+									<span
+										>View All Items from This Seller</span
+									>
 									<svg
 										class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
 										fill="none"
@@ -736,7 +964,11 @@
 			tabindex="-1"
 			onclick={closeImageModal}
 			onkeydown={(e) => {
-				if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+				if (
+					e.key === 'Escape' ||
+					e.key === 'Enter' ||
+					e.key === ' '
+				) {
 					e.preventDefault();
 					closeImageModal();
 				}
@@ -754,7 +986,9 @@
 				tabindex="-1"
 			>
 				<!-- Modal Title (hidden but for accessibility) -->
-				<h2 id="modal-title" class="sr-only">Image Gallery - {item.t}</h2>
+				<h2 id="modal-title" class="sr-only">
+					Image Gallery - {item.t}
+				</h2>
 
 				<!-- Close button -->
 				<button
@@ -762,7 +996,12 @@
 					onclick={closeImageModal}
 					aria-label="Close image gallery"
 				>
-					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<svg
+						class="h-6 w-6"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
 						<path
 							stroke-linecap="round"
 							stroke-linejoin="round"
@@ -774,7 +1013,9 @@
 
 				<!-- Main image container -->
 				<div class="group relative">
-					<div class="relative overflow-hidden rounded-3xl shadow-2xl shadow-purple-500/20">
+					<div
+						class="relative overflow-hidden rounded-3xl shadow-2xl shadow-purple-500/20"
+					>
 						<img
 							src={item.x[selectedImageIndex]}
 							alt={`${item.t} ${selectedImageIndex + 1}`}
@@ -798,7 +1039,12 @@
 							}}
 							aria-label="Previous image"
 						>
-							<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<svg
+								class="h-6 w-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
@@ -816,7 +1062,12 @@
 							}}
 							aria-label="Next image"
 						>
-							<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<svg
+								class="h-6 w-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
@@ -829,13 +1080,17 @@
 				</div>
 
 				<!-- Image info bar -->
-				<div class="mt-6 flex items-center justify-between">
+				<div
+					class="mt-6 flex items-center justify-between"
+				>
 					<!-- Image counter -->
 					{#if item.x.length > 1}
 						<div
 							class="flex items-center gap-2 rounded-2xl bg-white/10 px-4 py-2 text-sm font-medium text-white ring-1 ring-white/20 backdrop-blur-md"
 						>
-							<span class="font-bold">{selectedImageIndex + 1}</span>
+							<span class="font-bold"
+								>{selectedImageIndex + 1}</span
+							>
 							<span>of</span>
 							<span>{item.x.length}</span>
 						</div>
@@ -845,7 +1100,11 @@
 
 					<!-- Image title -->
 					<div class="flex-1 text-center">
-						<h3 class="text-lg font-semibold text-white">{item.t}</h3>
+						<h3
+							class="text-lg font-semibold text-white"
+						>
+							{item.t}
+						</h3>
 					</div>
 
 					<!-- Share button -->
@@ -860,7 +1119,9 @@
 									url: window.location.href
 								})
 								.catch(() => {
-									navigator.clipboard.writeText(window.location.href);
+									navigator.clipboard.writeText(
+										window.location.href
+									);
 								});
 						}}
 					>
@@ -962,7 +1223,11 @@
 			margin: 2.5em 0;
 			font-style: italic;
 			color: var(--color-theme-6);
-			background: linear-gradient(135deg, rgba(182, 55, 250, 0.05), rgba(250, 55, 139, 0.05));
+			background: linear-gradient(
+				135deg,
+				rgba(182, 55, 250, 0.05),
+				rgba(250, 55, 139, 0.05)
+			);
 			padding: 1.5em 2em;
 			border-radius: 0 1em 1em 0;
 			position: relative;
@@ -979,17 +1244,27 @@
 		}
 
 		.prose :global(code) {
-			background: linear-gradient(135deg, rgba(182, 55, 250, 0.1), rgba(248, 137, 250, 0.1));
+			background: linear-gradient(
+				135deg,
+				rgba(182, 55, 250, 0.1),
+				rgba(248, 137, 250, 0.1)
+			);
 			padding: 0.25em 0.5em;
 			border-radius: 0.5em;
-			font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+			font-family:
+				'SF Mono', 'Monaco', 'Menlo', 'Consolas',
+				monospace;
 			font-size: 0.875em;
 			font-weight: 500;
 			border: 1px solid rgba(182, 55, 250, 0.2);
 		}
 
 		.prose :global(pre) {
-			background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(20, 20, 20, 0.9));
+			background: linear-gradient(
+				135deg,
+				rgba(10, 10, 10, 0.9),
+				rgba(20, 20, 20, 0.9)
+			);
 			border: 1px solid rgba(248, 137, 250, 0.3);
 			border-radius: 1em;
 			padding: 1.5em;
@@ -1088,9 +1363,16 @@
 
 		/* Enhanced transitions for smoother interactions */
 		* {
-			transition-property: color, background-color, border-color, transform, opacity, box-shadow;
+			transition-property:
+				color, background-color, border-color,
+				transform, opacity, box-shadow;
 			transition-duration: 200ms;
-			transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+			transition-timing-function: cubic-bezier(
+				0.4,
+				0,
+				0.2,
+				1
+			);
 		}
 
 		/* Improved button hover states */
@@ -1119,11 +1401,19 @@
 		/* Dark mode specific enhancements */
 		[data-theme='dark'] {
 			.prose :global(blockquote) {
-				background: linear-gradient(135deg, rgba(182, 55, 250, 0.1), rgba(250, 55, 139, 0.1));
+				background: linear-gradient(
+					135deg,
+					rgba(182, 55, 250, 0.1),
+					rgba(250, 55, 139, 0.1)
+				);
 			}
 
 			.prose :global(code) {
-				background: linear-gradient(135deg, rgba(182, 55, 250, 0.15), rgba(248, 137, 250, 0.15));
+				background: linear-gradient(
+					135deg,
+					rgba(182, 55, 250, 0.15),
+					rgba(248, 137, 250, 0.15)
+				);
 			}
 		}
 	</style>

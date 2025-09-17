@@ -20,7 +20,7 @@
 }
 
 @utility chat-header-layout {
-	@apply flex justify-between items-center flex-nowrap;
+	@apply flex flex-nowrap items-center justify-between;
 }
 
 @utility chat-title-group {
@@ -28,5 +28,5 @@
 }
 
 @utility flex-shrink-min {
-	@apply flex-shrink min-w-0;
+	@apply min-w-0 flex-shrink;
 }

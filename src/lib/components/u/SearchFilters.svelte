@@ -60,22 +60,34 @@
 	});
 </script>
 
-<div class="search-filters mx-auto max-w-4xl px-4 pb-8">
-	<div class="rounded-3xl p-8 sm:p-6" style=" border: 3px solid var(--color-theme-6);">
-		<div class="flex flex-wrap items-center gap-6 sm:flex-col sm:items-stretch">
+<div
+	class="search-filters mx-auto max-w-4xl px-4 pb-8"
+>
+	<div
+		class="rounded-3xl p-8 sm:p-6"
+		style=" border: 3px solid var(--color-theme-6);"
+	>
+		<div
+			class="flex flex-wrap items-center gap-6 sm:flex-col sm:items-stretch"
+		>
 			{#if !lock_more}
 				<button
-					class="flex items-center gap-2 text-sm font-medium text-secondary"
-					onclick={() => (showAdvanced = !showAdvanced)}
+					class="text-secondary flex items-center gap-2 text-sm font-medium"
+					onclick={() =>
+						(showAdvanced = !showAdvanced)}
 				>
 					<svg
-						class="transform transition-transform {showAdvanced ? 'rotate-180' : ''}"
+						class="transform transition-transform {showAdvanced
+							? 'rotate-180'
+							: ''}"
 						width="20"
 						height="20"
 						viewBox="0 0 24 24"
 						fill="currentColor"
 					>
-						<path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+						<path
+							d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
+						/>
 					</svg>
 					more filters
 				</button>
@@ -90,14 +102,18 @@
 				/>
 				<GenderSelection show_all bind:gender />
 				<div class="flex-1">
-					<label for="age" class="mb-3 block text-sm font-bold text-accent">your age</label>
+					<label
+						for="age"
+						class="text-accent mb-3 block text-sm font-bold"
+						>your age</label
+					>
 
 					<input
 						id="age"
 						name="age"
 						type="number"
 						bind:value={user_age}
-						class="rounded-full input-rect-center w-min border-1"
+						class="input-rect-center w-min rounded-full border-1"
 						min="0"
 						max="144"
 						required
@@ -106,15 +122,33 @@
 
 				<!-- Filter by Age Toggle Switch -->
 				<label class="toggle-switch-container">
-					<input type="checkbox" class="toggle-switch-input" bind:checked={filter_by_age} />
-					<div class="toggle-switch-track" class:toggle-switch-track-checked={filter_by_age}>
-						<div class="toggle-switch-thumb" class:toggle-switch-thumb-checked={filter_by_age}></div>
+					<input
+						type="checkbox"
+						class="toggle-switch-input"
+						bind:checked={filter_by_age}
+					/>
+					<div
+						class="toggle-switch-track"
+						class:toggle-switch-track-checked={filter_by_age}
+					>
+						<div
+							class="toggle-switch-thumb"
+							class:toggle-switch-thumb-checked={filter_by_age}
+						></div>
 					</div>
-					<span class="ml-3 text-sm font-medium cursor-pointer text-secondary">Filter by Age ({filter_by_age ? 'on' : 'off'})</span>
+					<span
+						class="text-secondary ml-3 cursor-pointer text-sm font-medium"
+						>Filter by Age ({filter_by_age
+							? 'on'
+							: 'off'})</span
+					>
 				</label>
 
 				{#if filter_by_age}
-					<AgeRange bind:minAge={_minAge} bind:maxAge={_maxAge} />
+					<AgeRange
+						bind:minAge={_minAge}
+						bind:maxAge={_maxAge}
+					/>
 				{/if}
 			{/if}
 

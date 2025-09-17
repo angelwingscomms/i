@@ -9,9 +9,16 @@ interface Body {
 	transcript?: string;
 }
 
-export const POST: RequestHandler = async ({ request }) => {
-	const { title, description = '', transcript = '' } = (await request.json()) as Body;
-	if (!title?.trim()) throw error(400, 'title required');
+export const POST: RequestHandler = async ({
+	request
+}) => {
+	const {
+		title,
+		description = '',
+		transcript = ''
+	} = (await request.json()) as Body;
+	if (!title?.trim())
+		throw error(400, 'title required');
 
 	if (!GEMINI) {
 		const base = `${title}. ${description}`.trim();
@@ -20,7 +27,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	try {
 		const ai = new GoogleGenerativeAI(GEMINI);
-		const model = ai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+		const model = ai.getGenerativeModel({
+			model: 'gemini-1.5-flash'
+		});
 
 		const prompt = `You are an expert video summarizer.
 Summarize the following YouTube video in 5-8 concise bullet points (max 120 words total).
@@ -31,7 +40,9 @@ Description: ${description}
 Transcript:\n${transcript.slice(0, 20000)}\n`;
 
 		const res = await model.generateContent({
-			contents: [{ role: 'user', parts: [{ text: prompt }] }]
+			contents: [
+				{ role: 'user', parts: [{ text: prompt }] }
+			]
 		});
 
 		const text = res.response.text().trim();

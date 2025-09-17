@@ -6,13 +6,15 @@
 
 	let {
 		// mode,
-		custom_description = $bindable(''),
+		custom_description = $bindable('')
 	}: {
 		mode?: 'profile' | 'custom';
 		custom_description?: string;
 	} = $props();
 
-	let user_description = $derived(page.data.user?.d || '');
+	let user_description = $derived(
+		page.data.user?.d || ''
+	);
 
 	let updateTimeout: NodeJS.Timeout;
 
@@ -20,13 +22,20 @@
 		if (user_description !== undefined) {
 			clearTimeout(updateTimeout);
 			updateTimeout = setTimeout(() => {
-				axios.post('/edit_user', { description: user_description }).then(() => {
-					console.log('pda')
-					toast.success('Description updated!');
-				}).catch((err) => {
-					toast.error('Failed to update description.');
-					console.error(err);
-				});
+				axios
+					.post('/edit_user', {
+						description: user_description
+					})
+					.then(() => {
+						console.log('pda');
+						toast.success('Description updated!');
+					})
+					.catch((err) => {
+						toast.error(
+							'Failed to update description.'
+						);
+						console.error(err);
+					});
 			}, 1440); // 500ms throttle delay
 		}
 	});
@@ -40,7 +49,10 @@
 		/>
 	</div>
 {:else} -->
-	<div class="mt-3">
-		<DescriptionInput label="interests, beliefs, hobbies, stuff you like to talk about" bind:value={user_description} />
-	</div>
+<div class="mt-3">
+	<DescriptionInput
+		label="interests, beliefs, hobbies, stuff you like to talk about"
+		bind:value={user_description}
+	/>
+</div>
 <!-- {/if} -->

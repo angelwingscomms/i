@@ -23,7 +23,11 @@
 
 {#if results.length === 0}
 	<div class="py-12 text-center">
-		<div class="mb-2 text-lg text-gray-500">No items found</div>
-		<p class="text-sm text-gray-400">Try adjusting your search terms or filters</p>
+		<div class="mb-2 text-lg text-gray-500">
+			No items found
+		</div>
+		<p class="text-sm text-gray-400">
+			Try adjusting your search terms or filters
+		</p>
 	</div>
 {/if}

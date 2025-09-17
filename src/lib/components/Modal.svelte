@@ -60,7 +60,13 @@
 						<h2 class="modal-title">{title}</h2>
 					{/if}
 					{#if showClose}
-						<button class="modal-close" onclick={handleClose} aria-label="Close modal"> × </button>
+						<button
+							class="modal-close"
+							onclick={handleClose}
+							aria-label="Close modal"
+						>
+							×
+						</button>
 					{/if}
 				</div>
 			{/if}

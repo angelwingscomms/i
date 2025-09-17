@@ -1,10 +1,19 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { embed } from '$lib/util/embed';
-import { bbox, haversine_m, to_meters } from '$lib/util/geo';
-import { search_by_payload, search_by_vector } from '$lib/db';
+import {
+	bbox,
+	haversine_m,
+	to_meters
+} from '$lib/util/geo';
+import {
+	search_by_payload,
+	search_by_vector
+} from '$lib/db';
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({
+	request
+}) => {
 	const {
 		lat,
 		lon,
@@ -33,7 +42,11 @@ export const POST: RequestHandler = async ({ request }) => {
 		throw error(400, 'invalid lat/lon/radius');
 	}
 	const radius_m = to_meters(radius, unit);
-	const { minLat, maxLat, minLon, maxLon } = bbox(lat, lon, radius_m);
+	const { minLat, maxLat, minLon, maxLon } = bbox(
+		lat,
+		lon,
+		radius_m
+	);
 	const payload_filter: Record<string, unknown> = {
 		s: 'i',
 		l: { range: { gte: minLat, lte: maxLat } },
@@ -41,7 +54,13 @@ export const POST: RequestHandler = async ({ request }) => {
 		...(kind !== undefined ? { k: kind } : {})
 	};
 	const cap = Math.min(Math.max(limit, 1), 200);
-	let candidates: Array<{ i: string; t?: string; l?: number; n?: number; q?: string }> = [];
+	let candidates: Array<{
+		i: string;
+		t?: string;
+		l?: number;
+		n?: number;
+		q?: string;
+	}> = [];
 	if (q && q.trim()) {
 		const vector = await embed(q);
 		candidates = await search_by_vector({
@@ -61,7 +80,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		.map((it) => ({
 			...it,
 			dist:
-				typeof it.l === 'number' && typeof it.n === 'number'
+				typeof it.l === 'number' &&
+				typeof it.n === 'number'
 					? haversine_m(lat, lon, it.l, it.n)
 					: Number.MAX_VALUE
 		}))

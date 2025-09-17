@@ -10,17 +10,28 @@
 >
 	<div class="w-full max-w-md">
 		<div class="mb-8 text-center">
-			<h1 class="text-2xl font-bold tracking-tight text-slate-900">Login / Register</h1>
-			<p class="mt-1 text-sm text-slate-600">Sign in with your username or continue with Google</p>
+			<h1
+				class="text-2xl font-bold tracking-tight text-slate-900"
+			>
+				Login / Register
+			</h1>
+			<p class="mt-1 text-sm text-slate-600">
+				Sign in with your username or continue with
+				Google
+			</p>
 		</div>
 
 		{#if form?.message}
-			<div class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+			<div
+				class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+			>
 				{form.message}
 			</div>
 		{/if}
 
-		<div class="rounded-xl border border-slate-200 bg-white/80 p-6 shadow-lg backdrop-blur">
+		<div
+			class="rounded-xl border border-slate-200 bg-white/80 p-6 shadow-lg backdrop-blur"
+		>
 			<form
 				method="post"
 				action="?/login"
@@ -30,7 +41,11 @@
 				novalidate
 			>
 				<div>
-					<label for="username" class="block text-sm font-medium text-slate-700">Username</label>
+					<label
+						for="username"
+						class="block text-sm font-medium text-slate-700"
+						>Username</label
+					>
 					<input
 						id="username"
 						name="username"
@@ -39,7 +54,11 @@
 					/>
 				</div>
 				<div>
-					<label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+					<label
+						for="password"
+						class="block text-sm font-medium text-slate-700"
+						>Password</label
+					>
 					<input
 						id="password"
 						type="password"

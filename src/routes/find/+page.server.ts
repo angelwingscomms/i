@@ -1,7 +1,11 @@
 // import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals, parent, url }) => {
+export const load: PageServerLoad = async ({
+	locals,
+	parent,
+	url
+}) => {
 	const { seo: parent_seo } = await parent();
 
 	const page_title = 'Apexlinks - Find Matches';

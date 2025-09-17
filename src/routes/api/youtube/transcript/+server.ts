@@ -6,7 +6,9 @@ interface Body {
 	id: string;
 }
 
-function parseTimedTextToPlainText(xml: string): string {
+function parseTimedTextToPlainText(
+	xml: string
+): string {
 	// Very lightweight parse: strip tags and decode basic entities
 	// This avoids bringing in an XML parser dependency.
 	const lines = xml
@@ -29,7 +31,9 @@ function parseTimedTextToPlainText(xml: string): string {
 	return lines.join('\n');
 }
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({
+	request
+}) => {
 	const { id } = (await request.json()) as Body;
 	if (!id) throw error(400, 'id required');
 
@@ -42,10 +46,14 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	for (const url of captionEndpoints) {
 		try {
-			const res = await axios.get(url, { responseType: 'text' });
+			const res = await axios.get(url, {
+				responseType: 'text'
+			});
 			const xml = res.data as string;
 			if (xml && xml.includes('<text')) {
-				return json({ t: parseTimedTextToPlainText(xml) });
+				return json({
+					t: parseTimedTextToPlainText(xml)
+				});
 			}
 		} catch {
 			// try next

@@ -5,15 +5,21 @@ import { GEMINI } from '$env/static/private';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { Item } from '$lib/types/item';
 
-async function summarize(d: string): Promise<string | undefined> {
+async function summarize(
+	d: string
+): Promise<string | undefined> {
 	if (!d?.trim()) return undefined;
 	try {
 		if (!GEMINI) return d.slice(0, 160);
 		const ai = new GoogleGenerativeAI(GEMINI);
-		const model = ai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+		const model = ai.getGenerativeModel({
+			model: 'gemini-1.5-flash'
+		});
 		const prompt = `Summarize the following description into one concise sentence (<= 30 words), keep it neutral and helpful, no emojis.\n\n"""${d}"""`;
 		const res = await model.generateContent({
-			contents: [{ role: 'user', parts: [{ text: prompt }] }]
+			contents: [
+				{ role: 'user', parts: [{ text: prompt }] }
+			]
 		});
 		const text = res.response.text().trim();
 		return text || d.slice(0, 160);
@@ -22,7 +28,10 @@ async function summarize(d: string): Promise<string | undefined> {
 	}
 }
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({
+	request,
+	locals
+}) => {
 	if (!locals.user) throw error(401, 'Unauthorized');
 	const { t, d, k, x } = (await request.json()) as {
 		t: string;

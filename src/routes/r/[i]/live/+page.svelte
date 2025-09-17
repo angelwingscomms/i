@@ -5,7 +5,8 @@
 	import { onMount } from 'svelte';
 
 	console.log('df', page.data.q);
-	let meeting: RealtimeKitClient | undefined = $state(undefined),
+	let meeting: RealtimeKitClient | undefined =
+			$state(undefined),
 		liveOpen = $state(true);
 
 	onMount(async () => {

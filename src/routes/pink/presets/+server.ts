@@ -3,7 +3,10 @@ import type { RequestHandler } from './$types';
 import { create } from '$lib/db';
 import type { Preset } from '$lib/types';
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({
+	request,
+	locals
+}) => {
 	if (!locals.user) throw error(401, 'Unauthorized');
 	const { n, a, p, x } = (await request.json()) as {
 		n: string;
@@ -21,6 +24,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		...(x?.length ? { x } : {}),
 		d: Date.now()
 	} as any;
-	const i = await create(payload, [n, a, p].filter(Boolean).join(' '));
+	const i = await create(
+		payload,
+		[n, a, p].filter(Boolean).join(' ')
+	);
 	return json({ i });
 };

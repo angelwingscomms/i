@@ -1,17 +1,21 @@
-import { json, error } from '@sveltejs/kit';
-import type { LocalsUser } from '$lib/types';
-import { create_post } from '$lib/db/post';
-import { update_post } from '$lib/db/post';
+import { error, text } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
+import { create } from '$lib/db';
 
-export const POST = async ({ locals, request }: { locals: { user?: LocalsUser }; request: Request }) => {
-	if (!locals.user) return error(401, 'Unauthorized');
-	const formData = await request.formData();
-	const m = formData.get('m') as string || undefined;
-	const b = formData.get('b') as string || undefined;
-	const id = await create_post(locals.user.i);
-	if (m || b) {
-		const update_data = { m, b };
-		await update_post(id, update_data);
+export const POST: RequestHandler = async ({
+	locals
+}) => {
+	if (!locals.user) throw error(401);
+	let id;
+	try {
+		id = await create(
+			{ s: 'p', u: locals.user.i, d: Date.now() },
+			`{created_by: ${locals.user.t}}`
+		);
+	} catch (e) {
+		console.error('Error creating post:', e);
+		throw error(500, 'Failed to create post');
 	}
-	return json({ i: id });
+
+	return text(id);
 };

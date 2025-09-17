@@ -29,7 +29,10 @@
 		loading = true;
 		errorMsg = '';
 		try {
-			const res = await axios.post('/api/youtube/search', { q: query, maxResults: 12 });
+			const res = await axios.post(
+				'/api/youtube/search',
+				{ q: query, maxResults: 12 }
+			);
 			results = res.data as Result[];
 		} catch (e) {
 			console.error(e);
@@ -48,24 +51,40 @@
 
 		// Load transcript then summary
 		try {
-			const t = await axios.post('/api/youtube/transcript', { id: r.id });
+			const t = await axios.post(
+				'/api/youtube/transcript',
+				{ id: r.id }
+			);
 			chatTranscript = t.data?.t || '';
 		} catch {
 			chatTranscript = '';
 		}
 
 		try {
-			const s = await axios.post('/api/youtube/summarize', {
-				title: chatTitle,
-				description: chatDescription,
-				transcript: chatTranscript
-			});
+			const s = await axios.post(
+				'/api/youtube/summarize',
+				{
+					title: chatTitle,
+					description: chatDescription,
+					transcript: chatTranscript
+				}
+			);
 			const sum = String(s.data?.s || '');
 			const id = crypto.randomUUID();
-			messages = [...messages, { i: id, m: sum, saved: true }];
+			messages = [
+				...messages,
+				{ i: id, m: sum, saved: true }
+			];
 		} catch (e) {
 			const id = crypto.randomUUID();
-			messages = [...messages, { i: id, m: 'Failed to summarize', saved: true }];
+			messages = [
+				...messages,
+				{
+					i: id,
+					m: 'Failed to summarize',
+					saved: true
+				}
+			];
 		}
 	}
 
@@ -73,17 +92,37 @@
 		const id = crypto.randomUUID();
 		messages = [...messages, { i: id, m: text }];
 		try {
-			const convo = messages.map((m) => ({ role: m.saved ? 'model' : 'user', text: m.m }));
-			const res = await axios.post('/api/youtube/chat', {
-				title: chatTitle,
-				description: chatDescription,
-				transcript: chatTranscript,
-				messages: convo
-			});
+			const convo = messages.map((m) => ({
+				role: m.saved ? 'model' : 'user',
+				text: m.m
+			}));
+			const res = await axios.post(
+				'/api/youtube/chat',
+				{
+					title: chatTitle,
+					description: chatDescription,
+					transcript: chatTranscript,
+					messages: convo
+				}
+			);
 			const reply = String(res.data?.t || '');
-			messages = [...messages, { i: crypto.randomUUID(), m: reply, saved: true }];
+			messages = [
+				...messages,
+				{
+					i: crypto.randomUUID(),
+					m: reply,
+					saved: true
+				}
+			];
 		} catch (e) {
-			messages = [...messages, { i: crypto.randomUUID(), m: 'Failed to chat', saved: true }];
+			messages = [
+				...messages,
+				{
+					i: crypto.randomUUID(),
+					m: 'Failed to chat',
+					saved: true
+				}
+			];
 		}
 	}
 </script>
@@ -91,7 +130,9 @@
 <div class="container">
 	<h1 class="title">YouTube Video Summarizer</h1>
 	<div class="search-bar">
-		<label class="sr-only" for="ytq">Search query</label>
+		<label class="sr-only" for="ytq"
+			>Search query</label
+		>
 		<input
 			id="ytq"
 			class="input"
@@ -99,7 +140,11 @@
 			bind:value={query}
 			onkeydown={(e) => e.key === 'Enter' && search()}
 		/>
-		<button class="btn" onclick={search} aria-label="Search">search</button>
+		<button
+			class="btn"
+			onclick={search}
+			aria-label="Search">search</button
+		>
 	</div>
 
 	{#if errorMsg}
@@ -112,15 +157,34 @@
 		<div class="grid">
 			{#each results as r}
 				<div class="card">
-					<img alt={r.title} src={r.thumbnail} class="thumb" />
+					<img
+						alt={r.title}
+						src={r.thumbnail}
+						class="thumb"
+					/>
 					<div class="meta">
-						<a href={r.url} target="_blank" rel="noopener" class="video-title">{r.title}</a>
+						<a
+							href={r.url}
+							target="_blank"
+							rel="noopener"
+							class="video-title">{r.title}</a
+						>
 						<p class="desc">{r.description}</p>
 						<div class="stats">
-							<span aria-label="views">{r.viewCount.toLocaleString()} views</span>
-							<span aria-label="published">{new Date(r.publishedAt).toLocaleDateString()}</span>
+							<span aria-label="views"
+								>{r.viewCount.toLocaleString()} views</span
+							>
+							<span aria-label="published"
+								>{new Date(
+									r.publishedAt
+								).toLocaleDateString()}</span
+							>
 						</div>
-						<button class="btn-secondary" onclick={() => summarize(r)}>summarize</button>
+						<button
+							class="btn-secondary"
+							onclick={() => summarize(r)}
+							>summarize</button
+						>
 					</div>
 				</div>
 			{/each}
@@ -134,12 +198,23 @@
 			tabindex="0"
 			aria-label="Close chat"
 			onclick={() => (showChat = false)}
-			onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (showChat = false)}
+			onkeydown={(e) =>
+				(e.key === 'Enter' || e.key === ' ') &&
+				(showChat = false)}
 		></div>
-		<div class="modal" role="dialog" aria-modal="true" aria-label="Chat about video">
+		<div
+			class="modal"
+			role="dialog"
+			aria-modal="true"
+			aria-label="Chat about video"
+		>
 			<header class="modal_header">
 				<h2 class="modal_title">{chatTitle}</h2>
-				<button class="close" onclick={() => (showChat = false)} aria-label="Close">×</button>
+				<button
+					class="close"
+					onclick={() => (showChat = false)}
+					aria-label="Close">×</button
+				>
 			</header>
 			<section class="modal_body">
 				<ChatBox {messages} {onsend} />
@@ -183,7 +258,10 @@
 	}
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		grid-template-columns: repeat(
+			auto-fill,
+			minmax(280px, 1fr)
+		);
 		gap: 12px;
 		margin-top: 16px;
 	}

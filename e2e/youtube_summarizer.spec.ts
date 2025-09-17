@@ -4,13 +4,21 @@ import { test, expect } from '@playwright/test';
 // Assumes server running via playwright config webServer
 
 test('YouTube summarizer flow', async ({ page }) => {
-	await page.goto('/tools/youtube-video-summarize-tool');
+	await page.goto(
+		'/tools/youtube-video-summarize-tool'
+	);
 
 	// Page loads
-	await expect(page.getByRole('heading', { name: 'YouTube Video Summarizer' })).toBeVisible();
+	await expect(
+		page.getByRole('heading', {
+			name: 'YouTube Video Summarizer'
+		})
+	).toBeVisible();
 
 	// Enter a query and search
-	const input = page.getByPlaceholder('search videos...');
+	const input = page.getByPlaceholder(
+		'search videos...'
+	);
 	await input.fill('gemini');
 	await input.press('Enter');
 

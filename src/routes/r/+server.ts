@@ -9,19 +9,35 @@ export async function POST({ request, locals }) {
 	}
 
 	let { t, a } = await request.json();
-	if (!t) error(400, 'missing room tag in request body');
+	if (!t)
+		error(400, 'missing room tag in request body');
 	t = t.trim();
 
 	let create_meeting_res;
 
 	try {
-		create_meeting_res = await realtime.post('meetings', { title: t });
-		if (!create_meeting_res || create_meeting_res?.statusText === 'OK')
+		create_meeting_res = await realtime.post(
+			'meetings',
+			{ title: t }
+		);
+		if (
+			!create_meeting_res ||
+			create_meeting_res?.statusText === 'OK'
+		)
 			throw new Error('Failed to create meeting');
-		console.log('create_meeting_res', create_meeting_res);
+		console.log(
+			'create_meeting_res',
+			create_meeting_res
+		);
 	} catch (err) {
-		console.error('create cloudflare realtime meeting error: ', err);
-		throw error(500, 'Failed to create room due to an internal server error. Please try again.');
+		console.error(
+			'create cloudflare realtime meeting error: ',
+			err
+		);
+		throw error(
+			500,
+			'Failed to create room due to an internal server error. Please try again.'
+		);
 	}
 
 	const room_payload: Omit<Room, 'i'> & { s: 'r' } = {
@@ -50,8 +66,14 @@ export async function POST({ request, locals }) {
 			})
 		);
 	} catch (e) {
-		console.error('Error creating room in database:', e);
-		throw error(500, 'Failed to create room due to an internal server error. Please try again.');
+		console.error(
+			'Error creating room in database:',
+			e
+		);
+		throw error(
+			500,
+			'Failed to create room due to an internal server error. Please try again.'
+		);
 	}
 
 	return text(room_id);

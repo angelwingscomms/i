@@ -3,12 +3,17 @@ import { get, qdrant } from '$lib/db';
 import { redirect } from '@sveltejs/kit';
 import { collection } from '$lib/constants';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({
+	locals
+}) => {
 	if (!locals.user || !locals.user.i) {
 		redirect(302, '/login');
 	}
 
-	const userRooms = (await get(locals.user.i, 'r')) as string[];
+	const userRooms = (await get(
+		locals.user.i,
+		'r'
+	)) as string[];
 	console.log('userRooms', userRooms);
 
 	const rr = await await qdrant.scroll(collection, {
@@ -30,14 +35,19 @@ export const load: PageServerLoad = async ({ locals }) => {
 			console.log('p', p);
 			if (p.payload?._ === '-') {
 				if (p.payload.u === locals.user?.i) {
-					p.payload.t = await get<string>(p.payload.r as string, 't');
+					p.payload.t = await get<string>(
+						p.payload.r as string,
+						't'
+					);
 				} else {
 					delete p.payload.t;
 				}
 				delete p.payload.u; // !important, so the other user doesn't know who is behind this anon chat
 			} else if (p.payload?._ === '|') {
 				p.payload.t = await get<string>(
-					(p.payload.x as string[])?.find((x) => x !== locals.user?.i) as string,
+					(p.payload.x as string[])?.find(
+						(x) => x !== locals.user?.i
+					) as string,
 					't'
 				);
 			}

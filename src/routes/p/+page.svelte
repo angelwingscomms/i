@@ -1,98 +1,255 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-	import Button from '$lib/components/Button.svelte';
+	import { fade } from 'svelte/transition';
+	import { onMount } from 'svelte';
 	import { toast } from '$lib/util/toast';
-	import { page } from '$app/stores';
+	import axios from 'axios';
 	import { goto } from '$app/navigation';
+	import type { Post } from '$lib/types/index';
 
-	let {data}: PageData = $props();
-	console.log('d', data);
-	let { p: posts, q: query } = data;
-	console.log('p', posts);
-	// let search_query = query;
-	let searching = $state(false);
+	let { data } = $props();
+	// state
+	let q = $state('');
+	let posts: Pick<Post, 't' | 'l'>[] = $state(
+		data.p || []
+	);
+	let creating = $state(false);
 
-	let search_query = $derived(query);
+	let loading = $state(false);
+	let searched = $state(false);
 
-	async function performSearch() {
-		searching = true;
-		const url = new URL('/p', $page.url.origin);
-		url.searchParams.set('q', search_query);
-		await goto(url);
-		searching = false;
+	// minimal fetch wrappers
+	async function search() {
+		loading = true;
+		searched = true;
+		try {
+			({ data: posts } = await axios.post(
+				'/p/search',
+				{ q }
+			));
+		} catch (e) {
+			toast.error('Search failed. Try again.');
+		} finally {
+			loading = false;
+		}
 	}
+
+	async function create() {
+		creating = true; // Set creating to true
+		try {
+			const res = await axios.post('/p');
+			console.log('create res', res);
+			if (res.status === 401) {
+				toast.error(
+					'you must be logged in to create a post'
+				);
+				return;
+			}
+			if (res.statusText !== 'OK')
+				throw new Error('create failed');
+			const id = await res.data;
+			goto(`/p/${id}/edit`);
+		} catch (e) {
+			toast.error('Failed to create post');
+		} finally {
+			creating = false; // Reset creating in finally block
+		}
+	}
+
+	function on_key(e: KeyboardEvent) {
+		if (e.key === 'Enter') search();
+	}
+
+	onMount(() => {
+		// no-op init
+	});
 </script>
 
-<svelte:head>
-	<title>Posts - Apexlinks</title>
-</svelte:head>
+<div class="page pad">
+	<div class="row space-between v-center mb-md">
+		<h1 class="title">search posts</h1>
+		<button
+			class="btn-primary btn-wide"
+			onclick={create}
+			disabled={creating}
+		>
+			{#if creating}
+				<i class="fas fa-spinner fa-spin"></i>
+			{:else}
+				create post
+			{/if}
+		</button>
+	</div>
 
-<div class="min-h-screen py-8">
-	<div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-		<div class="mb-8 text-center">
-			<h1
-				class="mb-4 text-4xl font-bold text-gray-900"
+	<div class="card gap">
+		<div class="search-input-group">
+			<input
+				class="input-underline expand"
+				placeholder="search for an idea"
+				id="room_search"
+				bind:value={q}
+				onkeydown={on_key}
+			/>
+			<button
+				class="btn-primary btn-search-icon"
+				onclick={search}
+				disabled={loading}
 			>
-				Search Posts
-			</h1>
-			<div
-				class="mx-auto flex max-w-md flex-col gap-4 sm:flex-row"
-			>
-				<input
-					type="text"
-					bind:value={search_query}
-					placeholder="Search posts..."
-					class="flex-1 blurry-search"
-					on:keydown={(e) =>
-						e.key === 'Enter' && performSearch()}
-				/>
-				<Button
-					onClick={performSearch}
-					disabled={searching}
-					text={searching ? 'Searching...' : 'Search'}
-				/>
-			</div>
+				{#if loading}
+					<i class="fas fa-spinner fa-spin"></i>
+				{:else}
+					<i class="fas fa-magnifying-glass"></i>
+				{/if}
+			</button>
 		</div>
+	</div>
 
-		{#if posts.length === 0}
-			<div class="py-12 text-center">
-				<h2
-					class="mb-2 text-2xl font-semibold text-gray-900"
-				>
-					No posts found
-				</h2>
-				<p class="text-gray-500">
-					Try a different search term.
-				</p>
-			</div>
-		{:else}
-			<div class="grid gap-6">
-				{#each posts as post}
-					<a href={`/p/${post.i}`} class="block">
-						<div
-							class="card-normal transition-shadow hover:shadow-lg"
-						>
-							{#if post.p}
-								<img
-									src={post.p}
-									alt={post.m}
-									class="h-48 w-full rounded-t-lg object-cover"
-								/>
-							{/if}
-							<div class="p-6">
-								<h3
-									class="mb-2 text-xl font-bold text-bright-magenta"
-								>
-									{post.t}
-								</h3>
-								<p class="mb-4 text-gray-600">
-									{post.y}
-								</p>
+	{#if posts.length}
+		<ul class="list" in:fade={{ duration: 120 }}>
+			{#each posts as r (r.i)}
+				<li class="item">
+					<a class="link" href={`/r/${r.i}`}>
+						<div class="row space-between v-center">
+							<div>
+								<div class="result-title">{r.t}</div>
+								<!-- <div class="result-meta muted">{r.m ?? 0} members</div> -->
 							</div>
+							{#if r.score !== undefined}
+								<div class="badge">
+									{Math.round(
+										Math.max(
+											0,
+											Math.min(1, r.score)
+										) * 100
+									)}%
+								</div>
+							{/if}
 						</div>
 					</a>
-				{/each}
-			</div>
-		{/if}
-	</div>
+				</li>
+			{/each}
+		</ul>
+	{:else if searched}
+		<p class="muted">No results found.</p>
+	{:else}
+		<p class="muted">Try searching for a chatroom.</p>
+	{/if}
 </div>
+
+<style>
+	/* Use custom utility classes defined in app.css (no raw Tailwind) */
+	.page {
+		max-width: 720px;
+		margin: 0 auto;
+	}
+	.pad {
+		padding: 16px;
+	}
+	.row {
+		display: flex;
+		gap: 8px;
+	}
+	.space-between {
+		justify-content: space-between;
+	}
+	.v-center {
+		align-items: center;
+	}
+	.title {
+		font-size: 22px;
+		font-weight: 700;
+	}
+	.subtitle {
+		font-size: 18px;
+		font-weight: 600;
+		margin-bottom: 8px;
+	}
+	.card {
+		background: transparent;
+		border: 1px solid var(--color-theme-6);
+		border-radius: 12px;
+		padding: 12px;
+	}
+	.gap {
+		display: grid;
+		gap: 8px;
+	}
+	/* reserved for future inputs */
+	.btn {
+		background: var(--btn);
+		color: var(--btn-text);
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		padding: 8px 12px;
+		font-weight: 600;
+		cursor: pointer;
+	}
+	.btn.ghost {
+		background: transparent;
+		color: var(--text);
+	}
+	.btn-compact {
+		width: fit-content;
+	}
+	.btn-wide {
+		padding-left: 24px;
+		padding-right: 24px;
+	}
+	.list {
+		list-style: none;
+		padding: 0;
+		margin: 12px 0 0;
+		display: grid;
+		gap: 8px;
+	}
+	.item {
+		padding: 10px 12px;
+		border: 1px solid var(--color-theme-6);
+		border-radius: 10px;
+		background: transparent;
+	}
+	.link {
+		color: var(--link);
+		text-decoration: none;
+		font-weight: 600;
+	}
+	.muted {
+		color: var(--muted);
+		padding: 8px 0;
+	}
+
+	.modal_backdrop {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.4);
+		backdrop-filter: blur(10px);
+	}
+	.modal {
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: min(520px, 92vw);
+	}
+	.label {
+		font-size: 12px;
+		color: var(--muted);
+	}
+	.badge {
+		padding: 4px 8px;
+		border-radius: 999px;
+		background: var(--accent-emerald);
+		color: white;
+		font-weight: 700;
+		font-size: 12px;
+	}
+
+	.search-input-group {
+		display: flex;
+		align-items: center;
+		gap: 8px; /* Adjust gap as needed */
+	}
+
+	.expand {
+		flex-grow: 1; /* Allows the input to take up available space */
+	}
+</style>

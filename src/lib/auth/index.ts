@@ -1,10 +1,17 @@
-import { delete_, get, edit_point, create } from '$lib/db';
+import {
+	delete_,
+	get,
+	edit_point,
+	create
+} from '$lib/db';
 
 export { create_user } from './create_user';
 
 import { v7 } from 'uuid';
 
-export async function requireAuth(locals: App.Locals) {
+export async function requireAuth(
+	locals: App.Locals
+) {
 	if (!locals.user) {
 		return {
 			n: '',
@@ -19,7 +26,8 @@ export async function requireAuth(locals: App.Locals) {
 
 function generateSecureRandomString(): string {
 	// Human readable alphabet (a-z, 0-9 without l, o, 0, 1 to avoid confusion)
-	const alphabet = 'abcdefghijklmnpqrstuvwxyz23456789';
+	const alphabet =
+		'abcdefghijklmnpqrstuvwxyz23456789';
 
 	// Generate 24 bytes = 192 bits of entropy.
 	// We're only going to use 5 bits per byte so the total entropy will be 192 * 5 / 8 = 120 bits
@@ -55,7 +63,9 @@ function base64ToUint8(str: string): Uint8Array {
 	return arr;
 }
 
-export const createSession = async (u: string): Promise<SessionWithToken> => {
+export const createSession = async (
+	u: string
+): Promise<SessionWithToken> => {
 	const now = Date.now();
 
 	const i = v7();
@@ -78,9 +88,16 @@ export const createSession = async (u: string): Promise<SessionWithToken> => {
 	return session;
 };
 
-async function hashSecret(secret: string): Promise<Uint8Array> {
-	const secretBytes = new TextEncoder().encode(secret);
-	const secretHashBuffer = await crypto.subtle.digest('SHA-256', secretBytes);
+async function hashSecret(
+	secret: string
+): Promise<Uint8Array> {
+	const secretBytes = new TextEncoder().encode(
+		secret
+	);
+	const secretHashBuffer = await crypto.subtle.digest(
+		'SHA-256',
+		secretBytes
+	);
 	return new Uint8Array(secretHashBuffer);
 }
 
@@ -100,7 +117,9 @@ interface Session extends Record<string, unknown> {
 const activityCheckInterval = 1440;
 const inactivityTimeoutSeconds = 777600;
 
-export async function validateSessionToken(token: string): Promise<Session | null> {
+export async function validateSessionToken(
+	token: string
+): Promise<Session | null> {
 	const now = Date.now();
 	const tokenParts = token.split('.');
 	if (tokenParts.length !== 2) return null;
@@ -108,10 +127,14 @@ export async function validateSessionToken(token: string): Promise<Session | nul
 	const session = await getSession(sessionId);
 	if (!session) return null;
 
-	const tokenSecretHash = await hashSecret(sessionSecret);
+	const tokenSecretHash =
+		await hashSecret(sessionSecret);
 	if (typeof session.h !== 'string') return null;
 	const storedHash = base64ToUint8(session.h);
-	const equal = constantTimeEqual(tokenSecretHash, storedHash);
+	const equal = constantTimeEqual(
+		tokenSecretHash,
+		storedHash
+	);
 	if (!equal) return null;
 	// Activity check: update lastVerifiedAt if enough time has passed
 	if (now - session.l >= activityCheckInterval) {
@@ -122,7 +145,9 @@ export async function validateSessionToken(token: string): Promise<Session | nul
 	return session;
 }
 
-export async function getSession(sessionId: string): Promise<Session | null> {
+export async function getSession(
+	sessionId: string
+): Promise<Session | null> {
 	const now = Date.now();
 	const session = await get<Session>(sessionId);
 
@@ -132,7 +157,10 @@ export async function getSession(sessionId: string): Promise<Session | null> {
 	}
 
 	// Inactivity timeout
-	if (now - session.l >= inactivityTimeoutSeconds * 1000) {
+	if (
+		now - session.l >=
+		inactivityTimeoutSeconds * 1000
+	) {
 		await delete_(sessionId);
 		return null;
 	}
@@ -140,7 +168,10 @@ export async function getSession(sessionId: string): Promise<Session | null> {
 	return session;
 }
 
-function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
+function constantTimeEqual(
+	a: Uint8Array,
+	b: Uint8Array
+): boolean {
 	if (a.length !== b.length) return false;
 	let result = 0;
 	for (let i = 0; i < a.length; i++) {

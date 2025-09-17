@@ -5,7 +5,10 @@ import type { User } from '$lib/types';
 import { compare_users } from '$lib/util/users/compare_users';
 import { embed } from '$lib/util/embed';
 
-export const load: PageServerLoad = async ({ locals, params }) => {
+export const load: PageServerLoad = async ({
+	locals,
+	params
+}) => {
 	const { i } = params;
 
 	try {
@@ -31,22 +34,34 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 		// If current user is logged in, compare descriptions
 		let comparisonResult = null;
-		let local_description: string | undefined = undefined; // New variable for local user's description
+		let local_description: string | undefined =
+			undefined; // New variable for local user's description
 
 		if (locals.user?.i) {
 			// Check if local user is logged in
-			const self = (await get(locals.user.i, ['d', 't'])) as { d?: string; t: string };
+			const self = (await get(locals.user.i, [
+				'd',
+				't'
+			])) as { d?: string; t: string };
 			if (self) {
 				local_description = self.d; // Store local user's description
 				if (locals.user.i !== (user as any).i) {
 					// Only compare if not viewing own profile
-					comparisonResult = await compare_users(self, user);
+					comparisonResult = await compare_users(
+						self,
+						user
+					);
 				}
 			}
 		}
 
 		// Vector search similar users by this user's description
-		let results: Array<Pick<User, 't' | 'a' | 'g' | 'av'> & { i: string; score?: number }> = [];
+		let results: Array<
+			Pick<User, 't' | 'a' | 'g' | 'av'> & {
+				i: string;
+				score?: number;
+			}
+		> = [];
 		if (user.d) {
 			const vector = await embed(user.d);
 			results = await search_by_vector<User>({
@@ -62,7 +77,13 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 			c: comparisonResult,
 			s: locals.user?.i === (user as any).i,
 			ld: local_description, // Pass local user's description
-			r: results.map((u) => ({ i: (u as any).i, t: u.t, a: u.a, g: u.g, av: (u as any).av }))
+			r: results.map((u) => ({
+				i: (u as any).i,
+				t: u.t,
+				a: u.a,
+				g: u.g,
+				av: (u as any).av
+			}))
 		};
 	} catch (err) {
 		console.error('Error loading user:', err);

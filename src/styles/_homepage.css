@@ -2,7 +2,10 @@
 
 .features-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+	grid-template-columns: repeat(
+		auto-fit,
+		minmax(350px, 1fr)
+	);
 	gap: 2rem;
 	padding: 4rem 2rem;
 	max-width: 1200px;
@@ -73,7 +76,10 @@
 
 .stats-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	grid-template-columns: repeat(
+		auto-fit,
+		minmax(200px, 1fr)
+	);
 	gap: 2rem;
 	max-width: 800px;
 	margin: 2rem auto 0;

@@ -31,46 +31,46 @@
 /* Custom Scrollbar Styling */
 /* For Webkit browsers (Chrome, Safari) */
 ::-webkit-scrollbar {
-  width: 8px; /* Thin scrollbar */
-  height: 8px;
+	width: 8px; /* Thin scrollbar */
+	height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent; /* Transparent track */
-  border-radius: 10px; /* Rounded edges for the track */
+	background: transparent; /* Transparent track */
+	border-radius: 10px; /* Rounded edges for the track */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-theme-6); /* Pink color */
-  border-radius: 10px; /* Rounded edges for the thumb */
+	background: var(--color-theme-6); /* Pink color */
+	border-radius: 10px; /* Rounded edges for the thumb */
 }
 
 /* For Firefox */
 html {
-  scrollbar-width: thin; /* Thin scrollbar */
-  scrollbar-color: var(--color-theme-6) transparent; /* Pink thumb, transparent track */
+	scrollbar-width: thin; /* Thin scrollbar */
+	scrollbar-color: var(--color-theme-6) transparent; /* Pink thumb, transparent track */
 }
 
 /* For specific textareas */
 textarea::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+	width: 8px;
+	height: 8px;
 }
 
 textarea::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 10px;
+	background: transparent;
+	border-radius: 10px;
 }
 
 textarea::-webkit-scrollbar-thumb {
-  background: var(--color-theme-6);
-  border-radius: 10px;
+	background: var(--color-theme-6);
+	border-radius: 10px;
 }
 
 /* For Firefox textareas */
 textarea {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-theme-6) transparent;
+	scrollbar-width: thin;
+	scrollbar-color: var(--color-theme-6) transparent;
 }
 
 @plugin '@tailwindcss/forms';

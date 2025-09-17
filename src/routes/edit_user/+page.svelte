@@ -3,8 +3,12 @@
 	// import UsernameInput from '$lib/components/ui/UsernameInput.svelte';
 	import axios from 'axios';
 
-	let data = $props()
-	let form: { error?: string; success?: boolean; message?: string } | null = null;
+	let data = $props();
+	let form: {
+		error?: string;
+		success?: boolean;
+		message?: string;
+	} | null = null;
 
 	let tag = data.u!.t || '';
 	let description = data.u!.d || '';
@@ -19,7 +23,8 @@
 	let isSubmitting = false;
 
 	// avatar upload (stored as small data url)
-	let avatarDataUrl: string = (data.u && (data.u as any).av) || '';
+	let avatarDataUrl: string =
+		(data.u && (data.u as any).av) || '';
 	function onAvatarChange(e: Event) {
 		const input = e.target as HTMLInputElement;
 		const file = input.files?.[0];
@@ -28,34 +33,55 @@
 		reader.onload = () => {
 			const img = new Image();
 			img.onload = () => {
-				const canvas = document.createElement('canvas');
+				const canvas =
+					document.createElement('canvas');
 				const size = 128;
 				canvas.width = size;
 				canvas.height = size;
 				const ctx = canvas.getContext('2d');
 				if (!ctx) return;
 				// cover-fit crop
-				const scale = Math.max(size / img.width, size / img.height);
+				const scale = Math.max(
+					size / img.width,
+					size / img.height
+				);
 				const sw = size / scale;
 				const sh = size / scale;
 				const sx = (img.width - sw) / 2;
 				const sy = (img.height - sh) / 2;
 				ctx.clearRect(0, 0, size, size);
-				ctx.drawImage(img, sx, sy, sw, sh, 0, 0, size, size);
-				avatarDataUrl = canvas.toDataURL('image/png', 0.9);
+				ctx.drawImage(
+					img,
+					sx,
+					sy,
+					sw,
+					sh,
+					0,
+					0,
+					size,
+					size
+				);
+				avatarDataUrl = canvas.toDataURL(
+					'image/png',
+					0.9
+				);
 			};
 			img.src = reader.result as string;
 		};
 		reader.readAsDataURL(file);
 	}
 
-	function handleDescriptionUpdate(event: CustomEvent) {
+	function handleDescriptionUpdate(
+		event: CustomEvent
+	) {
 		description = event.detail.value;
 	}
 
 	async function getCurrentLocation() {
 		if (!navigator.geolocation) {
-			alert('Geolocation is not supported by this browser');
+			alert(
+				'Geolocation is not supported by this browser'
+			);
 			return;
 		}
 
@@ -92,28 +118,44 @@
 		form = null; // Clear previous messages
 
 		try {
-			const response = await axios.post('/edit_user', {
-				tag,
-				description,
-				age,
-				gender: +gender,
-				latitude,
-				longitude,
-				socialLinks,
-				avatarDataUrl
-			});
+			const response = await axios.post(
+				'/edit_user',
+				{
+					tag,
+					description,
+					age,
+					gender: +gender,
+					latitude,
+					longitude,
+					socialLinks,
+					avatarDataUrl
+				}
+			);
 
 			if (response.data.success) {
-				form = { success: true, message: response.data.message };
+				form = {
+					success: true,
+					message: response.data.message
+				};
 			} else {
-				form = { error: response.data.error || 'Failed to update profile' };
+				form = {
+					error:
+						response.data.error ||
+						'Failed to update profile'
+				};
 			}
 		} catch (error) {
 			console.error('Submission error:', error);
 			if (axios.isAxiosError(error)) {
-				form = { error: error.response?.data?.error || 'An unexpected error occurred.' };
+				form = {
+					error:
+						error.response?.data?.error ||
+						'An unexpected error occurred.'
+				};
 			} else {
-				form = { error: 'An unexpected error occurred.' };
+				form = {
+					error: 'An unexpected error occurred.'
+				};
 			}
 		} finally {
 			isSubmitting = false;
@@ -130,19 +172,31 @@
 	<div class="container-narrow min-h-screen py-8">
 		<header class="mb-8 text-center">
 			<h1 class="hero-title mb-4">Edit Profile</h1>
-			<p class="hero-subtitle">Update your information to improve matching</p>
+			<p class="hero-subtitle">
+				Update your information to improve matching
+			</p>
 		</header>
 
 		<div class="card-normal">
 			<!-- avatar -->
 			<div class="form-group">
-				<label class="form-label" for="avatar_input">avatar</label>
+				<label class="form-label" for="avatar_input"
+					>avatar</label
+				>
 				<div class="flex items-center gap-4">
-					<div class="h-16 w-16 overflow-hidden rounded-full bg-gray-800">
+					<div
+						class="h-16 w-16 overflow-hidden rounded-full bg-gray-800"
+					>
 						{#if avatarDataUrl}
-							<img src={avatarDataUrl} alt="avatar preview" class="h-full w-full object-cover" />
+							<img
+								src={avatarDataUrl}
+								alt="avatar preview"
+								class="h-full w-full object-cover"
+							/>
 						{:else}
-							<div class="flex h-full w-full items-center justify-center text-xs text-gray-400">
+							<div
+								class="flex h-full w-full items-center justify-center text-xs text-gray-400"
+							>
 								no pic
 							</div>
 						{/if}
@@ -155,11 +209,19 @@
 						class="input-rect"
 					/>
 				</div>
-				<small class="form-help">square image recommended. we store a tiny 128px copy.</small>
+				<small class="form-help"
+					>square image recommended. we store a tiny
+					128px copy.</small
+				>
 			</div>
-			<form onsubmit={handleSubmit} class="section-spacing">
+			<form
+				onsubmit={handleSubmit}
+				class="section-spacing"
+			>
 				<div class="form-group">
-					<label for="tag" class="form-label">user tag</label>
+					<label for="tag" class="form-label"
+						>user tag</label
+					>
 					<input
 						type="text"
 						name="tag"
@@ -180,11 +242,17 @@
 							on:update={handleDescriptionUpdate}
 						/>
 					</div>
-					<input type="hidden" name="description" value={description} />
+					<input
+						type="hidden"
+						name="description"
+						value={description}
+					/>
 				</div>
 
 				<div class="form-group">
-					<label for="age" class="form-label">Age</label>
+					<label for="age" class="form-label"
+						>Age</label
+					>
 					<input
 						id="age"
 						name="age"
@@ -198,7 +266,9 @@
 				</div>
 
 				<div class="form-group">
-					<span class="form-label" id="gender_label">Gender</span>
+					<span class="form-label" id="gender_label"
+						>Gender</span
+					>
 					<div class="choice-group">
 						<label>
 							<input
@@ -209,7 +279,11 @@
 								bind:group={gender}
 								class="sr-only"
 							/>
-							<div class={gender === 0 ? 'choice-btn-active-blue' : 'choice-btn-inactive'}>
+							<div
+								class={gender === 0
+									? 'choice-btn-active-blue'
+									: 'choice-btn-inactive'}
+							>
 								Male
 							</div>
 						</label>
@@ -222,23 +296,50 @@
 								bind:group={gender}
 								class="sr-only"
 							/>
-							<div class={gender === 1 ? 'choice-btn-active' : 'choice-btn-inactive'}>Female</div>
+							<div
+								class={gender === 1
+									? 'choice-btn-active'
+									: 'choice-btn-inactive'}
+							>
+								Female
+							</div>
 						</label>
 					</div>
 				</div>
 
 				<!-- Location -->
 				<div class="form-group">
-					<label class="form-label" for="location_btn" id="location_label">Location</label>
-					<div class="location-container" aria-labelledby="location_label">
+					<label
+						class="form-label"
+						for="location_btn"
+						id="location_label">Location</label
+					>
+					<div
+						class="location-container"
+						aria-labelledby="location_label"
+					>
 						<div class="location-display">
 							{#if latitude && longitude}
-								<span class="current-location">{latitude.toFixed(6)}, {longitude.toFixed(6)}</span>
+								<span class="current-location"
+									>{latitude.toFixed(6)}, {longitude.toFixed(
+										6
+									)}</span
+								>
 							{:else}
-								<span class="no-location">No location set</span>
+								<span class="no-location"
+									>No location set</span
+								>
 							{/if}
-							<input type="hidden" name="latitude" value={latitude} />
-							<input type="hidden" name="longitude" value={longitude} />
+							<input
+								type="hidden"
+								name="latitude"
+								value={latitude}
+							/>
+							<input
+								type="hidden"
+								name="longitude"
+								value={longitude}
+							/>
 						</div>
 						<button
 							id="location_btn"
@@ -257,7 +358,10 @@
 									role="img"
 									aria-hidden="true"
 								>
-									<path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" class="animate-spin" />
+									<path
+										d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
+										class="animate-spin"
+									/>
 								</svg>
 								Getting Location...
 							{:else}
@@ -280,17 +384,23 @@
 				</div>
 
 				<div class="form-group">
-					<span class="form-label" id="social_label">Social Media Links (Optional)</span>
+					<span class="form-label" id="social_label"
+						>Social Media Links (Optional)</span
+					>
 					<div class="mb-3 flex items-center gap-2">
 						<button
 							type="button"
-							onclick={() => (socialLinks = [...socialLinks, ''])}
+							onclick={() =>
+								(socialLinks = [...socialLinks, ''])}
 							class="add-link-btn flex h-8 w-8 items-center justify-center rounded-full"
 							aria-labelledby="social_label"
 						>
 							+
 						</button>
-						<small class="form-help">WhatsApp, Telegram or Social media links</small>
+						<small class="form-help"
+							>WhatsApp, Telegram or Social media
+							links</small
+						>
 					</div>
 					{#each socialLinks as _, index (index)}
 						<div class="social-link-item">
@@ -303,7 +413,10 @@
 							/>
 							<button
 								type="button"
-								onclick={() => (socialLinks = socialLinks.filter((_, i) => i !== index))}
+								onclick={() =>
+									(socialLinks = socialLinks.filter(
+										(_, i) => i !== index
+									))}
 								class="remove-link-btn flex h-8 w-8 items-center justify-center rounded-full"
 								aria-labelledby="social_label"
 							>
@@ -326,7 +439,11 @@
 				{/if}
 
 				<div class="flex justify-center gap-4 pt-4">
-					<button type="submit" class="btn-primary btn-lg rounded-full" disabled={isSubmitting}>
+					<button
+						type="submit"
+						class="btn-primary btn-lg rounded-full"
+						disabled={isSubmitting}
+					>
 						{#if isSubmitting}
 							<div class="loading-spinner"></div>
 							Saving...
@@ -334,7 +451,11 @@
 							Save Changes
 						{/if}
 					</button>
-					<a href="/" class="btn-ghost btn-lg rounded-full">Cancel</a>
+					<a
+						href="/"
+						class="btn-ghost btn-lg rounded-full"
+						>Cancel</a
+					>
 				</div>
 			</form>
 		</div>

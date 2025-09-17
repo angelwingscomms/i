@@ -123,7 +123,7 @@ export const load: PageServerLoad = async ({
 		}))
 	)) satisfies ChatMessage[];
 
-	console.log('m', m.length)
+	console.log('m', m.length);
 
 	return {
 		m,

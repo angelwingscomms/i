@@ -7,11 +7,17 @@
 	let isLoading = $state(false);
 
 	onMount(async () => {
-		if (!userId || typeof window === 'undefined') return;
+		if (!userId || typeof window === 'undefined')
+			return;
 
 		// Check if browser supports push notifications
-		if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-			console.log('Push notifications not supported in this browser');
+		if (
+			!('serviceWorker' in navigator) ||
+			!('PushManager' in window)
+		) {
+			console.log(
+				'Push notifications not supported in this browser'
+			);
 			return;
 		}
 
@@ -22,14 +28,21 @@
 
 		// Check if we have an existing subscription saved
 		try {
-			const response = await fetch(`/u/${userId}/push_notifications/check_subscription`);
+			const response = await fetch(
+				`/u/${userId}/push_notifications/check_subscription`
+			);
 			const data = await response.json();
 			if (data.subscribed) {
-				console.log('User already has a push notification subscription');
+				console.log(
+					'User already has a push notification subscription'
+				);
 				return;
 			}
 		} catch (e) {
-			console.log('Error checking subscription status:', e);
+			console.log(
+				'Error checking subscription status:',
+				e
+			);
 		}
 
 		// Show banner if permissions not granted and no subscription
@@ -41,7 +54,8 @@
 
 		isLoading = true;
 		try {
-			const result = await ensurePushSubscribed(userId);
+			const result =
+				await ensurePushSubscribed(userId);
 			if (result.ok) {
 				showBanner = false;
 			} else {
@@ -65,7 +79,10 @@
 				}
 			}
 		} catch (e) {
-			console.error('Error requesting push notification permissions:', e);
+			console.error(
+				'Error requesting push notification permissions:',
+				e
+			);
 			// Keep banner visible so user can try again
 		} finally {
 			isLoading = false;
@@ -81,19 +98,28 @@
 	<div
 		class="fixed right-0 bottom-0 left-0 z-[2000] bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white shadow-lg"
 	>
-		<div class="mx-auto flex max-w-4xl items-center justify-between">
+		<div
+			class="mx-auto flex max-w-4xl items-center justify-between"
+		>
 			<div class="flex items-center gap-3">
 				<div class="flex-shrink-0">
-					<svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+					<svg
+						class="h-8 w-8"
+						fill="currentColor"
+						viewBox="0 0 24 24"
+					>
 						<path
 							d="M12 2C10.896 2 10 2.896 10 4V5H6C4.896 5 4 5.896 4 7V19C4 20.104 4.896 21 6 21H18C19.104 21 20 20.104 20 19V7C20 5.896 19.104 5 18 5H14V4C14 2.896 13.104 2 12 2ZM12 4C12.552 4 13 4.448 13 5V6H11V5C11 4.448 11.448 4 12 4ZM6 7H18V19H6V7ZM8 9V11H16V9H8ZM8 13V15H13V13H8Z"
 						/>
 					</svg>
 				</div>
 				<div>
-					<h3 class="text-lg font-semibold">Stay Connected</h3>
+					<h3 class="text-lg font-semibold">
+						Stay Connected
+					</h3>
 					<p class="text-sm opacity-90">
-						Enable push notifications to get updates and never miss important messages.
+						Enable push notifications to get updates
+						and never miss important messages.
 					</p>
 				</div>
 			</div>
@@ -105,7 +131,11 @@
 				>
 					{#if isLoading}
 						<span class="flex items-center gap-2">
-							<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+							<svg
+								class="h-4 w-4 animate-spin"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
 								<circle
 									class="opacity-25"
 									cx="12"

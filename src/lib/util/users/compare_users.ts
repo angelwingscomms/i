@@ -2,7 +2,10 @@ import { GEMINI as key } from '$env/static/private';
 import type { User } from '$lib/types';
 import axios from 'axios';
 
-export const compare_users = async (self: Partial<User>, user: Partial<User>) => {
+export const compare_users = async (
+	self: Partial<User>,
+	user: Partial<User>
+) => {
 	if (!self.d || !user.d) return;
 	try {
 		const response = await axios.post(
@@ -58,7 +61,10 @@ export const compare_users = async (self: Partial<User>, user: Partial<User>) =>
 
 		return response.data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
 	} catch (comparisonError) {
-		console.error('Comparison error:', comparisonError);
+		console.error(
+			'Comparison error:',
+			comparisonError
+		);
 		// Continue without comparison if it fails
 	}
 };

@@ -7,7 +7,11 @@ interface Platform {
 	};
 }
 
-export async function upload_image(file: File, key?: string, platform?: Platform): Promise<string> {
+export async function upload_image(
+	file: File,
+	key?: string,
+	platform?: Platform
+): Promise<string> {
 	// Get R2 bucket from platform or environment
 	const bucket = platform?.env?.R2;
 	if (!bucket) {
@@ -15,8 +19,12 @@ export async function upload_image(file: File, key?: string, platform?: Platform
 	}
 
 	// Generate unique key for the file
-	const ext = (file.name.split('.').pop() || 'bin').toLowerCase();
-	const objectKey = key || `uploads/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+	const ext = (
+		file.name.split('.').pop() || 'bin'
+	).toLowerCase();
+	const objectKey =
+		key ||
+		`uploads/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
 	try {
 		// Convert file to Uint8Array for R2
@@ -26,7 +34,8 @@ export async function upload_image(file: File, key?: string, platform?: Platform
 		// Upload to R2
 		await bucket.put(objectKey, uint8Array, {
 			httpMetadata: {
-				contentType: file.type || 'application/octet-stream'
+				contentType:
+					file.type || 'application/octet-stream'
 			}
 		});
 
@@ -42,7 +51,10 @@ export async function upload_image(file: File, key?: string, platform?: Platform
 }
 
 // Helper function to delete a file from R2
-export async function delete_image(key: string, platform?: Platform): Promise<void> {
+export async function delete_image(
+	key: string,
+	platform?: Platform
+): Promise<void> {
 	const bucket = platform?.env?.R2;
 	if (!bucket) {
 		throw new Error('R2 bucket not available');
@@ -59,7 +71,10 @@ export async function delete_image(key: string, platform?: Platform): Promise<vo
 }
 
 // Helper function to get file info from R2
-export async function get_image_info(key: string, platform?: Platform): Promise<R2Object | null> {
+export async function get_image_info(
+	key: string,
+	platform?: Platform
+): Promise<R2Object | null> {
 	const bucket = platform?.env?.R2;
 	if (!bucket) {
 		throw new Error('R2 bucket not available');

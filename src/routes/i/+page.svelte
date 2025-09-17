@@ -20,21 +20,30 @@
 
 	let query = $state('');
 	let kind = $state<0 | 1 | undefined>(undefined);
-	let sort = $state<'relevance' | 'newest' | 'oldest'>('relevance');
+	let sort = $state<
+		'relevance' | 'newest' | 'oldest'
+	>('relevance');
 	let loading = $state(false);
 	let results = $state<Item[]>([]);
-	let searchTimeout = $state<NodeJS.Timeout | null>(null);
+	let searchTimeout = $state<NodeJS.Timeout | null>(
+		null
+	);
 
 	// Reactive statement to sync search query to localStorage
 	$effect(() => {
 		if (browser) {
-			localStorage.setItem('item_search_query', JSON.stringify({ query, kind, sort }));
+			localStorage.setItem(
+				'item_search_query',
+				JSON.stringify({ query, kind, sort })
+			);
 		}
 	});
 
 	onMount(() => {
 		if (browser) {
-			const savedQuery = localStorage.getItem('item_search_query');
+			const savedQuery = localStorage.getItem(
+				'item_search_query'
+			);
 			if (savedQuery) {
 				const { q, k, s } = JSON.parse(savedQuery);
 				query = q || '';
@@ -62,7 +71,10 @@
 				limit: 50
 			};
 
-			const response = await axios.post('/i', payload);
+			const response = await axios.post(
+				'/i',
+				payload
+			);
 			results = response.data as Item[];
 		} catch (error) {
 			console.error('Search error:', error);
@@ -90,17 +102,29 @@
 
 <svelte:head>
 	<title>Search Items - Apexlinks</title>
-	<meta name="description" content="Find products and services in your community" />
+	<meta
+		name="description"
+		content="Find products and services in your community"
+	/>
 </svelte:head>
 
-<div class="from-background to-surface min-h-screen bg-gradient-to-br">
+<div
+	class="from-background to-surface min-h-screen bg-gradient-to-br"
+>
 	<!-- Header -->
-	<div class="from-theme-1 to-theme-2 bg-gradient-to-r text-white">
+	<div
+		class="from-theme-1 to-theme-2 bg-gradient-to-r text-white"
+	>
 		<div class="mx-auto max-w-4xl px-4 py-8">
 			<div class="flex items-center justify-between">
 				<div>
-					<h1 class="mb-2 text-4xl font-bold">Search Items</h1>
-					<p class="text-white/80">Find products and services in your community</p>
+					<h1 class="mb-2 text-4xl font-bold">
+						Search Items
+					</h1>
+					<p class="text-white/80">
+						Find products and services in your
+						community
+					</p>
 				</div>
 				{#if user}
 					<a
@@ -109,8 +133,16 @@
 						style="border: 2px solid rgba(255, 255, 255, 0.2);"
 						aria-label="Create new item"
 					>
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-							<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+						<svg
+							width="20"
+							height="20"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							aria-hidden="true"
+						>
+							<path
+								d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
+							/>
 						</svg>
 						Create Item
 					</a>
@@ -125,7 +157,9 @@
 			class="mb-8 rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800"
 			style="border: 2px solid var(--color-theme-6);"
 		>
-			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+			<div
+				class="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+			>
 				<!-- Search Query -->
 				<div class="md:col-span-2">
 					<label
@@ -183,7 +217,9 @@
 						class="w-full rounded-xl border-2 px-4 py-3 transition-colors"
 						style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
 					>
-						<option value={undefined}>All Items</option>
+						<option value={undefined}
+							>All Items</option
+						>
 						<option value={0}>🛍️ Products</option>
 						<option value={1}>⚡ Services</option>
 					</select>
@@ -205,7 +241,9 @@
 						class="w-full rounded-xl border-2 px-4 py-3 transition-colors"
 						style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
 					>
-						<option value="relevance">Relevance</option>
+						<option value="relevance"
+							>Relevance</option
+						>
 						<option value="newest">Newest</option>
 						<option value="oldest">Oldest</option>
 					</select>
@@ -215,7 +253,10 @@
 			<!-- Loading indicator -->
 			{#if loading}
 				<div class="mt-4 text-center">
-					<div class="inline-flex items-center gap-2 text-sm" style="color: var(--color-theme-1);">
+					<div
+						class="inline-flex items-center gap-2 text-sm"
+						style="color: var(--color-theme-1);"
+					>
 						<div
 							class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
 						></div>
@@ -228,7 +269,10 @@
 		<!-- Results -->
 		<div class="space-y-4">
 			<div class="flex items-center justify-between">
-				<h2 class="text-xl font-semibold" style="color: var(--color-theme-4);">
+				<h2
+					class="text-xl font-semibold"
+					style="color: var(--color-theme-4);"
+				>
 					Results {#if !loading}({results.length}){/if}
 				</h2>
 			</div>
@@ -240,10 +284,18 @@
 
 <style>
 	:global(.bg-gradient-to-r) {
-		background: linear-gradient(to right, var(--color-theme-1), var(--color-theme-2));
+		background: linear-gradient(
+			to right,
+			var(--color-theme-1),
+			var(--color-theme-2)
+		);
 	}
 
 	:global(.bg-gradient-to-br) {
-		background: linear-gradient(to bottom right, var(--background), var(--surface));
+		background: linear-gradient(
+			to bottom right,
+			var(--background),
+			var(--surface)
+		);
 	}
 </style>

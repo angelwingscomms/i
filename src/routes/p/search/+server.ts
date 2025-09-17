@@ -28,14 +28,10 @@ export const POST: RequestHandler = async ({
 		144
 	);
 	const payload_filter: Record<string, unknown> = {
-		s: 'r',
-		_: '.'
+		s: 'p'
 	};
-	console.log('count', await count({ s: 'r' }));
-	// const payload_filter: Record<string, unknown> = { s: 'r', _: '.', ...(body?.f || {}) };
 
 	if (q.trim()) {
-		// Vector search when query provided
 		const vector = await embed(q.trim());
 		const results = await search_by_vector<{
 			t?: string;

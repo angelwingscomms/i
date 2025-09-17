@@ -3,7 +3,11 @@
 	import { browser } from '$app/environment';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
-	import { animate, createTimeline, stagger } from 'animejs';
+	import {
+		animate,
+		createTimeline,
+		stagger
+	} from 'animejs';
 
 	import PageHeader from '$lib/components/u/PageHeader.svelte';
 	import SearchFilters from '$lib/components/u/SearchFilters.svelte';
@@ -12,12 +16,21 @@
 
 	let { user }: PageData = $props();
 
-	type Result = { i: string; t: string; a?: number; g?: number; av?: string; score?: number };
+	type Result = {
+		i: string;
+		t: string;
+		a?: number;
+		g?: number;
+		av?: string;
+		score?: number;
+	};
 
 	let gender = $state<number | undefined>(undefined);
 	let minAge = $state(0);
 	let maxAge = $state(144);
-	let mode = $state<'profile' | 'custom'>(user ? 'profile' : 'custom');
+	let mode = $state<'profile' | 'custom'>(
+		user ? 'profile' : 'custom'
+	);
 	let description = $state('');
 	let loading = $state(false);
 	let results = $state<Result[]>([]);
@@ -34,7 +47,9 @@
 		results = results
 			.slice()
 			.sort((a, b) =>
-				sort === 'match' ? (b.score ?? 0) - (a.score ?? 0) : (a.a ?? 0) - (b.a ?? 0)
+				sort === 'match'
+					? (b.score ?? 0) - (a.score ?? 0)
+					: (a.a ?? 0) - (b.a ?? 0)
 			);
 	}
 
@@ -47,19 +62,38 @@
 		if (browser) {
 			localStorage.setItem(
 				'user_search_query',
-				JSON.stringify({ gender, minAge, maxAge, mode, description, sort })
+				JSON.stringify({
+					gender,
+					minAge,
+					maxAge,
+					mode,
+					description,
+					sort
+				})
 			);
 		}
 	});
 
 	onMount(() => {
 		if (browser) {
-			const savedQuery = localStorage.getItem('user_search_query');
+			const savedQuery = localStorage.getItem(
+				'user_search_query'
+			);
 			if (savedQuery) {
 				const parsed = JSON.parse(savedQuery);
 				gender = parsed.g;
-				minAge = typeof parsed.n === 'number' && parsed.n >= 0 && parsed.n <= 144 ? parsed.n : 0;
-				maxAge = typeof parsed.x === 'number' && parsed.x >= 0 && parsed.x <= 144 ? parsed.x : 144;
+				minAge =
+					typeof parsed.n === 'number' &&
+					parsed.n >= 0 &&
+					parsed.n <= 144
+						? parsed.n
+						: 0;
+				maxAge =
+					typeof parsed.x === 'number' &&
+					parsed.x >= 0 &&
+					parsed.x <= 144
+						? parsed.x
+						: 144;
 				mode = parsed.m;
 				description = parsed.d ?? '';
 				sort = parsed.s ?? 'match';
@@ -136,11 +170,15 @@
 				ic: inCallOnly
 			};
 			if (mode === 'custom' || !user) {
-				if (description?.trim()) payload.d = description.trim();
+				if (description?.trim())
+					payload.d = description.trim();
 			}
-			const arr = (await axios.post('/u', payload)).data as Result[];
+			const arr = (await axios.post('/u', payload))
+				.data as Result[];
 			results = arr.sort((a, b) =>
-				sort === 'match' ? (b.score ?? 0) - (a.score ?? 0) : (a.a ?? 0) - (b.a ?? 0)
+				sort === 'match'
+					? (b.score ?? 0) - (a.score ?? 0)
+					: (a.a ?? 0) - (b.a ?? 0)
 			);
 		} finally {
 			loading = false;

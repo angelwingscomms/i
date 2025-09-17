@@ -2,26 +2,48 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { json } from '@sveltejs/kit';
 import { GEMINI } from '$env/static/private';
 
-let model: ReturnType<GoogleGenerativeAI['getGenerativeModel']> | undefined;
+let model:
+	| ReturnType<
+			GoogleGenerativeAI['getGenerativeModel']
+	  >
+	| undefined;
 
 if (GEMINI) {
 	try {
 		const ai = new GoogleGenerativeAI(GEMINI);
-		model = ai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+		model = ai.getGenerativeModel({
+			model: 'gemini-1.5-flash'
+		});
 	} catch (e) {
-		console.error('Error initializing GoogleGenerativeAI:', e);
+		console.error(
+			'Error initializing GoogleGenerativeAI:',
+			e
+		);
 	}
 }
 
 export const POST = async ({ request }) => {
-	if (!model) return json({ error: 'Token counting not configured' }, { status: 500 });
+	if (!model)
+		return json(
+			{ error: 'Token counting not configured' },
+			{ status: 500 }
+		);
 	const { text } = await request.json();
-	if (typeof text !== 'string') return json({ error: 'text must be string' }, { status: 400 });
+	if (typeof text !== 'string')
+		return json(
+			{ error: 'text must be string' },
+			{ status: 400 }
+		);
 	try {
-		const res = await model.countTokens({ contents: [{ role: 'user', parts: [{ text }] }] });
+		const res = await model.countTokens({
+			contents: [{ role: 'user', parts: [{ text }] }]
+		});
 		return json({ tokenCount: res.totalTokens ?? 0 });
 	} catch (err) {
 		console.error('countTokens error', err);
-		return json({ error: 'failed to count tokens' }, { status: 500 });
+		return json(
+			{ error: 'failed to count tokens' },
+			{ status: 500 }
+		);
 	}
 };

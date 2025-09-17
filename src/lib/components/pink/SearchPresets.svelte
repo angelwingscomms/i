@@ -33,7 +33,10 @@
 	async function search_presets() {
 		loading = true;
 		try {
-			({ data: results } = await axios.post('/pink/presets/search', { q }));
+			({ data: results } = await axios.post(
+				'/pink/presets/search',
+				{ q }
+			));
 		} finally {
 			loading = false;
 		}
@@ -47,11 +50,19 @@
 			if (!name) return;
 			const res = await fetch('/pink/presets', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ n: name, a: about, p: prompt })
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					n: name,
+					a: about,
+					p: prompt
+				})
 			});
 			if (!res.ok) throw new Error('failed');
-			const { i } = (await res.json()) as { i: string };
+			const { i } = (await res.json()) as {
+				i: string;
+			};
 			creating = false;
 			n = a = p = '';
 			await search_presets();
@@ -75,7 +86,10 @@
 			tabindex="0"
 			onclick={() => (open = false)}
 			onkeydown={(e) =>
-				(e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') && (open = false)}
+				(e.key === 'Escape' ||
+					e.key === 'Enter' ||
+					e.key === ' ') &&
+				(open = false)}
 			in:fade
 		></div>
 	{/if}
@@ -86,29 +100,63 @@
 				class="input-underline"
 				placeholder="Search presets..."
 				bind:value={q}
-				onkeydown={(e: KeyboardEvent) => e.key === 'Enter' && search_presets()}
+				onkeydown={(e: KeyboardEvent) =>
+					e.key === 'Enter' && search_presets()}
 			/>
-			<button class="btn-primary btn-compact" onclick={search_presets} disabled={loading}
+			<button
+				class="btn-primary btn-compact"
+				onclick={search_presets}
+				disabled={loading}
 				>{loading ? 'searching…' : 'search'}</button
 			>
 		</div>
 
 		<div class="row space-between v-center">
 			<h3 class="subtitle">results</h3>
-			<button class="btn" onclick={() => (creating = true)}>create preset</button>
+			<button
+				class="btn"
+				onclick={() => (creating = true)}
+				>create preset</button
+			>
 		</div>
 
 		{#if creating}
 			<div class="card gap" in:fade>
-				<label class="label" for="preset_name">name</label>
-				<input id="preset_name" class="input-underline" bind:value={n} />
-				<label class="label" for="preset_about">about</label>
-				<textarea id="preset_about" class="input-underline" rows="2" bind:value={a}></textarea>
-				<label class="label" for="preset_prompt">prompt</label>
-				<textarea id="preset_prompt" class="input-underline" rows="3" bind:value={p}></textarea>
+				<label class="label" for="preset_name"
+					>name</label
+				>
+				<input
+					id="preset_name"
+					class="input-underline"
+					bind:value={n}
+				/>
+				<label class="label" for="preset_about"
+					>about</label
+				>
+				<textarea
+					id="preset_about"
+					class="input-underline"
+					rows="2"
+					bind:value={a}
+				></textarea>
+				<label class="label" for="preset_prompt"
+					>prompt</label
+				>
+				<textarea
+					id="preset_prompt"
+					class="input-underline"
+					rows="3"
+					bind:value={p}
+				></textarea>
 				<div class="row gap">
-					<button class="btn" onclick={create_preset}>save</button>
-					<button class="btn ghost" onclick={() => (creating = false)}>cancel</button>
+					<button class="btn" onclick={create_preset}
+						>save</button
+					>
+					<button
+						class="btn ghost"
+						onclick={() => (creating = false)}
+						>cancel</button
+					>
 				</div>
 			</div>
 		{/if}
@@ -120,14 +168,30 @@
 						<div class="row space-between v-center">
 							<div>
 								<div class="result-title">{r.n}</div>
-								{#if r.a}<div class="muted">{r.a}</div>{/if}
+								{#if r.a}<div class="muted">
+										{r.a}
+									</div>{/if}
 							</div>
 							<div class="row gap">
 								{#if r.score !== undefined}
-									<div class="badge">{Math.round(Math.max(0, Math.min(1, r.score)) * 100)}%</div>
+									<div class="badge">
+										{Math.round(
+											Math.max(
+												0,
+												Math.min(1, r.score)
+											) * 100
+										)}%
+									</div>
 								{/if}
-								<a class="btn ghost" href={`/pink/preset/${r.i}`}>open</a>
-								<button class="btn-primary" onclick={() => select(r)}>use</button>
+								<a
+									class="btn ghost"
+									href={`/pink/preset/${r.i}`}>open</a
+								>
+								<button
+									class="btn-primary"
+									onclick={() => select(r)}
+									>use</button
+								>
 							</div>
 						</div>
 					</li>

@@ -4,6 +4,7 @@
 </script>
 
 <Modal fixed bind:open>
-<!-- hii -->
-<rtk-meeting {meeting} id="my-meeting"></rtk-meeting>
+	<!-- hii -->
+	<rtk-meeting {meeting} id="my-meeting"
+	></rtk-meeting>
 </Modal>

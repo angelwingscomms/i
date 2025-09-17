@@ -36,31 +36,32 @@ UI:
 - for editing points, `always use qdrant.setpayload`;
 
 # types
+
 - when defining types, describe each field with a comment e.g export type Room { n: string; // room name, s: 'r', // tenant id}
 
-# in page.server load functions 
+# in page.server load functions
+
 - when getting resources from the db, always get just the fields of the point payload required e.g const room: Pick<Room, 't' | 'u' | 'd'> = await get(room_id, ['t', 'u', 'd'])
-- let the returned object always have single letter keys. e.g return {  r: room }
+- let the returned object always have single letter keys. e.g return { r: room }
 - if the resource requires authorization that the user doesn't have, throw 403 error, e.g if (r.u !== locals.user.i) { throw error(403, "You don't own this resume") }
 
 ALWAYS CODE AS CONCISELY AS POSSIBLE
 
 - always look at the reference files to see how things are done. The reference files are:
+  - \`src/lib/components/Chat.svelte\`
 
-  * \`src/lib/components/Chat.svelte\`
+  - \`src/routes/+page.svelte\` (homepage)
 
-  * \`src/routes/+page.svelte\` (homepage)
+  - \`src/routes/r/+page.server.ts\`
 
-  * \`src/routes/r/+page.server.ts\`
+  - \`src/routes/r/+server.ts\`
 
-  * \`src/routes/r/+server.ts\`
+  - \`src/routes/r/+page.svelte\`
 
-  * \`src/routes/r/+page.svelte\`
+  - all pages under \`src/routes/r/[i]/\` (r-detail pages)
 
-  * all pages under \`src/routes/r/[i]/\` (r-detail pages)
+  - \`src/lib/types/index.ts\`
 
-  * \`src/lib/types/index.ts\`
-
-  * \`src/lib/db/index.ts\`
+  - \`src/lib/db/index.ts\`
 
 These serve as the practical examples the agent should follow.

@@ -5,9 +5,21 @@
 	import axios from 'axios';
 	import { toast } from '$lib/util/toast';
 
-	let { full_room_name, meeting, i, onClose }: { full_room_name: string; meeting: RealtimeKitClient; i: string; onClose: () => void } = $props();
+	let {
+		full_room_name,
+		meeting,
+		i,
+		onClose
+	}: {
+		full_room_name: string;
+		meeting: RealtimeKitClient;
+		i: string;
+		onClose: () => void;
+	} = $props();
 
-	let recordings = $derived(meeting?.recording?.recordings || []);
+	let recordings = $derived(
+		meeting?.recording?.recordings || []
+	);
 
 	let downloading = $state(new Set<string>());
 
@@ -15,7 +27,9 @@
 		if (downloading.has(recordingId)) return;
 		downloading.add(recordingId);
 		try {
-			const res = await axios.get(`/r/${i}/get-recording-download-link?i=${recordingId}`);
+			const res = await axios.get(
+				`/r/${i}/get-recording-download-link?i=${recordingId}`
+			);
 			if (res.data.download_url) {
 				const a = document.createElement('a');
 				a.href = res.data.download_url;
@@ -52,15 +66,23 @@
 			<h3 class="subtitle">Recordings</h3>
 			<div class="recordings-list">
 				{#each recordings as rec}
-					<button class="btn download-btn" onclick={() => download(rec.id)} disabled={downloading.has(rec.id)}>
-						{downloading.has(rec.id) ? 'Downloading...' : `Download ${rec.id.slice(-8)}`}
+					<button
+						class="btn download-btn"
+						onclick={() => download(rec.id)}
+						disabled={downloading.has(rec.id)}
+					>
+						{downloading.has(rec.id)
+							? 'Downloading...'
+							: `Download ${rec.id.slice(-8)}`}
 					</button>
 				{/each}
 			</div>
 		</div>
 	{/if}
 	<div class="row gap">
-		<button class="btn" onclick={onClose}>Close</button>
+		<button class="btn" onclick={onClose}
+			>Close</button
+		>
 	</div>
 </div>
 

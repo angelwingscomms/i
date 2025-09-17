@@ -9,12 +9,20 @@ test.describe('Room Search', () => {
 	test.beforeAll(async () => {
 		// Create a dummy room
 		roomId = await create(
-			{ s: 'r', t: 'Test Room Search', d: 'A room for testing search' },
+			{
+				s: 'r',
+				t: 'Test Room Search',
+				d: 'A room for testing search'
+			},
 			'Test Room Search'
 		);
 		// Create a dummy user
 		userId = await create(
-			{ s: 'u', t: 'Test User Search', d: 'A user for testing search' },
+			{
+				s: 'u',
+				t: 'Test User Search',
+				d: 'A user for testing search'
+			},
 			'Test User Search'
 		);
 	});
@@ -25,11 +33,16 @@ test.describe('Room Search', () => {
 		await delete_(userId);
 	});
 
-	test('should only display chatrooms in search results', async ({ page }) => {
+	test('should only display chatrooms in search results', async ({
+		page
+	}) => {
 		await page.goto('/r');
 
 		// Type search query
-		await page.fill('input[placeholder="Search chatrooms..."]', 'Test Search');
+		await page.fill(
+			'input[placeholder="Search chatrooms..."]',
+			'Test Search'
+		);
 
 		// Click search button
 		await page.click('button:has-text("search")');
@@ -38,7 +51,9 @@ test.describe('Room Search', () => {
 		await page.waitForSelector('.list');
 
 		// Get all result links
-		const resultLinks = await page.locator('.list a').all();
+		const resultLinks = await page
+			.locator('.list a')
+			.all();
 
 		// Assert that only room links are present
 		for (const link of resultLinks) {
@@ -47,9 +62,13 @@ test.describe('Room Search', () => {
 		}
 
 		// Assert that the specific test room is found
-		await expect(page.locator(`.list a[href="/r/${roomId}"]`)).toBeVisible();
+		await expect(
+			page.locator(`.list a[href="/r/${roomId}"]`)
+		).toBeVisible();
 
 		// Assert that the specific test user is NOT found
-		await expect(page.locator(`.list a[href="/u/${userId}"]`)).not.toBeVisible();
+		await expect(
+			page.locator(`.list a[href="/u/${userId}"]`)
+		).not.toBeVisible();
 	});
 });

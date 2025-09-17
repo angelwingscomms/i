@@ -15,7 +15,7 @@
 			const res = await axios.post('/resume', txt);
 			if (res.statusText === 'OK') {
 				toast.success('Resume created successfully');
-				goto(`/resume/${res.data}`)
+				goto(`/resume/${res.data}`);
 			} else {
 				const err = res.data;
 				toast.error(err || 'Failed to create resume');
@@ -26,8 +26,10 @@
 	}
 </script>
 
-<div class="max-w-[720px] mx-auto p-4">
-	<h1 class="text-[22px] font-bold mb-4">Instantly create your resume with AI</h1>
+<div class="mx-auto max-w-[720px] p-4">
+	<h1 class="mb-4 text-[22px] font-bold">
+		Instantly create your resume with AI
+	</h1>
 	<DescriptionInput
 		bind:value={txt}
 		placeholder="Enter your work experience, education, skills, achievements, contact info, etc..."
@@ -35,9 +37,9 @@
 		label="Resume Content"
 		editable={true}
 	/>
-	<button 
-		class="w-full bg-[var(--btn-primary)] text-[var(--btn-text)] border border-[var(--border)] rounded-lg py-3 px-6 font-semibold cursor-pointer disabled:opacity-50" 
-		onclick={createResume} 
+	<button
+		class="w-full cursor-pointer rounded-lg border border-[var(--border)] bg-[var(--btn-primary)] px-6 py-3 font-semibold text-[var(--btn-text)] disabled:opacity-50"
+		onclick={createResume}
 		disabled={!txt.trim()}
 	>
 		Generate Resume

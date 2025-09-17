@@ -105,7 +105,10 @@ export interface Room {
 import { qdrant } from './index';
 import type { User, Room } from '$lib/types';
 
-export async function join_room(user_id: string, room_id: string): Promise<void> {
+export async function join_room(
+	user_id: string,
+	room_id: string
+): Promise<void> {
 	// Get current user and room data
 	const [user, room] = await Promise.all([
 		get<User>(user_id, ['r']), // get(id, [...desired payload fields])
@@ -142,7 +145,10 @@ export async function join_room(user_id: string, room_id: string): Promise<void>
 	}
 }
 
-export async function leave_room(user_id: string, room_id: string): Promise<void> {
+export async function leave_room(
+	user_id: string,
+	room_id: string
+): Promise<void> {
 	// Get current user and room data
 	const [user, room] = await Promise.all([
 		get<User>(user_id, ['r']), // get(id, [...desired payload fields])
@@ -154,7 +160,9 @@ export async function leave_room(user_id: string, room_id: string): Promise<void
 	}
 
 	// Remove room from user rooms list
-	const user_rooms = (user.r || []).filter((id) => id !== room_id);
+	const user_rooms = (user.r || []).filter(
+		(id) => id !== room_id
+	);
 	await qdrant.setPayload('i', {
 		wait: true,
 		payload: { r: user_rooms },
@@ -162,7 +170,9 @@ export async function leave_room(user_id: string, room_id: string): Promise<void
 	});
 
 	// Remove user from room members list and update count
-	const room_members = (room.q || []).filter((id) => id !== user_id);
+	const room_members = (room.q || []).filter(
+		(id) => id !== user_id
+	);
 	await qdrant.setPayload('i', {
 		wait: true,
 		payload: {
@@ -174,7 +184,10 @@ export async function leave_room(user_id: string, room_id: string): Promise<void
 }
 
 // Helper function to get entity data (imports from db/index.ts)
-async function get<T>(id: string, fields?: string[]): Promise<T | null> {
+async function get<T>(
+	id: string,
+	fields?: string[]
+): Promise<T | null> {
 	// This function should be imported from db/index.ts or implemented here
 	// Implementation depends on existing get function in db/index.ts
 }

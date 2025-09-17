@@ -26,10 +26,17 @@
 	async function upload_files(): Promise<string[]> {
 		if (!files || files.length === 0) return [];
 		const fd = new FormData();
-		Array.from(files).forEach((f) => fd.append('files', f));
-		const res = await fetch('/i/upload', { method: 'POST', body: fd });
+		Array.from(files).forEach((f) =>
+			fd.append('files', f)
+		);
+		const res = await fetch('/i/upload', {
+			method: 'POST',
+			body: fd
+		});
 		if (!res.ok) return [];
-		const { x } = (await res.json()) as { x: string[] };
+		const { x } = (await res.json()) as {
+			x: string[];
+		};
 		return x || [];
 	}
 
@@ -49,17 +56,25 @@
 
 			generating = true;
 			// Ensure files are uploaded
-			if (files && files.length > 0 && uploaded_urls.length !== (files?.length || 0)) {
+			if (
+				files &&
+				files.length > 0 &&
+				uploaded_urls.length !== (files?.length || 0)
+			) {
 				uploaded_urls = await upload_files();
 			}
 
 			const body: Record<string, unknown> = {
-				prompt: prompt.trim() || selected_preset?.p || '',
+				prompt:
+					prompt.trim() || selected_preset?.p || '',
 				x: uploaded_urls,
 				m: match_images,
 				pid: selected_preset?.i
 			};
-			const { data } = await axios.post('/pink/generate', body);
+			const { data } = await axios.post(
+				'/pink/generate',
+				body
+			);
 			generated_images = data.images || [];
 			generated_text = data.text || '';
 		} catch (e) {
@@ -89,38 +104,63 @@
 		></textarea>
 
 		<div class="row gap v-center">
-			<button class="btn" onclick={() => (show_presets = true)}>search presets</button>
+			<button
+				class="btn"
+				onclick={() => (show_presets = true)}
+				>search presets</button
+			>
 			{#if selected_preset}
 				<div class="badge">{selected_preset.n}</div>
-				<a class="link" href={`/pink/preset/${selected_preset.i}`}>open</a>
+				<a
+					class="link"
+					href={`/pink/preset/${selected_preset.i}`}
+					>open</a
+				>
 			{/if}
 		</div>
 
 		<div class="row v-center gap">
 			<label class="toggle">
-				<input type="checkbox" bind:checked={match_images} />
+				<input
+					type="checkbox"
+					bind:checked={match_images}
+				/>
 				<span>match preset images</span>
 			</label>
 		</div>
 
-		<label class="label" for="file-upload">images</label>
+		<label class="label" for="file-upload"
+			>images</label
+		>
 		<input
 			id="file-upload"
 			type="file"
 			multiple
 			accept="image/*"
-			onchange={(e) => (files = (e.target as HTMLInputElement).files)}
+			onchange={(e) =>
+				(files = (e.target as HTMLInputElement)
+					.files)}
 		/>
 
 		{#if selected_preset && match_images}
-			<p class="muted">Preset expects {selected_preset.x?.length ?? 0} image(s).</p>
+			<p class="muted">
+				Preset expects {selected_preset.x?.length ??
+					0} image(s).
+			</p>
 		{/if}
 
 		<div class="row gap">
-			<button class="btn-primary" onclick={generate} disabled={generating}
-				>{generating ? 'generating…' : 'generate'}</button
+			<button
+				class="btn-primary"
+				onclick={generate}
+				disabled={generating}
+				>{generating
+					? 'generating…'
+					: 'generate'}</button
 			>
-			{#if error}<span class="text-error">{error}</span>{/if}
+			{#if error}<span class="text-error"
+					>{error}</span
+				>{/if}
 		</div>
 	</div>
 
@@ -149,7 +189,11 @@
 </div>
 
 {#if show_presets}
-	<SearchPresets asModal bind:open={show_presets} onSelect={on_select_preset} />
+	<SearchPresets
+		asModal
+		bind:open={show_presets}
+		onSelect={on_select_preset}
+	/>
 {/if}
 
 <style>

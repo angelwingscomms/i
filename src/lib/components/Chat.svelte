@@ -299,7 +299,9 @@
 						class="btn"
 						onclick={() =>
 							(show_room_name_modal = true)}
-						>{r ? 'show full message' : 'show full room name'}</button
+						>{r
+							? 'show full message'
+							: 'show full room name'}</button
 					>
 				{/if}
 			</div>
@@ -316,7 +318,9 @@
 							class="btn"
 							onclick={() =>
 								(show_room_name_modal = true)}
-							>{r ? 'show full message' : 'show full room name'}</button
+							>{r
+								? 'show full message'
+								: 'show full room name'}</button
 						>
 					{/if}
 				</div>
@@ -337,7 +341,9 @@
 						class="btn"
 						onclick={() =>
 							(show_room_name_modal = true)}
-						>{r ? 'show full message' : 'show full room name'}</button
+						>{r
+							? 'show full message'
+							: 'show full room name'}</button
 					>
 				{/if}
 			</div>
@@ -408,7 +414,7 @@
 	{#if show_room_name_modal}
 		<RoomNameModal
 			full_room_name={t}
-			meeting={meeting}
+			{meeting}
 			i={roomId}
 			onClose={() => (show_room_name_modal = false)}
 		/>

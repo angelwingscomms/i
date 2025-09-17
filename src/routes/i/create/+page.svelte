@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { toast } from '$lib/util/toast';
 	import { onMount } from 'svelte';
-	import { animate, createTimeline, stagger } from 'animejs';
+	import {
+		animate,
+		createTimeline,
+		stagger
+	} from 'animejs';
 
 	let name = $state('');
 	let desc = $state('');
@@ -64,10 +68,17 @@
 	async function upload_files(): Promise<string[]> {
 		if (!files || files.length === 0) return [];
 		const fd = new FormData();
-		Array.from(files).forEach((f) => fd.append('files', f));
-		const res = await fetch('/i/upload', { method: 'POST', body: fd });
+		Array.from(files).forEach((f) =>
+			fd.append('files', f)
+		);
+		const res = await fetch('/i/upload', {
+			method: 'POST',
+			body: fd
+		});
 		if (!res.ok) return [];
-		const { x } = (await res.json()) as { x: string[] };
+		const { x } = (await res.json()) as {
+			x: string[];
+		};
 		return x || [];
 	}
 
@@ -90,8 +101,15 @@
 			const x = await upload_files();
 			const res = await fetch('/i/create', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ t: name, d: desc, k: kind, x })
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					t: name,
+					d: desc,
+					k: kind,
+					x
+				})
 			});
 			if (!res.ok) throw new Error('create failed');
 			const { i } = await res.json();
@@ -113,7 +131,9 @@
 	}
 </script>
 
-<div class="from-bg-primary via-bg-secondary to-bg-tertiary min-h-screen bg-gradient-to-br">
+<div
+	class="from-bg-primary via-bg-secondary to-bg-tertiary min-h-screen bg-gradient-to-br"
+>
 	<!-- Floating background elements -->
 	<div class="absolute inset-0 overflow-hidden">
 		<div
@@ -131,19 +151,32 @@
 	</div>
 
 	<!-- Page Header -->
-	<div class="page-header relative z-10 px-4 py-16 text-center opacity-0 sm:py-12">
+	<div
+		class="page-header relative z-10 px-4 py-16 text-center opacity-0 sm:py-12"
+	>
 		<div class="mx-auto max-w-4xl">
-			<h1 class="mb-6 text-6xl font-black sm:text-4xl" style="color: var(--color-theme-4);">
-				Create Your <span style="color: var(--color-theme-1);">Listing</span>
+			<h1
+				class="mb-6 text-6xl font-black sm:text-4xl"
+				style="color: var(--color-theme-4);"
+			>
+				Create Your <span
+					style="color: var(--color-theme-1);"
+					>Listing</span
+				>
 			</h1>
-			<p class="text-xl text-gray-600 sm:text-lg dark:text-gray-300">
-				Share your amazing products and services with the community
+			<p
+				class="text-xl text-gray-600 sm:text-lg dark:text-gray-300"
+			>
+				Share your amazing products and services with
+				the community
 			</p>
 		</div>
 	</div>
 
 	<!-- Form Section -->
-	<div class="form-section relative z-10 mx-auto max-w-2xl px-4 pb-16 opacity-0">
+	<div
+		class="form-section relative z-10 mx-auto max-w-2xl px-4 pb-16 opacity-0"
+	>
 		<div
 			class="rounded-3xl p-8 sm:p-6"
 			style="background: transparent; border: 1px solid var(--color-theme-3);"
@@ -156,7 +189,9 @@
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
-						<span style="color: var(--color-theme-1);">*</span> Item Name
+						<span style="color: var(--color-theme-1);"
+							>*</span
+						> Item Name
 					</label>
 					<input
 						id="item-name"
@@ -165,9 +200,15 @@
 						placeholder="Enter a catchy name for your item..."
 						bind:value={name}
 						onfocus={(e) =>
-							((e.target as HTMLInputElement).style.border = '1px solid var(--color-theme-1)')}
+							((
+								e.target as HTMLInputElement
+							).style.border =
+								'1px solid var(--color-theme-1)')}
 						onblur={(e) =>
-							((e.target as HTMLInputElement).style.border = '1px solid var(--color-theme-3)')}
+							((
+								e.target as HTMLInputElement
+							).style.border =
+								'1px solid var(--color-theme-3)')}
 					/>
 				</div>
 
@@ -187,21 +228,38 @@
 						placeholder="Describe your item in detail. What makes it special?"
 						bind:value={desc}
 						onfocus={(e) =>
-							((e.target as HTMLTextAreaElement).style.border = '1px solid var(--color-theme-1)')}
+							((
+								e.target as HTMLTextAreaElement
+							).style.border =
+								'1px solid var(--color-theme-1)')}
 						onblur={(e) =>
-							((e.target as HTMLTextAreaElement).style.border = '1px solid var(--color-theme-3)')}
+							((
+								e.target as HTMLTextAreaElement
+							).style.border =
+								'1px solid var(--color-theme-3)')}
 					></textarea>
 				</div>
 
 				<!-- Type Selection -->
 				<div class="form-field opacity-0">
 					<fieldset>
-						<legend class="mb-3 block text-lg font-bold" style="color: var(--color-theme-4);">
-							<span style="color: var(--color-theme-1);">*</span> Type
+						<legend
+							class="mb-3 block text-lg font-bold"
+							style="color: var(--color-theme-4);"
+						>
+							<span
+								style="color: var(--color-theme-1);"
+								>*</span
+							> Type
 						</legend>
 						<div class="flex gap-4">
 							<label class="flex-1">
-								<input type="radio" class="sr-only" bind:group={kind} value={0} />
+								<input
+									type="radio"
+									class="sr-only"
+									bind:group={kind}
+									value={0}
+								/>
 								<div
 									class="active-button cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all"
 									style={kind === 0
@@ -212,7 +270,12 @@
 								</div>
 							</label>
 							<label class="flex-1">
-								<input type="radio" class="sr-only" bind:group={kind} value={1} />
+								<input
+									type="radio"
+									class="sr-only"
+									bind:group={kind}
+									value={1}
+								/>
 								<div
 									class="active-button cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all"
 									style={kind === 1
@@ -242,19 +305,28 @@
 							multiple
 							accept="image/*"
 							class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-							onchange={(e) => (files = (e.target as HTMLInputElement).files)}
+							onchange={(e) =>
+								(files = (
+									e.target as HTMLInputElement
+								).files)}
 						/>
 						<div
 							class="rounded-2xl border border-dashed p-8 text-center transition-all"
 							style="border-color: var(--color-theme-3); background: transparent;"
 						>
 							<div class="mb-4 text-4xl">📸</div>
-							<p class="text-lg font-medium" style="color: var(--color-theme-4);">
+							<p
+								class="text-lg font-medium"
+								style="color: var(--color-theme-4);"
+							>
 								{files && files.length > 0
 									? `${files.length} file(s) selected`
 									: 'Click to upload images'}
 							</p>
-							<p class="mt-2 text-sm" style="color: var(--color-theme-3);">
+							<p
+								class="mt-2 text-sm"
+								style="color: var(--color-theme-3);"
+							>
 								PNG, JPG, GIF up to 10MB each
 							</p>
 						</div>
@@ -270,16 +342,22 @@
 						disabled={isSubmitting}
 					>
 						{#if isSubmitting}
-							<div class="flex items-center justify-center gap-3">
+							<div
+								class="flex items-center justify-center gap-3"
+							>
 								<div
 									class="h-6 w-6 animate-spin rounded-full border-3 border-white border-t-transparent"
 								></div>
 								Creating...
 							</div>
 						{:else}
-							<div class="flex items-center justify-center gap-3">
+							<div
+								class="flex items-center justify-center gap-3"
+							>
 								<span>✨</span>
-								Create {kind === 0 ? 'Product' : 'Service'}
+								Create {kind === 0
+									? 'Product'
+									: 'Service'}
 								<span>🚀</span>
 							</div>
 						{/if}

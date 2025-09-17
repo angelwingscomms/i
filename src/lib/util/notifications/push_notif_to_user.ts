@@ -10,7 +10,11 @@ export async function push_notif_to_user(
 		await fetch(`/u/${userId}/push_notif`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ t: title, m: body, k: tag })
+			body: JSON.stringify({
+				t: title,
+				m: body,
+				k: tag
+			})
 		});
 	} catch (err) {
 		console.error('push_notif_to_user error', err);

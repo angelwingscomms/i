@@ -1,14 +1,26 @@
 <script lang="ts">
-	let { minAge = $bindable(), maxAge = $bindable() }: { minAge: number; maxAge: number } = $props();
+	let {
+		minAge = $bindable(),
+		maxAge = $bindable()
+	}: { minAge: number; maxAge: number } = $props();
 	$inspect(minAge);
 	$inspect(maxAge);
 </script>
 
 <div class="flex-1">
-	<div class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">age range search</div>
+	<div
+		class="mb-3 block text-sm font-bold"
+		style="color: var(--color-theme-4);"
+	>
+		age range search
+	</div>
 	<div class="space-y-4">
 		<div class="flex items-center gap-4">
-			<span class="text-sm font-medium" style="color: var(--color-theme-1);">Min: {minAge}</span>
+			<span
+				class="text-sm font-medium"
+				style="color: var(--color-theme-1);"
+				>Min: {minAge}</span
+			>
 			<input
 				type="range"
 				min="0"
@@ -21,7 +33,11 @@
 			/>
 		</div>
 		<div class="flex items-center gap-4">
-			<span class="text-sm font-medium" style="color: var(--color-theme-2);">Max: {maxAge}</span>
+			<span
+				class="text-sm font-medium"
+				style="color: var(--color-theme-2);"
+				>Max: {maxAge}</span
+			>
 			<input
 				type="range"
 				min="0"

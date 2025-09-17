@@ -25,7 +25,7 @@
 
 /* Toggle Switch UI */
 @utility toggle-switch-container {
-	@apply relative inline-flex items-center cursor-pointer;
+	@apply relative inline-flex cursor-pointer items-center;
 }
 
 @utility toggle-switch-input {
@@ -33,20 +33,30 @@
 }
 
 @utility toggle-switch-track {
-	@apply w-11 h-6 rounded-full border-2; /* Add border */
-    border-color: var(--color-theme-6); /* Outline color when off */
-    transition: background-color 0.3s ease, border-color 0.3s ease; /* Add border-color to transition */
+	@apply h-6 w-11 rounded-full border-2; /* Add border */
+	border-color: var(
+		--color-theme-6
+	); /* Outline color when off */
+	transition:
+		background-color 0.3s ease,
+		border-color 0.3s ease; /* Add border-color to transition */
 }
 
 @utility toggle-switch-track-checked {
-    background-color: var(--color-theme-1); /* Filled color when on */
-    border-color: var(--color-theme-1); /* Border color when on (matches fill) */
+	background-color: var(
+		--color-theme-1
+	); /* Filled color when on */
+	border-color: var(
+		--color-theme-1
+	); /* Border color when on (matches fill) */
 }
 
 @utility toggle-switch-thumb {
-    @apply absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out;
+	@apply absolute top-[2px] left-[2px] h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300 ease-in-out;
 }
 
 @utility toggle-switch-thumb-checked {
-    transform: translateX(20px); /* Move thumb to the right */
+	transform: translateX(
+		20px
+	); /* Move thumb to the right */
 }

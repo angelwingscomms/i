@@ -1,10 +1,17 @@
 <script lang="ts">
 	let { data } = $props();
-	let results: { i: string; t: string; l?: number; m?: number }[] = $state((data as any).r || []);
+	let results: {
+		i: string;
+		t: string;
+		l?: number;
+		m?: number;
+	}[] = $state((data as any).r || []);
 
 	async function refresh() {
 		try {
-			const res = await fetch('/chats', { method: 'POST' });
+			const res = await fetch('/chats', {
+				method: 'POST'
+			});
 			if (!res.ok) throw new Error('failed');
 			results = await res.json();
 		} catch {
@@ -16,7 +23,9 @@
 <div class="page pad">
 	<div class="row space-between v-center">
 		<h1 class="title">your chats</h1>
-		<button class="btn" onclick={refresh}>refresh</button>
+		<button class="btn" onclick={refresh}
+			>refresh</button
+		>
 	</div>
 
 	{#if results.length}
@@ -28,12 +37,22 @@
 							<div>
 								{#if r._ === '-'}
 									{#if r.t}
-										<div class="result-meta muted italic">{r.t}</div>
+										<div
+											class="result-meta muted italic"
+										>
+											{r.t}
+										</div>
 									{:else}
-										<div class="result-meta muted italic">anonymous user</div>
+										<div
+											class="result-meta muted italic"
+										>
+											anonymous user
+										</div>
 									{/if}
 								{:else}
-									<div class="result-meta muted">{r.t}</div>
+									<div class="result-meta muted">
+										{r.t}
+									</div>
 								{/if}
 							</div>
 						</div>

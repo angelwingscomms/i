@@ -34,7 +34,9 @@
 	$effect(() => {
 		// Update the combined value when components change
 		if (localNumber) {
-			const rawNumber = selectedCountryCode + localNumber.replace(/\D/g, '');
+			const rawNumber =
+				selectedCountryCode +
+				localNumber.replace(/\D/g, '');
 			if (formatAsWhatsAppLink) {
 				// Format as WhatsApp link
 				value = `https://wa.me/${rawNumber.substring(1)}`; // Remove the + sign
@@ -62,7 +64,10 @@
 	function handleLocalNumberInput(event: Event) {
 		const target = event.target as HTMLInputElement;
 		// Only allow numbers, spaces, parentheses, hyphens
-		localNumber = target.value.replace(/[^\d\s\(\)\-]/g, '');
+		localNumber = target.value.replace(
+			/[^\d\s\(\)\-]/g,
+			''
+		);
 		validatePhoneNumber();
 		onInput?.({ value });
 	}
@@ -93,7 +98,10 @@
 
 	// Close dropdown when clicking outside
 	function handleClickOutside(event: MouseEvent) {
-		if (dropdownRef && !dropdownRef.contains(event.target as Node)) {
+		if (
+			dropdownRef &&
+			!dropdownRef.contains(event.target as Node)
+		) {
 			isDropdownOpen = false;
 		}
 	}
@@ -111,10 +119,20 @@
 				onclick={toggleDropdown}
 			>
 				<span class="mr-2 text-lg"
-					>{countries.find((c) => c.code === selectedCountryCode)?.flag || '🌐'}</span
+					>{countries.find(
+						(c) => c.code === selectedCountryCode
+					)?.flag || '🌐'}</span
 				>
-				<span class="text-primary mr-2 font-semibold">{selectedCountryCode}</span>
-				<svg class="opacity-60" width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
+				<span class="text-primary mr-2 font-semibold"
+					>{selectedCountryCode}</span
+				>
+				<svg
+					class="opacity-60"
+					width="10"
+					height="6"
+					viewBox="0 0 10 6"
+					fill="currentColor"
+				>
 					<path
 						d="M1 1L5 5L9 1"
 						stroke="currentColor"
@@ -137,11 +155,20 @@
 							country.code
 								? 'bg-glass-hover'
 								: ''}"
-							onclick={() => selectCountry(country.code)}
+							onclick={() =>
+								selectCountry(country.code)}
 						>
-							<span class="mr-3 text-lg">{country.flag}</span>
-							<span class="text-primary flex-1 text-sm">{country.name}</span>
-							<span class="text-secondary text-sm font-semibold">{country.code}</span>
+							<span class="mr-3 text-lg"
+								>{country.flag}</span
+							>
+							<span
+								class="text-primary flex-1 text-sm"
+								>{country.name}</span
+							>
+							<span
+								class="text-secondary text-sm font-semibold"
+								>{country.code}</span
+							>
 						</button>
 					{/each}
 				</div>
@@ -180,7 +207,8 @@
 					href={value}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="text-accent hover:underline">{value}</a
+					class="text-accent hover:underline"
+					>{value}</a
 				></small
 			>
 		</div>
@@ -192,7 +220,12 @@
 <style>
 	.phone-number-input:focus {
 		border-color: var(--border-focus) !important;
-		box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent);
+		box-shadow: 0 0 0 4px
+			color-mix(
+				in srgb,
+				var(--border-focus) 20%,
+				transparent
+			);
 	}
 
 	.border-error {

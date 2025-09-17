@@ -1,7 +1,9 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({
+	request
+}) => {
 	try {
 		const data = await request.json();
 		const username = data.username?.trim();
@@ -21,7 +23,8 @@ export const POST: RequestHandler = async ({ request }) => {
 			return json(
 				{
 					valid: false,
-					error: 'Username must be at least 3 characters long'
+					error:
+						'Username must be at least 3 characters long'
 				},
 				{ status: 400 }
 			);
@@ -32,16 +35,18 @@ export const POST: RequestHandler = async ({ request }) => {
 			return json(
 				{
 					valid: false,
-					error: 'Username can only contain letters, numbers, and underscores'
+					error:
+						'Username can only contain letters, numbers, and underscores'
 				},
 				{ status: 400 }
 			);
 		}
 
 		// Check if username already exists in database
-		const existingUser = await db.query.user.findFirst({
-			where: (user, { eq }) => eq(user.t, username)
-		});
+		const existingUser =
+			await db.query.user.findFirst({
+				where: (user, { eq }) => eq(user.t, username)
+			});
 
 		if (existingUser) {
 			return json(
@@ -58,7 +63,10 @@ export const POST: RequestHandler = async ({ request }) => {
 			valid: true
 		});
 	} catch (error) {
-		console.error('Username validation error:', error);
+		console.error(
+			'Username validation error:',
+			error
+		);
 		return json(
 			{
 				valid: false,

@@ -58,7 +58,10 @@ export interface Room {
 
 ```typescript
 // Join user to room (atomic operation)
-export async function join_room(user_id: string, room_id: string): Promise<void> {
+export async function join_room(
+	user_id: string,
+	room_id: string
+): Promise<void> {
 	// Get current user and room data
 	const [user, room] = await Promise.all([
 		get<User>({ s: 'u', i: user_id }),
@@ -75,19 +78,29 @@ export async function join_room(user_id: string, room_id: string): Promise<void>
 	const user_rooms = user.r || [];
 	if (!user_rooms.includes(room_id)) {
 		user_rooms.push(room_id);
-		await edit_point(user_id, { ...user, r: user_rooms }); // use qdrant.setpayload directly
+		await edit_point(user_id, {
+			...user,
+			r: user_rooms
+		}); // use qdrant.setpayload directly
 	}
 
 	// Update room members list
 	const room_members = room.mb || [];
 	if (!room_members.includes(user_id)) {
 		room_members.push(user_id);
-		await edit_point(room_id, { ...room, mb: room_members, m: room_members.length });
+		await edit_point(room_id, {
+			...room,
+			mb: room_members,
+			m: room_members.length
+		});
 	}
 }
 
 // Leave room (atomic operation)
-export async function leave_room(user_id: string, room_id: string): Promise<void> {
+export async function leave_room(
+	user_id: string,
+	room_id: string
+): Promise<void> {
 	// Get current user and room data
 	const [user, room] = await Promise.all([
 		get<User>({ s: 'u', i: user_id }),
@@ -99,12 +112,23 @@ export async function leave_room(user_id: string, room_id: string): Promise<void
 	}
 
 	// Remove room from user rooms list
-	const user_rooms = (user.r || []).filter((id) => id !== room_id);
-	await edit_point(user_id, { ...user, r: user_rooms });
+	const user_rooms = (user.r || []).filter(
+		(id) => id !== room_id
+	);
+	await edit_point(user_id, {
+		...user,
+		r: user_rooms
+	});
 
 	// Remove user from room members list
-	const room_members = (room.mb || []).filter((id) => id !== user_id);
-	await edit_point(room_id, { ...room, mb: room_members, m: room_members.length });
+	const room_members = (room.mb || []).filter(
+		(id) => id !== user_id
+	);
+	await edit_point(room_id, {
+		...room,
+		mb: room_members,
+		m: room_members.length
+	});
 }
 
 // Search users in a specific room
@@ -112,7 +136,10 @@ export async function search_users_in_room(
 	room_id: string,
 	filters?: PayloadFilter
 ): Promise<User[]> {
-	const room = await get<Room>({ s: 'r', i: room_id });
+	const room = await get<Room>({
+		s: 'r',
+		i: room_id
+	});
 	if (!room?.mb?.length) return [];
 
 	const member_filters = {
@@ -129,7 +156,10 @@ export async function search_rooms_for_user(
 	user_id: string,
 	filters?: PayloadFilter
 ): Promise<Room[]> {
-	const user = await get<User>({ s: 'u', i: user_id });
+	const user = await get<User>({
+		s: 'u',
+		i: user_id
+	});
 	if (!user?.r?.length) return [];
 
 	const room_filters = {
@@ -147,7 +177,10 @@ export async function search_users_in_room_by_vector(
 	vector: number[],
 	filters?: PayloadFilter
 ): Promise<User[]> {
-	const room = await get<Room>({ s: 'r', i: room_id });
+	const room = await get<Room>({
+		s: 'r',
+		i: room_id
+	});
 	if (!room?.mb?.length) return [];
 
 	const search_filters = {
@@ -171,7 +204,10 @@ export async function search_rooms_for_user_by_vector(
 	vector: number[],
 	filters?: PayloadFilter
 ): Promise<Room[]> {
-	const user = await get<User>({ s: 'u', i: user_id });
+	const user = await get<User>({
+		s: 'u',
+		i: user_id
+	});
 	if (!user?.r?.length) return [];
 
 	const search_filters = {
@@ -198,14 +234,18 @@ import type { RequestHandler } from './$types';
 import { join_room, leave_room } from '$lib/db';
 import type { LocalsUser } from '$lib/types';
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({
+	request,
+	locals
+}) => {
 	try {
 		const user = locals.user as LocalsUser;
 		if (!user) {
 			throw error(401, 'Unauthorized');
 		}
 
-		const { room_id, action = 'join' } = await request.json();
+		const { room_id, action = 'join' } =
+			await request.json();
 
 		if (!room_id) {
 			throw error(400, 'Room ID required');
@@ -213,16 +253,28 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		if (action === 'join') {
 			await join_room(user.i, room_id);
-			return json({ success: true, message: 'Joined room successfully' });
+			return json({
+				success: true,
+				message: 'Joined room successfully'
+			});
 		} else if (action === 'leave') {
 			await leave_room(user.i, room_id);
-			return json({ success: true, message: 'Left room successfully' });
+			return json({
+				success: true,
+				message: 'Left room successfully'
+			});
 		} else {
-			throw error(400, 'Invalid action. Use "join" or "leave"');
+			throw error(
+				400,
+				'Invalid action. Use "join" or "leave"'
+			);
 		}
 	} catch (err) {
 		console.error('Room membership error:', err);
-		throw error(500, 'Failed to update room membership');
+		throw error(
+			500,
+			'Failed to update room membership'
+		);
 	}
 };
 ```
@@ -230,44 +282,68 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 ### 4. src/lib/util/rooms.ts (NEW FILE)
 
 ```typescript
-import { search_users_in_room, search_rooms_for_user } from '$lib/db';
+import {
+	search_users_in_room,
+	search_rooms_for_user
+} from '$lib/db';
 import type { User, Room } from '$lib/types';
 
 // Get room members with their details
-export async function get_room_members(room_id: string): Promise<User[]> {
+export async function get_room_members(
+	room_id: string
+): Promise<User[]> {
 	return search_users_in_room(room_id);
 }
 
 // Get user's rooms with their details
-export async function get_user_rooms(user_id: string): Promise<Room[]> {
+export async function get_user_rooms(
+	user_id: string
+): Promise<Room[]> {
 	return search_rooms_for_user(user_id);
 }
 
 // Check if user is member of room
-export async function is_user_in_room(user_id: string, room_id: string): Promise<boolean> {
+export async function is_user_in_room(
+	user_id: string,
+	room_id: string
+): Promise<boolean> {
 	const user_rooms = await get_user_rooms(user_id);
-	return user_rooms.some((room) => room.i === room_id);
+	return user_rooms.some(
+		(room) => room.i === room_id
+	);
 }
 
 // Get common rooms between two users
-export async function get_common_rooms(user1_id: string, user2_id: string): Promise<Room[]> {
-	const [user1_rooms, user2_rooms] = await Promise.all([
-		get_user_rooms(user1_id),
-		get_user_rooms(user2_id)
-	]);
+export async function get_common_rooms(
+	user1_id: string,
+	user2_id: string
+): Promise<Room[]> {
+	const [user1_rooms, user2_rooms] =
+		await Promise.all([
+			get_user_rooms(user1_id),
+			get_user_rooms(user2_id)
+		]);
 
-	const user2_room_ids = new Set(user2_rooms.map((room) => room.i));
-	return user1_rooms.filter((room) => user2_room_ids.has(room.i));
+	const user2_room_ids = new Set(
+		user2_rooms.map((room) => room.i)
+	);
+	return user1_rooms.filter((room) =>
+		user2_room_ids.has(room.i)
+	);
 }
 
 // Get room member count
-export async function get_room_member_count(room_id: string): Promise<number> {
+export async function get_room_member_count(
+	room_id: string
+): Promise<number> {
 	const members = await get_room_members(room_id);
 	return members.length;
 }
 
 // Get user's room count
-export async function get_user_room_count(user_id: string): Promise<number> {
+export async function get_user_room_count(
+	user_id: string
+): Promise<number> {
 	const rooms = await get_user_rooms(user_id);
 	return rooms.length;
 }
@@ -309,14 +385,25 @@ export async function get_user_room_count(user_id: string): Promise<number> {
 
 ```typescript
 // Find all users in a room who are male
-const male_users = await search_users_in_room(room_id, { g: 0 });
+const male_users = await search_users_in_room(
+	room_id,
+	{ g: 0 }
+);
 
 // Find all rooms for a user that contain "tech" in name
-const tech_rooms = await search_rooms_for_user(user_id, { t: { match: { value: 'tech' } } });
+const tech_rooms = await search_rooms_for_user(
+	user_id,
+	{ t: { match: { value: 'tech' } } }
+);
 
 // Semantic search for users in room similar to a description
 const vector = await embed('experienced developer');
-const similar_users = await search_users_in_room_by_vector(room_id, vector, { g: 0 });
+const similar_users =
+	await search_users_in_room_by_vector(
+		room_id,
+		vector,
+		{ g: 0 }
+	);
 ```
 
 ## PERFORMANCE CONSIDERATIONS

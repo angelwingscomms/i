@@ -1,6 +1,9 @@
 // All Qdrant operations must use wait: true
 
-import { QDRANT_KEY, QDRANT_URL } from '$env/static/private';
+import {
+	QDRANT_KEY,
+	QDRANT_URL
+} from '$env/static/private';
 import { QdrantClient } from '@qdrant/js-client-rest';
 import { v7 as uuidv7 } from 'uuid';
 import { collection } from '$lib/constants';
@@ -15,8 +18,14 @@ export const qdrant = new QdrantClient({
 	apiKey: QDRANT_KEY
 });
 
-export async function getfirst<T>(filters: PayloadFilter): Promise<T | null> {
-	const results = await search_by_payload<T>(filters, [], 1);
+export async function getfirst<T>(
+	filters: PayloadFilter
+): Promise<T | null> {
+	const results = await search_by_payload<T>(
+		filters,
+		[],
+		1
+	);
 	if (results.length > 0) {
 		return results[0];
 	}
@@ -28,7 +37,10 @@ export function generateId(): string {
 	return uuidv7();
 }
 
-export const set = async (id: string, payload: Record<string, unknown>) => {
+export const set = async (
+	id: string,
+	payload: Record<string, unknown>
+) => {
 	await qdrant.setPayload('i', {
 		wait: true,
 		payload,
@@ -37,10 +49,9 @@ export const set = async (id: string, payload: Record<string, unknown>) => {
 };
 
 // Database operations wrapper
-export async function edit_point<T extends Record<string, unknown>>(
-	i: string,
-	data: T
-): Promise<T & { i: string }> {
+export async function edit_point<
+	T extends Record<string, unknown>
+>(i: string, data: T): Promise<T & { i: string }> {
 	const vector = new Array(3072).fill(0);
 
 	await qdrant.upsert(collection, {
@@ -87,18 +98,35 @@ export async function create<T extends { s: string }>(
 }
 
 export const format_filter = (
-	must?: Record<string, unknown> | Array<Record<string, unknown>>,
-	must_not?: Record<string, unknown> | Array<Record<string, unknown>>
+	must?:
+		| Record<string, unknown>
+		| Array<Record<string, unknown>>,
+	must_not?:
+		| Record<string, unknown>
+		| Array<Record<string, unknown>>
 ) => {
-	const normalize = (input?: Record<string, unknown> | Array<Record<string, unknown>>) => {
+	const normalize = (
+		input?:
+			| Record<string, unknown>
+			| Array<Record<string, unknown>>
+	) => {
 		if (!input) return undefined;
 		if (Array.isArray(input)) return input;
 		return Object.entries(input)
-			.filter(([, v]) => v !== undefined && v !== null && v !== '')
+			.filter(
+				([, v]) =>
+					v !== undefined && v !== null && v !== ''
+			)
 			.map(([k, v]) => {
 				if (typeof v === 'object' && v !== null) {
 					const o = v as Record<string, unknown>;
-					if ('match' in o || 'range' in o || 'in' in o || 'is_null' in o || 'has_id' in o) {
+					if (
+						'match' in o ||
+						'range' in o ||
+						'in' in o ||
+						'is_null' in o ||
+						'has_id' in o
+					) {
 						return { key: k, ...(o as object) };
 					}
 				}
@@ -114,7 +142,9 @@ export const format_filter = (
 	return result;
 };
 
-export async function count(filter: PayloadFilter): Promise<number> {
+export async function count(
+	filter: PayloadFilter
+): Promise<number> {
 	try {
 		const result = await qdrant.count(collection, {
 			filter: format_filter(filter),
@@ -143,7 +173,10 @@ export async function search_by_payload<T>(
 		if (order_by) {
 			// Create a dummy vector for payload-only search
 			const dummyVector = new Array(3072).fill(0);
-			const orderByObj = typeof order_by === 'string' ? { key: order_by } : order_by;
+			const orderByObj =
+				typeof order_by === 'string'
+					? { key: order_by }
+					: order_by;
 
 			results = await qdrant.search(collection, {
 				vector: dummyVector,
@@ -165,11 +198,24 @@ export async function search_by_payload<T>(
 		// console.debug('search_by_payload results', results);
 
 		// Handle both search and scroll result formats
-		const points = 'points' in results ? results.points : results;
-		return points.map((point: any) => ({ ...(point.payload as T), i: point.id }));
+		const points =
+			'points' in results ? results.points : results;
+		return points.map((point: any) => ({
+			...(point.payload as T),
+			i: point.id
+		}));
 	} catch (error) {
-		console.error('Error in search_by_payload:', error);
-		console.error('arg:', filter, with_payload, limit, order_by);
+		console.error(
+			'Error in search_by_payload:',
+			error
+		);
+		console.error(
+			'arg:',
+			filter,
+			with_payload,
+			limit,
+			order_by
+		);
 		throw error;
 	}
 }
@@ -183,7 +229,10 @@ export async function search_by_vector<T>({
 	vector: number[];
 	with_payload?: string[];
 	limit?: number;
-	filter?: { must: Record<string, unknown>; must_not?: Record<string, unknown> };
+	filter?: {
+		must: Record<string, unknown>;
+		must_not?: Record<string, unknown>;
+	};
 }): Promise<T[]> {
 	try {
 		const searchParams: Record<string, unknown> = {
@@ -194,13 +243,21 @@ export async function search_by_vector<T>({
 		};
 
 		if (filter) {
-			searchParams.filter = format_filter(filter.must, filter.must_not);
+			searchParams.filter = format_filter(
+				filter.must,
+				filter.must_not
+			);
 		}
-		console.log('searchParams', JSON.stringify(searchParams, null, 2));
+		console.log(
+			'searchParams',
+			JSON.stringify(searchParams, null, 2)
+		);
 		const results = await qdrant.search(
 			collection,
 			searchParams as {
-				vector: number[] | { name: string; vector: number[] };
+				vector:
+					| number[]
+					| { name: string; vector: number[] };
 				limit?: number;
 				with_payload?: boolean | string[];
 				with_vector?: boolean;
@@ -226,15 +283,28 @@ export async function get<T>(
 	try {
 		const result = await qdrant.retrieve(collection, {
 			ids: [id],
-			with_payload: typeof payload === 'string' ? [payload] : payload,
+			with_payload:
+				typeof payload === 'string'
+					? [payload]
+					: payload,
 			with_vector
 		});
 
 		if (result.length > 0) {
-			const res = result[0].payload as T & { vector: number[] };
-			if (with_vector && Array.isArray(result[0].vector)) {
-				res.vector = result[0].vector as unknown as number[];
-			} else if (payload && result[0].payload && typeof payload === 'string') {
+			const res = result[0].payload as T & {
+				vector: number[];
+			};
+			if (
+				with_vector &&
+				Array.isArray(result[0].vector)
+			) {
+				res.vector = result[0]
+					.vector as unknown as number[];
+			} else if (
+				payload &&
+				result[0].payload &&
+				typeof payload === 'string'
+			) {
 				return result[0].payload[payload] as T;
 			}
 			return res;
@@ -245,14 +315,19 @@ export async function get<T>(
 	}
 }
 
-export async function delete_by_id(id: string): Promise<void> {
+export async function delete_by_id(
+	id: string
+): Promise<void> {
 	await qdrant.delete(collection, {
 		points: [id],
 		wait: true
 	});
 }
 
-export async function update_point<T>(id: string, data: Partial<T>): Promise<void> {
+export async function update_point<T>(
+	id: string,
+	data: Partial<T>
+): Promise<void> {
 	const existing = await get<T>(id);
 	if (!existing) {
 		throw new Error('Document not found');
@@ -261,12 +336,16 @@ export async function update_point<T>(id: string, data: Partial<T>): Promise<voi
 	await edit_point(id, { ...existing, ...data });
 }
 
-export const exists = async (i: string): Promise<boolean> => {
+export const exists = async (
+	i: string
+): Promise<boolean> => {
 	return !!(await get(i, []));
 };
 
 // Get username from their ID
-export async function get_username_from_id(userId: string): Promise<string> {
+export async function get_username_from_id(
+	userId: string
+): Promise<string> {
 	const user = await get<{ u?: string }>(userId);
 
 	if (user && user.u) {
@@ -278,10 +357,14 @@ export async function get_username_from_id(userId: string): Promise<string> {
 }
 
 export const find_user_by_tag = async (t: string) => {
-	return (await search_by_payload<User>({ s: 'u', t }))[0];
+	return (
+		await search_by_payload<User>({ s: 'u', t })
+	)[0];
 };
 
-export const delete_ = async (id: string): Promise<void> => {
+export const delete_ = async (
+	id: string
+): Promise<void> => {
 	await qdrant.delete(collection, {
 		wait: true,
 		points: [id]

@@ -7,7 +7,13 @@
 	let { data } = $props();
 	// state
 	let q = $state('');
-	let results: { i: string; t: string; l?: number; m?: number; score?: number }[] = $state(data.r);
+	let results: {
+		i: string;
+		t: string;
+		l?: number;
+		m?: number;
+		score?: number;
+	}[] = $state(data.r);
 	let creating = $state(false);
 	let t = $state('');
 	let d = $state('');
@@ -19,8 +25,14 @@
 		loading = true;
 		searched = true;
 		try {
-			({ data: results } = await axios.post('/r/search', { q, f: { s: 'r' } }));
-			console.log('Client-side search results:', results);
+			({ data: results } = await axios.post(
+				'/r/search',
+				{ q, f: { s: 'r' } }
+			));
+			console.log(
+				'Client-side search results:',
+				results
+			);
 		} catch (e) {
 			toast.error('Search failed. Try again.');
 		} finally {
@@ -38,11 +50,15 @@
 			}
 			const res = await fetch('/r', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: {
+					'Content-Type': 'application/json'
+				},
 				body: JSON.stringify({ t: tag, a: desc })
 			});
 			if (res.status === 401) {
-				toast.error('Unauthorized: Please log in to create a room.');
+				toast.error(
+					'Unauthorized: Please log in to create a room.'
+				);
 				return;
 			}
 			if (!res.ok) throw new Error('create failed');
@@ -69,7 +85,11 @@
 <div class="page pad">
 	<div class="row space-between v-center mb-md">
 		<h1 class="title">search chatrooms</h1>
-		<button class="btn-primary btn-wide" onclick={() => (creating = true)}>add chatroom</button>
+		<button
+			class="btn-primary btn-wide"
+			onclick={() => (creating = true)}
+			>add chatroom</button
+		>
 	</div>
 
 	<div class="card gap">
@@ -81,7 +101,11 @@
 				bind:value={q}
 				onkeydown={on_key}
 			/>
-			<button class="btn-primary btn-search-icon" onclick={search_rooms} disabled={loading}>
+			<button
+				class="btn-primary btn-search-icon"
+				onclick={search_rooms}
+				disabled={loading}
+			>
 				{#if loading}
 					<i class="fas fa-spinner fa-spin"></i>
 				{:else}
@@ -102,7 +126,14 @@
 								<!-- <div class="result-meta muted">{r.m ?? 0} members</div> -->
 							</div>
 							{#if r.score !== undefined}
-								<div class="badge">{Math.round(Math.max(0, Math.min(1, r.score)) * 100)}%</div>
+								<div class="badge">
+									{Math.round(
+										Math.max(
+											0,
+											Math.min(1, r.score)
+										) * 100
+									)}%
+								</div>
 							{/if}
 						</div>
 					</a>
@@ -122,17 +153,25 @@
 		role="button"
 		tabindex="0"
 		onclick={() => (creating = false)}
-		onkeydown={(e) => e.key === 'Escape' && (creating = false)}
+		onkeydown={(e) =>
+			e.key === 'Escape' && (creating = false)}
 		in:fade={{ duration: 120 }}
 	></div>
 	<div class="modal card" in:fade={{ duration: 120 }}>
 		<h2 class="subtitle">create chatroom</h2>
 		<div class="gap">
 			<label class="label" for="room_tag">tag</label>
-			<input id="room_tag" class="input-underline" bind:value={t} placeholder="e.g. general" />
+			<input
+				id="room_tag"
+				class="input-underline"
+				bind:value={t}
+				placeholder="e.g. general"
+			/>
 		</div>
 		<div class="gap">
-			<label class="label" for="room_desc">description</label>
+			<label class="label" for="room_desc"
+				>description</label
+			>
 			<textarea
 				id="room_desc"
 				class="input-underline"
@@ -142,8 +181,14 @@
 			></textarea>
 		</div>
 		<div class="row gap">
-			<button class="btn" onclick={create_room}>Create</button>
-			<button class="btn ghost" onclick={() => (creating = false)}>Cancel</button>
+			<button class="btn" onclick={create_room}
+				>Create</button
+			>
+			<button
+				class="btn ghost"
+				onclick={() => (creating = false)}
+				>Cancel</button
+			>
 		</div>
 	</div>
 {/if}

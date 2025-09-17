@@ -43,7 +43,10 @@
 		"process_message": {
 			"signature": "(m: {r, d, m}) => void",
 			"description": "updates message.tc",
-			"use_in": ["/u/:i/c/+server.ts", "/r/:i/+server.ts"]
+			"use_in": [
+				"/u/:i/c/+server.ts",
+				"/r/:i/+server.ts"
+			]
 		}
 	},
 	"components": {
@@ -81,10 +84,20 @@
 		},
 		"desc": "describe a great friend for {user_description}",
 		"system_prompt": "use desc",
-		"tools": ["search_messages", "search_users", "search_groups"],
+		"tools": [
+			"search_messages",
+			"search_users",
+			"search_groups"
+		],
 		"refactor_search_messages": {
 			"from": "/r/:i/+page.server.ts",
-			"args": ["search string", "u?", "r?", "s?", "e?"],
+			"args": [
+				"search string",
+				"u?",
+				"r?",
+				"s?",
+				"e?"
+			],
 			"use": "AI to search groups/messages embeds({name: description})"
 		}
 	},

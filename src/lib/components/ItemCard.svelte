@@ -21,7 +21,10 @@
 	const p = matchPercent(item.score);
 </script>
 
-<a class="item-card group block no-underline" href={`/i/${item.i}`}>
+<a
+	class="item-card group block no-underline"
+	href={`/i/${item.i}`}
+>
 	<div
 		class="flex items-start gap-4 rounded-2xl p-4 transition-all duration-300"
 		style="background: transparent; border: 1px solid var(--color-theme-6);"
@@ -33,7 +36,11 @@
 				style="border: 1px solid var(--color-theme-6);"
 			>
 				{#if item.x && item.x.length > 0}
-					<img src={item.x[0]} alt={item.t} class="h-full w-full object-cover" />
+					<img
+						src={item.x[0]}
+						alt={item.t}
+						class="h-full w-full object-cover"
+					/>
 				{:else}
 					<div
 						class="flex h-full w-full items-center justify-center text-xl font-bold"
@@ -47,7 +54,10 @@
 			<div class="absolute -right-1 -bottom-1">
 				<span
 					class="rounded-full px-2 py-1 text-xs font-medium"
-					style="background: var(--color-theme-{item.k === 0 ? '1' : '2'}); color: white;"
+					style="background: var(--color-theme-{item.k ===
+					0
+						? '1'
+						: '2'}); color: white;"
 				>
 					{item.k === 0 ? '🛍️' : '⚡'}
 				</span>
@@ -67,14 +77,18 @@
 
 					<!-- Description -->
 					{#if item.d}
-						<p class="mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
+						<p
+							class="mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-400"
+						>
 							{item.d}
 						</p>
 					{/if}
 
 					<!-- Quick Summary -->
 					{#if item.q}
-						<p class="mt-1 text-xs text-gray-500 italic">
+						<p
+							class="mt-1 text-xs text-gray-500 italic"
+						>
 							{item.q}
 						</p>
 					{/if}
@@ -84,13 +98,15 @@
 				{#if p !== null}
 					<span
 						class="ml-2 flex-shrink-0 rounded-full px-2 py-1 text-xs font-bold"
-						style="background: transparent; border: 1px solid {p >= 80
+						style="background: transparent; border: 1px solid {p >=
+						80
 							? 'var(--color-theme-1)'
 							: p >= 60
 								? 'var(--color-theme-2)'
 								: p >= 40
 									? 'var(--color-theme-3)'
-									: 'var(--color-theme-6)'}; color: {p >= 80
+									: 'var(--color-theme-6)'}; color: {p >=
+						80
 							? 'var(--color-theme-1)'
 							: p >= 60
 								? 'var(--color-theme-2)'
@@ -121,7 +137,9 @@
 				style="color: var(--color-theme-6);"
 				class="transition-transform group-hover:translate-x-1"
 			>
-				<path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" />
+				<path
+					d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"
+				/>
 			</svg>
 		</div>
 	</div>

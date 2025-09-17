@@ -8,7 +8,11 @@
 		onClose: () => void;
 	}
 
-	let { images, currentIndex = $bindable(0), onClose }: Props = $props();
+	let {
+		images,
+		currentIndex = $bindable(0),
+		onClose
+	}: Props = $props();
 
 	let modalElement: HTMLElement;
 	let touchStartX = 0;
@@ -62,7 +66,10 @@
 		const deltaY = currentY - touchStartY;
 
 		// Only consider horizontal swipes
-		if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+		if (
+			Math.abs(deltaX) > Math.abs(deltaY) &&
+			Math.abs(deltaX) > 50
+		) {
 			isDragging = true;
 			dragOffset = deltaX;
 		}
@@ -74,7 +81,10 @@
 		const threshold = 100;
 		if (dragOffset > threshold && currentIndex > 0) {
 			prevImage();
-		} else if (dragOffset < -threshold && currentIndex < images.length - 1) {
+		} else if (
+			dragOffset < -threshold &&
+			currentIndex < images.length - 1
+		) {
 			nextImage();
 		}
 
@@ -85,7 +95,9 @@
 	function downloadImage() {
 		const link = document.createElement('a');
 		link.href = images[currentIndex];
-		link.download = getFilenameFromUrl(images[currentIndex]);
+		link.download = getFilenameFromUrl(
+			images[currentIndex]
+		);
 		link.target = '_blank';
 		document.body.appendChild(link);
 		link.click();
@@ -101,8 +113,15 @@
 
 	$effect(() => {
 		if (modalElement) {
-			document.addEventListener('keydown', handleKeydown);
-			return () => document.removeEventListener('keydown', handleKeydown);
+			document.addEventListener(
+				'keydown',
+				handleKeydown
+			);
+			return () =>
+				document.removeEventListener(
+					'keydown',
+					handleKeydown
+				);
 		}
 	});
 </script>
@@ -117,7 +136,11 @@
 >
 	<div class="modal-content">
 		<!-- Close button -->
-		<button class="close-btn" onclick={closeModal} aria-label="Close">
+		<button
+			class="close-btn"
+			onclick={closeModal}
+			aria-label="Close"
+		>
 			<i class="fas fa-times"></i>
 		</button>
 
@@ -158,12 +181,22 @@
 		<!-- Image info and controls -->
 		<div class="image-footer">
 			<div class="image-info">
-				<span class="filename">{getFilenameFromUrl(images[currentIndex])}</span>
+				<span class="filename"
+					>{getFilenameFromUrl(
+						images[currentIndex]
+					)}</span
+				>
 				{#if images.length > 1}
-					<span class="counter">{currentIndex + 1} / {images.length}</span>
+					<span class="counter"
+						>{currentIndex + 1} / {images.length}</span
+					>
 				{/if}
 			</div>
-			<button class="download-btn" onclick={downloadImage} aria-label="Download">
+			<button
+				class="download-btn"
+				onclick={downloadImage}
+				aria-label="Download"
+			>
 				<i class="fas fa-download"></i>
 			</button>
 		</div>

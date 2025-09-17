@@ -49,13 +49,22 @@ export interface NotificationSubscription {
 	sub: PushSubscription;
 }
 
-export type DBChatMessage = Pick<Message, 's' | 'u' | 'm' | 'd' | 'r' | 'q'>;
+export type DBChatMessage = Pick<
+	Message,
+	's' | 'u' | 'm' | 'd' | 'r' | 'q'
+>;
 
 // Client-to-server payload when sending a chat message. "a" is an optional
 // flag used by anon rooms; it is not part of the persisted Message payload.
-export type SendChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'd' | 't' | 'f'> & { a?: string };
+export type SendChatMessage = Pick<
+	Message,
+	'saved' | 'm' | 'i' | 'd' | 't' | 'f'
+> & { a?: string };
 
-export type ChatMessage = Pick<Message, 'saved' | 'm' | 'i' | 'x' | 'f' | 'u'>;
+export type ChatMessage = Pick<
+	Message,
+	'saved' | 'm' | 'i' | 'x' | 'f' | 'u'
+>;
 
 export interface Message {
 	saved?: boolean; // if client has received websocket event for this message, meaning message has been saved to db
@@ -102,7 +111,6 @@ export interface Meme {
 	r?: string; // associated chatroom id
 }
 
-
 // Preset type for /pink feature
 export interface Preset {
 	s: 'p'; // tenant id for preset
@@ -116,22 +124,14 @@ export interface Preset {
 
 export interface Post {
 	s: 'r'; // tenant for posts
-	i: string; // post id
-	m: string; // title
+	i?: string; // post id
+	t?: string; // title
 	b?: string; // body (markdown)
 	y?: string; // summary
 	p?: string; // image url
 	u?: string; // user id
-	a?: number; // created timestamp
-}
-
-export interface DescriptionInputProps {
-	value?: string;
-	editable?: boolean;
-	endpoint?: string;
-	placeholder?: string;
-	rows?: number;
-	label?: string;
+	d?: number; // created timestamp
+	l?: number; // last updated
 }
 
 export interface Recording {

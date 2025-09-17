@@ -59,7 +59,9 @@
 	}
 
 	function handleProgressClick(event: MouseEvent) {
-		const rect = (event.target as HTMLElement).getBoundingClientRect();
+		const rect = (
+			event.target as HTMLElement
+		).getBoundingClientRect();
 		const clickX = event.clientX - rect.left;
 		const newProgress = (clickX / rect.width) * 100;
 		const newTime = (newProgress / 100) * duration;
@@ -72,9 +74,14 @@
 	function handleProgressDrag(event: MouseEvent) {
 		if (!isDragging) return;
 
-		const rect = (event.target as HTMLElement).getBoundingClientRect();
+		const rect = (
+			event.target as HTMLElement
+		).getBoundingClientRect();
 		const clientX = event.clientX;
-		const dragX = Math.max(0, Math.min(clientX - rect.left, rect.width));
+		const dragX = Math.max(
+			0,
+			Math.min(clientX - rect.left, rect.width)
+		);
 		const newProgress = (dragX / rect.width) * 100;
 
 		progress = newProgress;
@@ -82,7 +89,10 @@
 
 	function startDrag() {
 		isDragging = true;
-		document.addEventListener('mousemove', handleProgressDrag);
+		document.addEventListener(
+			'mousemove',
+			handleProgressDrag
+		);
 		document.addEventListener('mouseup', endDrag);
 	}
 
@@ -93,19 +103,34 @@
 			currentTime = newTime;
 		}
 		isDragging = false;
-		document.removeEventListener('mousemove', handleProgressDrag);
+		document.removeEventListener(
+			'mousemove',
+			handleProgressDrag
+		);
 		document.removeEventListener('mouseup', endDrag);
 	}
 </script>
 
 <div class="audio-player">
-	<button class="play-btn" onclick={togglePlay} aria-label={isPlaying ? 'Pause' : 'Play'}>
-		<i class="fas {isPlaying ? 'fa-pause' : 'fa-play'}"></i>
+	<button
+		class="play-btn"
+		onclick={togglePlay}
+		aria-label={isPlaying ? 'Pause' : 'Play'}
+	>
+		<i
+			class="fas {isPlaying ? 'fa-pause' : 'fa-play'}"
+		></i>
 	</button>
 
 	<div class="progress-container">
-		<div class="progress-bar" onclick={handleProgressClick}>
-			<div class="progress-fill" style="width: {progress}%"></div>
+		<div
+			class="progress-bar"
+			onclick={handleProgressClick}
+		>
+			<div
+				class="progress-fill"
+				style="width: {progress}%"
+			></div>
 			<div
 				class="progress-handle"
 				style="left: {progress}%"
@@ -116,8 +141,12 @@
 	</div>
 
 	<div class="time-display">
-		<span class="current-time">{formatTime(currentTime)}</span>
-		<span class="duration">{formatTime(duration)}</span>
+		<span class="current-time"
+			>{formatTime(currentTime)}</span
+		>
+		<span class="duration"
+			>{formatTime(duration)}</span
+		>
 	</div>
 </div>
 

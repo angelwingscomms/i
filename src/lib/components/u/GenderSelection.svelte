@@ -18,12 +18,20 @@
 
 <div class="flex-1">
 	<fieldset>
-		<legend class="mb-3 block text-sm font-bold" style="color: var(--color-theme-4);">{head}</legend
+		<legend
+			class="mb-3 block text-sm font-bold"
+			style="color: var(--color-theme-4);"
+			>{head}</legend
 		>
 		<div class="flex gap-2">
 			{#if show_all}
 				<label class="flex-1">
-					<input type="radio" class="sr-only" bind:group={gender} value={-1} />
+					<input
+						type="radio"
+						class="sr-only"
+						bind:group={gender}
+						value={-1}
+					/>
 					<div
 						class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ===
 						-1
@@ -38,7 +46,12 @@
 				</label>
 			{/if}
 			<label class="flex-1">
-				<input type="radio" class="sr-only" bind:group={gender} value={0} />
+				<input
+					type="radio"
+					class="sr-only"
+					bind:group={gender}
+					value={0}
+				/>
 				<div
 					class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ===
 					0
@@ -52,7 +65,12 @@
 				</div>
 			</label>
 			<label class="flex-1">
-				<input type="radio" class="sr-only" bind:group={gender} value={1} />
+				<input
+					type="radio"
+					class="sr-only"
+					bind:group={gender}
+					value={1}
+				/>
 				<div
 					class="cursor-pointer rounded-full px-4 py-3 text-center font-semibold transition-all {gender ===
 					1

@@ -5,7 +5,11 @@ import { error, text } from '@sveltejs/kit';
 import { v7 } from 'uuid';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ locals, request, url }) => {
+export const GET: RequestHandler = async ({
+	locals,
+	request,
+	url
+}) => {
 	// console.log('🔥 GET request started', {
 	// 	locals,
 	// 	request: { url: request.url, headers: Object.fromEntries(request.headers) }
@@ -24,7 +28,9 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 			let userVector;
 			try {
 				// console.log('📊 Fetching user vector from database');
-				const userData = await get<{ vector: number[] }>(locals.user.i, false, true);
+				const userData = await get<{
+					vector: number[];
+				}>(locals.user.i, false, true);
 				// console.log('📊 User data received:', {
 				// 	userId: locals.user.i,
 				// 	hasVector: !!userData?.vector
@@ -42,7 +48,11 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 			// 	vectorLength: userVector?.length
 			// });
 
-			const deets: { n?: number; x?: number; g?: number } = {};
+			const deets: {
+				n?: number;
+				x?: number;
+				g?: number;
+			} = {};
 			if (url.searchParams.has('n')) {
 				deets.n = Number(url.searchParams.get('n'));
 			}
@@ -53,15 +63,23 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 				deets.g = Number(url.searchParams.get('g'));
 			}
 			// console.debug('deets', deets)
-			const must = [{ key: 'f', match: { value: 1 } }];
+			const must = [
+				{ key: 'f', match: { value: 1 } }
+			];
 
 			if (deets.g != null) {
 				if (deets.g !== 0 && deets.g !== 1) {
 					return error(400, 'Invalid gender');
 				}
-				must.push({ key: 'g', match: { value: deets.g } });
+				must.push({
+					key: 'g',
+					match: { value: deets.g }
+				});
 			}
-			const age_range: { gte?: number; lte?: number } = {};
+			const age_range: {
+				gte?: number;
+				lte?: number;
+			} = {};
 			if (deets.x != null) {
 				if (isNaN(deets.x)) {
 					return error(400, 'Invalid max age');
@@ -108,7 +126,10 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 		// 	hasPoints: !!res.points.length,
 		// 	firstPoint: res.points[0]
 		// });
-		if (res.points.length && res.points[0].payload?.r) {
+		if (
+			res.points.length &&
+			res.points[0].payload?.r
+		) {
 			// console.log('🤝 Match found! Processing match data');
 			try {
 				// console.log('📝 Setting initial f values');
@@ -120,19 +141,30 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 			} catch (err) {
 				// console.error('💥 Failed to set f values:', err);
 				// console.error('Detailed error:', JSON.stringify(err, null, 2));
-				throw error(500, 'Failed to update user status');
+				throw error(
+					500,
+					'Failed to update user status'
+				);
 			}
 
 			let other_user, self;
 			try {
 				// console.log('👥 Fetching both users data');
 				[other_user, self] = await Promise.all([
-					get<{ a: number; g: number; vector: number[] }>(
+					get<{
+						a: number;
+						g: number;
+						vector: number[];
+					}>(
 						res.points[0].id as string,
 						['a', 'g'],
 						true
 					),
-					get<{ a: number; g: number; vector: number[] }>(locals.user.i, ['a', 'g'], true)
+					get<{
+						a: number;
+						g: number;
+						vector: number[];
+					}>(locals.user.i, ['a', 'g'], true)
 				]);
 				// console.log('📊 Users data retrieved:', {
 				// 	other_user: { ...other_user, vector: 'VECTOR_HIDDEN' },
@@ -189,44 +221,72 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 			let self_friends, other_friends;
 			try {
 				// console.log('👥 Fetching friends lists');
-				[self_friends, other_friends] = await Promise.all([
-					get<{ f: string[] }>(locals.user.i, ['f']),
-					get<{ f: string[] }>(res.points[0].id as string, ['f'])
-				]);
+				[self_friends, other_friends] =
+					await Promise.all([
+						get<{ f: string[] }>(locals.user.i, [
+							'f'
+						]),
+						get<{ f: string[] }>(
+							res.points[0].id as string,
+							['f']
+						)
+					]);
 				// console.log('Current friends lists:', { self_friends, other_friends });
 			} catch (err) {
 				// console.error('💥 Failed to get friends lists:', err);
 				// console.error('Error details:', err.stack);
-				throw error(500, 'Failed to fetch friends data');
+				throw error(
+					500,
+					'Failed to fetch friends data'
+				);
 			}
 
-			const updated_self_friends = [...(self_friends?.f || []), res.points[0].id];
-			const updated_other_friends = [...(other_friends?.f || []), locals.user.i];
+			const updated_self_friends = [
+				...(self_friends?.f || []),
+				res.points[0].id
+			];
+			const updated_other_friends = [
+				...(other_friends?.f || []),
+				locals.user.i
+			];
 			// console.log('📝 Updated friends lists:', { updated_self_friends, updated_other_friends });
 
 			try {
 				// console.log('💾 Updating friends lists in database');
 				await Promise.all([
-					set(locals.user.i, { f: updated_self_friends }),
-					set(res.points[0].id as string, { f: updated_other_friends })
+					set(locals.user.i, {
+						f: updated_self_friends
+					}),
+					set(res.points[0].id as string, {
+						f: updated_other_friends
+					})
 				]);
 				// console.log('✅ Friends lists updated successfully');
 			} catch (err) {
 				// console.error('💥 Failed to update friends lists:', err);
 				// console.error('Full error:', JSON.stringify(err, null, 2));
-				throw error(500, 'Failed to update friends lists');
+				throw error(
+					500,
+					'Failed to update friends lists'
+				);
 			}
 
 			try {
 				// console.log('🎥 Creating realtime meeting');
-				const meetingEndpoint = 'meetings/' + res.points[0].payload?.r + '/participants';
+				const meetingEndpoint =
+					'meetings/' +
+					res.points[0].payload?.r +
+					'/participants';
 				// console.log('Meeting endpoint:', meetingEndpoint);
 
-				const realtimeResponse = await realtime.post(meetingEndpoint, {
-					name: locals.user?.t || 'Anonymous',
-					preset_name: 'group_call_participant',
-					custom_participant_id: locals.user?.i
-				});
+				const realtimeResponse = await realtime.post(
+					meetingEndpoint,
+					{
+						name: locals.user?.t || 'Anonymous',
+						preset_name: 'group_call_participant',
+						custom_participant_id: locals.user?.i
+					}
+				);
 				// console.log('✅ Realtime meeting created:', realtimeResponse.data);
 				return text(realtimeResponse.data.data.token);
 			} catch (err) {
@@ -243,9 +303,16 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 
 				let userRoom = await get(locals.user?.i, 'r');
 				// console.log('User room:', typeof userRoom, userRoom);
-				if (!userRoom || typeof userRoom !== 'string') {
+				if (
+					!userRoom ||
+					typeof userRoom !== 'string'
+				) {
 					// console.log('🏠 Creating new room for user');
-					const newRoom = (await realtime.post('meetings', { title: locals.user.t })).data.data.id;
+					const newRoom = (
+						await realtime.post('meetings', {
+							title: locals.user.t
+						})
+					).data.data.id;
 					await set(locals.user.i, { r: newRoom });
 					// console.log('✅ Room created:', newRoom);
 					userRoom = newRoom;
@@ -254,14 +321,20 @@ export const GET: RequestHandler = async ({ locals, request, url }) => {
 				// console.log('🎥 Creating solo realtime meeting');
 				let realtimeResponse;
 				try {
-					realtimeResponse = await realtime.post('meetings/' + userRoom + '/participants', {
-						name: locals.user?.t || 'Anonymous',
-						preset_name: 'group_call_participant',
-						custom_participant_id: locals.user?.i
-					});
+					realtimeResponse = await realtime.post(
+						'meetings/' + userRoom + '/participants',
+						{
+							name: locals.user?.t || 'Anonymous',
+							preset_name: 'group_call_participant',
+							custom_participant_id: locals.user?.i
+						}
+					);
 				} catch (err) {
 					// console.error('💥 Failed to create solo realtime meeting:', err);
-					throw error(500, 'Failed to create solo meeting');
+					throw error(
+						500,
+						'Failed to create solo meeting'
+					);
 				}
 				// console.log('✅ Solo meeting created:', realtimeResponse.data);
 				return text(realtimeResponse.data.data.token);

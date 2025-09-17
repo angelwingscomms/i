@@ -23,7 +23,9 @@
 @utility choice-btn-active-blue {
 	@apply choice-btn choice-btn-glow text-white;
 	background: transparent;
-	border-color: var(--border-focus); /* Ensure blue border */
+	border-color: var(
+		--border-focus
+	); /* Ensure blue border */
 	box-shadow: none; /* Ensure blue glow */
 }
 

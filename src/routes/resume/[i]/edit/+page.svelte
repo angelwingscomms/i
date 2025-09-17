@@ -17,7 +17,9 @@
 		try {
 			const res = await fetch('/resume/gemini', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: {
+					'Content-Type': 'application/json'
+				},
 				body: JSON.stringify({ instructions })
 			});
 			if (res.ok) {
@@ -50,21 +52,28 @@
 		/>
 	</div>
 	<div class="gap">
-		<label class="label" for="ai-instructions">AI Edit Instructions</label>
+		<label class="label" for="ai-instructions"
+			>AI Edit Instructions</label
+		>
 		<textarea
 			bind:value={instructions}
 			class="input-underline"
 			rows={4}
 			placeholder="e.g., Add a skills section, make it more modern, change layout..."
 		></textarea>
-		<button class="btn-primary" onclick={editWithGemini} disabled={loading || !instructions.trim()}>
+		<button
+			class="btn-primary"
+			onclick={editWithGemini}
+			disabled={loading || !instructions.trim()}
+		>
 			{loading ? 'Updating...' : 'Update with AI'}
 		</button>
 	</div>
 	{#if resume.h}
 		<div class="resume-preview mt-lg">
 			<h2 class="subtitle">Preview</h2>
-			<iframe srcdoc={resume.h} class="preview-iframe"></iframe>
+			<iframe srcdoc={resume.h} class="preview-iframe"
+			></iframe>
 		</div>
 	{/if}
 </div>

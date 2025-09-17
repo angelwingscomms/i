@@ -1,7 +1,11 @@
 import { get, writable } from 'svelte/store';
 
 // Define the type for a single toast notification
-export type ToastType = 'success' | 'error' | 'warning' | 'info';
+export type ToastType =
+	| 'success'
+	| 'error'
+	| 'warning'
+	| 'info';
 
 export interface Toast {
 	id: string;
@@ -25,10 +29,21 @@ export function addToast(
 	duration: number = 3000,
 	action?: { label: string; callback: () => void }
 ) {
-	const id = Date.now().toString() + Math.random().toString(36).substring(2, 9); // Simple unique ID
-	const newToast: Toast = { id, message, type, duration, action };
+	const id =
+		Date.now().toString() +
+		Math.random().toString(36).substring(2, 9); // Simple unique ID
+	const newToast: Toast = {
+		id,
+		message,
+		type,
+		duration,
+		action
+	};
 
-	toasts.update((currentToasts) => [...currentToasts, newToast]);
+	toasts.update((currentToasts) => [
+		...currentToasts,
+		newToast
+	]);
 
 	// Automatically remove the toast after its duration
 	setTimeout(() => {
@@ -38,17 +53,31 @@ export function addToast(
 
 // Function to remove a toast notification by its ID
 export function removeToast(id: string) {
-	toasts.update((currentToasts) => currentToasts.filter((toast) => toast.id !== id));
+	toasts.update((currentToasts) =>
+		currentToasts.filter((toast) => toast.id !== id)
+	);
 }
 
 // Helper functions for different toast types for convenience
 export const toast = {
-	success: (message: string, duration?: number, action?: { label: string; callback: () => void }) =>
-		addToast(message, 'success', duration, action),
-	error: (message: string, duration?: number, action?: { label: string; callback: () => void }) =>
-		addToast(message, 'error', duration, action),
-	warning: (message: string, duration?: number, action?: { label: string; callback: () => void }) =>
-		addToast(message, 'warning', duration, action),
-	info: (message: string, duration?: number, action?: { label: string; callback: () => void }) =>
-		addToast(message, 'info', duration, action)
+	success: (
+		message: string,
+		duration?: number,
+		action?: { label: string; callback: () => void }
+	) => addToast(message, 'success', duration, action),
+	error: (
+		message: string,
+		duration?: number,
+		action?: { label: string; callback: () => void }
+	) => addToast(message, 'error', duration, action),
+	warning: (
+		message: string,
+		duration?: number,
+		action?: { label: string; callback: () => void }
+	) => addToast(message, 'warning', duration, action),
+	info: (
+		message: string,
+		duration?: number,
+		action?: { label: string; callback: () => void }
+	) => addToast(message, 'info', duration, action)
 };

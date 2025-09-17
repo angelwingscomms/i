@@ -15,9 +15,20 @@ export async function search_messages({
 	e?: string;
 }) {
 	const vector = await embed(q || '');
-	return await search_by_vector<{ m?: string; u?: string; r?: string; d?: number }>({
+	return await search_by_vector<{
+		m?: string;
+		u?: string;
+		r?: string;
+		d?: number;
+	}>({
 		vector,
 		with_payload: ['m', 'u', 'r', 'd'],
-		filter: { must: { ...(u ? { u } : {}), ...(r ? { r } : {}), ...(s ? { s } : {}) } }
+		filter: {
+			must: {
+				...(u ? { u } : {}),
+				...(r ? { r } : {}),
+				...(s ? { s } : {})
+			}
+		}
 	});
 }

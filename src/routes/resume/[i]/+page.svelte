@@ -3,11 +3,14 @@
 	let r = $state(data.r);
 </script>
 
-<div class="max-w-2xl mx-auto p-4">
-	<h1 class="text-2xl font-bold mb-4">Resume</h1>
+<div class="mx-auto max-w-2xl p-4">
+	<h1 class="mb-4 text-2xl font-bold">Resume</h1>
 	{#if r.h}
-		<div class="bg-secondary rounded-lg p-4 mt-6">
-			<iframe srcdoc={r.h} class="w-full h-[600px] border border-border rounded"></iframe>
+		<div class="bg-secondary mt-6 rounded-lg p-4">
+			<iframe
+				srcdoc={r.h}
+				class="border-border h-[600px] w-full rounded border"
+			></iframe>
 		</div>
 	{/if}
 </div>

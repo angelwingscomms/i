@@ -25,7 +25,10 @@
 						"Adjust spacing/typography via custom utility classes only",
 						"Use animejs fade for initial mount"
 					],
-					"files": ["src/routes/r/[i]/+page.svelte", "src/app.css"],
+					"files": [
+						"src/routes/r/[i]/+page.svelte",
+						"src/app.css"
+					],
 					"acceptance": [
 						"No raw Tailwind utility classes on elements",
 						"Layout matches existing design system spacing and typography",
@@ -48,12 +51,17 @@
 						"Apply via existing class compositions, not inline Tailwind",
 						"Use animejs for hover fade where applicable"
 					],
-					"files": ["src/app.css", "src/lib/components/*"],
+					"files": [
+						"src/app.css",
+						"src/lib/components/*"
+					],
 					"acceptance": [
 						"All buttons except disabled show consistent hover per design system",
 						"Update profile button changes color on hover with smooth fade"
 					],
-					"tests": ["Playwright hover state screenshots on key pages"],
+					"tests": [
+						"Playwright hover state screenshots on key pages"
+					],
 					"estimate_h": 2,
 					"priority": "M"
 				},
@@ -72,7 +80,10 @@
 							}
 						}
 					},
-					"files": ["src/routes/u/[i]/+page.server.ts", "src/routes/u/[i]/+page.svelte"],
+					"files": [
+						"src/routes/u/[i]/+page.server.ts",
+						"src/routes/u/[i]/+page.svelte"
+					],
 					"acceptance": [
 						"Self view shows description and update CTA",
 						"Not-self view hides private parts and shows placeholder when missing"
@@ -102,7 +113,10 @@
 							"Else 404"
 						]
 					},
-					"acceptance": ["Known handles redirect in <100ms locally", "Unknown -> 404"],
+					"acceptance": [
+						"Known handles redirect in <100ms locally",
+						"Unknown -> 404"
+					],
 					"tests": ["Unit for resolver; e2e for 302"],
 					"estimate_h": 2,
 					"priority": "H"
@@ -110,9 +124,15 @@
 				{
 					"id": "redirects-user-chat",
 					"title": "Alias /u/:t/c -> /u/:user_i/c",
-					"impl": { "route": "src/routes/u/[t]/c/+server.ts" },
-					"acceptance": ["302 to canonical chat path"],
-					"tests": ["E2E 302 from alias to canonical"],
+					"impl": {
+						"route": "src/routes/u/[t]/c/+server.ts"
+					},
+					"acceptance": [
+						"302 to canonical chat path"
+					],
+					"tests": [
+						"E2E 302 from alias to canonical"
+					],
 					"estimate_h": 1,
 					"priority": "M",
 					"deps": ["redirects-users"]
@@ -120,8 +140,12 @@
 				{
 					"id": "redirects-room",
 					"title": "Alias /r/:t -> /r/:room_i",
-					"impl": { "route": "src/routes/r/[t]/+server.ts" },
-					"acceptance": ["302 to canonical room path"],
+					"impl": {
+						"route": "src/routes/r/[t]/+server.ts"
+					},
+					"acceptance": [
+						"302 to canonical room path"
+					],
 					"tests": ["E2E 302"],
 					"estimate_h": 1,
 					"priority": "M"
@@ -140,9 +164,17 @@
 						"On create: set dc = Date.now()",
 						"Location schema: { lat, lon, place?, accuracy?, updated_at }"
 					],
-					"db": ["Payload keys must remain compact; consider mapping to c/x if needed"],
-					"acceptance": ["New users get dc automatically", "Location optional and validated"],
-					"tests": ["Unit tests for validators", "Integration for create flow"],
+					"db": [
+						"Payload keys must remain compact; consider mapping to c/x if needed"
+					],
+					"acceptance": [
+						"New users get dc automatically",
+						"Location optional and validated"
+					],
+					"tests": [
+						"Unit tests for validators",
+						"Integration for create flow"
+					],
 					"estimate_h": 3,
 					"priority": "H"
 				},
@@ -155,9 +187,18 @@
 						"src/routes/u/[i]/edit/+page.svelte",
 						"src/lib/validation/user.ts"
 					],
-					"validation": ["lat in [-90,90]", "lon in [-180,180]", "accuracy >= 0"],
-					"acceptance": ["Server validates and persists via db.edit_point(wait:true)"],
-					"tests": ["Unit validate edge cases", "E2E form submit"],
+					"validation": [
+						"lat in [-90,90]",
+						"lon in [-180,180]",
+						"accuracy >= 0"
+					],
+					"acceptance": [
+						"Server validates and persists via db.edit_point(wait:true)"
+					],
+					"tests": [
+						"Unit validate edge cases",
+						"E2E form submit"
+					],
 					"estimate_h": 3,
 					"priority": "M",
 					"deps": ["user-fields"]
@@ -166,10 +207,16 @@
 					"id": "user-page-vector-load",
 					"title": "User page load: vector search by description",
 					"desc": "On /u/:i page load, fetch related results via search_by_vector using user's description.",
-					"files": ["src/routes/u/[i]/+page.server.ts"],
+					"files": [
+						"src/routes/u/[i]/+page.server.ts"
+					],
 					"return_format": { "results": "r" },
-					"acceptance": ["Server returns { results } and uses embed.ts"],
-					"tests": ["Unit: embedding called once; handles empty description"],
+					"acceptance": [
+						"Server returns { results } and uses embed.ts"
+					],
+					"tests": [
+						"Unit: embedding called once; handles empty description"
+					],
 					"estimate_h": 2,
 					"priority": "M"
 				}
@@ -187,8 +234,12 @@
 						"Prefer fast, deterministic heuristic if external not configured",
 						"Pluggable provider @ server using env; never expose client"
 					],
-					"acceptance": ["Returns number; handles empty/null"],
-					"tests": ["Unit: various strings including emojis"],
+					"acceptance": [
+						"Returns number; handles empty/null"
+					],
+					"tests": [
+						"Unit: various strings including emojis"
+					],
 					"estimate_h": 2,
 					"priority": "M"
 				},
@@ -200,8 +251,12 @@
 						"lastmessage = search_by_payload(filters: r = m.r, d < m.d, payload: 'tc')",
 						"return lastmessage.tc + token_count(m.m)"
 					],
-					"acceptance": ["Sums prior tc safely when none exists (assume 0)"],
-					"tests": ["Unit with and without prior messages"],
+					"acceptance": [
+						"Sums prior tc safely when none exists (assume 0)"
+					],
+					"tests": [
+						"Unit with and without prior messages"
+					],
 					"estimate_h": 2,
 					"priority": "M",
 					"deps": ["util-token-count"]
@@ -209,10 +264,19 @@
 				{
 					"id": "util-process-message",
 					"title": "process_message(message) updates message.tc",
-					"files": ["src/lib/util/chat/process_message.ts"],
-					"use_in": ["/u/:i/c/+server.ts", "/r/:i/+server.ts"],
-					"acceptance": ["Mutates or returns with tc computed"],
-					"tests": ["Unit: message with long text; edge cases"],
+					"files": [
+						"src/lib/util/chat/process_message.ts"
+					],
+					"use_in": [
+						"/u/:i/c/+server.ts",
+						"/r/:i/+server.ts"
+					],
+					"acceptance": [
+						"Mutates or returns with tc computed"
+					],
+					"tests": [
+						"Unit: message with long text; edge cases"
+					],
 					"estimate_h": 1,
 					"priority": "M",
 					"deps": ["util-get-message-tc"]
@@ -225,18 +289,33 @@
 				{
 					"id": "comp-chatbox",
 					"title": "Extract ChatBox component",
-					"props": { "onsend": "(text: string) => void", "messages": "ChatMessage[]" },
-					"files": ["src/lib/components/ChatBox.svelte", "src/lib/types/chat.ts"],
-					"acceptance": ["Only UI; no data fetching inside"],
-					"tests": ["Unit: renders messages; calls onsend"],
+					"props": {
+						"onsend": "(text: string) => void",
+						"messages": "ChatMessage[]"
+					},
+					"files": [
+						"src/lib/components/ChatBox.svelte",
+						"src/lib/types/chat.ts"
+					],
+					"acceptance": [
+						"Only UI; no data fetching inside"
+					],
+					"tests": [
+						"Unit: renders messages; calls onsend"
+					],
 					"estimate_h": 2,
 					"priority": "M"
 				},
 				{
 					"id": "comp-userchat",
 					"title": "Refactor UserChat from Chat using ChatBox",
-					"files": ["src/lib/components/UserChat.svelte", "src/lib/components/Chat.svelte"],
-					"acceptance": ["UserChat composes ChatBox; minimal props"],
+					"files": [
+						"src/lib/components/UserChat.svelte",
+						"src/lib/components/Chat.svelte"
+					],
+					"acceptance": [
+						"UserChat composes ChatBox; minimal props"
+					],
 					"tests": ["Unit: basic render"],
 					"estimate_h": 2,
 					"priority": "L",
@@ -265,8 +344,13 @@
 							"string_to_embed": "as per /i/+server.ts without room fields"
 						}
 					},
-					"acceptance": ["401 if unauthenticated", "Message persisted with correct s/u/i"],
-					"tests": ["Server route unit; e2e send message"],
+					"acceptance": [
+						"401 if unauthenticated",
+						"Message persisted with correct s/u/i"
+					],
+					"tests": [
+						"Server route unit; e2e send message"
+					],
 					"estimate_h": 4,
 					"priority": "H"
 				},
@@ -274,14 +358,22 @@
 					"id": "ai-config",
 					"title": "AI system config and tools",
 					"desc": "System prompt uses desc; tools search_messages/users/groups; refactor search_messages util.",
-					"files": ["src/lib/ai/config.ts", "src/lib/ai/tools.ts", "src/lib/ai/search.ts"],
+					"files": [
+						"src/lib/ai/config.ts",
+						"src/lib/ai/tools.ts",
+						"src/lib/ai/search.ts"
+					],
 					"refactor_search_messages": {
 						"from": "src/routes/r/[i]/+page.server.ts",
 						"args": ["q", "u?", "r?", "s?", "e?"],
 						"notes": "Use embeddings to search groups/messages"
 					},
-					"acceptance": ["Tool functions are server-only and typed"],
-					"tests": ["Unit: tools handle empty and bad inputs"],
+					"acceptance": [
+						"Tool functions are server-only and typed"
+					],
+					"tests": [
+						"Unit: tools handle empty and bad inputs"
+					],
 					"estimate_h": 3,
 					"priority": "M",
 					"deps": ["ai-route"]
@@ -294,13 +386,20 @@
 				{
 					"id": "auth-post-login-redirect",
 					"title": "Redirect to previous page after login",
-					"files": ["src/routes/auth/login/+page.server.ts", "src/routes/+layout.server.ts"],
+					"files": [
+						"src/routes/auth/login/+page.server.ts",
+						"src/routes/+layout.server.ts"
+					],
 					"impl": [
 						"Capture intended URL via signed param util s.ts or session temp store",
 						"After login, redirect 302 to captured URL; fallback home"
 					],
-					"acceptance": ["Navigating to protected route then login returns you there"],
-					"tests": ["E2E: attempt /u/:i/c unauth -> login -> back to /u/:i/c"],
+					"acceptance": [
+						"Navigating to protected route then login returns you there"
+					],
+					"tests": [
+						"E2E: attempt /u/:i/c unauth -> login -> back to /u/:i/c"
+					],
 					"estimate_h": 2,
 					"priority": "M"
 				}
@@ -313,9 +412,16 @@
 					"id": "item-unify",
 					"title": "Unify Item payload fields",
 					"desc": "Type Item with compact fields: v,q,kind,location{lat,lon,address?,place?,geohash?}",
-					"files": ["src/lib/types/item.ts", "src/lib/db/index.ts"],
-					"acceptance": ["CRUD uses compact keys; s value distinguishes type"],
-					"tests": ["Unit: type guards and serialization"],
+					"files": [
+						"src/lib/types/item.ts",
+						"src/lib/db/index.ts"
+					],
+					"acceptance": [
+						"CRUD uses compact keys; s value distinguishes type"
+					],
+					"tests": [
+						"Unit: type guards and serialization"
+					],
 					"estimate_h": 3,
 					"priority": "H"
 				},
@@ -332,8 +438,12 @@
 						"Upload images to COS; primary_image flag in payload",
 						"UI: primary prominent; others in horizontal scroll; click to viewer"
 					],
-					"acceptance": ["Images upload securely; URLs stored; primary default first"],
-					"tests": ["Unit: uploader stubs; e2e: create flow without real COS (mock)"],
+					"acceptance": [
+						"Images upload securely; URLs stored; primary default first"
+					],
+					"tests": [
+						"Unit: uploader stubs; e2e: create flow without real COS (mock)"
+					],
 					"estimate_h": 6,
 					"priority": "M",
 					"deps": ["item-unify"]
@@ -341,9 +451,19 @@
 				{
 					"id": "item-page",
 					"title": "Item page /i/:i UI",
-					"files": ["src/routes/i/[i]/+page.server.ts", "src/routes/i/[i]/+page.svelte"],
-					"ui": ["all details", "chat with owner button", "summary accordion", "AI chat link"],
-					"acceptance": ["Buttons visible and wired to routes"],
+					"files": [
+						"src/routes/i/[i]/+page.server.ts",
+						"src/routes/i/[i]/+page.svelte"
+					],
+					"ui": [
+						"all details",
+						"chat with owner button",
+						"summary accordion",
+						"AI chat link"
+					],
+					"acceptance": [
+						"Buttons visible and wired to routes"
+					],
 					"tests": ["E2E smoke + snapshots"],
 					"estimate_h": 3,
 					"priority": "M",
@@ -352,8 +472,19 @@
 				{
 					"id": "item-search-nearby",
 					"title": "Nearby search API /i/search_nearby",
-					"files": ["src/routes/i/search_nearby/+server.ts", "src/lib/util/geo.ts"],
-					"params": ["lat", "lon", "radius", "unit=meters|miles", "kind?", "limit=50", "q?"],
+					"files": [
+						"src/routes/i/search_nearby/+server.ts",
+						"src/lib/util/geo.ts"
+					],
+					"params": [
+						"lat",
+						"lon",
+						"radius",
+						"unit=meters|miles",
+						"kind?",
+						"limit=50",
+						"q?"
+					],
 					"algorithm": [
 						"1 validate lat/lon/radius",
 						"2 convert miles->meters",
@@ -389,7 +520,9 @@
 					"id": "ref-chatmessage",
 					"title": "Extract ChatMessage type from Chat",
 					"files": ["src/lib/types/chat.ts"],
-					"acceptance": ["Used across ChatBox/UserChat"],
+					"acceptance": [
+						"Used across ChatBox/UserChat"
+					],
 					"tests": ["Type compile checks"],
 					"estimate_h": 1,
 					"priority": "M"
@@ -416,10 +549,15 @@
 						"Icon click returns suggestion within 1s (mock ok)",
 						"Input focused on mount"
 					],
-					"tests": ["Unit: route merges context; e2e: suggestion populates input"],
+					"tests": [
+						"Unit: route merges context; e2e: suggestion populates input"
+					],
 					"estimate_h": 4,
 					"priority": "M",
-					"deps": ["util-process-message", "comp-chatbox"]
+					"deps": [
+						"util-process-message",
+						"comp-chatbox"
+					]
 				}
 			]
 		}
@@ -454,14 +592,30 @@
 				"util-process-message"
 			]
 		},
-		{ "name": "M3: AI chat route + tools", "includes": ["ai-route", "ai-config", "ref-chatinput"] },
+		{
+			"name": "M3: AI chat route + tools",
+			"includes": [
+				"ai-route",
+				"ai-config",
+				"ref-chatinput"
+			]
+		},
 		{
 			"name": "M4: Items + nearby search",
-			"includes": ["item-unify", "item-page", "item-search-nearby", "item-create"]
+			"includes": [
+				"item-unify",
+				"item-page",
+				"item-search-nearby",
+				"item-create"
+			]
 		},
 		{
 			"name": "M5: UI polish + auth UX",
-			"includes": ["ui-style-room", "ui-buttons-hover", "auth-post-login-redirect"]
+			"includes": [
+				"ui-style-room",
+				"ui-buttons-hover",
+				"auth-post-login-redirect"
+			]
 		}
 	],
 	"risk_notes": [

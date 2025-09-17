@@ -22,11 +22,16 @@ function applyTheme(theme: Theme) {
 	if (!browser) return;
 
 	if (theme === 'dark') {
-		document.documentElement.setAttribute('data-theme', 'dark');
+		document.documentElement.setAttribute(
+			'data-theme',
+			'dark'
+		);
 	} else {
 		// Even if the initial theme is dark, ensure no data-theme is set for 'light'
 		// This branch will effectively not be hit if we always default to 'dark'
-		document.documentElement.removeAttribute('data-theme');
+		document.documentElement.removeAttribute(
+			'data-theme'
+		);
 	}
 }
 

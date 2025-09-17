@@ -5,19 +5,23 @@
 	let q = $state('');
 	let loading = $state(false);
 	let searched = $state(false);
-	let results = $state<{
-		i: string;
-		l: string;
-		p: number;
-		a?: string;
-		r?: string;
-	}[]>([]);
+	let results = $state<
+		{
+			i: string;
+			l: string;
+			p: number;
+			a?: string;
+			r?: string;
+		}[]
+	>([]);
 
 	async function search_memes() {
 		loading = true;
 		searched = true;
 		try {
-			const { data } = await axios.post('/m/search', { q });
+			const { data } = await axios.post('/m/search', {
+				q
+			});
 			results = data || [];
 		} catch (e) {
 			console.error('search failed', e);
@@ -36,8 +40,18 @@
 	});
 
 	let modalOpen = $state(false);
-	let active: { i: string; l: string; a?: string; r?: string } | null = $state(null);
-	function openModal(m: { i: string; l: string; a?: string; r?: string }) {
+	let active: {
+		i: string;
+		l: string;
+		a?: string;
+		r?: string;
+	} | null = $state(null);
+	function openModal(m: {
+		i: string;
+		l: string;
+		a?: string;
+		r?: string;
+	}) {
 		active = m;
 		modalOpen = true;
 	}
@@ -54,7 +68,9 @@
 	</div>
 
 	<div class="card gap">
-		<label class="label" for="meme_search">search memes</label>
+		<label class="label" for="meme_search"
+			>search memes</label
+		>
 		<div class="search-input-group">
 			<input
 				class="input-underline expand"
@@ -64,22 +80,48 @@
 				onkeydown={on_key}
 				aria-label="Search memes"
 			/>
-			<button class="btn-primary btn-search-icon" onclick={search_memes} disabled={loading} aria-label="Search">
+			<button
+				class="btn-primary btn-search-icon"
+				onclick={search_memes}
+				disabled={loading}
+				aria-label="Search"
+			>
 				{#if loading}
-					<i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+					<i
+						class="fas fa-spinner fa-spin"
+						aria-hidden="true"
+					></i>
 				{:else}
-					<i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+					<i
+						class="fas fa-magnifying-glass"
+						aria-hidden="true"
+					></i>
 				{/if}
 			</button>
 		</div>
 	</div>
 
 	{#if results.length}
-		<div class="grid" role="list" aria-label="meme results" in:fade={{ duration: 120 }}>
+		<div
+			class="grid"
+			role="list"
+			aria-label="meme results"
+			in:fade={{ duration: 120 }}
+		>
 			{#each results as r (r.i)}
 				<div class="card thumb" role="listitem">
-					<button class="thumb-btn" onclick={() => openModal(r)} aria-label={r.a ? `Open meme: ${r.a.slice(0, 80)}` : 'Open meme image'}>
-						<img src={r.l} alt={r.a || 'meme image'} loading="lazy" />
+					<button
+						class="thumb-btn"
+						onclick={() => openModal(r)}
+						aria-label={r.a
+							? `Open meme: ${r.a.slice(0, 80)}`
+							: 'Open meme image'}
+					>
+						<img
+							src={r.l}
+							alt={r.a || 'meme image'}
+							loading="lazy"
+						/>
 					</button>
 				</div>
 			{/each}
@@ -98,21 +140,35 @@
 		tabindex="0"
 		aria-label="Close meme viewer"
 		onclick={closeModal}
-		onkeydown={(e) => e.key === 'Escape' && closeModal()}
+		onkeydown={(e) =>
+			e.key === 'Escape' && closeModal()}
 		in:fade={{ duration: 120 }}
 	></div>
-	<div class="modal image-modal" role="dialog" aria-modal="true" aria-label="Meme viewer" in:fade={{ duration: 120 }}>
+	<div
+		class="modal image-modal"
+		role="dialog"
+		aria-modal="true"
+		aria-label="Meme viewer"
+		in:fade={{ duration: 120 }}
+	>
 		<div class="image-wrap">
-			<img src={active.l} alt={active.a || 'meme image'} />
+			<img
+				src={active.l}
+				alt={active.a || 'meme image'}
+			/>
 		</div>
 		<div class="row gap">
 			{#if active.a}
 				<p class="muted" style="flex:1">{active.a}</p>
 			{/if}
 			{#if active.r}
-				<a class="btn" href={`/r/${active.r}`}>View Comments</a>
+				<a class="btn" href={`/r/${active.r}`}
+					>View Comments</a
+				>
 			{/if}
-			<button class="btn ghost" onclick={closeModal}>Close</button>
+			<button class="btn ghost" onclick={closeModal}
+				>Close</button
+			>
 		</div>
 	</div>
 {/if}
@@ -122,20 +178,43 @@
 		max-width: 980px;
 		margin: 0 auto;
 	}
-	.pad { padding: 16px; }
-	.row { display: flex; gap: 8px; }
-	.space-between { justify-content: space-between; }
-	.v-center { align-items: center; }
-	.title { font-size: 22px; font-weight: 700; }
-	.card { background: transparent; border: none; }
-	.gap { display: grid; gap: 8px; }
+	.pad {
+		padding: 16px;
+	}
+	.row {
+		display: flex;
+		gap: 8px;
+	}
+	.space-between {
+		justify-content: space-between;
+	}
+	.v-center {
+		align-items: center;
+	}
+	.title {
+		font-size: 22px;
+		font-weight: 700;
+	}
+	.card {
+		background: transparent;
+		border: none;
+	}
+	.gap {
+		display: grid;
+		gap: 8px;
+	}
 
 	.grid {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 12px;
 	}
-	.thumb { padding: 0; border: none; background: transparent; cursor: pointer; }
+	.thumb {
+		padding: 0;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+	}
 	.thumb img {
 		width: min(280px, 42vw);
 		height: auto;
@@ -144,13 +223,28 @@
 	}
 
 	.modal_backdrop {
-		position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.6);
 	}
 	.modal.image-modal {
-		position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
-		max-width: min(96vw, 980px); width: 96vw; background: #111; color: #fff; border-radius: 12px; padding: 12px;
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		max-width: min(96vw, 980px);
+		width: 96vw;
+		background: #111;
+		color: #fff;
+		border-radius: 12px;
+		padding: 12px;
 	}
-	.image-wrap { text-align: center; }
-	.image-wrap img { max-width: 100%; height: auto; border-radius: 8px; }
+	.image-wrap {
+		text-align: center;
+	}
+	.image-wrap img {
+		max-width: 100%;
+		height: auto;
+		border-radius: 8px;
+	}
 </style>
-

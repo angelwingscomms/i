@@ -7,37 +7,57 @@ import { REALTIME_API_TOKEN } from '$env/static/private';
 import axios from 'axios';
 import { realtime } from '$lib/util/realtime';
 
-export const POST: RequestHandler = async ({ params, locals, platform }) => {
+export const POST: RequestHandler = async ({
+	params,
+	locals,
+	platform
+}) => {
 	const room_id = params.i;
 	if (!room_id) throw error(400, 'missing room id');
-	if (!locals.user || !locals.user.i) throw error(401, 'Unauthorized');
+	if (!locals.user || !locals.user.i)
+		throw error(401, 'Unauthorized');
 
 	// Load minimal room fields for access checks
-	const r = await get<Pick<Room, 'c' | '_' | 'u' | 'r' | 'x' | 'o' | 'q'>>(room_id, [
-		'c',
-		'_',
-		'u',
-		'r',
-		'q',
-		'x',
-		'o'
-	]);
+	const r = await get<
+		Pick<
+			Room,
+			'c' | '_' | 'u' | 'r' | 'x' | 'o' | 'q'
+		>
+	>(room_id, ['c', '_', 'u', 'r', 'q', 'x', 'o']);
 	if (!r) throw error(404, 'room not found');
 
 	// Access control mirroring +page.server
 	switch (r._) {
 		case ',': {
-			const userRooms: string[] = ((await get(locals.user.i, 'r')) as any) || [];
-			if (!userRooms.includes(room_id)) throw error(403, 'you do not belong to this room');
+			const userRooms: string[] =
+				((await get(locals.user.i, 'r')) as any) ||
+				[];
+			if (!userRooms.includes(room_id))
+				throw error(
+					403,
+					'you do not belong to this room'
+				);
 			break;
 		}
 		case '|': {
-			if (!r.x?.includes(locals.user.i)) throw error(403, 'you do not belong to this room');
+			if (!r.x?.includes(locals.user.i))
+				throw error(
+					403,
+					'you do not belong to this room'
+				);
 			break;
 		}
 		case '-': {
-			if (!r.u || !r.r || (locals.user.i !== r.u && locals.user.i !== r.r)) {
-				throw error(403, 'you do not belong to this room');
+			if (
+				!r.u ||
+				!r.r ||
+				(locals.user.i !== r.u &&
+					locals.user.i !== r.r)
+			) {
+				throw error(
+					403,
+					'you do not belong to this room'
+				);
 			}
 			break;
 		}
@@ -47,16 +67,21 @@ export const POST: RequestHandler = async ({ params, locals, platform }) => {
 
 	// Try to delegate to the bound Cloudflare service (preferred):
 	try {
-		const response = await realtime.post('meetings/' + r.q + '/participants', {
-			name: locals.user.t || 'Anonymous',
-			picture: locals.user.p || '',
-			preset_name: 'group_call_host',
-			custom_participant_id: locals.user.i
-		});
+		const response = await realtime.post(
+			'meetings/' + r.q + '/participants',
+			{
+				name: locals.user.t || 'Anonymous',
+				picture: locals.user.p || '',
+				preset_name: 'group_call_host',
+				custom_participant_id: locals.user.i
+			}
+		);
 
-		if (!response?.ok) throw new Error('Failed to get token');
+		if (!response?.ok)
+			throw new Error('Failed to get token');
 		const data = await response.json();
-		if (!data?.success) throw new Error('Invalid response');
+		if (!data?.success)
+			throw new Error('Invalid response');
 		token = data.data.token;
 	} catch (e) {
 		console.warn('getting live token failed', e);

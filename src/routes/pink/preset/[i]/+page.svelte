@@ -1,5 +1,11 @@
 <script lang="ts">
-	type Preset = { i: string; n: string; a?: string; p?: string; x?: string[] };
+	type Preset = {
+		i: string;
+		n: string;
+		a?: string;
+		p?: string;
+		x?: string[];
+	};
 	let { data } = $props();
 	let p: Preset = (data as any).p;
 </script>

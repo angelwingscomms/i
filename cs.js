@@ -13,8 +13,13 @@ function memorySizeOf(obj) {
 					bytes += 4;
 					break;
 				case 'object':
-					const objClass = Object.prototype.toString.call(obj).slice(8, -1);
-					if (objClass === 'Object' || objClass === 'Array') {
+					const objClass = Object.prototype.toString
+						.call(obj)
+						.slice(8, -1);
+					if (
+						objClass === 'Object' ||
+						objClass === 'Array'
+					) {
 						for (const key in obj) {
 							if (!obj.hasOwnProperty(key)) continue;
 							sizeOf(obj[key]);
@@ -29,10 +34,17 @@ function memorySizeOf(obj) {
 	}
 	function format(bytes) {
 		if (bytes < 1024) return bytes + ' bytes';
-		if (bytes < 1048576) return (bytes / 1024).toFixed(3) + ' KiB';
+		if (bytes < 1048576)
+			return (bytes / 1024).toFixed(3) + ' KiB';
 		return (bytes / 1048576).toFixed(3) + ' MiB';
 	}
 	return sizeOf(obj);
 }
 
-console.log((memorySizeOf('0198cb9d-5d04-735d-99cc-6e1c1ff697') * 1440) / 1024);
+console.log(
+	(memorySizeOf(
+		'0198cb9d-5d04-735d-99cc-6e1c1ff697'
+	) *
+		1440) /
+		1024
+);
