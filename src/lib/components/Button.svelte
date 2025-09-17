@@ -5,7 +5,8 @@
 		loading = false,
 		disabled = false,
 		wide = false,
-		href
+		href,
+		icon
 	}: {
 		onclick?: (event: MouseEvent) => void;
 		text?: string;
@@ -13,18 +14,22 @@
 		disabled?: boolean;
 		wide?: boolean;
 		href?: string;
+		icon?: string;
 	} = $props();
 </script>
 
 {#if href}
 	<a
-		href={href}
+		{href}
 		class="btn-primary {wide ? 'btn-wide' : ''}"
 		{onclick}
 	>
 		{#if loading}
 			<i class="fas fa-spinner fa-spin"></i>
 		{:else}
+			{#if icon}
+				<i class="fas {icon}"></i>
+			{/if}
 			{text}
 		{/if}
 	</a>
@@ -37,6 +42,9 @@
 		{#if loading}
 			<i class="fas fa-spinner fa-spin"></i>
 		{:else}
+			{#if icon}
+				<i class="fas {icon}"></i>
+			{/if}
 			{text}
 		{/if}
 	</button>

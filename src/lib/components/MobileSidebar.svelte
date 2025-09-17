@@ -45,7 +45,10 @@
 				style="color: var(--color-theme-1);"
 				onclick={close_sidebar}
 			>
-				<i class="far fa-house mr-2"></i>
+				<i
+					class="far fa-house"
+					style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+				></i>
 				Home
 			</a>
 			{#if user}
@@ -55,8 +58,11 @@
 					style="color: var(--color-theme-3);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-comments mr-2"></i>
-					search chatrooms
+					<i
+						class="far fa-comments"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
+					chatrooms
 				</a>
 				<a
 					href="/posts"
@@ -64,7 +70,10 @@
 					style="color: var(--color-theme-2);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-file-alt mr-2"></i>
+					<i
+						class="fa-solid fa-pen"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					posts
 				</a>
 				<a
@@ -73,7 +82,10 @@
 					style="color: var(--color-theme-4);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-comment-dots mr-2"></i>
+					<i
+						class="far fa-comment-dots"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					chats
 				</a>
 				<a
@@ -82,7 +94,10 @@
 					style="color: var(--color-theme-6);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-users mr-2"></i>
+					<i
+						class="fa-solid fa-users"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					users
 				</a>
 				<a
@@ -91,7 +106,10 @@
 					style="color: var(--color-theme-1);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-play-circle mr-2"></i>
+					<i
+						class="far fa-circle-play"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					youtube summarizer
 				</a>
 				<a
@@ -100,17 +118,11 @@
 					style="color: var(--color-theme-4);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-cog mr-2"></i>
+					<i
+						class="fa-solid fa-gear"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					settings
-				</a>
-				<a
-					href="/edit_user"
-					class="sidebar-nav-link"
-					style="color: var(--color-theme-6);"
-					onclick={close_sidebar}
-				>
-					<i class="far fa-user-edit mr-2"></i>
-					edit profile
 				</a>
 				<a
 					href="/resume"
@@ -118,7 +130,10 @@
 					style="color: var(--color-theme-2);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-file-alt mr-2"></i>
+					<i
+						class="far fa-file-lines"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					resume
 				</a>
 				<a
@@ -127,7 +142,10 @@
 					style="color: var(--color-theme-4);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-user mr-2"></i>
+					<i
+						class="far fa-user"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					{user.t}
 				</a>
 				<a
@@ -136,7 +154,10 @@
 					style="color: var(--color-theme-5);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-sign-out-alt mr-2"></i>
+					<i
+						class="fa-solid fa-arrow-right-from-bracket"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					logout
 				</a>
 			{:else}
@@ -146,7 +167,10 @@
 					style="color: var(--color-theme-1);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-play-circle mr-2"></i>
+					<i
+						class="far fa-circle-play"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					youtube summarizer
 				</a>
 				<a
@@ -155,7 +179,10 @@
 					style="color: var(--color-theme-1);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-user mr-2"></i>
+					<i
+						class="far fa-user"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					login w username
 				</a>
 				<a
@@ -164,7 +191,10 @@
 					style="color: var(--color-theme-2);"
 					onclick={close_sidebar}
 				>
-					<i class="far fa-sign-in-alt mr-2"></i>
+					<i
+						class="far fa-right-to-bracket"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
 					login w Google
 				</a>
 			{/if}

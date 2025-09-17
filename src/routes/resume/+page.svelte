@@ -13,7 +13,9 @@
 	}
 </script>
 
-<div class="mx-auto max-w-2xl p-4 flex flex-col gap-y-5">
+<div
+	class="mx-auto flex max-w-2xl flex-col gap-y-5 p-4"
+>
 	<h1 class="text-2xl font-bold">My Resumes</h1>
 	<Button
 		text="Create Resume"
@@ -21,13 +23,12 @@
 		onclick={async () => {
 			creating = true;
 			try {
-				const { data } =
-					await axios.post('/resume');
+				const { data } = await axios.post('/resume');
 				goto(`/resume/${data}/edit`);
 			} catch (e) {
 				toast.error('Failed to create resume');
 			} finally {
-				creating = false
+				creating = false;
 			}
 		}}
 	/>
@@ -37,10 +38,7 @@
 				<li
 					class="rounded-lg border border-pink-200 p-4 hover:border-pink-400"
 				>
-					<a
-						href={`/resume/${r.i}`}
-						class="block"
-					>
+					<a href={`/resume/${r.i}`} class="block">
 						<div class="font-semibold">
 							{formatDate(r.d || 0)}
 						</div>

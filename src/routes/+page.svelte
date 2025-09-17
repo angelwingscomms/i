@@ -51,12 +51,12 @@
 			Connect with people just like you
 		</h1>
 		<p class="hero-subtitle mb-8">
-			Start a blog. Create and share posts.
-			Find people and chatrooms that share your
-			interests, values and beliefs. Connect with
-			people just like you through anonymous video or
-			text chats, join group discussions, and build
-			real connections effortlessly.
+			Start a blog. Create and share posts. Find
+			people and chatrooms that share your interests,
+			values and beliefs. Connect with people just
+			like you through anonymous video or text chats,
+			join group discussions, and build real
+			connections effortlessly.
 		</p>
 		<div
 			class="flex flex-col justify-center gap-4 sm:flex-row"
@@ -91,7 +91,11 @@
 				Share Posts to Connect with Your Community
 			</h3>
 			<p class="feature-description">
-				Create and share posts with text, images, and updates to engage with people who share your interests. Discover community discussions, view comments in realtime, follow updates, and build connections through shared content.
+				Create and share posts with text, images, and
+				updates to engage with people who share your
+				interests. Discover community discussions,
+				view comments in realtime, follow updates, and
+				build connections through shared content.
 			</p>
 			<a href="/posts" class="feature-link"
 				>Explore Posts <i class="fa fa-arrow-right"

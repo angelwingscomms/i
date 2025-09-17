@@ -1,5 +1,5 @@
 /* Responsive Design */
-@media (max-width: 640px) {
+@media (max-width: 864px) {
 	.container-main {
 		@apply px-2;
 	}

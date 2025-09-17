@@ -157,7 +157,7 @@
 	color: var(--color-theme-1);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 864px) {
 	/* sm breakpoint */
 	.btn-hero-cta {
 		padding: 1rem 2rem; /* sm:px-8 sm:py-4 */

@@ -15,5 +15,6 @@
 - Security: Validate inputs client/server; no secrets in code; use qdrant.setpayload for edits
 - Conciseness: Avoid vars for single-use; code minimally; reference patterns in src/lib/components/Chat.svelte, src/routes/+page.svelte, etc.
 - event handlers without have colon e.g `onclick` not `on:click`
-- when styling, always look at src/styles/_variables.css. ALWAYS use Tailwind ONLY. DON'T USE STYLEBLOCKS OR INLINE STYLES.
-- never run any npm commands unless asked to
+- when styling, always look at src/styles/\_variables.css. ALWAYS use Tailwind ONLY. DON'T USE STYLEBLOCKS OR INLINE STYLES.
+- ALWAYS run `npm run format` before and after editing files
+- except `npm run format`, never run any npm commands unless asked to

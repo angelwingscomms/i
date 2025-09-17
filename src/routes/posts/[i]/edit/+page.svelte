@@ -12,6 +12,8 @@
 	let showPreview = $state(false);
 	let saving = $state(false);
 	let timeout: NodeJS.Timeout | null = null;
+	let ai_input: HTMLTextAreaElement | null =
+		$state(null);
 
 	const saveWithDelay = (body: string) => {
 		saving = true;
@@ -20,7 +22,10 @@
 		}
 		timeout = setTimeout(async () => {
 			try {
-				const res = await axios.put(`/posts/${post.i}`, { b: body });
+				const res = await axios.put(
+					`/posts/${post.i}`,
+					{ b: body }
+				);
 				if (res.status === 200) {
 					toast.success('Post auto-saved');
 				}
@@ -41,7 +46,7 @@
 	const handleKeyDown = (e: KeyboardEvent) => {
 		if (e.ctrlKey && e.key === 'Enter' && !loading) {
 			const activeEl = document.activeElement;
-			if (activeEl && activeEl.tagName === 'TEXTAREA' && activeEl.getAttribute('data-instructions')) {
+			if (activeEl && activeEl === ai_input) {
 				e.preventDefault();
 				editWithGemini();
 			}
@@ -79,13 +84,17 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 <div class="mx-auto max-w-2xl p-4">
-	<div class="flex justify-between items-center mb-4">
+	<div class="mb-4 flex items-center justify-between">
 		<h1 class="text-2xl font-bold">Edit Post</h1>
 		<div class="flex items-center gap-2">
 			{#if saving}
-				<span class="text-sm text-gray-500">Saving...</span>
+				<span class="text-sm text-gray-500"
+					>Saving...</span
+				>
 			{/if}
-			<a href={`/posts/${post.i}`} class="btn-outline">View Post</a>
+			<a href={`/posts/${post.i}`} class="btn-outline"
+				>View Post</a
+			>
 		</div>
 	</div>
 	<div class="space-y-6">
@@ -95,6 +104,7 @@
 				endpoint="/posts/edit"
 				placeholder="Update your post content..."
 				rows={10}
+				bind:ref={ai_input}
 				label="Post Content"
 				editable={true}
 			/>
@@ -107,7 +117,6 @@
 				rows={4}
 				label="AI Edit Instructions"
 				editable={true}
-				textarea_attrs={{ 'data-instructions': true }}
 			/>
 			<Button
 				text={loading

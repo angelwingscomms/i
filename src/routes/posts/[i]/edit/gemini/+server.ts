@@ -1,13 +1,14 @@
 import { error, text } from '@sveltejs/kit';
 import { GEMINI } from '$env/static/private';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import {
-	edit_point,
-	get
-} from '$lib/db';
+import { edit_point, get } from '$lib/db';
 import type { Post } from '$lib/types';
 
-export const POST = async ({ request, locals, params }) => {
+export const POST = async ({
+	request,
+	locals,
+	params
+}) => {
 	if (!locals.user) {
 		throw error(401);
 	}
@@ -15,7 +16,11 @@ export const POST = async ({ request, locals, params }) => {
 	if (!instructions?.trim()) {
 		throw error(400, 'edit instructions required');
 	}
-	const post = await get<Post>(params.i, ['u', 'h', 'b']);
+	const post = await get<Post>(params.i, [
+		'u',
+		'h',
+		'b'
+	]);
 	if (!post) {
 		throw error(404, 'post not found');
 	}
@@ -30,11 +35,14 @@ export const POST = async ({ request, locals, params }) => {
 	const result = await model.generateContent(prompt);
 	const response = await result.response;
 	let b = response.text().trim();
-	b = b.replace(/^```markdown\s*\n?/, '').replace(/\n?```$/, '').trim();
-	 await edit_point(params.i, {
+	b = b
+		.replace(/^```markdown\s*\n?/, '')
+		.replace(/\n?```$/, '')
+		.trim();
+	await edit_point(params.i, {
 		b,
 		l: Date.now()
 	});
 	console.log('b', b);
-	return text(b)
+	return text(b);
 };

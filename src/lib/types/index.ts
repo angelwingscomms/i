@@ -140,4 +140,3 @@ export interface Recording {
 }
 
 export type { Resume } from './resume';
-

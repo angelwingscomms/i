@@ -8,10 +8,15 @@ export const POST = async ({ request, locals }) => {
 	if (!locals.user) {
 		throw error(401, 'Unauthorized');
 	}
-	let id
+	let id;
 	try {
-		const d = Date.now()
-		id = await create({s: 'e', u: locals.user.i, d, l: d });
+		const d = Date.now();
+		id = await create({
+			s: 'e',
+			u: locals.user.i,
+			d,
+			l: d
+		});
 	} catch (err) {
 		console.error('Failed to create resume', err);
 		throw error(500, 'Failed to create resume');

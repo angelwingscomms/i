@@ -1,5 +1,8 @@
 # CRUSH.md
 
+- ALWAYS run `npm run format` before editing files
+- except `npm run format`, never run any npm commands unless asked to
+
 ## Code Style
 
 - Naming: snake_case for vars/functions; db payload keys single letters (e.g., i=id, t=tag/text, u=user, d=desc/date, a=age/created, g=gender, l=lat/lon)
@@ -16,10 +19,11 @@
 - Conciseness: Avoid vars for single-use; code minimally; reference patterns in src/lib/components/Chat.svelte, src/routes/+page.svelte, etc.
 - Never run npm run dev/build/start unless user explicitly instructs (avoids interfering with local dev server).
 - event handlers without have colon e.g `onclick` not `on:click`
-- when styling, always look at src/styles/_variables.css. ALWAYS use Tailwind ONLY. DON'T USE STYLEBLOCKS OR INLINE STYLES.
+- when styling, always look at src/styles/\_variables.css. ALWAYS use Tailwind ONLY. DON'T USE STYLEBLOCKS OR INLINE STYLES.
 - never run any npm commands unless asked to
 - always send data to server as JSON w/ single character fields
 - always use all lowercase for copy
 
 ### page.svelte
- - use svelte:window to add event handlers to window, e.g <svelte:window onkeydown>
+
+- use svelte:window to add event handlers to window, e.g <svelte:window onkeydown>

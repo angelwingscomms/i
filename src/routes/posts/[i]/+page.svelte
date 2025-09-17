@@ -22,14 +22,32 @@
 		>
 	</div>
 
-	<div class="mb-8">
-		<h1 class="text-3xl font-bold text-[var(--accent-primary)]">{post.t}</h1>
-		<p class="text-sm text-[var(--text-secondary)]">Posted {new Date(post.d).toLocaleDateString()}</p>
+	<div class="mb-8 flex items-start justify-between">
+		<div>
+			<h1
+				class="text-3xl font-bold text-[var(--accent-primary)]"
+			>
+				{post.t}
+			</h1>
+			<p class="text-sm text-[var(--text-secondary)]">
+				Posted {new Date(post.d).toLocaleDateString()}
+			</p>
+		</div>
+		<Button
+			text={data.user?.i === post.u
+				? 'Edit'
+				: 'View author'}
+			href={data.user?.i === post.u
+				? `/posts/${post.i}/edit`
+				: `/u/${post.u}`}
+			icon={data.user?.i === post.u
+				? 'fa-edit'
+				: undefined}
+			class="font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
+		/>
 	</div>
 
-	<article
-		class="overflow-hidden rounded-lg bg-[var(--bg-card)]"
-	>
+	<article class="overflow-hidden rounded-lg">
 		{#if post.p}
 			<img
 				src={post.p}
@@ -37,34 +55,23 @@
 				class="h-64 w-full object-cover md:h-96"
 			/>
 		{/if}
-		<div class="prose prose-invert prose-lg max-w-none px-6 pt-6">
-			{@html marked.parse(post.b)}
-		</div>
 		<div
-			class="flex items-center justify-end px-6 pb-6"
+			class="prose prose-invert prose-lg max-w-none px-6 pt-6"
 		>
-			<div class="flex items-center gap-4">
-				<Button
-					text={data.user?.i === post.u
-						? 'Edit'
-						: 'View author'}
-					href={data.user?.i === post.u
-						? `/posts/${post.i}/edit`
-						: `/u/${post.u}`}
-					class="font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
-				/>
-			</div>
+			{@html marked.parse(post.b)}
 		</div>
 	</article>
 
-	{#if data.messages && data.messages.length > 0 || data.user}
+	<!-- {#if (data.messages && data.messages.length > 0) || data.user}
 		<div class="mt-8">
-			<Chat 
-				m={data.messages} 
-				t={data.t} 
-				_={data._} 
-				authToken={data.user ? data.user.i : undefined} 
+			<Chat
+				m={data.messages}
+				t={data.t}
+				_={data._}
+				authToken={data.user
+					? data.user.i
+					: undefined}
 			/>
 		</div>
-	{/if}
+	{/if} -->
 </div>

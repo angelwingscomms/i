@@ -189,16 +189,9 @@
 						class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
 						style="color: var(--color-theme-1); border: 1px solid var(--color-theme-1);"
 					>
-						<svg
-							width="16"
-							height="16"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-						>
-							<path
-								d="M19,7H18V6A2,2 0 0,0 16,4H8A2,2 0 0,0 6,6V7H5A1,1 0 0,0 4,8V19A3,3 0 0,0 7,22H17A3,3 0 0,0 20,19V8A1,1 0 0,0 19,7M8,6H16V7H8V6M18,19A1,1 0 0,1 17,20H7A1,1 0 0,1 6,19V9H18V19Z"
-							/>
-						</svg>
+						<i
+							class="fa-solid fa-bag-shopping mr-2 text-[1.1em] text-current"
+						></i>
 						Items
 					</a>
 					<a
@@ -206,16 +199,9 @@
 						class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
 						style="color: var(--color-theme-2); border: 1px solid var(--color-theme-2);"
 					>
-						<svg
-							width="16"
-							height="16"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-						>
-							<path
-								d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
-							/>
-						</svg>
+						<i
+							class="fa-solid fa-users mr-2 text-[1.1em] text-current"
+						></i>
 						Users
 					</a>
 					<a
@@ -223,16 +209,9 @@
 						class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
 						style="color: var(--color-theme-3); border: 1px solid var(--color-theme-3);"
 					>
-						<svg
-							width="16"
-							height="16"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-						>
-							<path
-								d="M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16.18 8.41,14.5 12,14.5C15.59,14.5 18.5,16.18 18.5,18.25V20H5.5V18.25Z"
-							/>
-						</svg>
+						<i
+							class="far fa-comments mr-2 text-[1.1em] text-current"
+						></i>
 						Rooms
 					</a>
 				</div>
@@ -244,34 +223,10 @@
 							class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
 							style="color: var(--color-theme-1); border: 1px solid var(--color-theme-1);"
 						>
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M12,8A4,4 0 1,0 16,12A4,4 0 0,0 12,8M4.93,6.14L3.5,4.71L2.09,6.12L3.5,7.53L4.93,6.14M19.07,6.14L20.5,7.53L21.91,6.12L20.5,4.71L19.07,6.14M12,2H12A1,1 0 0,1 13,3V5A1,1 0 0,1 12,6A1,1 0 0,1 11,5V3A1,1 0 0,1 12,2M12,18A1,1 0 0,1 13,19V21A1,1 0 0,1 12,22A1,1 0 0,1 11,21V19A1,1 0 0,1 12,18M2,12A1,1 0 0,1 3,11H5A1,1 0 0,1 6,12A1,1 0 0,1 5,13H3A1,1 0 0,1 2,12M18,12A1,1 0 0,1 19,11H21A1,1 0 0,1 22,12A1,1 0 0,1 21,13H19A1,1 0 0,1 18,12Z"
-								/>
-							</svg>
+							<i
+								class="fa-solid fa-gear mr-2 text-[1.1em] text-current"
+							></i>
 							Settings
-						</a>
-						<a
-							href="/edit_user"
-							class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
-							style="color: var(--color-theme-6); border: 1px solid var(--color-theme-6);"
-						>
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-								/>
-							</svg>
-							Edit Profile
 						</a>
 
 						<div
@@ -289,16 +244,9 @@
 								class="group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
 								style="color: var(--color-theme-5); border: 1px solid var(--color-theme-5);"
 							>
-								<svg
-									width="16"
-									height="16"
-									viewBox="0 0 24 24"
-									fill="currentColor"
-								>
-									<path
-										d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"
-									/>
-								</svg>
+								<i
+									class="fa-solid fa-arrow-right-from-bracket mr-2 text-[1.1em] text-current"
+								></i>
 								Logout
 							</a>
 						</div>
@@ -309,7 +257,8 @@
 						class="group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
 						style="color: var(--color-theme-1); border: 1px solid var(--color-theme-1);"
 					>
-						Login w/ Username
+						<i class="far fa-user h-4 w-4"></i>Login
+						w/ Username
 					</a>
 					<a
 						href="/google"

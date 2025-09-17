@@ -8,7 +8,8 @@
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
 		rows = 6,
 		onInput = () => {},
-		label
+		label,
+		ref = $bindable<HTMLTextAreaElement | null>(null)
 	} = $props();
 
 	// Constants
@@ -19,18 +20,19 @@
 	let mediaRecorder: MediaRecorder | null = null;
 	let audioChunks: Blob[] = [];
 	let charCount = value.length;
-	let textareaRef: HTMLTextAreaElement;
 
 	$effect(() => {
 		// Update char count when value changes
 		charCount = value?.length || 0;
 
 		// Auto-resize textarea
-		if (textareaRef) {
-			textareaRef.style.height = 'auto';
-			textareaRef.style.height =
-				textareaRef.scrollHeight + 'px';
+		if (ref) {
+			ref.style.height = 'auto';
+			ref.style.height = ref.scrollHeight + 'px';
 		}
+
+		// Sync textarea ref to prop
+		ref = ref;
 	});
 
 	async function startRecording() {
@@ -119,7 +121,7 @@
 		required
 		disabled={!editable || isTranscribing}
 		readonly={!editable}
-		bind:this={textareaRef}
+		bind:this={ref}
 	></textarea>
 
 	<div class="description-controls">

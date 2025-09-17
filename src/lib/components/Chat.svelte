@@ -283,60 +283,103 @@
 <div class="chat-layout">
 	<div class="chat-header chat-header-layout">
 		{#if r}
-			<div class="chat-title-group flex items-center gap-2">
+			<div
+				class="chat-title-group flex items-center gap-2"
+			>
 				<h1
-					class="chat-title flex-shrink-min font-light text-fuchsia-400 italic"
+					class="chat-title flex-shrink-min text-sm font-light text-fuchsia-400"
 				>
 					replies to <span class="text-white"
 						>{display_room_name}</span
 					>
 				</h1>
 				<button
-					class="ml-2 text-gray-400 hover:text-white self-center p-1 rounded focus:outline-none"
+					class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
 					onclick={() =>
 						(show_room_name_modal = true)}
-				><i class="fas fa-info-circle"></i></button>
+					aria-label="Show room information"
+					><i class="fas fa-info-circle"></i></button
+				>
+				<a
+					href="{page.url}/live"
+					class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+					aria-haspopup="dialog"
+					aria-controls="live-modal"
+					onclick={() => (liveOpen = true)}
+					aria-label="Open video chat"
+					><i class="fas fa-video"></i></a
+				>
 			</div>
 		{:else if _ === '-'}
 			{#if a}
-				<div class="chat-title-group flex items-center gap-2">
+				<div
+					class="chat-title-group flex items-center gap-2"
+				>
 					<h1
-						class="chat-title flex-shrink-min font-light text-gray-500 italic"
+						class="chat-title flex-shrink-min text-sm font-light text-gray-500"
 					>
 						anon chat {n} with {display_room_name}
 					</h1>
 					<button
-						class="ml-2 text-gray-400 hover:text-white self-center p-1 rounded focus:outline-none"
+						class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
 						onclick={() =>
 							(show_room_name_modal = true)}
-					><i class="fas fa-info-circle"></i></button>
+						><i class="fas fa-info-circle"
+						></i></button
+					>
+					<a
+						href="{page.url}/live"
+						class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+						aria-haspopup="dialog"
+						aria-controls="live-modal"
+						onclick={() => (liveOpen = true)}
+						><i class="fas fa-video"></i></a
+					>
 				</div>
 			{:else}
-				<h1
-					class="chat-title font-light text-gray-500 italic"
+				<div
+					class="chat-title-group flex items-center gap-2"
 				>
-					anonymous user
-				</h1>
+					<h1
+						class="chat-title text-sm font-light text-gray-500"
+					>
+						anonymous user
+					</h1>
+					<a
+						href="{page.url}/live"
+						class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+						aria-haspopup="dialog"
+						aria-controls="live-modal"
+						onclick={() => (liveOpen = true)}
+						><i class="fas fa-video"></i></a
+					>
+				</div>
 			{/if}
 		{:else}
-			<div class="chat-title-group flex items-center gap-2">
-				<h1 class="chat-title flex-shrink-min">
+			<div
+				class="chat-title-group flex items-center gap-2"
+			>
+				<h1
+					class="chat-title flex-shrink-min text-sm"
+				>
 					{display_room_name}
 				</h1>
 				<button
-					class="ml-2 text-gray-400 hover:text-white self-center p-1 rounded focus:outline-none"
+					class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
 					onclick={() =>
 						(show_room_name_modal = true)}
-				><i class="fas fa-info-circle"></i></button>
+					><i class="fas fa-info-circle"></i></button
+				>
+				<a
+					href="{page.url}/live"
+					class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+					aria-haspopup="dialog"
+					aria-controls="live-modal"
+					onclick={() => (liveOpen = true)}
+					><i class="fas fa-video"></i></a
+				>
 			</div>
 		{/if}
-		<a
-			href="{page.url}/live"
-			class="btn"
-			aria-haspopup="dialog"
-			aria-controls="live-modal"
-			onclick={() => (liveOpen = true)}>video chat</a
-		>
 	</div>
 	<div
 		class="messages-container"

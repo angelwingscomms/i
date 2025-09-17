@@ -124,7 +124,7 @@
 	margin-right: auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 864px) {
 	.features-grid {
 		grid-template-columns: 1fr;
 		padding: 2rem 1rem;
