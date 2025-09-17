@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import {
+	count,
 	get,
 	qdrant,
 	search_by_vector
@@ -21,16 +22,15 @@ export const load: PageServerLoad = async ({
 			if (vector) {
 				const posts = await search_by_vector<Post>({
 					vector,
-					filter: { must: { s: 'p', _: '.' } },
+					filter: { must: { s: 'p' } },
 					with_payload: ['t', 'l', 'm'],
 					limit: 54
 				});
 				return {
-					r: posts.map((r) => ({
+					p: posts.map((r) => ({
 						i: r.i,
 						t: r.t,
-						l: r.l,
-						m: r.m
+						l: r.l
 					}))
 				};
 			}
@@ -45,12 +45,6 @@ export const load: PageServerLoad = async ({
 									key: 's',
 									match: {
 										value: 'p'
-									}
-								},
-								{
-									key: '_',
-									match: {
-										value: '.'
 									}
 								}
 							]

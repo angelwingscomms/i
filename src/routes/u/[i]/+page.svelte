@@ -351,6 +351,78 @@
 							</button>
 						</div>
 					</div>
+				{#if !is_own_profile && data.user}
+					<div class="mt-8 space-y-4">
+						<div class="flex justify-center">
+							<a
+								href="/u/{user.i}/a"
+								class="action-button group relative overflow-hidden rounded-full px-12 py-6 text-xl font-bold text-white shadow-2xl transition-all"
+								style="background: var(--color-theme-2);"
+							>
+								<div
+									class="absolute inset-0 bg-white opacity-0 transition-opacity group-hover:opacity-20"
+								></div>
+								<div
+									class="relative flex items-center gap-3"
+								>
+									<svg
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+										fill="currentColor"
+									>
+										<path
+											d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2M6,9H18V11H6V9M14,14H6V12H14V14M18,8H6V6H18V8Z"
+										/>
+									</svg>
+									chat w {user.tag} anonymously
+								</div>
+							</a>
+						</div>
+						<div class="flex justify-center">
+							<a
+								href="/u/{user.i}/c"
+								class="action-button group relative overflow-hidden rounded-full px-12 py-6 text-xl font-bold text-white shadow-2xl transition-all"
+								style="background: var(--color-theme-2);"
+							>
+								<div
+									class="absolute inset-0 bg-white opacity-0 transition-opacity group-hover:opacity-20"
+								></div>
+								<div
+									class="relative flex items-center gap-3"
+								>
+									<svg
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+										fill="currentColor"
+									>
+										<path
+											d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2M6,9H18V11H6V9M14,14H6V12H14V14M18,8H6V6H18V8Z"
+										/>
+									</svg>
+									chat w {user.tag}
+								</div>
+							</a>
+						</div>
+						<div class="flex justify-center gap-4">
+							<a
+								href="/u/{user.i}/c?call=audio"
+								class="action-button rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl"
+								style="background: var(--color-theme-3);"
+							>
+								Audio call
+							</a>
+							<a
+								href="/u/{user.i}/c?call=video"
+								class="action-button rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl"
+								style="background: var(--color-theme-1);"
+							>
+								Video call
+							</a>
+						</div>
+					</div>
+				{/if}
 				</div>
 			</div>
 		</section>
@@ -403,76 +475,6 @@
 					</div>
 				{/if}
 
-				<!-- Chat Action -->
-				<div class="mb-12 flex justify-center">
-					<a
-						href="/u/{user.i}/a"
-						class="action-button group relative overflow-hidden rounded-full px-12 py-6 text-xl font-bold text-white shadow-2xl transition-all"
-						style="background: var(--color-theme-2);"
-					>
-						<div
-							class="absolute inset-0 bg-white opacity-0 transition-opacity group-hover:opacity-20"
-						></div>
-						<div
-							class="relative flex items-center gap-3"
-						>
-							<svg
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2M6,9H18V11H6V9M14,14H6V12H14V14M18,8H6V6H18V8Z"
-								/>
-							</svg>
-							chat w {user.tag} anonymously
-						</div>
-					</a>
-				</div>
-				<div class="mb-12 flex justify-center">
-					<a
-						href="/u/{user.i}/c"
-						class="action-button group relative overflow-hidden rounded-full px-12 py-6 text-xl font-bold text-white shadow-2xl transition-all"
-						style="background: var(--color-theme-2);"
-					>
-						<div
-							class="absolute inset-0 bg-white opacity-0 transition-opacity group-hover:opacity-20"
-						></div>
-						<div
-							class="relative flex items-center gap-3"
-						>
-							<svg
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2M6,9H18V11H6V9M14,14H6V12H14V14M18,8H6V6H18V8Z"
-								/>
-							</svg>
-							chat w {user.tag}
-						</div>
-					</a>
-				</div>
-
-				<div class="mb-12 flex justify-center gap-4">
-					<a
-						href="/u/{user.i}/c?call=audio"
-						class="action-button rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl"
-						style="background: var(--color-theme-3);"
-					>
-						Audio call
-					</a>
-					<a
-						href="/u/{user.i}/c?call=video"
-						class="action-button rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl"
-						style="background: var(--color-theme-1);"
-					>
-						Video call
-					</a>
-				</div>
 			{:else if is_own_profile}
 				<!-- Edit Profile Action -->
 				<div class="mb-12 flex justify-center">

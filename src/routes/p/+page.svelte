@@ -105,20 +105,20 @@
 
 	{#if posts.length}
 		<ul class="list" in:fade={{ duration: 120 }}>
-			{#each posts as r (r.i)}
+			{#each posts as p (p.i)}
 				<li class="item">
-					<a class="link" href={`/r/${r.i}`}>
+					<a class="link" href={`/p/${p.i}`}>
 						<div class="row space-between v-center">
 							<div>
-								<div class="result-title">{r.t}</div>
+								<div class="result-title">{p.t}</div>
 								<!-- <div class="result-meta muted">{r.m ?? 0} members</div> -->
 							</div>
-							{#if r.score !== undefined}
+							{#if p.score !== undefined}
 								<div class="badge">
 									{Math.round(
 										Math.max(
 											0,
-											Math.min(1, r.score)
+											Math.min(1, p.score)
 										) * 100
 									)}%
 								</div>
@@ -129,9 +129,9 @@
 			{/each}
 		</ul>
 	{:else if searched}
-		<p class="muted">No results found.</p>
+		<p class="muted">no results found</p>
 	{:else}
-		<p class="muted">Try searching for a chatroom.</p>
+		<p class="muted">try searching for a post</p>
 	{/if}
 </div>
 

@@ -248,10 +248,6 @@ export async function search_by_vector<T>({
 				filter.must_not
 			);
 		}
-		console.log(
-			'searchParams',
-			JSON.stringify(searchParams, null, 2)
-		);
 		const results = await qdrant.search(
 			collection,
 			searchParams as {
