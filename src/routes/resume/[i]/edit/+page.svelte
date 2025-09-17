@@ -5,13 +5,20 @@
 	import axios from 'axios';
 
 	let { data } = $props();
-	let resume = $state(data.r);
+	console.log('data', data)
+	let resume = $state({
+		...data.r,
+		h: data.r.h || ''
+	});
+	console.log('resume.i', resume.i)
 	let instructions = $state('');
 	let loading = $state(false);
 	let showPreview = $state(false);
+	let showHtmlEditor = $state(false);
 	let saving = $state(false);
 	let timeout: NodeJS.Timeout | null = null;
-	let ai_input: HTMLTextAreaElement | null = $state(null);
+	let ai_input: HTMLTextAreaElement | null =
+		$state(null);
 
 	const saveWithDelay = (body: string) => {
 		saving = true;
@@ -22,10 +29,10 @@
 			try {
 				const res = await axios.put(
 					`/resume/${resume.i}`,
-					{ txt: body }
+					{ h: body }
 				);
 				if (res.status === 200) {
-					toast.success('Resume auto-saved');
+					toast.success('HTML auto-saved');
 				}
 			} catch (e) {
 				console.error('Auto-save failed', e);
@@ -36,8 +43,8 @@
 	};
 
 	$effect(() => {
-		if (resume.txt) {
-			saveWithDelay(resume.txt);
+		if (resume.h) {
+			saveWithDelay(resume.h);
 		}
 	});
 
@@ -64,7 +71,10 @@
 			);
 			if (res.statusText === 'OK') {
 				toast.success('Resume updated with AI');
-				resume = res.data.resume;
+				resume = {
+					...res.data.resume,
+					h: res.data.resume.h || ''
+				};
 				instructions = '';
 			} else {
 				toast.error(
@@ -86,22 +96,17 @@
 		<h1 class="text-2xl font-bold">Edit Resume</h1>
 		<div class="flex items-center gap-2">
 			{#if saving}
-				<span class="text-sm text-gray-500">Saving...</span>
+				<span class="text-sm text-gray-500"
+					>Saving...</span
+				>
 			{/if}
-			<a href={`/resume/${resume.i}`} class="btn-outline">View Resume</a>
+			<a
+				href={`/resume/${resume.i}`}
+				class="btn-outline">View Resume</a
+			>
 		</div>
 	</div>
 	<div class="space-y-6">
-		<div class="space-y-2">
-			<DescriptionInput
-				bind:value={resume.txt}
-				endpoint="/resume/edit"
-				placeholder="Update your resume content..."
-				rows={10}
-				label="Resume Content"
-				editable={true}
-			/>
-		</div>
 		<div class="space-y-2">
 			<DescriptionInput
 				bind:value={instructions}
@@ -124,8 +129,8 @@
 		<div class="space-y-2">
 			<Button
 				text={showPreview
-					? 'Hide Resume Content'
-					: 'Show Resume Content'}
+					? 'Hide Preview'
+					: 'Show Preview'}
 				onclick={() => (showPreview = !showPreview)}
 			/>
 			{#if showPreview && resume.h}
@@ -137,6 +142,27 @@
 						srcdoc={resume.h}
 						class="h-96 w-full rounded border border-gray-300"
 					></iframe>
+				</div>
+			{/if}
+		</div>
+		<div class="space-y-2">
+			<Button
+				text={showHtmlEditor
+					? 'Hide HTML'
+					: 'Show HTML'}
+				onclick={() =>
+					(showHtmlEditor = !showHtmlEditor)}
+			/>
+			{#if showHtmlEditor}
+				<div class="mt-4">
+					<DescriptionInput
+						bind:value={resume.h}
+						endpoint=""
+						placeholder="Edit resume HTML here..."
+						rows={20}
+						label="Resume HTML"
+						editable={true}
+					/>
 				</div>
 			{/if}
 		</div>

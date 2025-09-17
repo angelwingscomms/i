@@ -4,13 +4,20 @@ import type { PageServerLoad } from './$types';
 import type { Resume } from '$lib/types';
 
 export const load: PageServerLoad = async ({
-	params
+	params,
+	locals
 }) => {
-	const r = await get<
-		Pick<Resume, 'u' | 'h' | 'd' | 'l'>
-	>(params.i, ['u', 'h', 'd', 'l']);
-	if (!r) {
+	const resume = await get<
+		Pick<Resume, 'u' | 'h' | 'd' | 'l' | 's'>
+	>(params.i, ['u', 'h', 'd', 'l', 's', 't']);
+	if (!resume) {
 		throw error(404, 'Resume not found');
 	}
-	return { r: { ...r, i: params.i } };
+	if (resume.s !== 'e') {
+		throw error(404, 'This entity is not a resume');
+	}
+	return {
+		r: { ...resume, i: params.i },
+		user: locals.user
+	};
 };

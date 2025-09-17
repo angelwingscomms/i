@@ -8,7 +8,11 @@ import {
 } from '$lib/db';
 import type { Resume } from '$lib/types';
 
-export const POST = async ({ request, locals, params }) => {
+export const POST = async ({
+	request,
+	locals,
+	params
+}) => {
 	if (!locals.user) {
 		throw error(401, 'Unauthorized');
 	}

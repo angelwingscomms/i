@@ -53,6 +53,18 @@
 			</a>
 			{#if user}
 				<a
+					href="/i"
+					class="sidebar-nav-link"
+					style="color: var(--color-theme-5);"
+					onclick={close_sidebar}
+				>
+					<i
+						class="fa-solid fa-bag-shopping"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
+					items
+				</a>
+				<a
 					href="/r"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-3);"
@@ -172,6 +184,18 @@
 						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
 					></i>
 					youtube summarizer
+				</a>
+				<a
+					href="/i"
+					class="sidebar-nav-link"
+					style="color: var(--color-theme-5);"
+					onclick={close_sidebar}
+				>
+					<i
+						class="fa-solid fa-bag-shopping"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
+					items
 				</a>
 				<a
 					href="/login"

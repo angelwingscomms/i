@@ -11,12 +11,12 @@ export const load: PageServerLoad = async ({
 		throw redirect(303, '/google');
 	}
 	const r = await get<
-		Pick<Resume, 'u' | 'h' | 'd' | 'l' | 's' | 'txt'>
-	>(params.i, ['u', 'h', 'd', 'l', 's', 'txt']);
+		Pick<Resume, 'u' | 'h' | 'd' | 'l' | 's'>
+	>(params.i, ['u', 'h', 'd', 'l', 's']);
 	if (!r) {
 		throw error(404, 'Resume not found');
 	}
-	if (r.s !== 'r') {
+	if (r.s !== 'e') {
 		throw error(404, 'This entity is not a resume');
 	}
 	if (r.u !== locals.user.i) {
