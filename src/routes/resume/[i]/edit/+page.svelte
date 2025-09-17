@@ -1,16 +1,17 @@
 <script lang="ts">
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Modal from '$lib/components/Modal.svelte';
 	import { toast } from '$lib/util/toast';
 	import axios from 'axios';
 
 	let { data } = $props();
-	console.log('data', data)
+	console.log('data', data);
 	let resume = $state({
 		...data.r,
 		h: data.r.h || ''
 	});
-	console.log('resume.i', resume.i)
+	console.log('resume.i', resume.i);
 	let instructions = $state('');
 	let loading = $state(false);
 	let showPreview = $state(false);
@@ -133,17 +134,12 @@
 					: 'Show Preview'}
 				onclick={() => (showPreview = !showPreview)}
 			/>
-			{#if showPreview && resume.h}
-				<div class="mt-4 rounded-lg bg-gray-100 p-4">
-					<h2 class="mb-2 text-xl font-semibold">
-						Preview
-					</h2>
-					<iframe
-						srcdoc={resume.h}
-						class="h-96 w-full rounded border border-gray-300"
-					></iframe>
-				</div>
-			{/if}
+			<Modal bind:open={showPreview} title="Preview">
+				<iframe
+					srcdoc={resume.h}
+					class="h-96 w-full rounded border border-gray-300"
+				></iframe>
+			</Modal>
 		</div>
 		<div class="space-y-2">
 			<Button
@@ -153,18 +149,19 @@
 				onclick={() =>
 					(showHtmlEditor = !showHtmlEditor)}
 			/>
-			{#if showHtmlEditor}
-				<div class="mt-4">
-					<DescriptionInput
-						bind:value={resume.h}
-						endpoint=""
-						placeholder="Edit resume HTML here..."
-						rows={20}
-						label="Resume HTML"
-						editable={true}
-					/>
-				</div>
-			{/if}
+			<Modal
+				bind:open={showHtmlEditor}
+				title="Edit HTML"
+			>
+				<DescriptionInput
+					bind:value={resume.h}
+					endpoint=""
+					placeholder="Edit resume HTML here..."
+					rows={20}
+					label="Resume HTML"
+					editable={true}
+				/>
+			</Modal>
 		</div>
 	</div>
 </div>

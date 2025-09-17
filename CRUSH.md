@@ -1,6 +1,6 @@
 # CRUSH.md
 
-- ALWAYS run `npm run format` before editing files
+- ALWAYS run `npm run format` before viewing and editing files
 - except `npm run format`, never run any npm commands unless asked to
 
 ## Code Style
