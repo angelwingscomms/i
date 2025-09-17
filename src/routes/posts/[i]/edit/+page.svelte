@@ -3,9 +3,10 @@
 	import Button from '$lib/components/Button.svelte';
 	import { toast } from '$lib/util/toast';
 	import axios from 'axios';
+	import { marked } from 'marked';
 
 	let { data } = $props();
-	let resume = $state(data.r);
+	let post = $state(data.p);
 	let instructions = $state('');
 	let loading = $state(false);
 	let showPreview = $state(false);
@@ -18,16 +19,16 @@
 		loading = true;
 		try {
 			const res = await axios.post(
-				`gemini`,
+				`/posts/${post.i}/edit/gemini`,
 				instructions
 			);
 			if (res.statusText === 'OK') {
-				toast.success('Resume updated with AI');
-				resume = res.data.resume;
+				toast.success('Post updated with AI');
+				post.b = res.data;
 				instructions = '';
 			} else {
 				toast.error(
-					res.data || 'Failed to update resume'
+					res.data || 'Failed to update post'
 				);
 			}
 		} catch (e) {
@@ -39,15 +40,15 @@
 </script>
 
 <div class="mx-auto max-w-2xl p-4">
-	<h1 class="mb-4 text-2xl font-bold">Edit Resume</h1>
+	<h1 class="mb-4 text-2xl font-bold">Edit Post</h1>
 	<div class="space-y-6">
 		<div class="space-y-2">
 			<DescriptionInput
-				value={resume.txt || ''}
-				endpoint="/resume/edit"
-				placeholder="Update your resume content..."
+				value={post.b || ''}
+				endpoint="/posts/edit"
+				placeholder="Update your post content..."
 				rows={10}
-				label="Resume Content"
+				label="Post Content"
 				editable={true}
 			/>
 		</div>
@@ -55,7 +56,7 @@
 			<DescriptionInput
 				bind:value={instructions}
 				endpoint=""
-				placeholder="e.g., Add a skills section, make it more modern, change layout..."
+				placeholder="e.g., Add more details, make it shorter, improve language..."
 				rows={4}
 				label="AI Edit Instructions"
 				editable={true}
@@ -72,19 +73,16 @@
 		<div class="space-y-2">
 			<Button
 				text={showPreview
-					? 'Hide Resume Content'
-					: 'Show Resume Content'}
+					? 'hide preview'
+					: 'show preview'}
 				onclick={() => (showPreview = !showPreview)}
 			/>
-			{#if showPreview && resume.h}
-				<div class="mt-4 rounded-lg bg-gray-100 p-4">
+			{#if showPreview}
+				<div class="mt-4 rounded-lg p-4">
 					<h2 class="mb-2 text-xl font-semibold">
 						Preview
 					</h2>
-					<iframe
-						srcdoc={resume.h}
-						class="h-96 w-full rounded border border-gray-300"
-					></iframe>
+					{@html marked.parse(post.b)}
 				</div>
 			{/if}
 		</div>

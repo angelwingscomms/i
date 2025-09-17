@@ -9,9 +9,7 @@
 	let { data } = $props();
 	// state
 	let q = $state('');
-	let posts: Pick<Post, 't' | 'l'>[] = $state(
-		data.p || []
-	);
+	let posts = $state(data.p || []);
 	let creating = $state(false);
 
 	let loading = $state(false);
@@ -23,7 +21,7 @@
 		searched = true;
 		try {
 			({ data: posts } = await axios.post(
-				'/p/search',
+				'/posts/search',
 				{ q }
 			));
 		} catch (e) {
@@ -36,7 +34,7 @@
 	async function create() {
 		creating = true; // Set creating to true
 		try {
-			const res = await axios.post('/p');
+			const res = await axios.post('/posts');
 			console.log('create res', res);
 			if (res.status === 401) {
 				toast.error(
@@ -46,8 +44,7 @@
 			}
 			if (res.statusText !== 'OK')
 				throw new Error('create failed');
-			const id = await res.data;
-			goto(`/p/${id}/edit`);
+			goto(`/posts/${res.data}/edit`);
 		} catch (e) {
 			toast.error('Failed to create post');
 		} finally {
@@ -107,13 +104,14 @@
 		<ul class="list" in:fade={{ duration: 120 }}>
 			{#each posts as p (p.i)}
 				<li class="item">
-					<a class="link" href={`/p/${p.i}`}>
+					<a class="link" href={`/posts/${p.i}`}>
 						<div class="row space-between v-center">
 							<div>
 								<div class="result-title">{p.t}</div>
 								<!-- <div class="result-meta muted">{r.m ?? 0} members</div> -->
 							</div>
-							{#if p.score !== undefined}
+							<!-- TODO score -->
+							<!-- {#if p.score !== undefined}
 								<div class="badge">
 									{Math.round(
 										Math.max(
@@ -122,7 +120,7 @@
 										) * 100
 									)}%
 								</div>
-							{/if}
+							{/if} -->
 						</div>
 					</a>
 				</li>

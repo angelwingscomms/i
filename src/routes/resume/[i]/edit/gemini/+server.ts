@@ -12,7 +12,7 @@ export const POST = async ({ request, locals }) => {
 	if (!locals.user) {
 		throw error(401, 'Unauthorized');
 	}
-	const { i, instructions } = await request.json();
+	const instructions = await request.text();
 	if (!i || !instructions?.trim()) {
 		throw error(400, 'Resume ID and edit instructions required');
 	}

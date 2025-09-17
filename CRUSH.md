@@ -19,3 +19,4 @@
 - when styling, always look at src/styles/_variables.css. ALWAYS use Tailwind ONLY. DON'T USE STYLEBLOCKS OR INLINE STYLES.
 - never run any npm commands unless asked to
 - always send data to server as JSON w/ single character fields
+- always use all lowercase for copy

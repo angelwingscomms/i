@@ -51,7 +51,7 @@
 					onclick={close_sidebar}>search chatrooms</a
 				>
 				<a
-					href="/p"
+					href="/posts"
 					class="sidebar-nav-link"
 					onclick={close_sidebar}>search posts</a
 				>

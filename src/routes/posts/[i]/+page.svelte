@@ -14,7 +14,7 @@
 <div class="mx-auto max-w-4xl p-4 md:p-8">
 	<div class="mb-6">
 		<a
-			href="/p"
+			href="/posts"
 			class="inline-flex items-center font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
 			>&larr; Back to posts</a
 		>
@@ -34,7 +34,7 @@
 		>
 			{post.t}
 		</h1>
-		<div class="prose prose-lg mb-8 max-w-none px-6">
+		<div class="prose prose-invert prose-lg mb-8 max-w-none px-6">
 			{@html post.b}
 		</div>
 		<div
@@ -51,7 +51,7 @@
 						? 'Edit'
 						: 'View author'}
 					href={data.user?.i === post.u
-						? `/p/${post.i}/edit`
+						? `/posts/${post.i}/edit`
 						: `/u/${post.u}`}
 					class="font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
 				/>

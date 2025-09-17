@@ -84,6 +84,24 @@
 			<div
 				class="feature-icon bg-[var(--color-theme-1)]"
 			>
+				<i class="fa fa-sticky-note"></i>
+			</div>
+			<h3 class="feature-title">
+				Share Posts to Connect with Your Community
+			</h3>
+			<p class="feature-description">
+				Create and share posts with text, images, and updates to engage with people who share your interests. Discover community discussions, view comments in realtime, follow updates, and build connections through shared content.
+			</p>
+			<a href="/posts" class="feature-link"
+				>Explore Posts <i class="fa fa-arrow-right"
+				></i></a
+			>
+		</div>
+
+		<div class="feature-card">
+			<div
+				class="feature-icon bg-[var(--color-theme-2)]"
+			>
 				<i class="fa fa-users"></i>
 			</div>
 			<h3 class="feature-title">
@@ -106,7 +124,7 @@
 
 		<div class="feature-card">
 			<div
-				class="feature-icon bg-[var(--color-theme-2)]"
+				class="feature-icon bg-[var(--color-theme-3)]"
 			>
 				<i class="fa fa-video-camera"></i>
 			</div>

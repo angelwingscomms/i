@@ -54,15 +54,14 @@ export async function edit_point<
 >(i: string, data: T): Promise<T & { i: string }> {
 	const vector = new Array(3072).fill(0);
 
-	await qdrant.upsert(collection, {
-		points: [
-			{
-				id: i,
-				payload: { ...data },
-				vector
-			}
-		],
+	await qdrant.setPayload(collection, {
+		points: [i],
+		payload: data,
 		wait: true
+	});
+
+	await qdrant.updateVectors(collection, {
+		points: [{ id: i, vector }]
 	});
 
 	return { ...data, i };
