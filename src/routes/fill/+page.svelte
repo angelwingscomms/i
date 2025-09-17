@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
   import * as ort from 'onnxruntime-web';
@@ -126,4 +126,4 @@
       />
     {/if}
   </div>
-</div>
+</div> -->
