@@ -80,18 +80,6 @@
 <!-- Features Section -->
 <section class="features-grid py-16">
 	<div class="mx-auto max-w-6xl px-4">
-		<h2 class="mb-12 text-center text-3xl font-bold">
-			Why Connect with People Just Like You on
-			Apexlinks?
-		</h2>
-		<p
-			class="mb-8 text-center text-xl text-[var(--text-secondary)]"
-		>
-			Find people and chatrooms that share your
-			interests, values, and beliefs. Discover
-			anonymous ways to connect and build meaningful
-			relationships.
-		</p>
 		<div class="feature-card">
 			<div
 				class="feature-icon bg-[var(--color-theme-1)]"
