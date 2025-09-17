@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({
 	}
 	const p = await get<
 		Pick<Post, 'u' | 'b' | 'd' | 'l' | 's'>
-	>(params.i, ['u', 'b', 't']);
+	>(params.i, ['u', 'b', 't', 's']);
 	if (!p) {
 		throw error(404, 'Post not found');
 	}

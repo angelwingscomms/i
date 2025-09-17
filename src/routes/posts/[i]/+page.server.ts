@@ -15,7 +15,10 @@ export const load = async ({ params, locals }) => {
 		'd',
 		's'
 	]);
-	if (!post || post.s !== 'p')
+	if (!post)
 		throw error(404, 'Post not found');
+	if (p.s !== 'p') {
+		throw error(404, 'This entity is not a post');
+	}
 	return { p: {...post, i: params.i} };
 };
