@@ -3,7 +3,8 @@ import { GEMINI } from '$env/static/private';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import {
 	search_by_payload,
-	edit_point
+	edit_point,
+	get
 } from '$lib/db';
 import type { Resume } from '$lib/types';
 
@@ -11,19 +12,17 @@ export const POST = async ({ request, locals }) => {
 	if (!locals.user) {
 		throw error(401, 'Unauthorized');
 	}
-	const { instructions } = await request.json();
-	if (!instructions?.trim()) {
-		throw error(400, 'Edit instructions required');
+	const { i, instructions } = await request.json();
+	if (!i || !instructions?.trim()) {
+		throw error(400, 'Resume ID and edit instructions required');
 	}
-	const resumes = await search_by_payload<Resume>({
-		s: 'e',
-		t: 'resume',
-		u: locals.user.i
-	});
-	if (resumes.length === 0) {
+	const resume = await get<Resume>(i, ['u', 'h', 'txt']);
+	if (!resume) {
 		throw error(404, 'Resume not found');
 	}
-	const resume = resumes[0];
+	if (resume.u !== locals.user.i) {
+		throw error(403, "You don't own this resume");
+	}
 	const genAI = new GoogleGenerativeAI(GEMINI);
 	const model = genAI.getGenerativeModel({
 		model: 'gemini-1.5-flash'
@@ -32,8 +31,7 @@ export const POST = async ({ request, locals }) => {
 	const result = await model.generateContent(prompt);
 	const response = await result.response;
 	const new_h = response.text().trim();
-	const id = resume.i;
-	const updated = await edit_point(id, {
+	const updated = await edit_point(i, {
 		h: new_h,
 		l: Date.now()
 	});

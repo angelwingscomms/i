@@ -8,6 +8,15 @@ export const POST = async ({ request, locals }) => {
 	if (!locals.user) {
 		throw error(401, 'Unauthorized');
 	}
+	let id
+	try {
+		const d = Date.now()
+		id = await create({s: 'e', u: locals.user.i, d, l: d });
+	} catch (err) {
+		console.error('Failed to create resume', err);
+		throw error(500, 'Failed to create resume');
+	}
+	return text(id, { status: 201 });
 	const txt = await request.text();
 	if (!txt?.trim()) {
 		throw error(400, 'Resume text required');

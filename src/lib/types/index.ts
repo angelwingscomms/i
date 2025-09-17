@@ -139,11 +139,5 @@ export interface Recording {
 	// Add fields like start_time, duration if needed for display
 }
 
-export interface Resume {
-	s: 'e'; // tenant id
-	u?: string; // user id
-	h?: string; // html
-	d?: number; // created
-	l?: number; // last updated
-	i?: string; // id
-}
+export type { Resume } from './resume';
+

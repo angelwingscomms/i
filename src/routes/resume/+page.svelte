@@ -1,35 +1,45 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
+	import { toast } from '$lib/util/toast.js';
 	import axios from 'axios';
 
 	let { data } = $props();
 	let resumes = $state(data.e || []);
+	let creating = $state(false);
 
 	function formatDate(timestamp: number): string {
 		return new Date(timestamp).toLocaleDateString();
 	}
 </script>
 
-<div class="mx-auto max-w-2xl p-4">
-	<h1 class="mb-4 text-2xl font-bold">My Resumes</h1>
+<div class="mx-auto max-w-2xl p-4 flex flex-col gap-y-5">
+	<h1 class="text-2xl font-bold">My Resumes</h1>
 	<Button
 		text="Create Resume"
+		loading={creating}
 		onclick={async () => {
-			const { data } =
-				await axios.post('/api/resume');
-			goto(`/resume/${data.i}/edit`);
+			creating = true;
+			try {
+				const { data } =
+					await axios.post('/resume');
+				goto(`/resume/${data}/edit`);
+			} catch (e) {
+				toast.error('Failed to create resume');
+			} finally {
+				creating = false
+			}
 		}}
 	/>
 	{#if resumes.length > 0}
 		<ul class="space-y-4">
 			{#each resumes as r (r.i)}
 				<li
-					class="rounded-lg border border-gray-200 p-4"
+					class="rounded-lg border border-pink-200 p-4 hover:border-pink-400"
 				>
 					<a
 						href={`/resume/${r.i}`}
-						class="block rounded p-2 hover:bg-gray-50"
+						class="block"
 					>
 						<div class="font-semibold">
 							{formatDate(r.d || 0)}
@@ -51,12 +61,3 @@
 		<p class="mb-4 text-gray-500">No resumes yet.</p>
 	{/if}
 </div>
-
-<style>
-	.line-clamp-3 {
-		display: -webkit-box;
-		-webkit-line-clamp: 3;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-	}
-</style>
