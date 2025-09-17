@@ -21,31 +21,28 @@
 	let ai_input: HTMLTextAreaElement | null =
 		$state(null);
 
-	const saveWithDelay = (body: string) => {
-		saving = true;
-		if (timeout) {
-			clearTimeout(timeout);
-		}
-		timeout = setTimeout(async () => {
-			try {
-				const res = await axios.put(
-					`/resume/${resume.i}`,
-					{ h: body }
-				);
-				if (res.status === 200) {
-					toast.success('HTML auto-saved');
-				}
-			} catch (e) {
-				console.error('Auto-save failed', e);
-			}
-			saving = false;
-			timeout = null;
-		}, 1440);
-	};
-
 	$effect(() => {
 		if (resume.h) {
-			saveWithDelay(resume.h);
+			if (timeout) {
+				clearTimeout(timeout);
+			}
+			timeout = setTimeout(async () => {
+				saving = true;
+				try {
+					const res = await axios.put(
+						`/resume/${resume.i}`,
+						resume.h
+					);
+					if (res.statusText !== 'OK') {
+						toast.error('save error occured');
+					}
+				} catch (e) {
+					toast.error('save error occured');
+					console.error('Auto-save failed', e);
+				}
+				saving = false;
+				timeout = null;
+			}, 1440);
 		}
 	});
 

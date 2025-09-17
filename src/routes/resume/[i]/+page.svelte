@@ -4,10 +4,11 @@
 	let { data } = $props();
 	let r: Resume = data.r;
 	let user = data.user;
+	let owner = data.owner;
 </script>
 
 <svelte:head>
-	<title>{r.t || 'Resume'}</title>
+	<title>{owner.t || 'Resume'}</title>
 </svelte:head>
 
 <div class="mx-auto max-w-4xl p-4 md:p-8">
@@ -24,10 +25,15 @@
 			<h1
 				class="text-3xl font-bold text-[var(--accent-primary)]"
 			>
-				{r.t || 'Resume'}
+				{owner.t}<span
+					class="text-[var(--text-accent)]"
+					>'s resume</span
+				>
 			</h1>
 			<p class="text-sm text-[var(--text-secondary)]">
-				Created {new Date(r.d).toLocaleDateString()}
+				Last updated {new Date(
+					r.l || r.d
+				).toLocaleDateString()}
 			</p>
 		</div>
 		<Button
@@ -40,12 +46,14 @@
 		/>
 	</div>
 
-	<div class="overflow-hidden rounded-lg">
+	<div
+		class="mx-auto max-w-[21cm] overflow-hidden rounded-lg"
+	>
 		{#if r.h}
 			<div class="bg-secondary rounded-lg p-4">
 				<iframe
 					srcdoc={r.h}
-					class="border-border h-[600px] w-full rounded border"
+					class="mx-auto h-[29.7cm] w-[21cm] rounded border-0"
 				></iframe>
 			</div>
 		{/if}
