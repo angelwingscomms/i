@@ -133,7 +133,7 @@
 			<Button
 				text={uploading ? 'Saving...' : 'Save Post'}
 				disabled={uploading}
-				onClick={save}
+				onclick={save}
 			/>
 		</form>
 	</div>

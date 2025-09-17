@@ -9,6 +9,7 @@
 - Data Loading: Fetch all in +page.server.ts load; return single-letter keys (e.g., { r: room })
 - DB/Qdrant: Single collection 'i'; filter by 's' (type); use scroll/search_by_payload; embeddings via src/lib/util/embed.ts
 - Auth: locals.user { i, t }; httpOnly cookies; 403 errors for unauthorized (e.g., if (r.u !== locals.user.i) throw error(403))
+- in page.svelte, get page data and current user from page.data.user. expect page.data.user to already have the current user and use to check authorization
 - Errors: error(status, message) from @sveltejs/kit or json(..., { status })
 - Toasts: src/lib/util/toast.ts
 - Security: Validate inputs client/server; no secrets in code; use qdrant.setpayload for edits

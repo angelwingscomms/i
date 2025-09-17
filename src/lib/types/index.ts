@@ -130,7 +130,7 @@ export interface Post {
 	y?: string; // summary
 	p?: string; // image url
 	u?: string; // user id
-	d?: number; // created timestamp
+	d: number; // created timestamp
 	l?: number; // last updated
 }
 
