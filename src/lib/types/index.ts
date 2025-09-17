@@ -123,7 +123,7 @@ export interface Preset {
 }
 
 export interface Post {
-	s: 'r'; // tenant for posts
+	s: 'p'; // tenant for posts
 	i?: string; // post id
 	t?: string; // title
 	b?: string; // body (markdown)

@@ -16,5 +16,5 @@ export const load = async ({
 		error(404, 'Post not found');
 	if (post.u !== locals.user?.i)
 		error(403, 'Not authorized');
-	return { p: post };
+	return { p: { ...post, i } };
 };

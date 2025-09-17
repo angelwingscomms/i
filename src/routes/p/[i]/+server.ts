@@ -1,4 +1,4 @@
-import { json, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type { LocalsUser, Post } from '$lib/types';
 import { update_post } from '$lib/db/post';
 import { upload_image } from '$lib/integrations/r2_storage';
@@ -16,15 +16,13 @@ export const PUT = async ({
 	platform: Platform;
 }) => {
 	if (!locals.user) return error(401, 'Unauthorized');
-	const { i } = params;
 	const formData = await request.formData();
-	const m =
-		(formData.get('m') as string) || undefined;
+	const t =
+		(formData.get('t') as string) || undefined;
 	const b =
 		(formData.get('b') as string) || undefined;
 	const file = formData.get('file') as File | null;
-	const remove_image =
-		formData.get('remove_image') === 'true';
+	const r = formData.get('r') === 'true';
 	let p: string | undefined = undefined;
 	if (file && file.size > 0) {
 		const uploaded = await upload_image(
@@ -33,11 +31,11 @@ export const PUT = async ({
 			platform
 		);
 		p = uploaded;
-	} else if (remove_image) {
+	} else if (r) {
 		p = undefined;
 	}
-	const update_data: Partial<Post> = { m, b };
+	const update_data: Partial<Post> = { t, b };
 	if (p !== undefined) update_data.p = p;
-	const updated = await update_post(i, update_data);
-	return json({ post: updated });
+	await update_post(params.i, update_data);
+	return new Response();
 };

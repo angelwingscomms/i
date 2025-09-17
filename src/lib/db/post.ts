@@ -14,25 +14,10 @@ export const create_post = async (
 	);
 };
 
-async function upsert_post(
-	id: string,
-	payload: Record<string, unknown>,
-	embed_text?: string
-) {
-	let vector = new Array(3072).fill(0);
-	if (embed_text) {
-		vector = await embed(embed_text);
-	}
-	await qdrant.upsert(collection, {
-		points: [{ id, payload, vector }],
-		wait: true
-	});
-}
-
 export const update_post = async (
 	id: string,
 	data: Partial<Post>
-): Promise<Post> => {
+): Promise<void> => {
 	const existing = await get<Post>(id);
 	if (!existing) {
 		throw new Error('Post not found');
@@ -42,10 +27,21 @@ export const update_post = async (
 		data.b && !base_data.y
 			? { ...base_data, y: await summarize(data.b) }
 			: base_data;
-	const embed_text =
-		update_data.m || update_data.y
-			? `${update_data.m || ''} ${update_data.y || ''}`.trim()
-			: '';
-	await upsert_post(id, update_data, embed_text);
-	return { ...update_data, i: id };
+	const embed_text = JSON.stringify({
+		body: update_data.b,
+		title: update_data.t,
+		summary: update_data.y
+	});
+	let vector = new Array(3072).fill(0);
+	if (embed_text) {
+		vector = await embed(embed_text);
+	}
+	await qdrant.setPayload(collection, {
+		points: [id],
+		payload: update_data,
+		wait: true
+	});
+	await qdrant.updateVectors(collection, {
+		points: [{ id, vector }]
+	});
 };

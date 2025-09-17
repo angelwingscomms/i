@@ -10,7 +10,7 @@
 	let b = $state(post.b || '');
 	let file = $state<File | null>(null);
 	let image_url = $state(post.p || '');
-	let remove_image = $state(false);
+	let r = $state(false);
 	let uploading = $state(false);
 
 	function handleFileChange(e: Event) {
@@ -22,19 +22,17 @@
 				image_url = e.target?.result as string;
 			};
 			reader.readAsDataURL(file);
-			remove_image = false;
+			r = false;
 		}
 	}
 
 	async function save() {
-		if (!user) return;
 		uploading = true;
 		const formData = new FormData();
 		formData.append('t', t);
 		formData.append('b', b);
 		if (file) formData.append('file', file);
-		if (remove_image)
-			formData.append('remove_image', 'true');
+		if (r) formData.append('r', 'true');
 
 		try {
 			const response = await fetch(`/p/${post.i}`, {
@@ -109,7 +107,7 @@
 						<button
 							type="button"
 							on:click={() => (
-								(remove_image = true),
+								(r = true),
 								(image_url = ''),
 								(file = null)
 							)}
