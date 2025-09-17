@@ -1,0 +1,88 @@
+/* Cards - Thin Outline Design System */
+@utility card {
+	@apply rounded-3xl transition-all duration-500;
+	background: transparent;
+	border: 1px solid var(--color-theme-6);
+}
+
+@utility card-hover {
+	@apply card hover:-translate-y-1;
+}
+
+.card-hover:hover {
+	border: 1px solid var(--color-theme-1);
+	background: transparent;
+}
+
+@utility card-compact {
+	@apply card p-4;
+}
+
+@utility card-normal {
+	@apply card p-6;
+}
+
+@utility card-large {
+	@apply card p-8;
+}
+
+/* Card variants with different color themes */
+@utility card-primary {
+	@apply card;
+	border: 1px solid var(--color-theme-1);
+	background: transparent;
+}
+
+@utility card-secondary {
+	@apply card;
+	border: 1px solid var(--color-theme-2);
+	background: transparent;
+}
+
+@utility card-accent {
+	@apply card;
+	border: 3px solid var(--color-theme-6);
+	background: transparent;
+}
+
+@utility card-error {
+	@apply card;
+	border: 3px solid var(--color-theme-5);
+	background: transparent;
+}
+
+/* Item-specific card styles */
+@utility item-card {
+	@apply card-hover;
+}
+
+.item-card:hover {
+	transform: translateY(-2px);
+	border: 1px solid var(--color-theme-1);
+	background: transparent;
+}
+
+/* Search form styles */
+@utility search-form {
+	@apply card-accent p-6;
+}
+
+@utility search-input {
+	@apply w-full rounded-xl border-2 px-4 py-3 transition-colors;
+	border-color: var(--color-theme-6);
+}
+
+.search-input:focus {
+	border-color: var(--color-theme-1);
+	outline: none;
+}
+
+@utility search-select {
+	@apply rounded-xl border-2 px-4 py-3 transition-colors;
+	border-color: var(--color-theme-6);
+}
+
+.search-select:focus {
+	border-color: var(--color-theme-1);
+	outline: none;
+}

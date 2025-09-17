@@ -1,0 +1,139 @@
+/* Homepage Styles */
+
+.features-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+	gap: 2rem;
+	padding: 4rem 2rem;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.feature-card {
+	background: transparent;
+	border-radius: 1.5rem;
+	padding: 2.5rem;
+	position: relative;
+	overflow: hidden;
+	border: 1px solid var(--border-primary);
+}
+
+.feature-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+}
+
+.feature-icon {
+	width: 60px;
+	height: 60px;
+
+	border-radius: 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 1.5rem;
+	color: white;
+	font-size: 1.5rem;
+}
+
+.feature-title {
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin-bottom: 1rem;
+	color: var(--text-primary);
+}
+
+.feature-description {
+	color: var(--text-secondary);
+	line-height: 1.6;
+	margin-bottom: 1.5rem;
+}
+
+.feature-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--accent-lilac);
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.feature-link:hover {
+	color: var(--accent-lilac-dark);
+}
+
+.stats-section {
+	padding: 4rem 2rem;
+	text-align: center;
+}
+
+.stats-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 2rem;
+	max-width: 800px;
+	margin: 2rem auto 0;
+}
+
+.stat-item {
+	padding: 1.5rem;
+}
+
+.stat-number {
+	font-size: 3rem;
+	font-weight: 800;
+	color: var(--accent-lilac-dark);
+	display: block;
+	margin-bottom: 0.5rem;
+}
+
+.stat-label {
+	color: var(--text-secondary);
+	font-weight: 500;
+}
+
+.cta-section {
+	background: transparent;
+	padding: 6rem 2rem;
+	text-align: center;
+}
+
+.cta-title {
+	font-size: clamp(2rem, 5vw, 3.5rem);
+	font-weight: 700;
+	margin-bottom: 1.5rem;
+	color: var(--text-primary);
+}
+
+.cta-subtitle {
+	font-size: 1.25rem;
+	color: var(--text-secondary);
+	margin-bottom: 3rem;
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@media (max-width: 768px) {
+	.features-grid {
+		grid-template-columns: 1fr;
+		padding: 2rem 1rem;
+	}
+
+	.feature-card {
+		padding: 2rem;
+	}
+
+	.hero-cta {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.stats-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}

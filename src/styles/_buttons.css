@@ -1,0 +1,182 @@
+/* Buttons - Thin Outline Design System */
+@utility btn {
+	@apply inline-flex transform items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-medium transition-all duration-300 disabled:transform-none disabled:opacity-50 whitespace-nowrap;
+	border: 1px solid var(--color-theme-6);
+	background: transparent;
+	color: var(--color-theme-4);
+}
+
+.btn:hover:not(:disabled) {
+	border: 1px solid var(--color-theme-1);
+	background: transparent;
+	color: var(--color-theme-1);
+	transform: translateY(-1px);
+	transition: all 180ms ease;
+}
+
+@utility btn-primary {
+	@apply btn;
+	border: 1px solid var(--color-theme-1);
+	background: transparent;
+	color: var(--color-theme-1);
+}
+
+.btn-primary:hover:not(:disabled) {
+	background: transparent;
+	border: 1px solid var(--color-theme-1);
+	transform: translateY(-2px);
+}
+
+@utility btn-secondary {
+	@apply btn text-white;
+	background: transparent;
+	border: 1px solid var(--color-theme-2);
+}
+
+.btn-secondary:hover:not(:disabled) {
+	background: transparent;
+	border: 1px solid var(--color-theme-2);
+	transform: translateY(-2px);
+}
+
+@utility btn-accent {
+	@apply btn text-white;
+	background: transparent;
+	border: 1px solid var(--color-theme-6);
+}
+
+.btn-accent:hover:not(:disabled) {
+	background: transparent;
+	border: 1px solid var(--color-theme-6);
+	transform: translateY(-2px);
+}
+
+/* Brand-specific helpers */
+@utility btn-pink {
+	@apply btn text-white;
+	background: transparent;
+	border: 1px solid var(--color-theme-2);
+}
+
+.btn-pink:hover:not(:disabled) {
+	background: transparent;
+	border: 1px solid var(--color-theme-2);
+	transform: translateY(-2px);
+}
+
+@utility btn-ghost {
+	@apply btn;
+	background: transparent;
+	color: var(--color-theme-4);
+	border: 2px solid var(--color-theme-6);
+}
+
+.btn-ghost:hover:not(:disabled) {
+	background: transparent;
+	border: 2px solid var(--color-theme-6);
+	color: var(--color-theme-1);
+	transform: translateY(-1px);
+}
+
+/* Outline Button */
+@utility btn-outline {
+	@apply btn;
+	background: transparent;
+	color: var(--color-theme-6);
+	border: 1px solid var(--color-theme-6);
+}
+
+.btn-outline:hover:not(:disabled) {
+	background: transparent;
+	color: var(--color-theme-6);
+	transform: translateY(-2px);
+}
+
+/* Error Button */
+@utility btn-error {
+	@apply btn text-white;
+	background: transparent;
+	border: 1px solid var(--color-theme-5);
+}
+
+.btn-error:hover:not(:disabled) {
+	background: transparent;
+	color: var(--color-theme-5);
+	border: 1px solid var(--color-theme-5);
+	transform: translateY(-1px);
+}
+
+@utility btn-sm {
+	@apply px-4 py-2 text-sm;
+}
+
+@utility btn-lg {
+	@apply px-8 py-4 text-lg font-semibold;
+	min-height: 3.5rem;
+}
+
+@utility btn-xl {
+	@apply px-12 py-6 text-xl font-bold;
+	min-height: 4rem;
+	border-radius: 2rem;
+}
+
+/* Icon button for mobile menu */
+@utility btn-icon {
+	@apply inline-flex items-center justify-center rounded-full p-3 transition-all duration-300;
+	border: 1px solid var(--color-theme-6);
+	background: transparent;
+	color: var(--color-theme-4);
+}
+
+.btn-icon:hover {
+	border: 1px solid var(--color-theme-1);
+	background: transparent;
+	color: var(--color-theme-1);
+	transform: scale(1.05);
+}
+
+.btn-icon:active {
+	transform: scale(0.95);
+}
+
+@utility btn-search-icon {
+	@apply btn-icon;
+	width: 40px; /* Adjust as needed */
+	height: 40px; /* Adjust as needed */
+	padding: 0; /* Remove padding */
+}
+
+/* Hero CTA Button */
+@utility btn-hero-cta {
+	@apply relative overflow-hidden rounded-full font-bold transition-all;
+	padding: 1.5rem 3rem; /* px-12 py-6 */
+	font-size: 1.5rem; /* text-2xl */
+	background: transparent;
+	border: 2px solid var(--color-theme-1);
+	color: var(--color-theme-1);
+}
+
+@media (max-width: 640px) {
+	/* sm breakpoint */
+	.btn-hero-cta {
+		padding: 1rem 2rem; /* sm:px-8 sm:py-4 */
+		font-size: 1.125rem; /* sm:text-lg */
+	}
+}
+
+@utility btn-hero-cta-hover-overlay {
+	@apply absolute inset-0 bg-white opacity-0 transition-opacity;
+}
+
+@utility btn-hero-cta-content {
+	@apply relative flex items-center gap-3;
+}
+
+@utility btn-icon-only {
+	@apply px-6 py-6;
+}
+
+.btn-icon-only .btn-hero-cta-content {
+	@apply gap-0;
+}

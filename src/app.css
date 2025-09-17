@@ -1,0 +1,77 @@
+@import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
+@import 'tailwindcss';
+@import './styles/_variables.css';
+@import './styles/_base.css';
+@import './styles/_background.css';
+@import './styles/_buttons.css';
+@import './styles/_cards.css';
+@import './styles/_forms.css';
+@import './styles/_text.css';
+@import './styles/_layout.css';
+@import './styles/_navigation.css';
+@import './styles/_toggle_buttons.css';
+@import './styles/_choice_buttons.css';
+@import './styles/_result_cards.css';
+@import './styles/_message_states.css';
+@import './styles/_empty_states.css';
+@import './styles/_hero_section.css';
+@import './styles/_age_range_picker.css';
+@import './styles/_theme_toggle.css';
+@import './styles/_social_links.css';
+@import './styles/_location_controls.css';
+@import './styles/_icons.css';
+@import './styles/_chat.css';
+@import './styles/_dropdowns.css';
+@import './styles/_homepage.css';
+@import './styles/_utilities.css';
+@import './styles/_responsive.css';
+@import './styles/_fonts.css';
+@import './styles/_animated_background.css';
+
+/* Custom Scrollbar Styling */
+/* For Webkit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 8px; /* Thin scrollbar */
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Transparent track */
+  border-radius: 10px; /* Rounded edges for the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-theme-6); /* Pink color */
+  border-radius: 10px; /* Rounded edges for the thumb */
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: var(--color-theme-6) transparent; /* Pink thumb, transparent track */
+}
+
+/* For specific textareas */
+textarea::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: var(--color-theme-6);
+  border-radius: 10px;
+}
+
+/* For Firefox textareas */
+textarea {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-theme-6) transparent;
+}
+
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';

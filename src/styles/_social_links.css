@@ -1,0 +1,14 @@
+/* Social Links */
+@utility social-link-item {
+	@apply mb-3 flex items-center gap-2;
+}
+
+@utility remove-link-btn {
+	@apply btn-sm text-white;
+	background: transparent;
+}
+
+@utility add-link-btn {
+	@apply btn-sm mt-2 text-white;
+	background: transparent;
+}

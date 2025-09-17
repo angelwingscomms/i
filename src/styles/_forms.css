@@ -1,0 +1,149 @@
+/* Inputs - Outline-based Design System */
+@utility input {
+	@apply px-4 py-3 font-light transition-all duration-300 focus:outline-none;
+	background: transparent;
+	color: var(--text-primary);
+	border: 2px solid var(--color-theme-6);
+}
+
+/* Bottom-border-only input style: using new color palette */
+@utility input-underline {
+	@apply font-light transition-all duration-300 focus:outline-none;
+	background: transparent;
+	color: var(--text-primary);
+	border: none;
+	border-bottom: 2px solid var(--color-theme-6);
+	border-radius: 0;
+	padding: 8px 0;
+}
+
+.input-underline:focus {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+.input:focus {
+	border: 3px solid var(--color-theme-1);
+	border-color: var(--color-theme-1);
+}
+
+@utility input-rounded {
+	@apply input rounded-full;
+}
+
+@utility input-pill {
+	@apply input-rounded text-center;
+}
+
+@utility input-rect {
+	@apply input rounded-lg;
+}
+
+@utility input-rect-center {
+	@apply input-rect text-center;
+}
+
+/* Text Areas */
+@utility textarea {
+	@apply input min-h-[120px] rounded-lg;
+}
+
+.textarea:focus {
+	border-color: var(--border-focus);
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 20%, transparent);
+}
+
+/* Form Groups */
+@utility form-group {
+	@apply space-y-2;
+}
+
+@utility form-label {
+	@apply block text-sm font-medium;
+	color: var(--text-primary);
+}
+
+@utility form-help {
+	@apply text-xs;
+	color: var(--text-tertiary);
+}
+
+/* Description Input Specific */
+@utility description-container {
+	@apply relative w-full flex flex-col items-start gap-1;
+}
+
+@utility description-textarea {
+	@apply textarea w-full pb-16;
+}
+
+@utility description-controls {
+	@apply mt-2 flex items-center justify-between;
+}
+
+@utility char-count {
+	@apply text-xs;
+	color: var(--text-tertiary);
+}
+
+@utility char-count-over {
+	@apply char-count;
+	color: var(--text-error);
+}
+
+@utility voice-controls {
+	@apply flex gap-2 absolute bottom-6 left-2;
+}
+
+@utility voice-btn {
+	@apply btn-sm flex items-center gap-2 transition-all duration-300;
+	background: transparent;
+	color: var(--text-primary);
+	border: 2px solid var(--color-theme-6); /* Add this line */
+}
+
+.voice-btn:hover:not(:disabled) {
+	background: transparent;
+}
+
+@utility voice-btn-recording {
+	@apply voice-btn animate-pulse;
+	background: transparent;
+}
+
+@utility voice-btn-transcribing {
+	@apply voice-btn cursor-not-allowed;
+	background: transparent;
+}
+
+/* Phone Input Specific */
+@utility phone-input-container {
+	@apply relative;
+}
+
+@utility phone-input {
+	@apply input-rect w-full;
+}
+
+@utility blurry-search {
+	@apply input-rect;
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+.blurry-search:focus {
+	border-color: var(--color-theme-1);
+	box-shadow: 0 0 0 3px rgba(var(--color-theme-1-rgb), 0.1);
+}
+
+/* Custom Checkbox for Filter by Age */
+@utility checkbox-round-outer {
+	@apply w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer;
+    border-color: var(--color-theme-1); /* Use theme color for border */
+}
+
+@utility checkbox-round-inner-filled {
+	@apply w-3 h-3 rounded-full;
+    background-color: var(--color-theme-1); /* Use theme color for fill */
+}

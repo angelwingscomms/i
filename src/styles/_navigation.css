@@ -1,0 +1,22 @@
+/* Navigation */
+@utility nav {
+	@apply sticky top-0 z-50 backdrop-blur-lg transition-all duration-300;
+	background: transparent;
+	border-bottom: 1px solid var(--border-primary);
+}
+
+@utility nav-link {
+	@apply flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200;
+	color: var(--text-secondary);
+}
+
+.nav-link:hover {
+	color: var(--text-accent);
+	background: var(--bg-glass);
+}
+
+@utility nav-link-active {
+	@apply nav-link font-semibold;
+	color: var(--text-accent);
+	background: var(--bg-glass);
+}

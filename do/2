@@ -1,0 +1,6 @@
+/tools/youtube-video-summarize-tool
+
+searches youtube with input string and filters
+returns results with thumbnail, title, description, viewcount, date and link
+each result has summarize button, clicking it sends title+description+video_transcription_from_YT to GEMINI for summary
+Chat w/ gemini modal opens, the first message is the summary, and the user can chat with gemini about the video, the context is always the video title, description and trascription

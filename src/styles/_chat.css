@@ -1,0 +1,134 @@
+/* i/src/styles/_chat.css */
+
+/* Custom utility classes for the chat application */
+
+.chat-layout {
+	@apply mx-auto max-w-2xl p-5 font-sans;
+	scroll-behavior: smooth;
+}
+
+.chat-title {
+	@apply mb-4 text-2xl font-bold;
+}
+
+.messages-container {
+	@apply mb-3 h-96 overflow-y-auto rounded-md p-3;
+	background: transparent;
+	scroll-behavior: smooth;
+}
+/* thin scrollbar with fully rounded ends using exact indigo mix color */
+.messages-container::-webkit-scrollbar {
+	width: 6px;
+}
+.messages-container::-webkit-scrollbar-track {
+	background: transparent;
+}
+.messages-container::-webkit-scrollbar-thumb {
+	background: transparent;
+	border-radius: 9999px;
+	border: 2px solid transparent; /* create pill caps */
+	background-clip: padding-box; /* keep rounded ends clean */
+}
+.messages-container {
+	scrollbar-width: thin;
+	scrollbar-color: transparent transparent;
+}
+
+.message-item {
+	@apply mb-1.5;
+}
+
+.message-system {
+	@apply text-sm italic;
+	color: var(--text-accent);
+}
+
+.message-user {
+	@apply font-bold;
+	color: var(--text-accent);
+}
+
+.message-text {
+	color: var(--text-primary);
+}
+
+.input-area {
+	@apply flex gap-2;
+}
+
+.message-input {
+	@apply flex-grow rounded-none p-2 focus:outline-none;
+	background: transparent;
+	border: none;
+	border-bottom: 1px solid var(--border-secondary);
+	color: var(--text-primary);
+}
+
+.ghost-border {
+	border: 2px dashed var(--border-secondary);
+}
+
+.message-input:focus {
+	border-color: var(--border-focus);
+	box-shadow: none;
+}
+
+.send-button {
+	@apply rounded-full px-4 py-2 font-medium focus:outline-none;
+	background: transparent;
+	color: var(--text-primary);
+	transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+	background: transparent;
+}
+
+.send-button:focus {
+	box-shadow: none;
+}
+
+/* Chat bubble utilities */
+.chat_item {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem; /* tighter spacing between username and bubble */
+	margin-bottom: 0.6rem; /* space between messages */
+}
+.chat_meta {
+	display: flex;
+	align-items: center;
+}
+.chat_username {
+	font-size: 0.625rem;
+	opacity: 0.7;
+	letter-spacing: 0.02em;
+}
+.chat_username--anon {
+	display: none; /* hide 'Anonymous' entirely */
+}
+.chat_bubble {
+	border-radius: 9999px;
+	padding: 0.5rem 0.75rem;
+	color: var(--text-primary);
+	background: transparent; /* default: gentle purple haze */
+	/* border removed for cleaner bubble */
+}
+.chat_bubble--self {
+	background: transparent; /* self: dreamy blue */
+	/* border removed for cleaner bubble */
+}
+.chat_bubble--anon {
+	opacity: 0.97;
+	background: transparent; /* anon: soft emerald mist */
+	/* border removed for cleaner bubble */
+}
+/* pending now uses a solid dreamy color; no animation */
+.chat_bubble--pending {
+	color: var(--text-primary);
+	background: transparent; /* pending: indigo glow */
+	/* border removed for cleaner bubble */
+	opacity: 0.9;
+}
+
+/* solid dreamy colors only; no pulsing animations */

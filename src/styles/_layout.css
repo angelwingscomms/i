@@ -1,0 +1,32 @@
+/* Layout */
+@utility container-main {
+	@apply mx-auto w-full max-w-6xl px-4;
+}
+
+@utility container-narrow {
+	@apply mx-auto w-full max-w-2xl px-4;
+}
+
+@utility section-spacing {
+	@apply space-y-6;
+}
+
+@utility section-spacing-sm {
+	@apply space-y-3;
+}
+
+@utility section-spacing-lg {
+	@apply space-y-8;
+}
+
+@utility chat-header-layout {
+	@apply flex justify-between items-center flex-nowrap;
+}
+
+@utility chat-title-group {
+	@apply flex items-center gap-2;
+}
+
+@utility flex-shrink-min {
+	@apply flex-shrink min-w-0;
+}

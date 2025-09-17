@@ -1,0 +1,11 @@
+room modal
+
+rename to ReplyDetails
+shows full name of parent message/room
+full name
+
+
+Room modal: same props as chat, except messages.
+If `r`: reply room.
+Else: top-level room → has `z` (room id), `k` (room name, not yet implemented → implement).
+Room modal gets details of target message/room.

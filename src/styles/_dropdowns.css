@@ -1,0 +1,82 @@
+/* Dropdowns (Design System Utilities) */
+
+@utility dropdown-container {
+	@apply inline-block; /* so the panel can size to trigger */
+	position: relative;
+}
+
+@utility dropdown-trigger {
+	@apply input-rounded; /* reuse input style */
+	/* layout */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	cursor: pointer;
+}
+
+/* caret icon container (optional) */
+@utility dropdown-caret {
+	@apply opacity-60; /* subtle */
+	transition: transform 0.2s ease;
+}
+
+@utility dropdown-caret-open {
+	transform: rotate(180deg);
+}
+
+@utility dropdown-panel {
+	/* position */
+	position: absolute;
+	top: 100%;
+	left: 0;
+	margin-top: 4px;
+	min-width: 100%;
+	z-index: 60; /* above cards/nav content */
+	/* look */
+	background: transparent;
+	border: 2px solid var(--border-secondary);
+	border-radius: 12px;
+	backdrop-filter: blur(12px);
+	/* scroll */
+	max-height: 320px;
+	overflow-y: auto;
+}
+
+@utility dropdown-item {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	text-align: left;
+	padding: 10px 12px;
+	border: none;
+	background: transparent;
+	color: var(--text-primary);
+	font-size: 14px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.dropdown-item:hover {
+	background: transparent;
+}
+
+.dropdown-item[aria-selected='true'] {
+	background: transparent;
+	color: var(--text-primary);
+	font-weight: 600;
+}
+
+/* allow small size variations via composition if needed */
+@utility dropdown-sm {
+	min-width: 180px;
+}
+@utility dropdown-md {
+	min-width: 220px;
+}
+@utility dropdown-lg {
+	min-width: 280px;
+}

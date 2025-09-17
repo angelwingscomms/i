@@ -1,0 +1,21 @@
+/* Background Elements - Removed */
+@utility bg-orb {
+	@apply pointer-events-none absolute overflow-hidden;
+	display: none;
+}
+
+.bg-orb::before {
+	display: none;
+}
+
+.bg-orb-1::before {
+	display: none;
+}
+
+.bg-orb-2::before {
+	display: none;
+}
+
+.bg-orb-3::before {
+	display: none;
+}

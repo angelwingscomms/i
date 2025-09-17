@@ -1,0 +1,52 @@
+/* Toggle Buttons */
+@utility toggle-group {
+	@apply rounded-full p-1 backdrop-blur-lg;
+	background: transparent;
+	border: 1px solid var(--border-glass);
+}
+
+@utility toggle-btn {
+	@apply flex transform cursor-pointer items-center gap-2 rounded-full px-6 py-3 font-medium transition-all duration-500;
+}
+
+@utility toggle-btn-active {
+	@apply toggle-btn scale-105 text-white;
+}
+
+@utility toggle-btn-inactive {
+	@apply toggle-btn;
+	color: var(--text-secondary);
+}
+
+.toggle-btn-inactive:hover {
+	color: var(--text-accent);
+	background: var(--bg-glass);
+}
+
+/* Toggle Switch UI */
+@utility toggle-switch-container {
+	@apply relative inline-flex items-center cursor-pointer;
+}
+
+@utility toggle-switch-input {
+	@apply sr-only; /* Hide the actual checkbox */
+}
+
+@utility toggle-switch-track {
+	@apply w-11 h-6 rounded-full border-2; /* Add border */
+    border-color: var(--color-theme-6); /* Outline color when off */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Add border-color to transition */
+}
+
+@utility toggle-switch-track-checked {
+    background-color: var(--color-theme-1); /* Filled color when on */
+    border-color: var(--color-theme-1); /* Border color when on (matches fill) */
+}
+
+@utility toggle-switch-thumb {
+    @apply absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out;
+}
+
+@utility toggle-switch-thumb-checked {
+    transform: translateX(20px); /* Move thumb to the right */
+}

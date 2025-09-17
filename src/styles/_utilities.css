@@ -1,0 +1,66 @@
+/* Utility Classes */
+@utility glass {
+	background: transparent;
+	backdrop-filter: none;
+}
+
+@utility glass-hover {
+	background: transparent;
+	backdrop-filter: none;
+}
+
+@utility divider {
+	@apply h-px;
+}
+
+/* Loading States */
+@utility loading-spinner {
+	@apply h-4 w-4 animate-spin rounded-full border-2;
+	border-color: var(--border-secondary);
+	border-top-color: currentColor;
+}
+
+/* Animations */
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+}
+
+@utility animate-float {
+	animation: float 6s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@utility animate-fade-in {
+	animation: fadeIn 0.5s ease-out forwards;
+}
+
+@utility btn-search-icon {
+	@apply btn-icon;
+	width: 40px; /* Adjust as needed */
+	height: 40px; /* Adjust as needed */
+	padding: 0; /* Remove padding */
+}
+
+@utility mb-md {
+	margin-bottom: 16px;
+}
+
+@utility flex-1 {
+	flex: 1;
+}

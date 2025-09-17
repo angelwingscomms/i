@@ -1,0 +1,21 @@
+/* Age Range Picker */
+@utility age-range-container {
+	@apply flex items-center justify-center gap-4;
+}
+
+@utility age-input {
+	@apply w-24 rounded-full px-4 py-3 text-center font-medium;
+	background: transparent;
+	border: 2px solid var(--border-secondary);
+	color: var(--text-primary);
+	transition: all 0.3s ease;
+}
+
+.age-input:focus {
+	border-color: var(--border-focus);
+	outline: none;
+}
+
+@utility age-divider {
+	@apply h-px w-8;
+}
