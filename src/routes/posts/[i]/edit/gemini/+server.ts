@@ -15,12 +15,12 @@ export const POST = async ({ request, locals, params }) => {
 	if (!instructions?.trim()) {
 		throw error(400, 'edit instructions required');
 	}
-	const post = await get<Post>(params.i, ['u', 'h', 'txt']);
+	const post = await get<Post>(params.i, ['u', 'h', 'b']);
 	if (!post) {
-		throw error(404, 'resume not found');
+		throw error(404, 'post not found');
 	}
 	if (post.u !== locals.user.i) {
-		throw error(403, "you don't own this resume");
+		throw error(403, "you don't own this post");
 	}
 	const genAI = new GoogleGenerativeAI(GEMINI);
 	const model = genAI.getGenerativeModel({
@@ -29,10 +29,12 @@ export const POST = async ({ request, locals, params }) => {
 	const prompt = `Edit the post according to the given instructions.Current post:\n \`\`\`markdown\n${post.b}\`\`\`. Edit according to these instructions: ${instructions}. Output only the markdown code`;
 	const result = await model.generateContent(prompt);
 	const response = await result.response;
-	const b = response.text().trim();
+	let b = response.text().trim();
+	b = b.replace(/^```markdown\s*\n?/, '').replace(/\n?```$/, '').trim();
 	 await edit_point(params.i, {
 		b,
 		l: Date.now()
 	});
+	console.log('b', b);
 	return text(b)
 };

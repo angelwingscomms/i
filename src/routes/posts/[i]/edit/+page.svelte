@@ -10,6 +10,43 @@
 	let instructions = $state('');
 	let loading = $state(false);
 	let showPreview = $state(false);
+	let saving = $state(false);
+	let timeout: NodeJS.Timeout | null = null;
+
+	const saveWithDelay = (body: string) => {
+		saving = true;
+		if (timeout) {
+			clearTimeout(timeout);
+		}
+		timeout = setTimeout(async () => {
+			try {
+				const res = await axios.put(`/posts/${post.i}`, { b: body });
+				if (res.status === 200) {
+					toast.success('Post auto-saved');
+				}
+			} catch (e) {
+				console.error('Auto-save failed', e);
+			}
+			saving = false;
+			timeout = null;
+		}, 1440);
+	};
+
+	$effect(() => {
+		if (post.b) {
+			saveWithDelay(post.b);
+		}
+	});
+
+	const handleKeyDown = (e: KeyboardEvent) => {
+		if (e.ctrlKey && e.key === 'Enter' && !loading) {
+			const activeEl = document.activeElement;
+			if (activeEl && activeEl.tagName === 'TEXTAREA' && activeEl.getAttribute('data-instructions')) {
+				e.preventDefault();
+				editWithGemini();
+			}
+		}
+	};
 
 	async function editWithGemini() {
 		if (!instructions.trim()) {
@@ -39,12 +76,22 @@
 	}
 </script>
 
+<svelte:window on:keydown={handleKeyDown} />
+
 <div class="mx-auto max-w-2xl p-4">
-	<h1 class="mb-4 text-2xl font-bold">Edit Post</h1>
+	<div class="flex justify-between items-center mb-4">
+		<h1 class="text-2xl font-bold">Edit Post</h1>
+		<div class="flex items-center gap-2">
+			{#if saving}
+				<span class="text-sm text-gray-500">Saving...</span>
+			{/if}
+			<a href={`/posts/${post.i}`} class="btn-outline">View Post</a>
+		</div>
+	</div>
 	<div class="space-y-6">
 		<div class="space-y-2">
 			<DescriptionInput
-				value={post.b || ''}
+				bind:value={post.b}
 				endpoint="/posts/edit"
 				placeholder="Update your post content..."
 				rows={10}
@@ -60,6 +107,7 @@
 				rows={4}
 				label="AI Edit Instructions"
 				editable={true}
+				textarea_attrs={{ 'data-instructions': true }}
 			/>
 			<Button
 				text={loading
@@ -82,7 +130,7 @@
 					<h2 class="mb-2 text-xl font-semibold">
 						Preview
 					</h2>
-					{@html marked.parse(post.b)}
+					{@html marked.parse(post.b || '')}
 				</div>
 			{/if}
 		</div>

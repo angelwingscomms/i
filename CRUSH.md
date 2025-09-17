@@ -20,3 +20,6 @@
 - never run any npm commands unless asked to
 - always send data to server as JSON w/ single character fields
 - always use all lowercase for copy
+
+### page.svelte
+ - use svelte:window to add event handlers to window, e.g <svelte:window onkeydown>
