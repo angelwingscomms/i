@@ -82,6 +82,11 @@
 					onclick={close_sidebar}>edit profile</a
 				>
 				<a
+					href="/resume"
+					class="sidebar-nav-link"
+					onclick={close_sidebar}>resume</a
+				>
+				<a
 					href="/u/{user.i}"
 					class="sidebar-nav-link"
 					onclick={close_sidebar}>{user.t}</a

@@ -248,7 +248,7 @@
 			>
 				<!-- Avatar with glow effect -->
 				<div
-					class="profile-avatar mb-8 flex justify-center"
+					class="profile-avatar flex justify-center"
 				>
 					<div class="relative">
 						<div

@@ -1,47 +1,62 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
-	import { toast } from '$lib/util/toast';
+	import Button from '$lib/components/Button.svelte';
 	import axios from 'axios';
 
-	let txt = $state('');
+	let { data } = $props();
+	let resumes = $state(data.e || []);
 
-	async function createResume() {
-		if (!txt.trim()) {
-			toast.error('Please enter resume content');
-			return;
-		}
-		try {
-			const res = await axios.post('/resume', txt);
-			if (res.statusText === 'OK') {
-				toast.success('Resume created successfully');
-				goto(`/resume/${res.data}`);
-			} else {
-				const err = res.data;
-				toast.error(err || 'Failed to create resume');
-			}
-		} catch (e) {
-			toast.error('An error occurred');
-		}
+	function formatDate(timestamp: number): string {
+		return new Date(timestamp).toLocaleDateString();
 	}
 </script>
 
-<div class="mx-auto max-w-[720px] p-4">
-	<h1 class="mb-4 text-[22px] font-bold">
-		Instantly create your resume with AI
-	</h1>
-	<DescriptionInput
-		bind:value={txt}
-		placeholder="Enter your work experience, education, skills, achievements, contact info, etc..."
-		rows={10}
-		label="Resume Content"
-		editable={true}
+<div class="mx-auto max-w-2xl p-4">
+	<h1 class="mb-4 text-2xl font-bold">My Resumes</h1>
+	<Button
+		text="Create Resume"
+		onclick={async () => {
+			const { data } =
+				await axios.post('/api/resume');
+			goto(`/resume/${data.i}/edit`);
+		}}
 	/>
-	<button
-		class="w-full cursor-pointer rounded-lg border border-[var(--border)] bg-[var(--btn-primary)] px-6 py-3 font-semibold text-[var(--btn-text)] disabled:opacity-50"
-		onclick={createResume}
-		disabled={!txt.trim()}
-	>
-		Generate Resume
-	</button>
+	{#if resumes.length > 0}
+		<ul class="space-y-4">
+			{#each resumes as r (r.i)}
+				<li
+					class="rounded-lg border border-gray-200 p-4"
+				>
+					<a
+						href={`/resume/${r.i}`}
+						class="block rounded p-2 hover:bg-gray-50"
+					>
+						<div class="font-semibold">
+							{formatDate(r.d || 0)}
+						</div>
+						{#if r.h}
+							<div
+								class="line-clamp-3 text-sm text-gray-600"
+							>
+								{r.h
+									.replace(/<[^>]*>/g, '')
+									.substring(0, 100)}...
+							</div>
+						{/if}
+					</a>
+				</li>
+			{/each}
+		</ul>
+	{:else}
+		<p class="mb-4 text-gray-500">No resumes yet.</p>
+	{/if}
 </div>
+
+<style>
+	.line-clamp-3 {
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+</style>

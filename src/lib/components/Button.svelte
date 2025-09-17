@@ -1,11 +1,18 @@
 <script lang="ts">
 	let {
-		on_click,
+		onclick,
 		text = '',
 		loading = false,
 		disabled = false,
 		wide = false,
 		href
+	}: {
+		onclick?: (event: MouseEvent) => void;
+		text?: string;
+		loading?: boolean;
+		disabled?: boolean;
+		wide?: boolean;
+		href?: string;
 	} = $props();
 </script>
 
@@ -13,7 +20,7 @@
 	<a
 		href={href}
 		class="btn-primary {wide ? 'btn-wide' : ''}"
-		onclick={on_click}
+		{onclick}
 	>
 		{#if loading}
 			<i class="fas fa-spinner fa-spin"></i>
@@ -24,7 +31,7 @@
 {:else}
 	<button
 		class="btn-primary {wide ? 'btn-wide' : ''}"
-		onclick={on_click}
+		{onclick}
 		disabled={loading || disabled}
 	>
 		{#if loading}

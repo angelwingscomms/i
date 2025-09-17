@@ -145,4 +145,5 @@ export interface Resume {
 	h?: string; // html
 	d?: number; // created
 	l?: number; // last updated
+	i?: string; // id
 }
