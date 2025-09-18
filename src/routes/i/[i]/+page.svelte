@@ -280,7 +280,7 @@
 
 						<!-- Additional Action -->
 						<div
-							class="mt-6 border-t border-white/10 pt-6 justify-center gap-3"
+							class="mt-6 justify-center gap-3 border-t border-white/10 pt-6"
 						>
 							<Button
 								href="/i/{item.i}/c"
@@ -417,7 +417,7 @@
 
 				<!-- Additional Action -->
 				<div
-					class="mt-8 border-t border-white/10 pt-8 flex justify-center gap-3"
+					class="mt-8 flex justify-center gap-3 border-t border-white/10 pt-8"
 				>
 					<Button
 						href="/i/{item.i}/c"

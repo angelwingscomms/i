@@ -14,7 +14,7 @@ export const POST: RequestHandler = async ({
 		try {
 			create_meeting_res = await realtime.post(
 				'meetings',
-				{ title: 'post discussion' }
+				{ title: 'post comments' }
 			);
 			if (
 				!create_meeting_res ||
@@ -36,48 +36,13 @@ export const POST: RequestHandler = async ({
 			);
 		}
 
-		const room_payload = {
-			s: 'r',
-			t: 'post discussion',
-			a: '',
-			c: '',
-			q: create_meeting_res.data.data.id,
-			_: '.',
-			u: locals.user.i,
-			d: Date.now()
-		};
-
-		let room_id;
-		console.log('room_payload', room_payload);
-
-		try {
-			room_id = await create(
-				room_payload,
-				JSON.stringify({
-					room_name_or_tag: room_payload.t,
-					room_created_by: locals.user?.t,
-					room_description: room_payload.a,
-					room_type: 'public'
-				})
-			);
-		} catch (e) {
-			console.error(
-				'Error creating room in database:',
-				e
-			);
-			throw error(
-				500,
-				'Failed to create post due to an internal server error. Please try again.'
-			);
-		}
-
 		// Create post with room_id
 		id = await create(
 			{
 				s: 'p',
 				u: locals.user.i,
 				d: Date.now(),
-				r: room_id
+				r: create_meeting_res.data.data.id
 			},
 			`{created_by: ${locals.user.t}}`
 		);

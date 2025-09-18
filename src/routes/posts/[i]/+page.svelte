@@ -51,14 +51,14 @@
 		{#if post.p}
 			<img
 				src={post.p}
-				alt="Post image"
+				alt="Post cover"
 				class="h-64 w-full object-cover md:h-96"
 			/>
 		{/if}
 		<div
 			class="prose prose-invert prose-lg max-w-none px-6 pt-6"
 		>
-			{@html marked.parse(post.b)}
+			{@html marked.parse(post.b || '')}
 		</div>
 	</article>
 

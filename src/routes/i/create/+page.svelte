@@ -232,8 +232,7 @@
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
-						<span
-							style="color: var(--color-theme-1);"
+						<span style="color: var(--color-theme-1);"
 							>*</span
 						> Type
 					</label>
@@ -241,7 +240,7 @@
 						<Button
 							text="Product"
 							icon="fa-shopping-bag"
-							onclick={() => kind = 0}
+							onclick={() => (kind = 0)}
 							class={kind === 0 ? 'active' : ''}
 							style={kind === 0
 								? `background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);`
@@ -250,7 +249,7 @@
 						<Button
 							text="Service"
 							icon="fa-wrench"
-							onclick={() => kind = 1}
+							onclick={() => (kind = 1)}
 							class={kind === 1 ? 'active' : ''}
 							style={kind === 1
 								? `background: transparent; border: 1px solid var(--color-theme-2); color: var(--color-theme-2);`
@@ -308,8 +307,12 @@
 				<!-- Submit Button -->
 				<div class="form-field pt-4 opacity-0">
 					<Button
-						text={isSubmitting ? 'Creating...' : `Create ${kind === 0 ? 'Product' : 'Service'}`}
-						icon={isSubmitting ? 'fa-spinner fa-spin' : 'fa-magic'}
+						text={isSubmitting
+							? 'Creating...'
+							: `Create ${kind === 0 ? 'Product' : 'Service'}`}
+						icon={isSubmitting
+							? 'fa-spinner fa-spin'
+							: 'fa-magic'}
 						onclick={submit}
 						disabled={isSubmitting}
 						class="submit-button w-full !rounded-full !px-8 !py-6 !text-2xl !font-black"

@@ -4,7 +4,7 @@ import { GEMINI } from '$env/static/private';
 import axios from 'axios';
 
 export const POST: RequestHandler = async ({
-	request,
+	request
 }) => {
 	try {
 		const formData = await request.formData();

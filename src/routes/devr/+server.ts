@@ -26,7 +26,7 @@ export const GET: RequestHandler = async () => {
 			must: {
 				key: 's',
 				match: {
-					value: 'i'
+					value: 'p'
 				}
 			}
 		}

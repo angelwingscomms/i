@@ -28,7 +28,11 @@
 				const res = await axios.put(
 					`/posts/${post.i}`,
 					formData,
-					{ headers: { 'Content-Type': 'multipart/form-data' } }
+					{
+						headers: {
+							'Content-Type': 'multipart/form-data'
+						}
+					}
 				);
 				if (res.status === 200) {
 					toast.success('Post auto-saved');

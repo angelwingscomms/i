@@ -1,5 +1,8 @@
+- let your edit diffs always be ALWAYS be single lines. If the edit spans multiple lines, call the edit/multi-edit tool with many single calls
+
 ## Code Style
 
+- always use axios and try/catch for http requests: try {axios.method...} catch (e) {console.error(e.response?.data || e.message)} 
 - Naming: snake_case for vars/functions; db payload keys single letters (e.g., i=id, t=tag/text, u=user, d=desc/date, a=age/created, g=gender, l=lat/lon)
 - Types: Define in src/lib/types/index.ts; minimal/optional fields; export interfaces with comments (e.g., export interface Room { n: string; // room name })
 - Styling: Tailwind utilities only; no inline styles/style blocks
