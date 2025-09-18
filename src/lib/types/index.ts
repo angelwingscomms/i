@@ -133,6 +133,7 @@ export interface Post {
 	u?: string; // user id
 	d: number; // created timestamp
 	l?: number; // last updated
+	r?: string; // realtime room
 }
 
 export interface Recording {
