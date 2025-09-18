@@ -2,7 +2,7 @@
 	import axios from 'axios';
 	import Button from '$lib/components/Button.svelte';
 	let {
-		value = $bindable(''),
+		value = $bindable(),
 		editable = true,
 		endpoint = '/api/transcribe', // Changed default endpoint to transcribe
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
@@ -15,25 +15,10 @@
 	// Constants
 	const maxLength = 500;
 
-	let isRecording = false;
-	let isTranscribing = false;
+	let isRecording = $state(false);
+	let isTranscribing = $state(false);
 	let mediaRecorder: MediaRecorder | null = null;
 	let audioChunks: Blob[] = [];
-	let charCount = value.length;
-
-	$effect(() => {
-		// Update char count when value changes
-		charCount = value?.length || 0;
-
-		// Auto-resize textarea
-		if (ref) {
-			ref.style.height = 'auto';
-			ref.style.height = ref.scrollHeight + 'px';
-		}
-
-		// Sync textarea ref to prop
-		ref = ref;
-	});
 
 	async function startRecording() {
 		try {
@@ -126,15 +111,10 @@
 	></textarea>
 
 	<div class="description-controls">
-		<!-- <div class={charCount > maxLength ? 'char-count-over' : 'char-count'}>
-			{charCount}/{maxLength}
-		</div> -->
-
 		{#if editable}
 			<div class="voice-controls">
 				{#if !isRecording && !isTranscribing}
 					<Button
-						type="button"
 						class="voice-btn rounded-full"
 						onclick={startRecording}
 						icon="fa-microphone"
@@ -142,7 +122,6 @@
 					/>
 				{:else if isRecording}
 					<Button
-						type="button"
 						class="voice-btn-recording rounded-full"
 						onclick={stopRecording}
 						icon="fa-circle"
