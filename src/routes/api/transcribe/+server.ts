@@ -5,15 +5,7 @@ import axios from 'axios';
 
 export const POST: RequestHandler = async ({
 	request,
-	locals
 }) => {
-	if (!locals.user) {
-		return json(
-			{ error: 'Unauthorized' },
-			{ status: 401 }
-		);
-	}
-
 	try {
 		const formData = await request.formData();
 		const audioFile = formData.get('audio') as File;

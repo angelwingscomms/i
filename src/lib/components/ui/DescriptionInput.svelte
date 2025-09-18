@@ -4,7 +4,6 @@
 	let {
 		value = $bindable(),
 		editable = true,
-		endpoint = '/api/transcribe', // Changed default endpoint to transcribe
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
 		rows = 6,
 		onInput = () => {},
@@ -69,7 +68,7 @@
 			formData.append('audio', audioBlob);
 
 			const response = await axios.post(
-				endpoint,
+				'/api/transcribe',
 				formData,
 				{
 					headers: {
@@ -115,14 +114,12 @@
 			<div class="voice-controls">
 				{#if !isRecording && !isTranscribing}
 					<Button
-						class="voice-btn rounded-full"
 						onclick={startRecording}
 						icon="fa-microphone"
 						text="voice typing"
 					/>
 				{:else if isRecording}
 					<Button
-						class="voice-btn-recording rounded-full"
 						onclick={stopRecording}
 						icon="fa-circle"
 						text="recording"
