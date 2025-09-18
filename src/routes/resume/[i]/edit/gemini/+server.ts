@@ -6,7 +6,7 @@ import {
 	edit_point,
 	get
 } from '$lib/db';
-import { getUserColors } from '$lib/util/colors';
+import { get_user_colors } from '$lib/util/colors';
 import type { Resume } from '$lib/types';
 
 export const POST = async ({
@@ -36,7 +36,7 @@ export const POST = async ({
 	if (resume.u !== locals.user.i) {
 		throw error(403, "You don't own this resume");
 	}
-	const colors = await getUserColors(resume.u);
+	const colors = await get_user_colors(resume.u);
 	const colorStr = colors
 		.map((c) => `#${c}`)
 		.join(', ');

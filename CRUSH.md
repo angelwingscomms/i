@@ -1,8 +1,7 @@
 # CRUSH.md
 
-- ALWAYS run `npm run format` before viewing and editing files to avoid any edit errors
-- if you encounter any edit errors, like 'old string not found', run `npm run format`, then retry
-- except `npm run format`, never run any npm commands unless asked to
+- ALWAYS run `prettier --write <filename>` before viewing a file
+- if you encounter any edit errors, like 'old string not found in content', run `prettier --write <filename>`, then view the file again before trying to edit
 
 ## Code Style
 

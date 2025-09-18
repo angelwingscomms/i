@@ -110,7 +110,7 @@
 </svelte:head>
 
 <div
-	class="from-background to-surface min-h-screen bg-gradient-to-br"
+	class="i-page from-background to-surface min-h-screen bg-gradient-to-br"
 >
 	<!-- Header -->
 	<div
@@ -132,6 +132,7 @@
 						href="/i/create"
 						text="Create Item"
 						icon="fa-plus"
+						class="!rounded-none ![border-color:var(--color-theme-1)]"
 					/>
 				{/if}
 			</div>
@@ -141,8 +142,8 @@
 	<!-- Search Form -->
 	<div class="mx-auto max-w-4xl px-4 py-8">
 		<div
-			class="mb-8 rounded-2xl p-6 shadow-lg"
-			style="border: 2px solid var(--color-theme-6);"
+			class="mb-8 rounded-lg p-6 shadow-lg"
+
 		>
 			<div
 				class="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
@@ -151,8 +152,7 @@
 				<div class="md:col-span-2">
 					<label
 						for="query"
-						class="mb-2 block text-sm font-medium"
-						style="color: var(--color-theme-4);"
+						class="mb-2 block text-sm font-medium text-theme-4"
 					>
 						Search
 					</label>
@@ -163,13 +163,12 @@
 							bind:value={query}
 							oninput={debouncedSearch}
 							placeholder="Search for items..."
-							class="w-full rounded-xl border-2 bg-transparent px-4 py-3 pr-12 transition-colors"
-							style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
+							class="w-full rounded-full border-b-2 border-l-2 [border-color:var(--color-theme-1)] bg-transparent px-4 py-3 pr-12 transition-colors focus:[border-color:var(--color-theme-1)]"
 						/>
 						{#if query}
 							<button
 								onclick={clearSearch}
-								class="absolute top-1/2 right-3 -translate-y-1/2 transform text-gray-400 hover:text-gray-600"
+								class="absolute top-1/2 right-3 -translate-y-1/2 transform rounded border-t border-r [border-color:var(--color-theme-1)] text-gray-400 hover:text-gray-600"
 								aria-label="Clear search"
 							>
 								<svg
@@ -192,8 +191,7 @@
 				<div>
 					<label
 						for="kind"
-						class="mb-2 block text-sm font-medium"
-						style="color: var(--color-theme-4);"
+						class="mb-2 block text-sm font-medium text-theme-4"
 					>
 						Type
 					</label>
@@ -201,14 +199,13 @@
 						id="kind"
 						bind:value={kind}
 						onchange={search}
-						class="w-full rounded-xl border-2 bg-transparent px-4 py-3 transition-colors"
-						style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
+						class="w-full rounded-full border-b-2 border-l-2 [border-color:var(--color-theme-1)] bg-transparent px-4 py-3 transition-colors focus:[border-color:var(--color-theme-1)] appearance-none"
 					>
-						<option value={undefined}
+						<option value={undefined} class="bg-transparent text-inherit"
 							>All Items</option
 						>
-						<option value={0}>🛍️ Products</option>
-						<option value={1}>⚡ Services</option>
+						<option value={0} class="bg-transparent text-inherit">🛍️ Products</option>
+						<option value={1} class="bg-transparent text-inherit">⚡ Services</option>
 					</select>
 				</div>
 
@@ -216,8 +213,7 @@
 				<div>
 					<label
 						for="sort"
-						class="mb-2 block text-sm font-medium"
-						style="color: var(--color-theme-4);"
+						class="mb-2 block text-sm font-medium text-theme-4"
 					>
 						Sort by
 					</label>
@@ -225,14 +221,13 @@
 						id="sort"
 						bind:value={sort}
 						onchange={search}
-						class="w-full rounded-xl border-2 bg-transparent px-4 py-3 transition-colors"
-						style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
+						class="w-full rounded-full border-b-2 border-l-2 [border-color:var(--color-theme-1)] bg-transparent px-4 py-3 transition-colors focus:[border-color:var(--color-theme-1)] appearance-none"
 					>
-						<option value="relevance"
+						<option value="relevance" class="bg-transparent text-inherit"
 							>Relevance</option
 						>
-						<option value="newest">Newest</option>
-						<option value="oldest">Oldest</option>
+						<option value="newest" class="bg-transparent text-inherit">Newest</option>
+						<option value="oldest" class="bg-transparent text-inherit">Oldest</option>
 					</select>
 				</div>
 			</div>
@@ -241,11 +236,10 @@
 			{#if loading}
 				<div class="mt-4 text-center">
 					<div
-						class="inline-flex items-center gap-2 text-sm"
-						style="color: var(--color-theme-1);"
+						class="inline-flex items-center gap-2 rounded border-t-2 border-r-2 [border-color:var(--color-theme-1)] text-sm [color:var(--color-theme-1)]"
 					>
 						<div
-							class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+							class="h-4 w-4 animate-spin border-2 [border-color:var(--color-theme-1)] [border-top-color:transparent]"
 						></div>
 						Searching...
 					</div>
@@ -257,8 +251,7 @@
 		<div class="space-y-4">
 			<div class="flex items-center justify-between">
 				<h2
-					class="text-xl font-semibold"
-					style="color: var(--color-theme-4);"
+					class="text-xl font-semibold [color:var(--color-theme-4)]"
 				>
 					Results {#if !loading}({results.length}){/if}
 				</h2>
@@ -269,14 +262,4 @@
 	</div>
 </div>
 
-<style>
-	:global(select) {
-		appearance: none;
-		background: transparent;
-	}
 
-	:global(select option) {
-		background: transparent;
-		color: inherit;
-	}
-</style>

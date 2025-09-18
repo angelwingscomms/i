@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import axios from 'axios';
+	import { toast } from '$lib/util/toast';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
+	import Button from '$lib/components/Button.svelte';
 	import type { User } from '$lib/types';
 
 	let colors = $state<string[]>([]);
 	let showAI = $state(false);
 	let aiDesc = $state('');
+	let loading = $state(false);
 
 	onMount(async () => {
 		const res = await axios.get('/color');
@@ -44,12 +47,23 @@
 	}
 
 	async function editWithAI() {
-		const res = await axios.post('/color', {
-			d: aiDesc
-		});
-		colors = res.data.c;
-		showAI = false;
-		aiDesc = '';
+		loading = true;
+		try {
+			const res = await axios.post('/color', {
+				d: aiDesc.trim()
+			});
+			colors = res.data.c;
+			showAI = false;
+			aiDesc = '';
+		} catch (e: any) {
+			toast(
+				e.response?.data?.message ||
+					e.message ||
+					'Failed to generate colors'
+			);
+		} finally {
+			loading = false;
+		}
 	}
 </script>
 
@@ -88,18 +102,20 @@
 	{#if showAI}
 		<div class="mt-4 rounded-lg border p-4">
 			<DescriptionInput
+				label="color theme prompt"
+				placeholder="describe the color theme you'd like"
 				bind:value={aiDesc}
 				editable={true}
 			/>
-			<button
+			<Button
 				onclick={editWithAI}
+				loading={loading}
+				text={loading ? 'Generating...' : 'Generate Colors'}
 				class="btn-primary mt-2 rounded-full px-4 py-2"
-				>Generate Colors</button
-			>
+			/>
 		</div>
 	{/if}
 </div>
-","file_path">/home/x/z/angelwingscomms/i/src/lib/components/Color.svelte
 
 <style>
 	.colors-section :global(.btn-outline) {

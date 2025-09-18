@@ -26,14 +26,12 @@
 	href={`/i/${item.i}`}
 >
 	<div
-		class="flex items-start gap-4 rounded-2xl p-4 transition-all duration-300"
-		style="background: transparent; border: 1px solid var(--color-theme-6);"
+		class="flex items-start gap-4 rounded-lg border-t border-r [border-color:var(--color-theme-1)] p-4 transition-all duration-300 [background:transparent]"
 	>
 		<!-- Item Image -->
 		<div class="relative flex-shrink-0">
 			<div
-				class="h-16 w-16 overflow-hidden rounded-xl"
-				style="border: 1px solid var(--color-theme-6);"
+				class="h-16 w-16 overflow-hidden rounded border-t border-r [border-color:var(--color-theme-1)]"
 			>
 				{#if item.x && item.x.length > 0}
 					<img
@@ -43,8 +41,7 @@
 					/>
 				{:else}
 					<div
-						class="flex h-full w-full items-center justify-center text-xl font-bold"
-						style="background: transparent; color: var(--text-primary);"
+						class="flex h-full w-full items-center justify-center text-xl font-bold [color:var(--text-primary)] [background:transparent]"
 					>
 						{item.t?.charAt(0).toUpperCase() ?? '?'}
 					</div>
@@ -53,11 +50,10 @@
 			<!-- Item Type Badge -->
 			<div class="absolute -right-1 -bottom-1">
 				<span
-					class="rounded-full px-2 py-1 text-xs font-medium"
-					style="background: var(--color-theme-{item.k ===
+					class="rounded px-2 py-1 text-xs font-medium [background:var(--color-theme-{item.k ===
 					0
 						? '1'
-						: '2'}); color: white;"
+						: '2'})] border-t border-r [border-color:var(--color-theme-1)] [color:white]"
 				>
 					{item.k === 0 ? '🛍️' : '⚡'}
 				</span>
@@ -69,8 +65,7 @@
 			<div class="flex items-start justify-between">
 				<div class="min-w-0 flex-1">
 					<h3
-						class="truncate text-lg font-bold transition-transform group-hover:scale-105"
-						style="color: var(--color-theme-4);"
+						class="truncate text-lg font-bold [color:var(--color-theme-4)] transition-transform group-hover:scale-105"
 					>
 						{item.t ?? 'Untitled Item'}
 					</h3>
@@ -97,22 +92,7 @@
 				<!-- Match Score -->
 				{#if p !== null}
 					<span
-						class="ml-2 flex-shrink-0 rounded-full px-2 py-1 text-xs font-bold"
-						style="background: transparent; border: 1px solid {p >=
-						80
-							? 'var(--color-theme-1)'
-							: p >= 60
-								? 'var(--color-theme-2)'
-								: p >= 40
-									? 'var(--color-theme-3)'
-									: 'var(--color-theme-6)'}; color: {p >=
-						80
-							? 'var(--color-theme-1)'
-							: p >= 60
-								? 'var(--color-theme-2)'
-								: p >= 40
-									? 'var(--color-theme-3)'
-									: 'var(--color-theme-6)'};"
+						class="ml-2 flex-shrink-0 rounded border-t border-r [border-color:var(--color-theme-1)] px-2 py-1 text-xs font-bold [color:var(--color-theme-1)] [background:transparent]"
 					>
 						{p}%
 					</span>
@@ -134,8 +114,7 @@
 				height="16"
 				viewBox="0 0 24 24"
 				fill="currentColor"
-				style="color: var(--color-theme-6);"
-				class="transition-transform group-hover:translate-x-1"
+				class="text-[var(--color-theme-6)] transition-transform group-hover:translate-x-1"
 			>
 				<path
 					d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"

@@ -33,7 +33,7 @@ export const POST: RequestHandler = async ({
 
 	const genAI = new GoogleGenerativeAI(GEMINI);
 	const model = genAI.getGenerativeModel({
-		model: 'gemini-pro'
+		model: 'gemini-2.5-flash'
 	});
 
 	let prompt =

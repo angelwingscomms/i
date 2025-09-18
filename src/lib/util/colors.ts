@@ -1,57 +1,53 @@
 import { get, edit_point } from '$lib/db';
 import { GEMINI } from '$env/static/private';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import type { User } from '$lib/types';
 
 export async function generateColorPalette(
-	user_i: string
+	user_i: string,
+	desc?: string
 ): Promise<string[]> {
 	const user = await get<{ d?: string }>(user_i, 'd');
-	if (!user?.d) {
-		return [
-			'000000',
-			'333333',
-			'666666',
-			'999999',
-			'cccccc'
-		]; // neutral default
-	}
-
+	const effectiveDesc =
+		desc ||
+		user?.d ||
+		'a dreamy purple/lavender/pink/lilac color palette';
 	const genAI = new GoogleGenerativeAI(GEMINI);
 	const model = genAI.getGenerativeModel({
-		model: 'gemini-1.5-flash'
+		model: 'gemini-2.5-flash'
 	});
 
-	const schema = {
-		type: 'array',
-		items: { type: 'string' },
-		maxItems: 5,
-		minItems: 5
-	} as const;
+	const prompt = `Generate 5 distinct 6-digit hex color codes (without #) inspired by this description: ${effectiveDesc}. Return ONLY the hex codes, without hashes, as a JSON array, wrapped in \`\`\`json\n...\n\`\`\`.\n e.g. \`\`\`json\n["000000", "333333", "666666", "999999", "cccccc"]\n\`\`\``;
 
-	const generationConfig = {
-		generationConfig: {
-			responseMimeType: 'application/json',
-			responseSchema: schema
-		}
-	};
-
-	const prompt = `Based on this user description: "${user.d}", generate a professional 5-color palette suitable for a resume or profile. Each color is a 6-digit hex code WITHOUT the # prefix. Ensure they are distinct and harmonious. Output ONLY the JSON array of 5 strings.`;
-
-	const result = await model.generateContent({
-		contents: [
-			{ role: 'user', parts: [{ text: prompt }] }
-		],
-		...generationConfig
-	});
+	const result = await model.generateContent(prompt);
 
 	const response = await result.response;
 	const text = response.text().trim();
+	const jsonMatch = text.match(
+		new RegExp('```json\\n([\\s\\S]*?)\\n```')
+	);
 	let colors: string[];
-	try {
-		colors = JSON.parse(text);
-	} catch {
-		throw new Error('Failed to parse color palette');
+	if (jsonMatch && jsonMatch[1]) {
+		try {
+			colors = JSON.parse(jsonMatch[1]);
+		} catch (e) {
+			console.error('JSON parsing error:', e);
+			throw new Error(
+				'Failed to parse color palette: Invalid JSON structure'
+			);
+		}
+	} else {
+		// Fallback for cases where the model doesn't wrap in ```json
+		try {
+			colors = JSON.parse(text);
+		} catch (e) {
+			console.error(
+				'Fallback JSON parsing error:',
+				e
+			);
+			throw new Error(
+				'Failed to parse color palette: No JSON found or invalid format'
+			);
+		}
 	}
 
 	// Validate and normalize
@@ -70,7 +66,7 @@ export async function generateColorPalette(
 	return colors;
 }
 
-export async function getUserColors(
+export async function get_user_colors(
 	user_i: string
 ): Promise<string[]> {
 	const user = await get<{ c?: string[] }>(

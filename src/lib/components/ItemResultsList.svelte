@@ -22,7 +22,9 @@
 </div>
 
 {#if results.length === 0}
-	<div class="py-12 text-center">
+	<div
+		class="rounded-lg border-t-2 border-r-2 [border-color:var(--color-theme-1)] py-12 text-center"
+	>
 		<div class="mb-2 text-lg text-gray-500">
 			No items found
 		</div>
