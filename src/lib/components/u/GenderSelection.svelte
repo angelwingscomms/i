@@ -19,8 +19,7 @@
 <div class="flex-1">
 	<fieldset>
 		<legend
-			class="mb-3 block text-sm font-bold"
-			style="color: var(--color-theme-4);"
+			class="text-color-theme-4 mb-3 block text-sm font-bold"
 			>{head}</legend
 		>
 		<div class="flex gap-2">

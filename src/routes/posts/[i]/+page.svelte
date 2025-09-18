@@ -62,16 +62,16 @@
 		</div>
 	</article>
 
-	<!-- {#if (data.messages && data.messages.length > 0) || data.user}
+	{#if (data.messages && data.messages.length > 0) || data.user}
 		<div class="mt-8">
 			<Chat
 				m={data.messages}
-				t={data.t}
-				_={data._}
-				authToken={data.user
-					? data.user.i
-					: undefined}
+				t="comments"
+				_="."
+				i={post.i!!}
+				authToken={data.a}
+				showIcons={false}
 			/>
 		</div>
-	{/if} -->
+	{/if}
 </div>

@@ -3,7 +3,7 @@
 /* Custom utility classes for the chat application */
 
 .chat-layout {
-	@apply mx-auto max-w-2xl p-5 font-sans;
+	@apply max-w-2xl p-5 font-sans;
 	scroll-behavior: smooth;
 }
 

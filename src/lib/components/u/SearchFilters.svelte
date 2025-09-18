@@ -164,7 +164,7 @@
 			<!-- <ModeSelection bind:mode /> -->
 
 			<!-- TODO-PUTBACK -->
-			<!-- <div class="ml-auto flex items-center gap-3">
+			<div class="ml-auto flex items-center gap-3">
 				<SortDropdown
 					bind:sort
 					bind:sort_open
@@ -175,7 +175,7 @@
 				<button class="btn-primary btn-md" onclick={search} disabled={loading}
 					>{loading ? 'searching…' : 'search'}</button
 				>
-			</div> -->
+			</div>
 		</div>
 
 		<DescriptionInput {mode} />

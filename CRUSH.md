@@ -1,6 +1,3 @@
-# CRUSH.md
-
-- ALWAYS run `prettier --write <filename>` before viewing a file
 - if you encounter any edit errors, like 'old string not found in content', run `prettier --write <filename>`, then view the file again before trying to edit
 
 ## Code Style

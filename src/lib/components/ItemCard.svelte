@@ -26,12 +26,12 @@
 	href={`/i/${item.i}`}
 >
 	<div
-		class="flex items-start gap-4 rounded-lg border-t border-r [border-color:var(--color-theme-1)] p-4 transition-all duration-300 [background:transparent]"
+		class="flex items-start gap-4 rounded-lg p-4 transition-all duration-300 [background:transparent]"
 	>
 		<!-- Item Image -->
 		<div class="relative flex-shrink-0">
 			<div
-				class="h-16 w-16 overflow-hidden rounded border-t border-r [border-color:var(--color-theme-1)]"
+				class="h-16 w-16 overflow-hidden rounded"
 			>
 				{#if item.x && item.x.length > 0}
 					<img
@@ -53,7 +53,7 @@
 					class="rounded px-2 py-1 text-xs font-medium [background:var(--color-theme-{item.k ===
 					0
 						? '1'
-						: '2'})] border-t border-r [border-color:var(--color-theme-1)] [color:white]"
+						: '2'})] [color:white]"
 				>
 					{item.k === 0 ? '🛍️' : '⚡'}
 				</span>
@@ -92,7 +92,7 @@
 				<!-- Match Score -->
 				{#if p !== null}
 					<span
-						class="ml-2 flex-shrink-0 rounded border-t border-r [border-color:var(--color-theme-1)] px-2 py-1 text-xs font-bold [color:var(--color-theme-1)] [background:transparent]"
+						class="ml-2 flex-shrink-0 rounded px-2 py-1 text-xs font-bold [color:var(--color-theme-1)] [background:transparent]"
 					>
 						{p}%
 					</span>
