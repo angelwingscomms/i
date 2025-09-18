@@ -1,5 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import { get } from '$lib/db';
+import { getUserColors } from '$lib/util/colors';
 import type { PageServerLoad } from './$types';
 import type { Resume } from '$lib/types';
 
@@ -22,7 +23,9 @@ export const load: PageServerLoad = async ({
 	if (r.u !== locals.user.i) {
 		throw error(403, "You don't own this resume");
 	}
+	const colors = await getUserColors(r.u);
 	return {
-		r: { ...r, i: params.i }
+		r: { ...r, i: params.i },
+		colors
 	};
 };

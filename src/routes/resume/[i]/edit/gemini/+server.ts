@@ -6,6 +6,7 @@ import {
 	edit_point,
 	get
 } from '$lib/db';
+import { getUserColors } from '$lib/util/colors';
 import type { Resume } from '$lib/types';
 
 export const POST = async ({
@@ -35,11 +36,15 @@ export const POST = async ({
 	if (resume.u !== locals.user.i) {
 		throw error(403, "You don't own this resume");
 	}
+	const colors = await getUserColors(resume.u);
+	const colorStr = colors
+		.map((c) => `#${c}`)
+		.join(', ');
 	const genAI = new GoogleGenerativeAI(GEMINI);
 	const model = genAI.getGenerativeModel({
 		model: 'gemini-2.5-flash'
 	});
-	const prompt = `Write a complete HTML/CSS resume page. Current resume HTML: ${resume.h}. Current text content: ${resume.txt}. Edit according to these instructions: ${instructions}. Output only the HTML code with embedded CSS in the <style> tag. Make it professional and responsive.`;
+	const prompt = `Write a complete HTML/CSS resume page. Current resume HTML: ${resume.h}. Current text content: ${resume.txt}. Edit according to these instructions: ${instructions}. Incorporate these user colors into the design where appropriate: ${colorStr}. Output only the HTML code with embedded CSS in the <style> tag. Make it professional and responsive.`;
 	const result = await model.generateContent(prompt);
 	const response = await result.response;
 	let new_h = response.text().trim();

@@ -3,6 +3,7 @@
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 	import ItemResultsList from '$lib/components/ItemResultsList.svelte';
+	import Button from '$lib/components/Button.svelte';
 
 	type Item = {
 		i: string;
@@ -127,25 +128,11 @@
 					</p>
 				</div>
 				{#if user}
-					<a
+					<Button
 						href="/i/create"
-						class="inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-3 font-medium text-white backdrop-blur-sm transition-all hover:bg-white/20"
-						style="border: 2px solid rgba(255, 255, 255, 0.2);"
-						aria-label="Create new item"
-					>
-						<svg
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-							aria-hidden="true"
-						>
-							<path
-								d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
-							/>
-						</svg>
-						Create Item
-					</a>
+						text="Create Item"
+						icon="fa-plus"
+					/>
 				{/if}
 			</div>
 		</div>
@@ -154,7 +141,7 @@
 	<!-- Search Form -->
 	<div class="mx-auto max-w-4xl px-4 py-8">
 		<div
-			class="mb-8 rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800"
+			class="mb-8 rounded-2xl p-6 shadow-lg"
 			style="border: 2px solid var(--color-theme-6);"
 		>
 			<div
@@ -176,7 +163,7 @@
 							bind:value={query}
 							oninput={debouncedSearch}
 							placeholder="Search for items..."
-							class="w-full rounded-xl border-2 px-4 py-3 pr-12 transition-colors"
+							class="w-full rounded-xl border-2 bg-transparent px-4 py-3 pr-12 transition-colors"
 							style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
 						/>
 						{#if query}
@@ -214,7 +201,7 @@
 						id="kind"
 						bind:value={kind}
 						onchange={search}
-						class="w-full rounded-xl border-2 px-4 py-3 transition-colors"
+						class="w-full rounded-xl border-2 bg-transparent px-4 py-3 transition-colors"
 						style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
 					>
 						<option value={undefined}
@@ -238,7 +225,7 @@
 						id="sort"
 						bind:value={sort}
 						onchange={search}
-						class="w-full rounded-xl border-2 px-4 py-3 transition-colors"
+						class="w-full rounded-xl border-2 bg-transparent px-4 py-3 transition-colors"
 						style="border-color: var(--color-theme-6); focus:border-color: var(--color-theme-1);"
 					>
 						<option value="relevance"
@@ -283,19 +270,13 @@
 </div>
 
 <style>
-	:global(.bg-gradient-to-r) {
-		background: linear-gradient(
-			to right,
-			var(--color-theme-1),
-			var(--color-theme-2)
-		);
+	:global(select) {
+		appearance: none;
+		background: transparent;
 	}
 
-	:global(.bg-gradient-to-br) {
-		background: linear-gradient(
-			to bottom right,
-			var(--background),
-			var(--surface)
-		);
+	:global(select option) {
+		background: transparent;
+		color: inherit;
 	}
 </style>

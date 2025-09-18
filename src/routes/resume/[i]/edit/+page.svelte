@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Color from '$lib/components/Color.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Modal from '$lib/components/Modal.svelte';
@@ -105,6 +106,12 @@
 		</div>
 	</div>
 	<div class="space-y-6">
+		<div class="space-y-2">
+			<label class="block text-sm font-medium"
+				>Color Palette</label
+			>
+			<Color />
+		</div>
 		<div class="space-y-2">
 			<DescriptionInput
 				bind:value={instructions}

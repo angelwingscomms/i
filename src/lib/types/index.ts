@@ -26,6 +26,7 @@ export interface User {
 	on?: number; // last online timestamp (ms)
 	ic?: boolean; // currently in call
 	r?: string; // realtime meeting id
+	c?: string[]; // color palette hex without #
 	c: Record<string, string>;
 	x?: string[]; // contact links,
 	rt?: string; // realtime room token

@@ -64,8 +64,8 @@
 			<a href="/posts" class="btn-primary"
 				>explore posts</a
 			>
-			<a href="/r" class="btn-outline"
-				>explore chatrooms</a
+			<a href="/i" class="btn-outline"
+				>find products and services</a
 			>
 		</div>
 	</div>
@@ -81,6 +81,28 @@
 <!-- Features Section -->
 <section class="features-grid py-16">
 	<div class="mx-auto max-w-6xl px-4">
+		<div class="feature-card">
+			<div
+				class="feature-icon bg-[var(--color-theme-1)]"
+			>
+				<i class="fa-solid fa-bag-shopping"></i>
+			</div>
+			<h3 class="feature-title">
+				discover products and services
+			</h3>
+			<p class="feature-description">
+				browse user-created items, products, and
+				services from people nearby. connect with
+				creators, share your own offerings, and find
+				what you need through community-driven
+				discovery.
+			</p>
+			<a href="/i" class="feature-link"
+				>explore products <i class="fa fa-arrow-right"
+				></i></a
+			>
+		</div>
+
 		<div class="feature-card">
 			<div
 				class="feature-icon bg-[var(--color-theme-1)]"
@@ -107,7 +129,7 @@
 			<div
 				class="feature-icon bg-[var(--color-theme-2)]"
 			>
-				<i class="fa fa-users"></i>
+				<i class="far fa-comments"></i>
 			</div>
 			<h3 class="feature-title">
 				Create & Join Chatrooms to Connect with People

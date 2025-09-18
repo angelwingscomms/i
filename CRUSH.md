@@ -1,6 +1,7 @@
 # CRUSH.md
 
-- ALWAYS run `npm run format` before editing files
+- ALWAYS run `npm run format` before viewing and editing files to avoid any edit errors
+- if you encounter any edit errors, like 'old string not found', run `npm run format`, then retry
 - except `npm run format`, never run any npm commands unless asked to
 
 ## Code Style
@@ -23,6 +24,10 @@
 - never run any npm commands unless asked to
 - always send data to server as JSON w/ single character fields
 - always use all lowercase for copy
+
+### genai
+
+- always use gemini-2.5-flash for all text genai
 
 ### page.svelte
 
