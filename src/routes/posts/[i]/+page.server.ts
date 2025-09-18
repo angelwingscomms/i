@@ -29,15 +29,16 @@ export const load = async ({ params, locals }) => {
 				post.r = realtime_res.data.data.id;
 			}
 			
-			const realtime_res = await realtime.post(
-				'meetings/' + post.r + '/participants',
-				{
-					name: locals.user?.t || 'Anonymous',
-					preset_name: 'group_call_participant',
-					custom_participant_id: locals.user?.i || v7()
-				}
-			);
-			a = realtime_res.data.data.token;
+			// console.log('locals.user', locals.user)
+			// const realtime_res = await realtime.post(
+			// 	'meetings/' + post.r + '/participants',
+			// 	{
+			// 		name: locals.user?.t || 'Anonymous',
+			// 		preset_name: 'group_call_participant',
+			// 		custom_participant_id: locals.user?.i || v7()
+			// 	}
+			// );
+			// a = realtime_res.data.data.token;
 		} catch (e) {
 			console.error('Error with realtime:', e);
 			throw error(500, 'Failed to setup realtime communication');

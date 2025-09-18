@@ -23,9 +23,12 @@
 		}
 		timeout = setTimeout(async () => {
 			try {
+				const formData = new FormData();
+				formData.append('b', body);
 				const res = await axios.put(
 					`/posts/${post.i}`,
-					{ b: body }
+					formData,
+					{ headers: { 'Content-Type': 'multipart/form-data' } }
 				);
 				if (res.status === 200) {
 					toast.success('Post auto-saved');

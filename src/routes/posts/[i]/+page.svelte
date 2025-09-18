@@ -62,7 +62,7 @@
 		</div>
 	</article>
 
-	{#if (data.messages && data.messages.length > 0) || data.user}
+	<!-- {#if (data.a && data.messages && data.messages.length > 0) || data.user}
 		<div class="mt-8">
 			<Chat
 				m={data.messages}
@@ -73,5 +73,5 @@
 				showIcons={false}
 			/>
 		</div>
-	{/if}
+	{/if} -->
 </div>
