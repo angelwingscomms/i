@@ -109,8 +109,10 @@
 			/>
 			<Button
 				onclick={editWithAI}
-				loading={loading}
-				text={loading ? 'Generating...' : 'Generate Colors'}
+				{loading}
+				text={loading
+					? 'Generating...'
+					: 'Generate Colors'}
 				class="btn-primary mt-2 rounded-full px-4 py-2"
 			/>
 		</div>

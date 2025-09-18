@@ -141,10 +141,7 @@
 
 	<!-- Search Form -->
 	<div class="mx-auto max-w-4xl px-4 py-8">
-		<div
-			class="mb-8 rounded-lg p-6 shadow-lg"
-
-		>
+		<div class="mb-8 rounded-lg p-6 shadow-lg">
 			<div
 				class="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
 			>
@@ -152,7 +149,7 @@
 				<div class="md:col-span-2">
 					<label
 						for="query"
-						class="mb-2 block text-sm font-medium text-theme-4"
+						class="text-theme-4 mb-2 block text-sm font-medium"
 					>
 						Search
 					</label>
@@ -191,7 +188,7 @@
 				<div>
 					<label
 						for="kind"
-						class="mb-2 block text-sm font-medium text-theme-4"
+						class="text-theme-4 mb-2 block text-sm font-medium"
 					>
 						Type
 					</label>
@@ -199,13 +196,23 @@
 						id="kind"
 						bind:value={kind}
 						onchange={search}
-						class="w-full rounded-full border-b-2 border-l-2 [border-color:var(--color-theme-1)] bg-transparent px-4 py-3 transition-colors focus:[border-color:var(--color-theme-1)] appearance-none"
+						class="w-full appearance-none rounded-full border-b-2 border-l-2 [border-color:var(--color-theme-1)] bg-transparent px-4 py-3 transition-colors focus:[border-color:var(--color-theme-1)]"
 					>
-						<option value={undefined} class="bg-transparent text-inherit"
+						<option
+							value={undefined}
+							class="bg-transparent text-inherit"
 							>All Items</option
 						>
-						<option value={0} class="bg-transparent text-inherit">🛍️ Products</option>
-						<option value={1} class="bg-transparent text-inherit">⚡ Services</option>
+						<option
+							value={0}
+							class="bg-transparent text-inherit"
+							>🛍️ Products</option
+						>
+						<option
+							value={1}
+							class="bg-transparent text-inherit"
+							>⚡ Services</option
+						>
 					</select>
 				</div>
 
@@ -213,7 +220,7 @@
 				<div>
 					<label
 						for="sort"
-						class="mb-2 block text-sm font-medium text-theme-4"
+						class="text-theme-4 mb-2 block text-sm font-medium"
 					>
 						Sort by
 					</label>
@@ -221,13 +228,23 @@
 						id="sort"
 						bind:value={sort}
 						onchange={search}
-						class="w-full rounded-full border-b-2 border-l-2 [border-color:var(--color-theme-1)] bg-transparent px-4 py-3 transition-colors focus:[border-color:var(--color-theme-1)] appearance-none"
+						class="w-full appearance-none rounded-full border-b-2 border-l-2 [border-color:var(--color-theme-1)] bg-transparent px-4 py-3 transition-colors focus:[border-color:var(--color-theme-1)]"
 					>
-						<option value="relevance" class="bg-transparent text-inherit"
+						<option
+							value="relevance"
+							class="bg-transparent text-inherit"
 							>Relevance</option
 						>
-						<option value="newest" class="bg-transparent text-inherit">Newest</option>
-						<option value="oldest" class="bg-transparent text-inherit">Oldest</option>
+						<option
+							value="newest"
+							class="bg-transparent text-inherit"
+							>Newest</option
+						>
+						<option
+							value="oldest"
+							class="bg-transparent text-inherit"
+							>Oldest</option
+						>
 					</select>
 				</div>
 			</div>
@@ -261,5 +278,3 @@
 		</div>
 	</div>
 </div>
-
-

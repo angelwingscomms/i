@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { search_by_payload, get } from '$lib/db';
+import { search_by_payload, get, set } from '$lib/db';
 import { join_room } from '$lib/db/room';
 import { realtime } from '$lib/util/realtime';
 import { v7 } from 'uuid';
@@ -26,23 +26,27 @@ export const load = async ({ params, locals }) => {
 	}
 	console.log('post', post);
 
-	let a;
-	// Join user to room and get auth token if logged in and post has room
-	if (locals.user && post.r) {
-		await join_room(locals.user.i, post.r);
-		const room = await get(post.r, ['q']);
-		if (room && room.q) {
-			const realtime_res = await realtime.post(
-				'meetings/' + room.q + '/participants',
-				{
-					name: locals.user.t || 'Anonymous',
-					preset_name: 'group_call_participant',
-					custom_participant_id: locals.user.i || v7()
-				}
-			);
-			a = realtime_res.data.data.token;
-		}
+	if (!post.r) {
+		const realtime_res = await realtime.post(
+			'meetings',
+			{
+				title: ''
+			}
+		);
+		await set(params.i, {
+			r: realtime_res.data.data.id
+		});
+		post.r = realtime_res.data.data.id;
 	}
+	const realtime_res = await realtime.post(
+		'meetings/' + post.r + '/participants',
+		{
+			name: locals.user?.t || 'Anonymous',
+			preset_name: 'group_call_participant',
+			custom_participant_id: locals.user?.i || v7()
+		}
+	);
+	const a = realtime_res.data.data.token;
 
 	const messagePayloads = ['u', 'm', 'i', 'd', 'f'];
 	const messages = await search_by_payload(

@@ -172,7 +172,10 @@
 					on:sort={(e) => onSort(e.detail)}
 					onclick_outside={onClickOutside}
 				/>
-				<button class="btn-primary btn-md" onclick={search} disabled={loading}
+				<button
+					class="btn-primary btn-md"
+					onclick={search}
+					disabled={loading}
 					>{loading ? 'searching…' : 'search'}</button
 				>
 			</div>

@@ -30,9 +30,7 @@
 	>
 		<!-- Item Image -->
 		<div class="relative flex-shrink-0">
-			<div
-				class="h-16 w-16 overflow-hidden rounded"
-			>
+			<div class="h-16 w-16 overflow-hidden rounded">
 				{#if item.x && item.x.length > 0}
 					<img
 						src={item.x[0]}
