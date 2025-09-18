@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { marked } from 'marked';
+	import markedInstance from '$lib/util/marked';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import type { PageProps } from './$types';
@@ -489,7 +489,7 @@
 							<div
 								class="prose prose-lg max-w-none leading-relaxed text-gray-700 dark:text-gray-300"
 							>
-								{@html marked(item.d)}
+								{@html markedInstance(item.d)}
 							</div>
 						{:else}
 							<div class="py-16 text-center">

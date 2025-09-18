@@ -2,7 +2,7 @@
 	import type { Post } from '$lib/types';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
-	import { marked } from 'marked';
+	import { markedInstance } from '$lib/util/marked';
 	import Chat from '$lib/components/Chat.svelte';
 
 	let { data } = $props();
@@ -58,7 +58,7 @@
 		<div
 			class="prose prose-invert prose-lg max-w-none px-6 pt-6"
 		>
-			{@html marked.parse(post.b || '')}
+			{@html markedInstance(post.b || '')}
 		</div>
 	</article>
 

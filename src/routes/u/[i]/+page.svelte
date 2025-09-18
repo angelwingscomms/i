@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { marked } from 'marked';
+	import markedInstance from '$lib/util/marked';
 	import { onMount } from 'svelte';
 	import {
 		animate,
@@ -462,7 +462,7 @@
 							class="prose prose-lg max-w-none leading-relaxed"
 							style="color: var(--color-theme-4);"
 						>
-							{@html marked.parse(comparison)}
+							{@html markedInstance(comparison)}
 						</div>
 					</div>
 				{:else if !user.description}

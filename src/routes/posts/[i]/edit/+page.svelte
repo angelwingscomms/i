@@ -3,7 +3,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { toast } from '$lib/util/toast';
 	import axios from 'axios';
-	import { marked } from 'marked';
+	import markedInstance from '$lib/util/marked';
 	import { goto } from '$app/navigation';
 
 	let { data } = $props();
@@ -164,7 +164,7 @@
 					<h2 class="mb-2 text-xl font-semibold">
 						Preview
 					</h2>
-					{@html marked.parse(post.b || '')}
+					{@html markedInstance(post.b || '')}
 				</div>
 			{/if}
 		</div>
