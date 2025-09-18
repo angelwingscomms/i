@@ -4,6 +4,7 @@
 	import { toast } from '$lib/util/toast';
 	import axios from 'axios';
 	import { marked } from 'marked';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
 	let post = $state(data.p);
@@ -79,6 +80,22 @@
 			loading = false;
 		}
 	}
+
+	async function deletePost() {
+		if (
+			!confirm(
+				'Are you sure you want to delete this post?'
+			)
+		)
+			return;
+		try {
+			await axios.delete(`/posts/${post.i}`);
+			toast.success('Post deleted');
+			goto('/posts');
+		} catch (e) {
+			toast.error('Failed to delete post');
+		}
+	}
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
@@ -95,6 +112,7 @@
 			<a href={`/posts/${post.i}`} class="btn-outline"
 				>View Post</a
 			>
+			<Button text="Delete" onclick={deletePost} />
 		</div>
 	</div>
 	<div class="space-y-6">

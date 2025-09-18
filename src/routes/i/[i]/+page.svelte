@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import type { PageProps } from './$types';
-	import ChatWithButton from '$lib/components/ChatWithButton.svelte';
+	import Button from '$lib/components/Button.svelte';
 
 	type Item = {
 		i: string;
@@ -171,19 +171,9 @@
 							<div
 								class="absolute -right-3 -bottom-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-md"
 							>
-								<svg
-									class="h-6 w-6 text-white"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-									></path>
-								</svg>
+								<i
+									class="fas fa-search h-6 w-6 text-white"
+								></i>
 							</div>
 						</div>
 
@@ -222,9 +212,11 @@
 							<span
 								class="rounded-2xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 backdrop-blur-md"
 							>
-								{item.k === 0
-									? '🛍️ PRODUCT'
-									: '⚡ SERVICE'}
+								<i
+									class={`fas fa-${item.k === 0 ? 'shopping-bag' : 'bolt'} mr-1`}
+								></i>{item.k === 0
+									? 'PRODUCT'
+									: 'SERVICE'}
 							</span>
 							<span
 								class="text-sm font-medium text-white/70"
@@ -261,9 +253,11 @@
 						>
 							<div class="flex-1 sm:flex-none">
 								{#if item.u}
-									<ChatWithButton
+									<Button
 										href="/u/{item.u}/c"
-										text="💬 Chat with Owner"
+										text="Chat with Owner"
+										icon="fa-comments"
+										variant="primary"
 									/>
 								{/if}
 							</div>
@@ -271,26 +265,18 @@
 								<div
 									class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row"
 								>
-									<a
+									<Button
 										href="/u/{item.u}"
-										class="btn btn-secondary group"
-									>
-										<span
-											class="transition-transform duration-200 group-hover:scale-110"
-											>👤</span
-										>
-										<span>View Owner Profile</span>
-									</a>
-									<a
+										variant="secondary"
+										icon="fa-user"
+										text="View Owner Profile"
+									/>
+									<Button
 										href="/u/{item.u}/i"
-										class="btn btn-secondary group"
-									>
-										<span
-											class="transition-transform duration-200 group-hover:scale-110"
-											>🛍️</span
-										>
-										<span>More from Owner</span>
-									</a>
+										variant="secondary"
+										icon="fa-shopping-bag"
+										text="More from Owner"
+									/>
 								</div>
 							{/if}
 						</div>
@@ -299,32 +285,12 @@
 						<div
 							class="mt-6 border-t border-white/10 pt-6"
 						>
-							<a
+							<Button
 								href="/i/{item.i}/c"
-								class="group inline-flex items-center gap-3 text-white/80 transition-colors duration-200 hover:text-white"
-							>
-								<div
-									class="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 transition-colors duration-200 group-hover:bg-white/20"
-								>
-									<span class="text-sm">🤖</span>
-								</div>
-								<span class="font-medium"
-									>Ask AI About This Item</span
-								>
-								<svg
-									class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M9 5l7 7-7 7"
-									></path>
-								</svg>
-							</a>
+								variant="secondary"
+								icon="fa-robot"
+								text="Ask AI About This Item"
+							/>
 						</div>
 					</div>
 				</div>
@@ -357,9 +323,9 @@
 				<div
 					class="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-2xl ring-1 shadow-purple-500/30 ring-white/20"
 				>
-					<span class="text-4xl"
-						>{item.k === 0 ? '🛍️' : '⚡'}</span
-					>
+					<i
+						class={`fas fa-${item.k === 0 ? 'shopping-bag' : 'bolt'} text-4xl text-white`}
+					></i>
 				</div>
 
 				<div
@@ -368,9 +334,11 @@
 					<span
 						class="rounded-2xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 backdrop-blur-md"
 					>
-						{item.k === 0
-							? '🛍️ PRODUCT'
-							: '⚡ SERVICE'}
+						<i
+							class={`fas fa-${item.k === 0 ? 'shopping-bag' : 'bolt'} mr-1`}
+						></i>{item.k === 0
+							? 'PRODUCT'
+							: 'SERVICE'}
 					</span>
 					<span
 						class="text-sm font-medium text-white/70"
@@ -406,34 +374,28 @@
 					class="mx-auto flex max-w-2xl flex-col justify-center gap-4 sm:flex-row"
 				>
 					<div class="flex-1 sm:flex-none">
-						<ChatWithButton
+						<Button
 							href="/u/{item.u}/c"
-							text="💬 Chat with Owner"
+							text="Chat with Owner"
+							icon="fa-comments"
+							variant="primary"
 						/>
 					</div>
 					<div
 						class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row"
 					>
-						<a
+						<Button
 							href="/u/{item.u}"
-							class="btn btn-secondary group"
-						>
-							<span
-								class="transition-transform duration-200 group-hover:scale-110"
-								>👤</span
-							>
-							<span>View Owner Profile</span>
-						</a>
-						<a
+							variant="secondary"
+							icon="fa-user"
+							text="View Owner Profile"
+						/>
+						<Button
 							href="/u/{item.u}/i"
-							class="btn btn-secondary group"
-						>
-							<span
-								class="transition-transform duration-200 group-hover:scale-110"
-								>🛍️</span
-							>
-							<span>More from Owner</span>
-						</a>
+							variant="secondary"
+							icon="fa-shopping-bag"
+							text="More from Owner"
+						/>
 					</div>
 				</div>
 
@@ -441,32 +403,12 @@
 				<div
 					class="mt-8 border-t border-white/10 pt-8"
 				>
-					<a
+					<Button
 						href="/i/{item.i}/c"
-						class="group inline-flex items-center gap-3 text-white/80 transition-colors duration-200 hover:text-white"
-					>
-						<div
-							class="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 transition-colors duration-200 group-hover:bg-white/20"
-						>
-							<span class="text-sm">🤖</span>
-						</div>
-						<span class="font-medium"
-							>Ask AI About This Item</span
-						>
-						<svg
-							class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M9 5l7 7-7 7"
-							></path>
-						</svg>
-					</a>
+						variant="secondary"
+						icon="fa-robot"
+						text="Ask AI About This Item"
+					/>
 				</div>
 			</div>
 		</div>
@@ -497,7 +439,9 @@
 								<div
 									class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30"
 								>
-									<span class="text-white">📄</span>
+									<i
+										class="fas fa-file-alt text-white"
+									></i>
 								</div>
 								Description
 							</h2>
@@ -517,7 +461,8 @@
 								<div
 									class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-gray-100 to-gray-200 shadow-inner"
 								>
-									<span class="text-3xl">📝</span>
+									<i class="fas fa-file-alt text-3xl"
+									></i>
 								</div>
 								<h3
 									class="mb-2 text-lg font-semibold text-gray-600 dark:text-gray-400"
@@ -546,7 +491,9 @@
 								<div
 									class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 shadow-lg shadow-blue-500/30"
 								>
-									<span class="text-white">ℹ️</span>
+									<i
+										class="fas fa-info-circle text-white"
+									></i>
 								</div>
 								Details
 							</h2>
@@ -570,9 +517,11 @@
 										<div
 											class="rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 text-xs font-bold text-white shadow-lg shadow-purple-500/30"
 										>
-											{item.k === 0
-												? '🛍️ Product'
-												: '⚡ Service'}
+											<i
+												class={`fas fa-${item.k === 0 ? 'shopping-bag' : 'bolt'} mr-1`}
+											></i>{item.k === 0
+												? 'Product'
+												: 'Service'}
 										</div>
 									</div>
 								</div>
@@ -668,7 +617,8 @@
 									<div
 										class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 shadow-lg shadow-green-500/30"
 									>
-										<span class="text-white">⚡</span>
+										<i class="fas fa-bolt text-white"
+										></i>
 									</div>
 									Quick Actions
 								</h3>
@@ -678,47 +628,38 @@
 							</div>
 
 							<div class="space-y-4">
-								<ChatWithButton
+								<Button
 									href="/u/{item.u}/c"
-									text="💬 Chat with Owner"
+									text="Chat with Owner"
+									icon="fa-comments"
+									variant="primary"
 								/>
 
-								<a
+								<Button
 									href="/u/{item.u}"
-									class="btn btn-secondary group/btn w-full"
-								>
-									<span
-										class="transition-transform duration-200 group-hover/btn:scale-110"
-										>👤</span
-									>
-									<span>View Owner Profile</span>
-								</a>
+									variant="secondary"
+									icon="fa-user"
+									text="View Owner Profile"
+									wide={true}
+								/>
 
-								<a
+								<Button
 									href="/u/{item.u}/i"
-									class="btn btn-secondary group/btn w-full"
-								>
-									<span
-										class="transition-transform duration-200 group-hover/btn:scale-110"
-										>🛍️</span
-									>
-									<span>More from Owner</span>
-								</a>
+									variant="secondary"
+									icon="fa-shopping-bag"
+									text="More from Owner"
+									wide={true}
+								/>
 
-								<a
+								<Button
 									href="/i/{item.i}/c"
-									class="btn btn-secondary group/btn w-full"
-								>
-									<span
-										class="transition-transform duration-200 group-hover/btn:scale-110"
-										>🤖</span
-									>
-									<span>Ask AI About This</span>
-								</a>
+									variant="secondary"
+									icon="fa-robot"
+									text="Ask AI About This"
+									wide={true}
+								/>
 
-								<button
-									class="btn group/btn w-full"
-									style="border: 1px solid var(--color-theme-6); color: var(--color-theme-4);"
+								<Button
 									onclick={() =>
 										navigator
 											.share?.({
@@ -732,13 +673,11 @@
 													window.location.href
 												);
 											})}
-								>
-									<span
-										class="transition-transform duration-200 group-hover/btn:scale-110"
-										>📤</span
-									>
-									<span>Share Item</span>
-								</button>
+									variant="secondary"
+									icon="fa-share"
+									text="Share Item"
+									wide={true}
+								/>
 							</div>
 						</div>
 
@@ -754,7 +693,9 @@
 									<div
 										class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-500 shadow-lg shadow-orange-500/30"
 									>
-										<span class="text-white">📊</span>
+										<i
+											class="fas fa-chart-bar text-white"
+										></i>
 									</div>
 									Stats
 								</h4>
@@ -802,7 +743,8 @@
 								<div
 									class="flex h-12 w-12 items-center justify-center rounded-3xl bg-gradient-to-br from-teal-500 to-cyan-500 shadow-lg shadow-teal-500/30"
 								>
-									<span class="text-white">🔗</span>
+									<i class="fas fa-link text-white"
+									></i>
 								</div>
 								More from This Seller
 							</h2>
@@ -858,9 +800,11 @@
 														? '1'
 														: '2'});"
 												>
-													{relatedItem.k === 0
-														? '🛍️ Product'
-														: '⚡ Service'}
+													<i
+														class={`fas fa-${relatedItem.k === 0 ? 'shopping-bag' : 'bolt'} mr-1`}
+													></i>{relatedItem.k === 0
+														? 'Product'
+														: 'Service'}
 												</div>
 											</div>
 
@@ -923,31 +867,12 @@
 
 						{#if relatedItems.length >= 6}
 							<div class="mt-10 text-center">
-								<a
+								<Button
 									href="/u/{item.u}/i"
-									class="btn btn-secondary group inline-flex items-center gap-3"
-								>
-									<span
-										class="transition-transform duration-200 group-hover:scale-110"
-										>👀</span
-									>
-									<span
-										>View All Items from This Seller</span
-									>
-									<svg
-										class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M9 5l7 7-7 7"
-										></path>
-									</svg>
-								</a>
+									variant="secondary"
+									icon="fa-eye"
+									text="View All Items from This Seller"
+								/>
 							</div>
 						{/if}
 					</div>
@@ -996,19 +921,7 @@
 					onclick={closeImageModal}
 					aria-label="Close image gallery"
 				>
-					<svg
-						class="h-6 w-6"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M6 18L18 6M6 6l12 12"
-						></path>
-					</svg>
+					<i class="fas fa-times h-6 w-6"></i>
 				</button>
 
 				<!-- Main image container -->
@@ -1039,19 +952,8 @@
 							}}
 							aria-label="Previous image"
 						>
-							<svg
-								class="h-6 w-6"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M15 19l-7-7 7-7"
-								></path>
-							</svg>
+							<i class="fas fa-chevron-left h-6 w-6"
+							></i>
 						</button>
 
 						<button
@@ -1062,19 +964,8 @@
 							}}
 							aria-label="Next image"
 						>
-							<svg
-								class="h-6 w-6"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 5l7 7-7 7"
-								></path>
-							</svg>
+							<i class="fas fa-chevron-right h-6 w-6"
+							></i>
 						</button>
 					{/if}
 				</div>
