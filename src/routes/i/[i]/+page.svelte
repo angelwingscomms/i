@@ -23,6 +23,7 @@
 		i: Item;
 		relatedItems?: Item[];
 	};
+	console.log('Loaded item:', item);
 	let selectedImageIndex = $state(0);
 	let showImageModal = $state(false);
 
@@ -251,20 +252,16 @@
 						<div
 							class="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start"
 						>
-							<div class="flex-1 sm:flex-none">
-								{#if item.u}
+							{#if item.u}
+								<div
+									class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row"
+								>
 									<Button
 										href="/u/{item.u}/c"
 										text="Chat with Owner"
 										icon="fa-comments"
 										variant="primary"
 									/>
-								{/if}
-							</div>
-							{#if item.u}
-								<div
-									class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row"
-								>
 									<Button
 										href="/u/{item.u}"
 										variant="secondary"
@@ -283,13 +280,32 @@
 
 						<!-- Additional Action -->
 						<div
-							class="mt-6 border-t border-white/10 pt-6"
+							class="mt-6 border-t border-white/10 pt-6 justify-center gap-3"
 						>
 							<Button
 								href="/i/{item.i}/c"
 								variant="secondary"
 								icon="fa-robot"
 								text="Ask AI About This Item"
+							/>
+							<Button
+								onclick={() =>
+									navigator
+										.share?.({
+											title: item.t,
+											text: item.d || '',
+											url: window.location.href
+										})
+										.catch(() => {
+											// Fallback to clipboard
+											navigator.clipboard.writeText(
+												window.location.href
+											);
+										})}
+								variant="secondary"
+								icon="fa-share"
+								text="Share Item"
+								wide={true}
 							/>
 						</div>
 					</div>
@@ -401,13 +417,32 @@
 
 				<!-- Additional Action -->
 				<div
-					class="mt-8 border-t border-white/10 pt-8"
+					class="mt-8 border-t border-white/10 pt-8 flex justify-center gap-3"
 				>
 					<Button
 						href="/i/{item.i}/c"
 						variant="secondary"
 						icon="fa-robot"
 						text="Ask AI About This Item"
+					/>
+					<Button
+						onclick={() =>
+							navigator
+								.share?.({
+									title: item.t,
+									text: item.d || '',
+									url: window.location.href
+								})
+								.catch(() => {
+									// Fallback to clipboard
+									navigator.clipboard.writeText(
+										window.location.href
+									);
+								})}
+						variant="secondary"
+						icon="fa-share"
+						text="Share Item"
+						wide={true}
 					/>
 				</div>
 			</div>
@@ -596,132 +631,6 @@
 											{item.i}
 										</span>
 									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Right Column - Actions & Quick Info -->
-				<div class="lg:col-span-1">
-					<div class="sticky top-8 space-y-8">
-						<!-- Quick Actions Card -->
-						<div class="card-normal group">
-							<div
-								class="mb-6 flex items-center justify-between"
-							>
-								<h3
-									class="flex items-center gap-3 text-xl font-bold lg:text-2xl"
-									style="color: var(--color-theme-4);"
-								>
-									<div
-										class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 shadow-lg shadow-green-500/30"
-									>
-										<i class="fas fa-bolt text-white"
-										></i>
-									</div>
-									Quick Actions
-								</h3>
-								<div
-									class="h-8 w-px bg-gradient-to-b from-green-500/20 to-transparent"
-								></div>
-							</div>
-
-							<div class="space-y-4">
-								<Button
-									href="/u/{item.u}/c"
-									text="Chat with Owner"
-									icon="fa-comments"
-									variant="primary"
-								/>
-
-								<Button
-									href="/u/{item.u}"
-									variant="secondary"
-									icon="fa-user"
-									text="View Owner Profile"
-									wide={true}
-								/>
-
-								<Button
-									href="/u/{item.u}/i"
-									variant="secondary"
-									icon="fa-shopping-bag"
-									text="More from Owner"
-									wide={true}
-								/>
-
-								<Button
-									href="/i/{item.i}/c"
-									variant="secondary"
-									icon="fa-robot"
-									text="Ask AI About This"
-									wide={true}
-								/>
-
-								<Button
-									onclick={() =>
-										navigator
-											.share?.({
-												title: item.t,
-												text: item.d || '',
-												url: window.location.href
-											})
-											.catch(() => {
-												// Fallback to clipboard
-												navigator.clipboard.writeText(
-													window.location.href
-												);
-											})}
-									variant="secondary"
-									icon="fa-share"
-									text="Share Item"
-									wide={true}
-								/>
-							</div>
-						</div>
-
-						<!-- Item Stats Card -->
-						<div class="card-normal group">
-							<div
-								class="mb-6 flex items-center justify-between"
-							>
-								<h4
-									class="flex items-center gap-3 text-lg font-bold"
-									style="color: var(--color-theme-4);"
-								>
-									<div
-										class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-500 shadow-lg shadow-orange-500/30"
-									>
-										<i
-											class="fas fa-chart-bar text-white"
-										></i>
-									</div>
-									Stats
-								</h4>
-								<div
-									class="h-6 w-px bg-gradient-to-b from-orange-500/20 to-transparent"
-								></div>
-							</div>
-
-							<div class="space-y-4">
-								<div
-									class="flex items-center justify-between rounded-xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-3 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
-								>
-									<span
-										class="text-sm font-medium text-gray-600 dark:text-gray-400"
-										>Age</span
-									>
-									<span
-										class="font-bold text-gray-900 dark:text-gray-100"
-									>
-										{item.a
-											? Math.ceil(
-													(Date.now() - item.a) /
-														(1000 * 60 * 60 * 24)
-												)
-											: '—'}d
-									</span>
 								</div>
 							</div>
 						</div>

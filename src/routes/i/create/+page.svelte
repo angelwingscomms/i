@@ -6,6 +6,8 @@
 		createTimeline,
 		stagger
 	} from 'animejs';
+	import Button from '$lib/components/Button.svelte';
+	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 
 	let name = $state('');
 	let desc = $state('');
@@ -214,79 +216,47 @@
 
 				<!-- Description Field -->
 				<div class="form-field opacity-0">
-					<label
-						for="item-description"
-						class="mb-3 block text-lg font-bold"
-						style="color: var(--color-theme-4);"
-					>
-						Description
-					</label>
-					<textarea
-						id="item-description"
-						class="min-h-[120px] w-full rounded-2xl px-6 py-4 text-lg font-medium transition-all focus:outline-none"
-						style="border: 1px solid var(--color-theme-3); background: transparent;"
-						placeholder="Describe your item in detail. What makes it special?"
+					<DescriptionInput
 						bind:value={desc}
-						onfocus={(e) =>
-							((
-								e.target as HTMLTextAreaElement
-							).style.border =
-								'1px solid var(--color-theme-1)')}
-						onblur={(e) =>
-							((
-								e.target as HTMLTextAreaElement
-							).style.border =
-								'1px solid var(--color-theme-3)')}
-					></textarea>
+						endpoint=""
+						placeholder="Describe your item in detail. What makes it special?"
+						rows={5}
+						label="Description"
+						editable={true}
+					/>
 				</div>
 
 				<!-- Type Selection -->
 				<div class="form-field opacity-0">
-					<fieldset>
-						<legend
-							class="mb-3 block text-lg font-bold"
-							style="color: var(--color-theme-4);"
-						>
-							<span
-								style="color: var(--color-theme-1);"
-								>*</span
-							> Type
-						</legend>
-						<div class="flex gap-4">
-							<label class="flex-1">
-								<input
-									type="radio"
-									class="sr-only"
-									bind:group={kind}
-									value={0}
-								/>
-								<div
-									class="active-button cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all"
-									style={kind === 0
-										? `background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);`
-										: `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}
-								>
-									🛍️ Product
-								</div>
-							</label>
-							<label class="flex-1">
-								<input
-									type="radio"
-									class="sr-only"
-									bind:group={kind}
-									value={1}
-								/>
-								<div
-									class="active-button cursor-pointer rounded-full px-6 py-4 text-center text-lg font-bold transition-all"
-									style={kind === 1
-										? `background: transparent; border: 1px solid var(--color-theme-2); color: var(--color-theme-2);`
-										: `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}
-								>
-									⚡ Service
-								</div>
-							</label>
-						</div>
-					</fieldset>
+					<label
+						class="mb-3 block text-lg font-bold"
+						style="color: var(--color-theme-4);"
+					>
+						<span
+							style="color: var(--color-theme-1);"
+							>*</span
+						> Type
+					</label>
+					<div class="flex gap-4">
+						<Button
+							text="Product"
+							icon="fa-shopping-bag"
+							onclick={() => kind = 0}
+							class={kind === 0 ? 'active' : ''}
+							style={kind === 0
+								? `background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);`
+								: `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}
+						/>
+						<Button
+							text="Service"
+							icon="fa-wrench"
+							onclick={() => kind = 1}
+							class={kind === 1 ? 'active' : ''}
+							style={kind === 1
+								? `background: transparent; border: 1px solid var(--color-theme-2); color: var(--color-theme-2);`
+								: `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}
+						/>
+					</div>
 				</div>
 
 				<!-- File Upload -->
@@ -314,7 +284,9 @@
 							class="rounded-2xl border border-dashed p-8 text-center transition-all"
 							style="border-color: var(--color-theme-3); background: transparent;"
 						>
-							<div class="mb-4 text-4xl">📸</div>
+							<div class="mb-4">
+								<i class="fas fa-camera text-4xl"></i>
+							</div>
 							<p
 								class="text-lg font-medium"
 								style="color: var(--color-theme-4);"
@@ -335,33 +307,14 @@
 
 				<!-- Submit Button -->
 				<div class="form-field pt-4 opacity-0">
-					<button
-						class="submit-button w-full rounded-full px-8 py-6 text-2xl font-black transition-all disabled:cursor-not-allowed disabled:opacity-50"
-						style="background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);"
+					<Button
+						text={isSubmitting ? 'Creating...' : `Create ${kind === 0 ? 'Product' : 'Service'}`}
+						icon={isSubmitting ? 'fa-spinner fa-spin' : 'fa-magic'}
 						onclick={submit}
 						disabled={isSubmitting}
-					>
-						{#if isSubmitting}
-							<div
-								class="flex items-center justify-center gap-3"
-							>
-								<div
-									class="h-6 w-6 animate-spin rounded-full border-3 border-white border-t-transparent"
-								></div>
-								Creating...
-							</div>
-						{:else}
-							<div
-								class="flex items-center justify-center gap-3"
-							>
-								<span>✨</span>
-								Create {kind === 0
-									? 'Product'
-									: 'Service'}
-								<span>🚀</span>
-							</div>
-						{/if}
-					</button>
+						class="submit-button w-full !rounded-full !px-8 !py-6 !text-2xl !font-black"
+						style="background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);"
+					/>
 				</div>
 			</div>
 		</div>

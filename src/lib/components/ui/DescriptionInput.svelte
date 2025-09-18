@@ -1,6 +1,6 @@
 <script lang="ts">
 	import axios from 'axios';
-
+	import Button from '$lib/components/Button.svelte';
 	let {
 		value = $bindable(''),
 		editable = true,
@@ -73,6 +73,7 @@
 		if (mediaRecorder && isRecording) {
 			mediaRecorder.stop();
 			isRecording = false;
+			isTranscribing = true;
 		}
 	}
 
@@ -132,58 +133,29 @@
 		{#if editable}
 			<div class="voice-controls">
 				{#if !isRecording && !isTranscribing}
-					<button
+					<Button
 						type="button"
 						class="voice-btn rounded-full"
 						onclick={startRecording}
-					>
-						<svg
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-						>
-							<path
-								d="M12 2C13.1 2 14 2.9 14 4V12C14 13.1 13.1 14 12 14C10.9 14 10 13.1 10 12V4C10 2.9 10.9 2 12 2M19 12C19 16.2 15.8 19.2 12 19.2S5 16.2 5 12H7C7 15.1 9.5 17.6 12 17.6S17 15.1 17 12H19Z"
-							/>
-						</svg>
-						voice typing
-					</button>
+						icon="fa-microphone"
+						text="voice typing"
+					/>
 				{:else if isRecording}
-					<button
+					<Button
 						type="button"
 						class="voice-btn-recording rounded-full"
 						onclick={stopRecording}
-					>
-						<svg
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-						>
-							<path d="M6 6H18V18H6V6Z" />
-						</svg>
-						Stop Recording
-					</button>
+						icon="fa-circle"
+						text="recording"
+					/>
 				{:else}
-					<button
+					<Button
 						type="button"
 						class="voice-btn-transcribing rounded-full"
-						disabled
-					>
-						<svg
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-						>
-							<path
-								d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
-								style="animation: spin 1s linear infinite;"
-							/>
-						</svg>
-						Transcribing...
-					</button>
+						disabled={true}
+						loading={true}
+						text="transcribing"
+					/>
 				{/if}
 			</div>
 		{/if}

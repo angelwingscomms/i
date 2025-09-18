@@ -7,6 +7,7 @@ export interface Item {
 	k?: 0 | 1; // kind: 0 product, 1 service
 	l?: number; // lat
 	n?: number; // lon
+	u: string; // user id
 	c?: Record<string, unknown>; // compact map
 	x?: string[]; // images urls
 	a?: number; // created timestamp

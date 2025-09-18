@@ -1,5 +1,3 @@
-- if you encounter any edit errors, like 'old string not found in content', run `prettier --write <filename>`, then view the file again before trying to edit
-
 ## Code Style
 
 - Naming: snake_case for vars/functions; db payload keys single letters (e.g., i=id, t=tag/text, u=user, d=desc/date, a=age/created, g=gender, l=lat/lon)

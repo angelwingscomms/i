@@ -45,6 +45,7 @@ export const POST: RequestHandler = async ({
 		s: 'i',
 		t: t.trim(),
 		d: d.trim(),
+		u: locals.user.i,
 		q,
 		k: k ?? 0,
 		a: Date.now(),
