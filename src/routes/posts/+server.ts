@@ -2,7 +2,6 @@ import { error, text } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { create } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
-import { join_room } from '$lib/db/room';
 
 export const POST: RequestHandler = async ({
 	locals
@@ -71,9 +70,6 @@ export const POST: RequestHandler = async ({
 				'Failed to create post due to an internal server error. Please try again.'
 			);
 		}
-
-		// Join creator to room
-		await join_room(locals.user.i, room_id);
 
 		// Create post with room_id
 		id = await create(
