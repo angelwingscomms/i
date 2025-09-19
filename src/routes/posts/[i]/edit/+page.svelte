@@ -125,10 +125,10 @@
 	<div class="flex gap-4">
 		<div class="flex-1">
 			<div class="mb-4 flex items-center justify-between">
-				<h1 class="text-2xl font-bold">Edit Post</h1>
+				<h1 class="text-2xl font-bold text-purple-600">Edit Post</h1>
 				<div class="flex items-center gap-2">
 					{#if saving}
-						<span class="text-sm text-gray-500">Saving...</span>
+						<span class="text-sm text-purple-500">Saving...</span>
 					{/if}
 					<a href={`/posts/${post.i}`} class="btn-outline">View Post</a>
 					<Button text="Delete" onclick={deletePost} />
