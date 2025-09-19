@@ -1,12 +1,14 @@
 <script lang="ts">
+	import { marked } from 'marked';
 	import type { Post } from '$lib/types';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
-	import { md } from '$lib/util/marked';
 	import Chat from '$lib/components/Chat.svelte';
+	import { toast } from '$lib/util/toast';
+	import axios from 'axios';
+	import { untrack } from 'svelte';
 
-	let { data } = $props();
-	let post: Post = data.p;
+	let { data } = $props(), post: Post = data.p;
 </script>
 
 <svelte:head>
@@ -43,7 +45,6 @@
 			icon={data.user?.i === post.u
 				? 'fa-edit'
 				: undefined}
-			class="font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
 		/>
 	</div>
 
@@ -58,7 +59,7 @@
 		<div
 			class="prose prose-invert prose-lg max-w-none px-6 pt-6"
 		>
-			{@html md(post.b || '')}
+			{@html marked.parse(post.b || '')}
 		</div>
 	</article>
 

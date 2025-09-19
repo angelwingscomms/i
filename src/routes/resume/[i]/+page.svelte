@@ -38,8 +38,8 @@
 		</div>
 		<div class="flex gap-2">
 			<Button
-				text="View in full"
-				href={`/resume/${r.i}/full`}
+				text="Full page view"
+				href={`/resume/${r.i}/full_page_view`}
 				icon="fa-expand"
 			/>
 			<Button

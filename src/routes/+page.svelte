@@ -61,11 +61,11 @@
 		<div
 			class="flex flex-col justify-center gap-4 sm:flex-row"
 		>
-			<a href="/posts" class="btn-primary"
-				>explore posts</a
-			>
 			<a href="/i" class="btn-outline"
 				>find products and services</a
+			>
+			<a href="/posts" class="btn-primary"
+				>explore posts</a
 			>
 		</div>
 	</div>

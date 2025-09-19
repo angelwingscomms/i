@@ -1,5 +1,5 @@
-- let your edit diffs always be ALWAYS be single lines. If the edit spans multiple lines, call the edit/multi-edit tool with many single calls
-- always use context7 check the docs for anything before doing it, especially SvelteKit
+- when using edit tools, never include linebreaks or trailing whitespaces in `old_string`. if what you want to edit spans multiple lines, call the tool multiple times.
+- always use exasearch to check the docs for anything before starting, especially SvelteKit
 
 ## Code Style
 
@@ -20,14 +20,19 @@
 - event handlers without have colon e.g `onclick` not `on:click`
 - when styling, always look at src/styles/_variables.css. ALWAYS use Tailwind ONLY. DON'T USE STYLEBLOCKS OR INLINE STYLES.
 - never run any npm commands unless asked to
-- always send data to server as JSON w/ single character fields
-- always use all lowercase for copy
+- always send data to server as JSON or formdata w/ single character fields
+- always use all lowercase for all UI text
 
-### genai
+# multi variable declaration
+```svelte
+	let { data } = $props(), post: Post = data.p;
+```
+
+# genai
 
 - always use gemini-2.5-flash for all text genai
 
-### page.svelte
+# page.svelte
 
 - use svelte:window to add event handlers to window, e.g <svelte:window onkeydown>
 - always import {page} from '$app/state', cuz Svelte5

@@ -131,7 +131,7 @@
 				bind:ref={ai_input}
 				label="Post Content"
 				editable={true}
-				send_button={true}
+				send_button={false}
 			/>
 		</div>
 		<div class="space-y-2">

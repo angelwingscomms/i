@@ -40,7 +40,7 @@ export const POST: RequestHandler = async ({
 		x?: string[];
 	};
 	if (!t || !d) throw error(400, 'missing fields');
-	const q = await summarize(d);
+	const q = d.trim().length > 1440 ? await summarize(d) : undefined;
 	const payload: Item = {
 		s: 'i',
 		t: t.trim(),
