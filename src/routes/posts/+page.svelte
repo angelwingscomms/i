@@ -44,7 +44,7 @@
 			}
 			if (res.statusText !== 'OK')
 				throw new Error('create failed');
-			await goto(`/posts/${res.data}/edit`);
+			goto(`/posts/${res.data}/edit`);
 		} catch (e) {
 			toast.error('Failed to create post');
 		} finally {

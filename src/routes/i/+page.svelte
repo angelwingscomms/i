@@ -132,7 +132,6 @@
 						href="/i/create"
 						text="Create Item"
 						icon="fa-plus"
-						class="!rounded-none ![border-color:var(--color-theme-1)]"
 					/>
 				{/if}
 			</div>

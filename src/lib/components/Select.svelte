@@ -7,6 +7,7 @@
 		open = false,
 		placeholder = 'Select...',
 		sort_ref = null as HTMLDivElement | null,
+		label = '',
 		onclick
 	} = $props<{
 		options: { value: string; label: string }[];
@@ -14,13 +15,14 @@
 		open?: boolean;
 		placeholder?: string;
 		sort_ref?: HTMLDivElement | null;
-		onclick?: () => void;
+		label?: string;
+		onclick?: (v: string) => void;
 	}>();
 
 	function handle_select(v: string) {
 		value = v;
 		open = false;
-		onclick(v);
+		onclick?.(v);
 	}
 
 	function handle_click_outside(event: MouseEvent) {
