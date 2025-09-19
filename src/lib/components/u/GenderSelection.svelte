@@ -1,6 +1,6 @@
 <script lang="ts">
 	let {
-		gender = $bindable(1),
+		gender = $bindable(undefined),
 		show_all = false,
 		head = 'Searching for',
 		onchange

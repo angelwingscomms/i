@@ -2,7 +2,7 @@
 	import GenderSelection from './GenderSelection.svelte';
 	import AgeRange from './AgeRange.svelte';
 	import ModeSelection from './ModeSelection.svelte';
-	import SortDropdown from './SortDropdown.svelte';
+	import Select from '$lib/components/Select.svelte';
 	import DescriptionInput from './DescriptionInput.svelte';
 	import { page } from '$app/state';
 	import axios from 'axios';

@@ -155,7 +155,8 @@
 				rows={4}
 				label="AI Edit Instructions"
 				editable={true}
-				send_button={editWithGemini}
+				send={editWithGemini}
+				send_loading={loading}
 			/>
 		</div>
 		<div class="space-y-2">

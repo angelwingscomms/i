@@ -80,8 +80,8 @@
 
 <!-- Features Section -->
 <section class="features-grid py-16">
-	<div class="mx-auto max-w-6xl px-4">
-		<div class="feature-card">
+	<div class="mx-auto max-w-6xl px-4 flex flex-wrap gap-8 justify-center">
+		<div class="feature-card w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
 			<div
 				class="feature-icon bg-[var(--color-theme-1)]"
 			>
@@ -103,7 +103,7 @@
 			>
 		</div>
 
-		<div class="feature-card">
+		<div class="feature-card w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
 			<div
 				class="feature-icon bg-[var(--color-theme-1)]"
 			>
@@ -125,7 +125,7 @@
 			>
 		</div>
 
-		<div class="feature-card">
+		<div class="feature-card w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
 			<div
 				class="feature-icon bg-[var(--color-theme-2)]"
 			>
@@ -149,7 +149,7 @@
 			>
 		</div>
 
-		<div class="feature-card">
+		<div class="feature-card w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
 			<div
 				class="feature-icon bg-[var(--color-theme-3)]"
 			>
@@ -172,7 +172,7 @@
 			>
 		</div>
 
-		<div class="feature-card">
+		<div class="feature-card w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
 			<div
 				class="feature-icon bg-[var(--color-theme-4)]"
 			>
@@ -195,7 +195,7 @@
 			>
 		</div>
 
-		<div class="feature-card">
+		<div class="feature-card w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
 			<div
 				class="feature-icon bg-[var(--color-theme-5)]"
 			>

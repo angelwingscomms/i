@@ -11,7 +11,8 @@
 		ref = $bindable<
 			HTMLInputElement | HTMLTextAreaElement | null
 		>(null),
-		send_button = () => {}
+		send,
+		send_loading = false
 	}: {
 		value?: string;
 		editable?: boolean;
@@ -23,7 +24,8 @@
 			| HTMLInputElement
 			| HTMLTextAreaElement
 			| null;
-		send_button?: (value: string | undefined) => void;
+		send?: (value: string | undefined) => void;
+		send_loading?: boolean;
 	} = $props();
 
 	// Constants
@@ -152,10 +154,11 @@
 							onclick={startRecording}
 							icon="fa-microphone"
 						/>
-						{#if send_button}
+						{#if send}
 							<Button
-								onclick={() => send_button(value)}
-								icon="fa-paper-plane"
+								onclick={() => send(value)}
+								icon={send_loading ? "fa-spinner" : "fa-paper-plane"}
+								disabled={send_loading}
 							/>
 						{/if}
 					{:else if isRecording}
