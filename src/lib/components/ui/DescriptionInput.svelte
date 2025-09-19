@@ -97,50 +97,51 @@
 			>{label}</label
 		>
 	{/if}
-	<textarea
-		id="description"
-		name="description"
-		bind:value
-		class="description-textarea border-1 border-l-0 border-b-0"
-		{placeholder}
-		{rows}
-		required
-		disabled={!editable || isTranscribing}
-		readonly={!editable}
-		bind:this={ref}
-	></textarea>
-
-	<div class="description-controls">
-		{#if editable}
-			<div class="voice-controls flex items-center gap-2">
-				{#if !isRecording && !isTranscribing}
-					<Button
-						onclick={startRecording}
-						icon="fa-microphone"
-						class="h-8 w-8 p-0"
-					/>
-					{#if send_button}
+	<div class="flex w-full flex-col items-start gap-2 border-b-1 border-l-1 rounded-b-3xl rounded-br-none rounded-t-none p-2" style="border-color: var(--color-theme-6)">
+		<textarea
+			id="description"
+			name="description"
+			bind:value
+			class="description-textarea focus:ring-0 focus:outline-none border-0"
+			{placeholder}
+			{rows}
+			required
+			disabled={!editable || isTranscribing}
+			readonly={!editable}
+			bind:this={ref}
+		></textarea>
+		<div
+			class="description-controls flex-shrink-0"
+		>
+			{#if editable}
+				<div
+					class="voice-controls flex items-center gap-2"
+				>
+					{#if !isRecording && !isTranscribing}
 						<Button
-							onclick={() => onInput({ value })}
-							icon="fa-paper-plane"
-							class="h-8 w-8 p-0"
+							onclick={startRecording}
+							icon="fa-microphone"
+						/>
+						{#if send_button}
+							<Button
+								onclick={() => onInput({ value })}
+								icon="fa-paper-plane"
+							/>
+						{/if}
+					{:else if isRecording}
+						<Button
+							onclick={stopRecording}
+							icon="fa-circle"
+						/>
+					{:else}
+						<Button
+							icon="fa-spinner"
+							disabled={true}
+							loading={true}
 						/>
 					{/if}
-				{:else if isRecording}
-					<Button
-						onclick={stopRecording}
-						icon="fa-circle"
-						class="h-8 w-8 p-0"
-					/>
-				{:else}
-					<Button
-						type="button"
-						class="voice-btn-transcribing rounded-full h-8 w-8 p-0"
-						disabled={true}
-						loading={true}
-					/>
-				{/if}
-			</div>
-		{/if}
+				</div>
+			{/if}
+		</div>
 	</div>
 </div>

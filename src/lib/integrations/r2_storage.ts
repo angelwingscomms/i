@@ -1,3 +1,5 @@
+import { dev } from '$app/environment';
+
 // Platform interface for Cloudflare Workers
 export interface Platform {
 	env: {
@@ -55,9 +57,9 @@ export async function upload_image(
 			}
 		});
 
-		// Return the public URL for the uploaded file
-		// In production, this should use your domain's R2 public URL
-		return `https://files.apexlinks.org/${objectKey}`;
+		return dev
+			? `https://pub-094030d6a86b4bf2b41abb6daf297c6d.r2.dev/${objectKey}`
+			: `https://files.apexlinks.org/${objectKey}`;
 	} catch (error) {
 		console.error('R2 upload error:', error);
 		throw new Error(

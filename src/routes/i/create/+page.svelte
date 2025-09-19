@@ -85,20 +85,6 @@
 	}
 
 	async function submit() {
-
-
-
-		}
-
-		isSubmitting = true;
-
-		// Submit button animation
-		animate('.submit-button', {
-			scale: [1, 0.95, 1],
-			duration: 300,
-			ease: 'outElastic(1, .8)'
-		});
-
 		try {
 			const x = await upload_files();
 			const res = await fetch('/i/create', {
@@ -125,7 +111,7 @@
 
 			toast.success('item created');
 			window.location.href = `/i/${i}`;
-		} catch {
+		} catch (error) {
 			toast.error('failed to create item');
 		} finally {
 			isSubmitting = false;

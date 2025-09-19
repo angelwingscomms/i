@@ -49,13 +49,9 @@
 }
 
 .textarea:focus {
-	border-color: var(--border-focus);
-	box-shadow: 0 0 0 4px
-		color-mix(
-			in srgb,
-			var(--border-focus) 20%,
-			transparent
-		);
+	outline: none;
+	border-color: inherit;
+	box-shadow: none;
 }
 
 /* Form Groups */
@@ -79,7 +75,7 @@
 }
 
 @utility description-textarea {
-	@apply textarea w-full pb-16;
+	@apply textarea w-full;
 }
 
 @utility description-controls {
@@ -97,7 +93,7 @@
 }
 
 @utility voice-controls {
-	@apply absolute bottom-6 left-2 flex gap-2;
+	@apply flex gap-2;
 }
 
 @utility voice-btn {
