@@ -40,18 +40,18 @@
 <div
 	use:outside_click
 	outside_click={handle_click_outside}
-	class="dropdown-container"
+	class="dropdown-container w-full"
 	bind:this={sort_ref}
 >
 	<button
 		type="button"
-		class="dropdown-trigger"
+		class="dropdown-trigger w-full justify-between"
 		onclick={() => (open = !open)}
 		aria-haspopup="listbox"
 		aria-expanded={open}
 		aria-label="select option"
 	>
-		<span class="text-secondary">sort:</span>
+		{#if label}<span class="text-secondary">{label}</span>{/if}
 		<span class="text-primary">
 			{#if value}
 				{@const selected = options.find(
@@ -84,7 +84,7 @@
 	{#if open}
 		<div
 			role="listbox"
-			class="dropdown-panel dropdown-sm animate-fade-in"
+			class="dropdown-panel dropdown-sm animate-fade-in w-full"
 		>
 			{#each options as opt}
 				<button

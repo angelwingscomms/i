@@ -4,6 +4,8 @@
 	import { onMount } from 'svelte';
 	import ItemResultsList from '$lib/components/ItemResultsList.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Select from '$lib/components/Select.svelte';
+
 
 	type Item = {
 		i: string;
@@ -189,30 +191,21 @@
 						for="kind"
 						class="text-theme-4 mb-2 block text-sm font-medium"
 					>
-						Type
+						type
 					</label>
-					<select
-						id="kind"
-						bind:value={kind}
-						onchange={search}
-						class="w-full appearance-none rounded-full border-b-2 border-l-2 [border-color:var(--color-theme-1)] bg-transparent px-4 py-3 transition-colors focus:[border-color:var(--color-theme-1)]"
-					>
-						<option
-							value={undefined}
-							class="bg-transparent text-inherit"
-							>All Items</option
-						>
-						<option
-							value={0}
-							class="bg-transparent text-inherit"
-							>🛍️ Products</option
-						>
-						<option
-							value={1}
-							class="bg-transparent text-inherit"
-							>⚡ Services</option
-						>
-					</select>
+					<Select
+						options={[
+							{ value: '', label: 'all items' },
+							{ value: '0', label: '🛍️ products' },
+							{ value: '1', label: '⚡ services' }
+						]}
+						value={kind === undefined ? '' : String(kind)}
+						placeholder="select type"
+						onclick={(v) => {
+							kind = v ? (Number(v) as 0 | 1) : undefined;
+							search();
+						}}
+					/>
 				</div>
 
 				<!-- Sort -->
@@ -221,30 +214,21 @@
 						for="sort"
 						class="text-theme-4 mb-2 block text-sm font-medium"
 					>
-						Sort by
+						sort by
 					</label>
-					<select
-						id="sort"
-						bind:value={sort}
-						onchange={search}
-						class="w-full appearance-none rounded-full border-b-2 border-l-2 [border-color:var(--color-theme-1)] bg-transparent px-4 py-3 transition-colors focus:[border-color:var(--color-theme-1)]"
-					>
-						<option
-							value="relevance"
-							class="bg-transparent text-inherit"
-							>Relevance</option
-						>
-						<option
-							value="newest"
-							class="bg-transparent text-inherit"
-							>Newest</option
-						>
-						<option
-							value="oldest"
-							class="bg-transparent text-inherit"
-							>Oldest</option
-						>
-					</select>
+					<Select
+						options={[
+							{ value: 'relevance', label: 'relevance' },
+							{ value: 'newest', label: 'newest' },
+							{ value: 'oldest', label: 'oldest' }
+						]}
+						value={sort}
+						placeholder="select sort"
+						onclick={(v) => {
+							sort = v as 'relevance' | 'newest' | 'oldest';
+							search();
+						}}
+					/>
 				</div>
 			</div>
 
@@ -252,7 +236,7 @@
 			{#if loading}
 				<div class="mt-4 text-center">
 					<div
-						class="inline-flex items-center gap-2 rounded border-t-2 border-r-2 [border-color:var(--color-theme-1)] text-sm [color:var(--color-theme-1)]"
+						class="inline-flex items-center gap-2 rounded text-sm [color:var(--color-theme-1)]"
 					>
 						<div
 							class="h-4 w-4 animate-spin border-2 [border-color:var(--color-theme-1)] [border-top-color:transparent]"
