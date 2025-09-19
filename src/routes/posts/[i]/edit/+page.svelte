@@ -4,17 +4,20 @@
 	import Button from '$lib/components/Button.svelte';
 	import { toast } from '$lib/util/toast';
 	import axios from 'axios';
-	import { md } from '$lib/util/marked';
+	import Modal from '$lib/components/Modal.svelte';
 	import { goto } from '$app/navigation';
+	import { md } from '$lib/util/marked.js';
 
 	let { data } = $props();
 	let post = $state(data.p);
 	let instructions = $state('');
 	let loading = $state(false);
-	let showPreview = $state(false);
 	let saving = $state(false);
 	let timeout: NodeJS.Timeout | null = null;
 	let ai_input: HTMLTextAreaElement | null = $state(null);
+	let width = $state(0);
+	let isMobile = $derived(width < 768);
+	let showModal = $state(false);
 
 	const saveWithDelay = async (body: string) => {
 		if (!post.t && !body) return;
@@ -116,61 +119,79 @@
 	}
 </script>
 
-<svelte:window on:keydown={handleKeyDown} />
+<svelte:window on:keydown={handleKeyDown} bind:innerWidth={width} />
 
-<div class="mx-auto max-w-2xl p-4">
-	<div class="mb-4 flex items-center justify-between">
-		<h1 class="text-2xl font-bold">Edit Post</h1>
-		<div class="flex items-center gap-2">
-			{#if saving}
-				<span class="text-sm text-gray-500">Saving...</span>
-			{/if}
-			<a href={`/posts/${post.i}`} class="btn-outline">View Post</a>
-			<Button text="Delete" onclick={deletePost} />
+<div class="mx-auto max-w-7xl p-4">
+	<div class="flex gap-4">
+		<div class="flex-1">
+			<div class="mb-4 flex items-center justify-between">
+				<h1 class="text-2xl font-bold">Edit Post</h1>
+				<div class="flex items-center gap-2">
+					{#if saving}
+						<span class="text-sm text-gray-500">Saving...</span>
+					{/if}
+					<a href={`/posts/${post.i}`} class="btn-outline">View Post</a>
+					<Button text="Delete" onclick={deletePost} />
+				</div>
+			</div>
+			<div class="space-y-6">
+				<div class="space-y-2">
+					<DescriptionInput
+						bind:value={post.t}
+						placeholder="Enter post title"
+						label="Title"
+						editable={true}
+					/>
+				</div>
+				<div class="space-y-2">
+					<DescriptionInput
+						bind:value={post.b}
+						placeholder="Update your post content..."
+						rows={10}
+						bind:ref={ai_input}
+						label="Post Content"
+						editable={true}
+					/>
+				</div>
+				<div class="space-y-2">
+					<DescriptionInput
+						bind:value={instructions}
+						placeholder="e.g., Add more details, make it shorter, improve language..."
+						rows={4}
+						label="AI Edit Instructions"
+						editable={true}
+						send={editWithGemini}
+						send_loading={loading}
+					/>
+				</div>
+				{#if isMobile}
+					<div class="space-y-2">
+						<Button
+							text="Show Preview"
+							onclick={() => (showModal = true)}
+						/>
+					</div>
+				{/if}
+			</div>
 		</div>
-	</div>
-	<div class="space-y-6">
-		<div class="space-y-2">
-			<DescriptionInput
-				bind:value={post.t}
-				placeholder="Enter post title"
-				label="Title"
-				editable={true}
-			/>
-		</div>
-		<div class="space-y-2">
-			<DescriptionInput
-				bind:value={post.b}
-				placeholder="Update your post content..."
-				rows={10}
-				bind:ref={ai_input}
-				label="Post Content"
-				editable={true}
-			/>
-		</div>
-		<div class="space-y-2">
-			<DescriptionInput
-				bind:value={instructions}
-				placeholder="e.g., Add more details, make it shorter, improve language..."
-				rows={4}
-				label="AI Edit Instructions"
-				editable={true}
-				send={editWithGemini}
-				send_loading={loading}
-			/>
-		</div>
-		<div class="space-y-2">
-			<Button
-				text={showPreview ? 'Hide Preview' : 'Show Preview'}
-				onclick={() => (showPreview = !showPreview)}
-			/>
-			{#if showPreview}
-				<div class="mt-4 rounded-lg p-4">
+		{#if !isMobile}
+			<div class="hidden md:block w-1/2 p-4">
+				<div class="sticky top-4 rounded-lg border p-4">
 					<h2 class="mb-2 text-xl font-semibold">Preview</h2>
 					<h1 class="mb-4 text-2xl font-bold">{post.t || 'Untitled'}</h1>
 					{@html md(post.b || '')}
 				</div>
-			{/if}
-		</div>
+			</div>
+		{/if}
 	</div>
 </div>
+
+{#if isMobile && showModal}
+	<Modal bind:open={showModal}>
+		<div class="p-4">
+			<h2 class="mb-2 text-xl font-semibold">Preview</h2>
+			<h1 class="mb-4 text-2xl font-bold">{post.t || 'Untitled'}</h1>
+			{@html md(post.b || '')}
+		</div>
+	</Modal>
+{/if}
