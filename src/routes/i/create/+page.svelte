@@ -85,9 +85,9 @@
 	}
 
 	async function submit() {
-		if (!name.trim()) {
-			toast.error('Name is required');
-			return;
+
+
+
 		}
 
 		isSubmitting = true;
@@ -191,9 +191,7 @@
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
-						<span style="color: var(--color-theme-1);"
-							>*</span
-						> Item Name
+						Item Name
 					</label>
 					<input
 						id="item-name"

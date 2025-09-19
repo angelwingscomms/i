@@ -1,4 +1,4 @@
-<script lang="ts">
+&lt;script lang="ts"&gt;
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { toast } from '$lib/util/toast';
@@ -16,14 +16,15 @@
 	let ai_input: HTMLTextAreaElement | null =
 		$state(null);
 
-	const saveWithDelay = (body: string) => {
+	const saveWithDelay = (body: string) =&gt; {
 		saving = true;
 		if (timeout) {
 			clearTimeout(timeout);
 		}
-		timeout = setTimeout(async () => {
+		timeout = setTimeout(async () =&gt; {
 			try {
 				const formData = new FormData();
+				formData.append('t', post.t || '');
 				formData.append('b', body);
 				const res = await axios.put(
 					`/posts/${post.i}`,
@@ -45,16 +46,22 @@
 		}, 1440);
 	};
 
-	$effect(() => {
+	$effect(() =&gt; {
 		if (post.b) {
 			saveWithDelay(post.b);
 		}
 	});
 
-	const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.ctrlKey && e.key === 'Enter' && !loading) {
+	$effect(() =&gt; {
+		if (post.t !== undefined) {
+			saveWithDelay(post.b || '');
+		}
+	});
+
+	const handleKeyDown = (e: KeyboardEvent) =&gt; {
+		if (e.ctrlKey &amp;&amp; e.key === 'Enter' &amp;&amp; !loading) {
 			const activeEl = document.activeElement;
-			if (activeEl && activeEl === ai_input) {
+			if (activeEl &amp;&amp; activeEl === ai_input) {
 				e.preventDefault();
 				editWithGemini();
 			}
@@ -103,28 +110,38 @@
 			toast.error('Failed to delete post');
 		}
 	}
-</script>
+&lt;/script&gt;
 
-<svelte:window on:keydown={handleKeyDown} />
+&lt;svelte:window on:keydown={handleKeyDown} /&gt;
 
-<div class="mx-auto max-w-2xl p-4">
-	<div class="mb-4 flex items-center justify-between">
-		<h1 class="text-2xl font-bold">Edit Post</h1>
-		<div class="flex items-center gap-2">
+&lt;div class="mx-auto max-w-2xl p-4"&gt;
+	&lt;div class="mb-4 flex items-center justify-between"&gt;
+		&lt;h1 class="text-2xl font-bold"&gt;Edit Post&lt;/h1&gt;
+		&lt;div class="flex items-center gap-2"&gt;
 			{#if saving}
-				<span class="text-sm text-gray-500"
-					>Saving...</span
-				>
+				&lt;span class="text-sm text-gray-500"
+					&gt;Saving...&lt;/span
+				&gt;
 			{/if}
-			<a href={`/posts/${post.i}`} class="btn-outline"
-				>View Post</a
-			>
-			<Button text="Delete" onclick={deletePost} />
-		</div>
-	</div>
-	<div class="space-y-6">
-		<div class="space-y-2">
-			<DescriptionInput
+			&lt;a href={`/posts/${post.i}`} class="btn-outline"
+				&gt;View Post&lt;/a
+			&gt;
+			&lt;Button text="Delete" onclick={deletePost} /&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+	&lt;div class="space-y-6"&gt;
+		&lt;div class="space-y-2"&gt;
+			&lt;label for="title" class="block text-sm font-medium text-gray-700"&gt;Title&lt;/label&gt;
+			&lt;input
+				id="title"
+				type="text"
+				bind:value={post.t}
+				placeholder="Enter post title"
+				class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+			/&gt;
+		&lt;/div&gt;
+		&lt;div class="space-y-2"&gt;
+			&lt;DescriptionInput
 				bind:value={post.b}
 				placeholder="Update your post content..."
 				rows={10}
@@ -132,40 +149,41 @@
 				label="Post Content"
 				editable={true}
 				send_button={false}
-			/>
-		</div>
-		<div class="space-y-2">
-			<DescriptionInput
+			/&gt;
+		&lt;/div&gt;
+		&lt;div class="space-y-2"&gt;
+			&lt;DescriptionInput
 				bind:value={instructions}
 				placeholder="e.g., Add more details, make it shorter, improve language..."
 				rows={4}
 				label="AI Edit Instructions"
 				editable={true}
-			/>
-			<Button
+			/&gt;
+			&lt;Button
 				text={loading
 					? 'Updating...'
 					: 'Update with AI'}
 				onclick={editWithGemini}
 				{loading}
 				disabled={loading || !instructions.trim()}
-			/>
-		</div>
-		<div class="space-y-2">
-			<Button
+			/&gt;
+		&lt;/div&gt;
+		&lt;div class="space-y-2"&gt;
+			&lt;Button
 				text={showPreview
 					? 'hide preview'
 					: 'show preview'}
-				onclick={() => (showPreview = !showPreview)}
-			/>
+				onclick={() =&gt; (showPreview = !showPreview)}
+			/&gt;
 			{#if showPreview}
-				<div class="mt-4 rounded-lg p-4">
-					<h2 class="mb-2 text-xl font-semibold">
+				&lt;div class="mt-4 rounded-lg p-4"&gt;
+					&lt;h2 class="mb-2 text-xl font-semibold"&gt;
 						Preview
-					</h2>
+					&lt;/h2&gt;
+					&lt;h1 class="mb-4 text-2xl font-bold"&gt;{post.t || 'Untitled'}&lt;/h1&gt;
 					{@html md(post.b || '')}
-				</div>
+				&lt;/div&gt;
 			{/if}
-		</div>
-	</div>
-</div>
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/div&gt;

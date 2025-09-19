@@ -11,8 +11,8 @@ export const load: PageServerLoad = async ({
 		throw redirect(303, '/google');
 	}
 	const p = await get<
-		Pick<Post, 'u' | 'b' | 'd' | 'l' | 's'>
-	>(params.i, ['u', 'b', 't', 's']);
+		Pick<Post, 'u' | 'b' | 't' | 'd' | 'l' | 's'>
+	>(params.i, ['u', 'b', 't', 'd', 'l', 's']);
 	if (!p) {
 		throw error(404, 'Post not found');
 	}

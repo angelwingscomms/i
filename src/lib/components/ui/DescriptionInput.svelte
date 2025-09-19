@@ -101,7 +101,7 @@
 		id="description"
 		name="description"
 		bind:value
-		class="description-textarea border-1"
+		class="description-textarea border-1 border-l-0 border-b-0"
 		{placeholder}
 		{rows}
 		required

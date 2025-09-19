@@ -57,7 +57,7 @@ export async function upload_image(
 
 		// Return the public URL for the uploaded file
 		// In production, this should use your domain's R2 public URL
-		return `https://pub-${crypto.randomUUID()}.r2.dev/${objectKey}`;
+		return `https://files.apexlinks.org/${objectKey}`;
 	} catch (error) {
 		console.error('R2 upload error:', error);
 		throw new Error(
