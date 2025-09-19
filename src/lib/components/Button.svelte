@@ -23,7 +23,7 @@
 {#if href}
 	<a
 		{href}
-		class="btn-{variant} {wide ? 'btn-wide' : ''}"
+		class="btn-{variant} {wide ? 'btn-wide' : ''} py-1.5"
 		{onclick}
 	>
 		{#if loading}
@@ -37,7 +37,7 @@
 	</a>
 {:else}
 	<button
-		class="btn-{variant} {wide ? 'btn-wide' : ''}"
+		class="btn-{variant} {wide ? 'btn-wide' : ''} py-1.5"
 		{onclick}
 		disabled={loading || disabled}
 	>

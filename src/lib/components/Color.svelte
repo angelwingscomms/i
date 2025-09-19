@@ -49,8 +49,9 @@
 	async function editWithAI() {
 		loading = true;
 		try {
+			const prompt = `${aiDesc.trim()}\n\nCurrent colors: ${colors.map(c => '#' + c).join(', ')}`;
 			const res = await axios.post('/color', {
-				d: aiDesc.trim()
+				d: prompt
 			});
 			colors = res.data.c;
 			showAI = false;

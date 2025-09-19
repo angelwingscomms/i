@@ -1,4 +1,5 @@
 - let your edit diffs always be ALWAYS be single lines. If the edit spans multiple lines, call the edit/multi-edit tool with many single calls
+- always use context7 check the docs for anything before doing it, especially SvelteKit
 
 ## Code Style
 

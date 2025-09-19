@@ -8,7 +8,8 @@
 		rows = 6,
 		onInput = () => {},
 		label,
-		ref = $bindable<HTMLTextAreaElement | null>(null)
+		ref = $bindable<HTMLTextAreaElement | null>(null),
+		send_button = false
 	} = $props();
 
 	// Constants
@@ -111,26 +112,32 @@
 
 	<div class="description-controls">
 		{#if editable}
-			<div class="voice-controls">
+			<div class="voice-controls flex items-center gap-2">
 				{#if !isRecording && !isTranscribing}
 					<Button
 						onclick={startRecording}
 						icon="fa-microphone"
-						text="voice typing"
+						class="h-8 w-8 p-0"
 					/>
+					{#if send_button}
+						<Button
+							onclick={() => onInput({ value })}
+							icon="fa-paper-plane"
+							class="h-8 w-8 p-0"
+						/>
+					{/if}
 				{:else if isRecording}
 					<Button
 						onclick={stopRecording}
 						icon="fa-circle"
-						text="recording"
+						class="h-8 w-8 p-0"
 					/>
 				{:else}
 					<Button
 						type="button"
-						class="voice-btn-transcribing rounded-full"
+						class="voice-btn-transcribing rounded-full h-8 w-8 p-0"
 						disabled={true}
 						loading={true}
-						text="transcribing"
 					/>
 				{/if}
 			</div>

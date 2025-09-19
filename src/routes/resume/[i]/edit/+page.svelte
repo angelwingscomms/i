@@ -121,6 +121,7 @@
 				rows={4}
 				label="AI Edit Instructions"
 				editable={true}
+				send_button={true}
 			/>
 			<Button
 				text={loading

@@ -36,14 +36,21 @@
 				).toLocaleDateString()}
 			</p>
 		</div>
-		<Button
-			text={user?.i === r.u ? 'Edit' : 'View author'}
-			href={user?.i === r.u
-				? `/resume/${r.i}/edit`
-				: `/u/${r.u}`}
-			icon={user?.i === r.u ? 'fa-edit' : undefined}
-			class="font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
-		/>
+		<div class="flex gap-2">
+			<Button
+				text="View in full"
+				href={`/resume/${r.i}/full`}
+				icon="fa-expand"
+			/>
+			<Button
+				text={user?.i === r.u ? 'Edit' : 'View author'}
+				href={user?.i === r.u
+					? `/resume/${r.i}/edit`
+					: `/u/${r.u}`}
+				icon={user?.i === r.u ? 'fa-edit' : undefined}
+				class="font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
+			/>
+		</div>
 	</div>
 
 	<div
