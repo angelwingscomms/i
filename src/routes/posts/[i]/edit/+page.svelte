@@ -3,7 +3,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { toast } from '$lib/util/toast';
 	import axios from 'axios';
-	import markedInstance from '$lib/util/marked';
+	import {md} from '$lib/util/marked';
 	import { goto } from '$app/navigation';
 
 	let { data } = $props();
@@ -126,7 +126,6 @@
 		<div class="space-y-2">
 			<DescriptionInput
 				bind:value={post.b}
-				endpoint="/posts/edit"
 				placeholder="Update your post content..."
 				rows={10}
 				bind:ref={ai_input}
@@ -137,7 +136,6 @@
 		<div class="space-y-2">
 			<DescriptionInput
 				bind:value={instructions}
-				endpoint=""
 				placeholder="e.g., Add more details, make it shorter, improve language..."
 				rows={4}
 				label="AI Edit Instructions"
@@ -164,7 +162,7 @@
 					<h2 class="mb-2 text-xl font-semibold">
 						Preview
 					</h2>
-					{@html markedInstance(post.b || '')}
+					{@html md(post.b || '')}
 				</div>
 			{/if}
 		</div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import Chat from '$lib/components/Chat.svelte';
 	import type { PageProps } from './$types';
 	const { data }: PageProps = $props();
@@ -7,8 +8,8 @@
 
 <Chat
 	authToken={data.q}
-	s={data.s}
 	m={data.m}
+	i={page.params.i!!}
 	t={data.t}
 	r={data.r}
 	_={data._}
