@@ -1,13 +1,14 @@
 /* Buttons - Thin Outline Design System */
 @utility btn {
 	@apply inline-flex transform items-center justify-center gap-2 rounded-full py-2 px-3 text-base font-medium whitespace-nowrap transition-all duration-300 disabled:transform-none disabled:opacity-50;
-	border: 1px solid var(--color-theme-6);
+	border-bottom: 1px solid var(--color-theme-1);
+	border-left: 1px solid var(--color-theme-1);
 	background: transparent;
 	color: var(--color-theme-4);
 }
 
 .btn:hover:not(:disabled) {
-	border: 1px solid var(--color-theme-1);
+	border-color: var(--color-theme-1);
 	background: transparent;
 	color: var(--color-theme-1);
 	transform: translateY(-1px);
@@ -16,38 +17,38 @@
 
 @utility btn-primary {
 	@apply btn;
-	border: 1px solid var(--color-theme-1);
+	border-color: var(--color-theme-1);
 	background: transparent;
 	color: var(--color-theme-1);
 }
 
 .btn-primary:hover:not(:disabled) {
 	background: transparent;
-	border: 1px solid var(--color-theme-1);
+	border-color: var(--color-theme-1);
 	transform: translateY(-2px);
 }
 
 @utility btn-secondary {
 	@apply btn text-white;
 	background: transparent;
-	border: 1px solid var(--color-theme-2);
+	border-color: var(--color-theme-2);
 }
 
 .btn-secondary:hover:not(:disabled) {
 	background: transparent;
-	border: 1px solid var(--color-theme-2);
+	border-color: var(--color-theme-2);
 	transform: translateY(-2px);
 }
 
 @utility btn-accent {
 	@apply btn text-white;
 	background: transparent;
-	border: 1px solid var(--color-theme-6);
+	border-color: var(--color-theme-6);
 }
 
 .btn-accent:hover:not(:disabled) {
 	background: transparent;
-	border: 1px solid var(--color-theme-6);
+	border-color: var(--color-theme-6);
 	transform: translateY(-2px);
 }
 
@@ -55,12 +56,12 @@
 @utility btn-pink {
 	@apply btn text-white;
 	background: transparent;
-	border: 1px solid var(--color-theme-2);
+	border-color: var(--color-theme-2);
 }
 
 .btn-pink:hover:not(:disabled) {
 	background: transparent;
-	border: 1px solid var(--color-theme-2);
+	border-color: var(--color-theme-2);
 	transform: translateY(-2px);
 }
 
@@ -83,7 +84,7 @@
 	@apply btn;
 	background: transparent;
 	color: var(--color-theme-6);
-	border: 1px solid var(--color-theme-6);
+	border-color: var(--color-theme-6);
 }
 
 .btn-outline:hover:not(:disabled) {
@@ -96,13 +97,13 @@
 @utility btn-error {
 	@apply btn text-white;
 	background: transparent;
-	border: 1px solid var(--color-theme-5);
+	border-color: var(--color-theme-5);
 }
 
 .btn-error:hover:not(:disabled) {
 	background: transparent;
 	color: var(--color-theme-5);
-	border: 1px solid var(--color-theme-5);
+	border-color: var(--color-theme-5);
 	transform: translateY(-1px);
 }
 
@@ -124,13 +125,13 @@
 /* Icon button for mobile menu */
 @utility btn-icon {
 	@apply inline-flex items-center justify-center rounded-full p-3 transition-all duration-300;
-	border: 1px solid var(--color-theme-6);
+	border-color: var(--color-theme-6);
 	background: transparent;
 	color: var(--color-theme-4);
 }
 
 .btn-icon:hover {
-	border: 1px solid var(--color-theme-1);
+	border-color: var(--color-theme-1);
 	background: transparent;
 	color: var(--color-theme-1);
 	transform: scale(1.05);
