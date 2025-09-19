@@ -130,11 +130,13 @@
 	</div>
 	<div class="space-y-6">
 		<div class="space-y-2">
-			<!-- <TextInput
+			<DescriptionInput
 				bind:value={post.t}
 				placeholder="Enter post title"
 				label="Title"
-			/> -->
+				editable={true}
+				send_button={false}
+			/>
 		</div>
 		<div class="space-y-2">
 			<DescriptionInput

@@ -5,10 +5,10 @@
 		value = $bindable(),
 		editable = true,
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
-		rows = 6,
+		rows = undefined,
 		onInput = () => {},
 		label,
-		ref = $bindable<HTMLTextAreaElement | null>(null),
+		ref = $bindable<HTMLInputElement | HTMLTextAreaElement | null>(null),
 		send_button = false
 	} = $props();
 
@@ -97,19 +97,34 @@
 			>{label}</label
 		>
 	{/if}
-	<div class="flex w-full flex-col items-start gap-2 border-b-1 border-l-1 rounded-b-3xl rounded-br-none rounded-t-none p-2" style="border-color: var(--color-theme-6)">
-		<textarea
-			id="description"
-			name="description"
-			bind:value
-			class="description-textarea focus:ring-0 focus:outline-none border-0"
-			{placeholder}
-			{rows}
-			required
-			disabled={!editable || isTranscribing}
-			readonly={!editable}
-			bind:this={ref}
-		></textarea>
+	<div class="flex w-full flex-col items-start border-b-1 border-l-1 rounded-b-3xl rounded-br-none rounded-t-none p-2" style="border-color: var(--color-theme-6)">
+		{#if rows}
+			<textarea
+				id="description"
+				name="description"
+				bind:value
+				class="description-textarea focus:ring-0 focus:outline-none border-0"
+				{placeholder}
+				{rows}
+				required
+				disabled={!editable || isTranscribing}
+				readonly={!editable}
+				bind:this={ref}
+			></textarea>
+		{:else}
+			<input
+				type="text"
+				id="description"
+				name="description"
+				bind:value
+				class="description-textinput focus:ring-0 focus:outline-none border-0"
+				{placeholder}
+				required
+				disabled={!editable || isTranscribing}
+				readonly={!editable}
+				bind:this={ref}
+			/>
+		{/if}
 		<div
 			class="description-controls flex-shrink-0"
 		>
