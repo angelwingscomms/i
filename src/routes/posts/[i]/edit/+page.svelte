@@ -86,6 +86,7 @@
 			
 			if (res.data) {
 				toast.success('Post updated with AI');
+				console.debug('edg', res.data)
 				post.b = res.data;
 				instructions = '';
 			} else {
@@ -135,7 +136,6 @@
 				placeholder="Enter post title"
 				label="Title"
 				editable={true}
-				send_button={false}
 			/>
 		</div>
 		<div class="space-y-2">
@@ -146,7 +146,6 @@
 				bind:ref={ai_input}
 				label="Post Content"
 				editable={true}
-				send_button={false}
 			/>
 		</div>
 		<div class="space-y-2">
@@ -156,12 +155,7 @@
 				rows={4}
 				label="AI Edit Instructions"
 				editable={true}
-			/>
-			<Button
-				text={loading ? 'Updating...' : 'Update with AI'}
-				onclick={editWithGemini}
-				{loading}
-				disabled={loading || !instructions.trim()}
+				send_button={editWithGemini}
 			/>
 		</div>
 		<div class="space-y-2">

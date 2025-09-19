@@ -6,10 +6,24 @@
 		editable = true,
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
 		rows = undefined,
-		onInput = () => {},
+		ontranscribe = () => {},
 		label,
-		ref = $bindable<HTMLInputElement | HTMLTextAreaElement | null>(null),
-		send_button = false
+		ref = $bindable<
+			HTMLInputElement | HTMLTextAreaElement | null
+		>(null),
+		send_button = () => {}
+	}: {
+		value?: string;
+		editable?: boolean;
+		placeholder?: string;
+		rows?: number;
+		ontranscribe?: (value: string | undefined) => void;
+		label?: string;
+		ref?:
+			| HTMLInputElement
+			| HTMLTextAreaElement
+			| null;
+		send_button?: (value: string | undefined) => void;
 	} = $props();
 
 	// Constants
@@ -80,7 +94,7 @@
 
 			if (response.data.text) {
 				value += ' ' + response.data.text;
-				onInput?.({ value });
+				ontranscribe?.(value);
 			}
 		} catch (error) {
 			console.error('Transcription error:', error);
@@ -97,13 +111,16 @@
 			>{label}</label
 		>
 	{/if}
-	<div class="flex w-full flex-col items-start border-b-1 border-l-1 rounded-b-3xl rounded-br-none rounded-t-none p-2" style="border-color: var(--color-theme-6)">
+	<div
+		class="flex w-full flex-col items-start rounded-t-none rounded-b-3xl rounded-br-none border-b-1 border-l-1 p-2"
+		style="border-color: var(--color-theme-6)"
+	>
 		{#if rows}
 			<textarea
 				id="description"
 				name="description"
 				bind:value
-				class="description-textarea focus:ring-0 focus:outline-none border-0"
+				class="description-textarea border-0 focus:ring-0 focus:outline-none"
 				{placeholder}
 				{rows}
 				required
@@ -117,7 +134,7 @@
 				id="description"
 				name="description"
 				bind:value
-				class="description-textinput focus:ring-0 focus:outline-none border-0"
+				class="description-textinput border-0 focus:ring-0 focus:outline-none"
 				{placeholder}
 				required
 				disabled={!editable || isTranscribing}
@@ -125,9 +142,7 @@
 				bind:this={ref}
 			/>
 		{/if}
-		<div
-			class="description-controls flex-shrink-0"
-		>
+		<div class="description-controls flex-shrink-0">
 			{#if editable}
 				<div
 					class="voice-controls flex items-center gap-2"
@@ -139,7 +154,7 @@
 						/>
 						{#if send_button}
 							<Button
-								onclick={() => onInput({ value })}
+								onclick={() => send_button(value)}
 								icon="fa-paper-plane"
 							/>
 						{/if}
