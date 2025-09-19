@@ -1,35 +1,50 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { outside_click } from '$lib/util/outside_click';
 
-	export let options: { value: string; label: string }[];
-	export let value: string;
-	let open = $bindable(false);
-	let placeholder = 'Select...';
-	let sort_ref = $bindable<HTMLDivElement | null>(null);
-
-	const dispatch = createEventDispatcher();
+	let {
+		options,
+		value = $bindable(),
+		open = false,
+		placeholder = 'Select...',
+		sort_ref = null as HTMLDivElement | null,
+		onclick
+	} = $props<{
+		options: { value: string; label: string }[];
+		value: string | undefined;
+		open?: boolean;
+		placeholder?: string;
+		sort_ref?: HTMLDivElement | null;
+		onclick?: () => void;
+	}>();
 
 	function handle_select(v: string) {
 		value = v;
 		open = false;
-		dispatch('change', { value: v });
+		onclick(v);
 	}
 
 	function handle_click_outside(event: MouseEvent) {
-		if (sort_ref && !sort_ref.contains(event.target as Node)) {
+		if (
+			sort_ref &&
+			!sort_ref.contains(event.target as Node)
+		) {
 			open = false;
-			dispatch('close');
 		}
 	}
 </script>
 
 <svelte:window onclick={handle_click_outside} />
 
-<div class="dropdown-container" bind:this={sort_ref}>
+<div
+	use:outside_click
+	outside_click={handle_click_outside}
+	class="dropdown-container"
+	bind:this={sort_ref}
+>
 	<button
 		type="button"
 		class="dropdown-trigger"
-		onclick={() => open = !open}
+		onclick={() => (open = !open)}
 		aria-haspopup="listbox"
 		aria-expanded={open}
 		aria-label="select option"
@@ -37,14 +52,18 @@
 		<span class="text-secondary">sort:</span>
 		<span class="text-primary">
 			{#if value}
-				{@const selected = options.find(o => o.value === value)}
+				{@const selected = options.find(
+					(o: typeof value) => o.value === value
+				)}
 				{selected ? selected.label : placeholder}
 			{:else}
 				{placeholder}
 			{/if}
 		</span>
 		<svg
-			class="dropdown-caret {open ? 'dropdown-caret-open' : ''}"
+			class="dropdown-caret {open
+				? 'dropdown-caret-open'
+				: ''}"
 			width="10"
 			height="6"
 			viewBox="0 0 10 6"

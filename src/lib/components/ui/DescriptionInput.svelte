@@ -114,7 +114,7 @@
 		>
 	{/if}
 	<div
-		class="flex w-full flex-col items-start rounded-t-none rounded-b-3xl rounded-br-none border-b-1 border-l-1 p-2"
+		class="flex w-full flex-col items-start rounded-t-3xl rounded-b-3xl rounded-br-3xl border-b-1 border-l-1 p-2"
 		style="border-color: var(--color-theme-6)"
 	>
 		{#if rows}
