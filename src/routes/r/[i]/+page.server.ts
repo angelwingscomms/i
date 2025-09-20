@@ -7,7 +7,6 @@ import type {
 	Room
 } from '$lib/types';
 import { s } from '$lib/util/s';
-import { v7 } from 'uuid';
 import { realtime } from '$lib/util/realtime';
 
 export const load: PageServerLoad = async ({

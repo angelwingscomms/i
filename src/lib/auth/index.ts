@@ -2,12 +2,11 @@ import {
 	delete_,
 	get,
 	edit_point,
-	create
+	create,
+	new_id
 } from '$lib/db';
 
 export { create_user } from './create_user';
-
-import { v7 } from 'uuid';
 
 export async function requireAuth(
 	locals: App.Locals

@@ -47,6 +47,7 @@
 	let isTranscribing = $state(false);
 	let mediaRecorder: MediaRecorder | null = null;
 	let audioChunks: Blob[] = [];
+	let insertPos = $state(0);
 
 	async function startRecording() {
 		try {
@@ -84,6 +85,7 @@
 
 	function stopRecording() {
 		if (mediaRecorder && isRecording) {
+			insertPos = ref ? (ref.selectionStart || 0) : value.length;
 			mediaRecorder.stop();
 			isRecording = false;
 			isTranscribing = true;
@@ -92,6 +94,7 @@
 
 	async function transcribeAudio(audioBlob: Blob) {
 		isTranscribing = true;
+		let transcribedText = '';
 		try {
 			const formData = new FormData();
 			formData.append('audio', audioBlob);
@@ -107,7 +110,9 @@
 			);
 
 			if (response.data.text) {
-				value += ' ' + response.data.text;
+				transcribedText = response.data.text;
+				const toInsert = transcribedText + ' ';
+				value = value.slice(0, insertPos) + toInsert + value.slice(insertPos);
 				ontranscribe?.(value);
 			}
 		} catch (error) {
@@ -115,6 +120,11 @@
 			alert('Failed to transcribe audio');
 		} finally {
 			isTranscribing = false;
+			if (ref && transcribedText) {
+				const newPos = insertPos + transcribedText.length + 1;
+				ref.setSelectionRange(newPos, newPos);
+				ref.focus();
+			}
 		}
 	}
 </script>
@@ -126,7 +136,7 @@
 		>
 	{/if}
 	<div
-		class="flex w-full {buttons_below ? 'flex-col items-start' : 'flex-row items-start gap-2'} rounded-t-none rounded-b-3xl rounded-br-3xl border-b-1 border-l-1 p-2"
+		class="flex w-full {buttons_below ? 'flex-col items-start' : 'flex-row items-start gap-2'} border-l-1"
 		style="border-color: var(--color-theme-6)"
 	>
 		{#if rows}
@@ -134,7 +144,7 @@
 				id="description"
 				name="description"
 				bind:value
-				class="description-textarea border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)] {buttons_below ? '' : 'flex-1'}"
+				class="description-textarea border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
 				{placeholder}
 				{rows}
 				required
@@ -151,7 +161,7 @@
 				id="description"
 				name="description"
 				bind:value
-				class="description-textinput border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)] {buttons_below ? '' : 'flex-1'}"
+				class="description-textinput border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
 				{placeholder}
 				required
 				disabled={!editable || isTranscribing}

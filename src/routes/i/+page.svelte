@@ -7,7 +7,6 @@
 	import Select from '$lib/components/Select.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 
-
 	type Item = {
 		i: string;
 		t?: string;
@@ -27,7 +26,7 @@
 	let sort = $state<
 		'relevance' | 'newest' | 'oldest'
 	>('relevance');
-	let loading = $state(false);
+	let searching = $state(false);
 	let results = $state<Item[]>([]);
 	let searchTimeout = $state<NodeJS.Timeout | null>(
 		null
@@ -41,16 +40,6 @@
 				JSON.stringify({ query, kind, sort })
 			);
 		}
-	});
-
-	// Debounce search on query change
-	$effect(() => {
-		if (searchTimeout) {
-			clearTimeout(searchTimeout);
-		}
-		searchTimeout = setTimeout(() => {
-			search();
-		}, 300);
 	});
 
 	onMount(() => {
@@ -69,35 +58,39 @@
 		}
 	});
 
-	async function search() {
-		loading = true;
+	async function search(_?: any) {
+		searching = true;
 
 		// Clear previous timeout
 		if (searchTimeout) {
 			clearTimeout(searchTimeout);
 		}
 
-		try {
-			const payload: Record<string, unknown> = {
-				q: query.trim() || undefined,
-				kind,
-				sort,
-				limit: 50
-			};
-
-			const response = await axios.post(
-				'/i',
-				payload
-			);
-			results = response.data as Item[];
-		} catch (error) {
-			console.error('Search error:', error);
-			results = [];
-		} finally {
-			loading = false;
+		if (searchTimeout) {
+			clearTimeout(searchTimeout);
 		}
-	}
+		searchTimeout = setTimeout(async () => {
+			try {
+				const payload: Record<string, unknown> = {
+					q: query.trim() || undefined,
+					kind,
+					sort,
+					limit: 50
+				};
 
+				const response = await axios.post(
+					'/i',
+					payload
+				);
+				results = response.data as Item[];
+			} catch (error) {
+				console.error('Search error:', error);
+				results = [];
+			} finally {
+				searching = false;
+			}
+		}, 2160);
+	}
 
 	function clearSearch() {
 		query = '';
@@ -108,7 +101,7 @@
 	<title>Search Items - Apexlinks</title>
 	<meta
 		name="description"
-		content="Find products and services in your community"
+		content="Find products and services"
 	/>
 </svelte:head>
 
@@ -122,13 +115,16 @@
 		<div class="mx-auto max-w-4xl px-4 py-8">
 			<div class="flex items-center justify-between">
 				<div>
-					<h1 class="mb-2 text-4xl font-bold flex items-center gap-3">
-						<i class="fa-solid fa-bag-shopping text-[1.5em] text-white"></i>
+					<h1
+						class="mb-2 flex items-center gap-3 text-4xl font-bold"
+					>
+						<i
+							class="fa-solid fa-bag-shopping text-[1.5em] text-white"
+						></i>
 						Search Items
 					</h1>
 					<p class="text-white/80">
-						Find products and services in your
-						community
+						Find products and services
 					</p>
 				</div>
 				{#if user}
@@ -158,10 +154,10 @@
 					</label>
 					<div class="relative">
 						<DescriptionInput
-							id="query"
 							bind:value={query}
 							placeholder="search for items..."
-							rows={3}
+							send={search}
+							send_loading={searching}
 							label=""
 							voice_typing={true}
 							ontranscribe={() => {}}
@@ -189,7 +185,7 @@
 				</div>
 
 				<!-- Item Type -->
-				<div>
+				<!-- <div>
 					<label
 						for="kind"
 						class="text-theme-4 mb-2 block text-sm font-medium"
@@ -199,20 +195,32 @@
 					<Select
 						options={[
 							{ value: '', label: 'all items' },
-							{ value: '0', label: 'products', icon: 'fa-shopping-bag' },
-							{ value: '1', label: 'services', icon: 'fa-wrench' }
+							{
+								value: '0',
+								label: 'products',
+								icon: 'fa-shopping-bag'
+							},
+							{
+								value: '1',
+								label: 'services',
+								icon: 'fa-wrench'
+							}
 						]}
-						value={kind === undefined ? '' : String(kind)}
+						value={kind === undefined
+							? ''
+							: String(kind)}
 						placeholder="select type"
 						onclick={(v) => {
-							kind = v ? (Number(v) as 0 | 1) : undefined;
+							kind = v
+								? (Number(v) as 0 | 1)
+								: undefined;
 							search();
 						}}
 					/>
-				</div>
+				</div> -->
 
 				<!-- Sort -->
-				<div>
+				<!-- <div>
 					<label
 						for="sort"
 						class="text-theme-4 mb-2 block text-sm font-medium"
@@ -221,33 +229,25 @@
 					</label>
 					<Select
 						options={[
-							{ value: 'relevance', label: 'relevance' },
+							{
+								value: 'relevance',
+								label: 'relevance'
+							},
 							{ value: 'newest', label: 'newest' },
 							{ value: 'oldest', label: 'oldest' }
 						]}
 						value={sort}
 						placeholder="select sort"
 						onclick={(v) => {
-							sort = v as 'relevance' | 'newest' | 'oldest';
+							sort = v as
+								| 'relevance'
+								| 'newest'
+								| 'oldest';
 							search();
 						}}
 					/>
-				</div>
+				</div> -->
 			</div>
-
-			<!-- Loading indicator -->
-			{#if loading}
-				<div class="mt-4 text-center">
-					<div
-						class="inline-flex items-center gap-2 rounded text-sm [color:var(--color-theme-1)]"
-					>
-						<div
-							class="h-4 w-4 animate-spin border-2 [border-color:var(--color-theme-1)] [border-top-color:transparent]"
-						></div>
-						Searching...
-					</div>
-				</div>
-			{/if}
 		</div>
 
 		<!-- Results -->
@@ -256,7 +256,7 @@
 				<h2
 					class="text-xl font-semibold [color:var(--color-theme-4)]"
 				>
-					Results {#if !loading}({results.length}){/if}
+					Results {#if !searching}({results.length}){/if}
 				</h2>
 			</div>
 

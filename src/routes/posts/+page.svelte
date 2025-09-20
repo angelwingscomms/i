@@ -5,6 +5,7 @@
 	import axios from 'axios';
 	import { goto } from '$app/navigation';
 	import type { Post } from '$lib/types/index';
+	import Button from '$lib/components/Button.svelte';
 
 	let { data } = $props();
 	// state
@@ -44,7 +45,7 @@
 			}
 			if (res.statusText !== 'OK')
 				throw new Error('create failed');
-			goto(`/posts/${res.data}/edit`);
+			goto(`/posts/create`);
 		} catch (e) {
 			toast.error('Failed to create post');
 		} finally {
@@ -64,17 +65,12 @@
 <div class="page pad">
 	<div class="row space-between v-center mb-md">
 		<h1 class="title">posts</h1>
-		<button
-			class="btn-primary btn-wide"
-			onclick={create}
-			disabled={creating}
-		>
-			{#if creating}
-				<i class="fas fa-spinner fa-spin"></i>
-			{:else}
-				create post
-			{/if}
-		</button>
+		<Button
+			text='create post'
+			icon={creating ? 'fa-spinner fa-spin' : ''}
+			href="create"
+			wide={true}
+		/>
 	</div>
 
 	<div class="card gap">

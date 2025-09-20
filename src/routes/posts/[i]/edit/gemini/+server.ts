@@ -31,7 +31,7 @@ export const POST = async ({
 		throw error(404, 'Post not found');
 	}
 	if (post.s !== 'p') {
-		throw error(404, 'This entity is not a post');
+		throw error(400, 'This entity is not a post');
 	}
 	if (post.u !== locals.user.i) {
 		throw error(403, "You don't own this post");

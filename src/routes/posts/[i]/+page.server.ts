@@ -1,7 +1,6 @@
 import { error } from '@sveltejs/kit';
-import { search_by_payload, get, set } from '$lib/db';
+import { search_by_payload, get, new_id } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
-import { v7 } from 'uuid';
 import type { Post } from '$lib/types';
 import type { ChatMessage } from '$lib/types/index';
 

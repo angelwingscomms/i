@@ -1,6 +1,5 @@
 <script lang="ts">
 	import axios from 'axios';
-	import { v7 } from 'uuid';
 
 	let {
 		onsend = (

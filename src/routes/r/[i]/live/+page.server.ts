@@ -1,6 +1,5 @@
 import { get } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
-import { v7 } from 'uuid';
 
 export const load = async ({ params, locals }) => {
 	const q = await get(params.i, 'q');

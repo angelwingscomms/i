@@ -2,12 +2,10 @@ import { collection } from '$lib/constants';
 import { get, qdrant, set } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
 import { error, text } from '@sveltejs/kit';
-import { v7 } from 'uuid';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({
 	locals,
-	request,
 	url
 }) => {
 	// console.log('🔥 GET request started', {

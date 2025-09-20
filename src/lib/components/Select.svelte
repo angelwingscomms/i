@@ -45,7 +45,7 @@
 >
 	<button
 		type="button"
-		class="dropdown-trigger w-full justify-between"
+		class="dropdown-trigger w-full justify-between border-t-0 border-r-0 border-b-0"
 		onclick={() => (open = !open)}
 		aria-haspopup="listbox"
 		aria-expanded={open}

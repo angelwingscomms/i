@@ -22,11 +22,11 @@
 </script>
 
 <a
-	class="item-card group block no-underline"
+	class="group block no-underline"
 	href={`/i/${item.i}`}
 >
 	<div
-		class="flex items-start gap-4 rounded-lg p-4 transition-all duration-300 [background:transparent]"
+		class="flex items-start gap-4 rounded-3xl p-4 transition-all duration-500 border-l border-t-0 border-r-0 border-b-0 [border-left-color:var(--color-theme-6)] [background:transparent] group-hover:-translate-y-0.5 group-hover:[border-left-color:var(--color-theme-1)]"
 	>
 		<!-- Item Image -->
 		<div class="relative flex-shrink-0">

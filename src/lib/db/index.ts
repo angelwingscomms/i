@@ -8,7 +8,7 @@ import { QdrantClient } from '@qdrant/js-client-rest';
 import { collection } from '$lib/constants';
 import type { User } from '$lib/types';
 import { embed } from '$lib/util/embed';
-import { v7 } from 'uuid';
+import { new_id } from '$lib/util/new_id';
 
 export type PayloadFilter = Record<string, unknown>;
 

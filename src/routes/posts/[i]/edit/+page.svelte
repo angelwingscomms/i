@@ -103,7 +103,7 @@
 			}
 		} catch (e: any) {
 			console.error('AI edit failed:', e);
-			toast.error(e.response?.data || 'Failed to update post with AI');
+			toast.error(e.response?.data?.message || 'Failed to update post with AI');
 		} finally {
 			loading = false;
 		}
