@@ -8,19 +8,51 @@
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import type { PageData } from '../../../i/$types';
 	import type { Item } from '$lib/types/item';
+	import axios from 'axios';
+	import { toast } from '$lib/util/toast';
 
 	interface ItemPageData extends PageData {
 		items: Item[];
 	}
 
 	let { data } = $props<{ data: ItemPageData }>();
-	let search_term = $state('');
-	let filtered_items = $derived<Item[]>(
-		data.i.filter((item: Item) =>
-			item.t.toLowerCase().includes(search_term.toLowerCase()) ||
-			item.d?.toLowerCase().includes(search_term.toLowerCase())
-		)
-	);
+	let search_term = $state(''), searching = $state(false);
+	let filtered_items = $state(data.i);
+	let timeout: NodeJS.Timeout | undefined = undefined;
+
+	const searchItems = async (term: string) => {
+		if (timeout) {
+			clearTimeout(timeout);
+		}
+		searching = true
+		timeout = setTimeout(async () => {
+			if (!term) {
+				filtered_items = data.i;
+				searching = false;
+				return;
+			}
+
+			try {
+				const response = await axios.post('/i', {
+					q: term.trim(),
+					limit: 50
+				});
+				filtered_items = response.data;
+			} catch (error) {
+				console.error(
+					'Error searching items:',
+					error
+				);
+				toast.error('Failed to search items');
+			} finally {
+				searching = false;
+			}
+		}, 300);
+	};
+
+	$effect(() => {
+		searchItems(search_term);
+	});
 
 	onMount(() => {
 		// Page entrance animations
@@ -103,6 +135,8 @@
 			<div class="mt-8 flex justify-center">
 				<div class="w-full max-w-md">
 					<DescriptionInput
+						send={searchItems}
+						send_loading={searching}
 						bind:value={search_term}
 						placeholder="search items..."
 						editable={true}
@@ -165,7 +199,9 @@
 								</span>
 								<span class="text-xs text-gray-500">
 									{item.a
-										? new Date(item.a).toLocaleDateString()
+										? new Date(
+												item.a
+											).toLocaleDateString()
 										: 'n/a'}
 								</span>
 							</div>
@@ -228,7 +264,8 @@
 					class="mb-8 text-lg"
 					style="color: var(--color-theme-6);"
 				>
-					try a different search term or create a new item.
+					try a different search term or create a new
+					item.
 				</p>
 				{#if data.user}
 					<a

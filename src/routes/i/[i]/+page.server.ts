@@ -12,6 +12,6 @@ export const load: PageServerLoad = async ({
 		error(404, 'item not found');
 
 	return {
-		i: item
+		i: {...item, i}
 	};
 };
