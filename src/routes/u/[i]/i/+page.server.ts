@@ -17,6 +17,6 @@ export const load: PageServerLoad = async ({
 	console.log('items', items);
 
 	return {
-		i
+		i: items
 	};
 };
