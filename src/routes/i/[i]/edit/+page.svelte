@@ -284,11 +284,11 @@
 							<p class="text-sm text-gray-600 mb-2">Current Images:</p>
 							<div class="flex gap-2 overflow-x-auto">
 								{#each currentImages as image}
-									<img src={image} alt="Current image" class="h-20 w-20 rounded object-cover" />
+									<img src={image} alt="Currently viewed product pic" class="h-20 w-20 rounded object-cover" />
 								{/each}
 							</div>
 						</div>
-					{/if>
+					{/if}
 					<div class="relative">
 						<input
 							id="file-upload"
