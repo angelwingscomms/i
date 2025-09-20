@@ -1,7 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { get } from '$lib/db';
-import type { Item } from '$lib/types/item';
 
 export const load: PageServerLoad = async ({
 	params,
@@ -24,7 +23,10 @@ export const load: PageServerLoad = async ({
 		error(400, 'this resource is not an item');
 	}
 
+	console.debug('item', item);
+
 	return {
-		i: {...item as unknown as Item, i}
+		user: locals.user,
+		i: {...item, i}
 	};
 };

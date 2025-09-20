@@ -9,18 +9,10 @@
 	import Button from '$lib/components/Button.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import axios from 'axios';
-	import type { PageData } from './$types';
-	import type { Item } from '$lib/types/item';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 
-	let { data }: PageData = $props();
-	let { user, i: item } = data;
-
-	let name = $state(item.t || '');
-	let desc = $state(item.a || '');
-	let kind = $state(item.k || 0);
-	let price = $state(item.v || 0);
-	let currency = $state(item.m || '$');
+	let item = $state(page.data.i)
 	let files: FileList | null = $state(null);
 	let isSubmitting = $state(false);
 
@@ -97,21 +89,28 @@
 		try {
 			isSubmitting = true;
 			const formData = new FormData();
-			formData.append('t', name);
-			if (desc) formData.append('a', desc);
-			formData.append('k', kind.toString());
-			formData.append('v', price.toString());
-			formData.append('m', currency);
+			formData.append('t', item.name);
+			if (item.desc) formData.append('a', item.desc);
+			formData.append('k', item.kind.toString());
+			formData.append('v', item.price.toString());
+			formData.append('m', item.currency);
 			if (files) {
-				Array.from(files).forEach((f) => formData.append('files', f));
+				Array.from(files).forEach((f) =>
+					formData.append('files', f)
+				);
 			}
 
-			const res = await axios.post(`/i/${item.i}/edit`, formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
+			const res = await axios.post(
+				`/i/${item.i}/edit`,
+				formData,
+				{
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
 				}
-			});
-			if (res.status !== 200) throw new Error('update failed');
+			);
+			if (res.status !== 200)
+				throw new Error('update failed');
 
 			// Success animation
 			animate('.form-section', {
@@ -184,7 +183,7 @@
 				<!-- Name Field -->
 				<div class="form-field opacity-0">
 					<DescriptionInput
-						bind:value={name}
+						bind:value={item.name}
 						placeholder="Enter a catchy name for your item..."
 						label="Item Name"
 						editable={true}
@@ -194,7 +193,7 @@
 				<!-- Description Field -->
 				<div class="form-field opacity-0">
 					<DescriptionInput
-						bind:value={desc}
+						bind:value={item.desc}
 						placeholder="Describe your item in detail. What makes it special?"
 						rows={5}
 						label="Description"
@@ -209,20 +208,22 @@
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
-						<span style="color: var(--color-theme-1);">*</span> Type
+						<span style="color: var(--color-theme-1);"
+							>*</span
+						> Type
 					</label>
 					<div class="flex gap-4">
 						<Button
 							text="Product"
 							icon="fa-shopping-bag"
-							onclick={() => (kind = 0)}
-							active={kind === 0}
+							onclick={() => (item.kind = 0)}
+							active={item.kind === 0}
 						/>
 						<Button
 							text="Service"
 							icon="fa-wrench"
-							onclick={() => (kind = 1)}
-							active={kind === 1}
+							onclick={() => (item.kind = 1)}
+							active={item.kind === 1}
 						/>
 					</div>
 				</div>
@@ -234,7 +235,9 @@
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
-						<span style="color: var(--color-theme-1);">*</span> Price
+						<span style="color: var(--color-theme-1);"
+							>*</span
+						> Price
 					</label>
 					<div class="flex gap-4">
 						<div class="relative flex-1">
@@ -246,12 +249,16 @@
 								class="w-full rounded-full px-4 py-4 text-lg font-medium transition-all focus:outline-none"
 								style="border: 1px solid var(--color-theme-3); background: transparent;"
 								placeholder="0.00"
-								bind:value={price}
+								bind:value={item.price}
 								onfocus={(e) =>
-									((e.target as HTMLInputElement).style.border =
+									((
+										e.target as HTMLInputElement
+									).style.border =
 										'1px solid var(--color-theme-1)')}
 								onblur={(e) =>
-									((e.target as HTMLInputElement).style.border =
+									((
+										e.target as HTMLInputElement
+									).style.border =
 										'1px solid var(--color-theme-3)')}
 							/>
 						</div>
@@ -260,12 +267,16 @@
 							class="w-24 rounded-full px-3 py-4 text-lg font-medium transition-all focus:outline-none"
 							style="border: 1px solid var(--color-theme-3); background: transparent;"
 							placeholder="$"
-							bind:value={currency}
+							bind:value={item.currency}
 							onfocus={(e) =>
-								((e.target as HTMLInputElement).style.border =
+								((
+									e.target as HTMLInputElement
+								).style.border =
 									'1px solid var(--color-theme-1)')}
 							onblur={(e) =>
-								((e.target as HTMLInputElement).style.border =
+								((
+									e.target as HTMLInputElement
+								).style.border =
 									'1px solid var(--color-theme-3)')}
 						/>
 					</div>
@@ -320,8 +331,12 @@
 				<!-- Submit Button -->
 				<div class="form-field pt-4 opacity-0">
 					<Button
-						text={isSubmitting ? 'Updating...' : 'Update Item'}
-						icon={isSubmitting ? 'fa-spinner fa-spin' : 'fa-save'}
+						text={isSubmitting
+							? 'Updating...'
+							: 'Update Item'}
+						icon={isSubmitting
+							? 'fa-spinner fa-spin'
+							: 'fa-save'}
 						onclick={submit}
 						disabled={isSubmitting}
 					/>
