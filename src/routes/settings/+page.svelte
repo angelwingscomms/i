@@ -110,12 +110,6 @@
 			<p class="mb-4 text-sm opacity-80">
 				enable push notifications to get updates even when you're not on the site.
 			</p>
-			<div class="flex items-center gap-3">
-				<button
-					class="rounded-full bg-black px-5 py-2 text-white disabled:opacity-50 dark:bg-white dark:text-black"
-					onclick={enableNotifications}
-					disabled={isEnabling}
-				>
 				<div class="mb-4 flex items-center gap-3">
 					<span class="text-sm opacity-70">status:</span>
 					{#if sub_status === 'on'}
@@ -139,6 +133,13 @@
 						{/if}
 					</button>
 				</div>
+
+			<div class="flex items-center gap-3">
+				<button
+					class="rounded-full bg-black px-5 py-2 text-white disabled:opacity-50 dark:bg-white dark:text-black"
+					onclick={enableNotifications}
+					disabled={isEnabling}
+				>
 
 
 					{#if isEnabling}
