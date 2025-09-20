@@ -1,5 +1,7 @@
 import { PUBLIC_VAPID_KEY } from '$env/static/public';
 import { toast } from '../toast';
+import axios from 'axios';
+
 
 export async function ensurePushSubscribed(
 	userId: string
@@ -176,33 +178,12 @@ export async function ensurePushSubscribed(
 		console.log(
 			'💾 Saving subscription to server...'
 		);
-		// Save subscription with timeout
-		const saveResponse = await Promise.race([
-			fetch(
-				`/u/${userId}/push_notifications/save_subscription`,
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify(sub)
-				}
-			),
-			new Promise<never>((_, reject) =>
-				setTimeout(
-					() =>
-						reject(
-							new Error('Save subscription timeout')
-						),
-					5000
-				)
-			)
-		]);
-
-		if (!saveResponse.ok) {
-			throw new Error(
-				`Save subscription failed: ${saveResponse.status}`
-			);
+		// Save subscription
+		try {
+			await axios.post('/api/notifications/subscribe', sub, { timeout: 5000 });
+		} catch (e: any) {
+			console.error(e.response?.data || e.message);
+			throw new Error('Save subscription failed');
 		}
 
 		console.log(
@@ -257,6 +238,32 @@ export async function sendPushToUser(
 		});
 	} catch (e) {}
 }
+export async function unsubscribe_push() {
+	if (
+		typeof window === 'undefined' ||
+		!('serviceWorker' in navigator) ||
+		!('PushManager' in window)
+	) {
+		return { ok: false, reason: 'unsupported' } as const;
+	}
+	try {
+		const reg = await navigator.serviceWorker.getRegistration();
+		const sub = await reg?.pushManager.getSubscription();
+		if (!sub) return { ok: false, reason: 'not_subscribed' } as const;
+		try {
+			await axios.post('/api/notifications/unsubscribe', sub);
+		} catch (e: any) {
+			console.error(e.response?.data || e.message);
+		}
+		await sub.unsubscribe();
+		toast.success('notifications turned off');
+		return { ok: true } as const;
+	} catch (e) {
+		console.error(e);
+		return { ok: false, reason: 'error' } as const;
+	}
+}
+
 
 function urlBase64ToUint8Array(base64String: string) {
 	const padding = '='.repeat(
@@ -271,4 +278,29 @@ function urlBase64ToUint8Array(base64String: string) {
 		outputArray[i] = rawData.charCodeAt(i);
 	}
 	return outputArray;
+}
+
+export async function refresh_push_subscription() {
+	if (
+		typeof window === 'undefined' ||
+		!('serviceWorker' in navigator) ||
+		!('PushManager' in window)
+	) {
+		return { ok: false, reason: 'unsupported' } as const;
+	}
+	try {
+		const reg = await navigator.serviceWorker.getRegistration();
+		const sub = await reg?.pushManager.getSubscription();
+		if (!sub) return { ok: false, reason: 'not_subscribed' } as const;
+		try {
+			await axios.post('/api/notifications/subscribe', sub, { timeout: 5000 });
+		} catch (e: any) {
+			console.error(e.response?.data || e.message);
+			return { ok: false, reason: 'error' } as const;
+		}
+		return { ok: true } as const;
+	} catch (e) {
+		console.error(e);
+		return { ok: false, reason: 'error' } as const;
+	}
 }

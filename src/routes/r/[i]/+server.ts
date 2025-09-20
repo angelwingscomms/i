@@ -1,14 +1,18 @@
-import { create } from '$lib/db';
+import { create, get, set } from '$lib/db';
 import type { RequestHandler } from './$types';
 import type {
 	DBChatMessage,
 	SendChatMessage,
-	Message
+	Message,
+	Room,
+	User
 } from '$lib/types';
 import { upload_image } from '$lib/integrations/r2_storage';
 import { process_message } from '$lib/util/chat/process_message';
 import { error } from 'console';
 import { realtime } from '$lib/util/realtime';
+import { send_push_notif } from '$lib/util/send_push_notif';
+import type { PushSubscription } from 'web-push';
 type R2Bucket = unknown;
 
 export const POST: RequestHandler = async ({
@@ -173,6 +177,86 @@ export const POST: RequestHandler = async ({
 	// 		...(fileUrls.length > 0 ? { f: fileUrls } : {})
 	// 	} satisfies ChatMessage)
 	// });
+
+	// Push notifications for private rooms (one-on-one: room._ === '|')
+	try {
+		const room = await get<Room>(params.i);
+		if (room && room._ === '|') {
+			const ids = Array.isArray(room.x)
+				? room.x
+				: room.u
+				? [room.u]
+				: [];
+			const recipients = ids.filter(
+				(id) => id && id !== locals.user?.i
+			);
+			if (recipients.length) {
+				const pair_subs: { id: string; sub: PushSubscription }[] = [];
+				const subs_by_user: Record<string, PushSubscription[]> = {};
+				for (const id of recipients) {
+					const psVal = (await get<User['ps']>(id, 'ps')) || [];
+					const list: PushSubscription[] = Array.isArray(psVal)
+						? (psVal as PushSubscription[])
+						: psVal
+						? [psVal as unknown as PushSubscription]
+						: [];
+					const now = Date.now();
+					const filtered = list.filter((s) => {
+						const exp = (s as unknown as { expirationTime?: number }).expirationTime;
+						return !(typeof exp === 'number' && exp > 0 && exp < now);
+					});
+					if (filtered.length !== list.length) {
+						await set(id, { ps: filtered.length ? filtered : null });
+					}
+					subs_by_user[id] = filtered;
+					for (const sub of filtered) pair_subs.push({ id, sub });
+				}
+				if (pair_subs.length) {
+					const sender_name = locals.user?.t || 'someone';
+					const notificationPayload = {
+						title: m.a ? 'New message' : `Message from ${sender_name}`,
+						body: m.m,
+						tag: `room-${params.i}`,
+						icon: '/icons/icon-192.png',
+						data: {
+							roomId: params.i,
+							url: `/r/${params.i}?message=${m.i}`,
+							type: 'room_message'
+						},
+						vibrate: [200, 100, 200]
+					};
+					const results = await Promise.allSettled(
+						pair_subs.map((p) =>
+							send_push_notif(p.sub, notificationPayload)
+						)
+					);
+					const to_prune: Record<string, string[]> = {};
+					results.forEach((res, idx) => {
+						if (res.status === 'rejected') {
+							type MaybeWebPushErr = { statusCode?: number; status?: number; response?: { status?: number } };
+							const err = res.reason as MaybeWebPushErr;
+							const status = err.statusCode ?? err.status ?? err.response?.status;
+							if (status === 404 || status === 410) {
+								const { id, sub } = pair_subs[idx];
+								(to_prune[id] ||= []).push(sub.endpoint);
+							} else {
+								console.error('push send failed', err);
+							}
+						}
+					});
+					for (const id of Object.keys(to_prune)) {
+						const current = subs_by_user[id] || [];
+						const pruned = current.filter((s) => !to_prune[id].includes(s.endpoint));
+						if (pruned.length !== current.length) {
+							await set(id, { ps: pruned.length ? pruned : null });
+						}
+					}
+				}
+			}
+		}
+	} catch (e) {
+		console.error('push notify error', e);
+	}
 
 	return new Response();
 };

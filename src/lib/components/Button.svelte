@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { navigating, page } from '$app/state';
+
 	let {
 		onclick,
 		text = '',
@@ -20,15 +22,26 @@
 		variant?: 'primary' | 'secondary';
 		active?: boolean;
 	} = $props();
+
+	const effectiveLoading = $derived.by(
+		() =>
+			loading ||
+			(href &&
+				navigating?.to &&
+				page.url.pathname ===
+					navigating.to.url.pathname)
+	);
 </script>
 
 {#if href}
 	<a
 		{href}
-		class="btn-{variant} {wide ? 'btn-wide' : ''} {active ? 'text-white border-white' : ''}"
+		class="btn-{variant} {wide
+			? 'btn-wide'
+			: ''} {active ? 'border-white text-white' : ''}"
 		{onclick}
 	>
-		{#if loading}
+		{#if effectiveLoading}
 			<i class="fas fa-spinner fa-spin"></i>
 		{:else}
 			{#if icon}
@@ -39,11 +52,13 @@
 	</a>
 {:else}
 	<button
-		class="btn-{variant} {wide ? 'btn-wide' : ''} {active ? 'text-white border-white' : ''}"
+		class="btn-{variant} {wide
+			? 'btn-wide'
+			: ''} {active ? 'border-white text-white' : ''}"
 		{onclick}
-		disabled={loading || disabled}
+		disabled={effectiveLoading || disabled}
 	>
-		{#if loading}
+		{#if effectiveLoading}
 			<i class="fas fa-spinner fa-spin"></i>
 		{:else}
 			{#if icon}

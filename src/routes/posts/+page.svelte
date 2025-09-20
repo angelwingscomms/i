@@ -68,7 +68,7 @@
 		<Button
 			text='create post'
 			icon={creating ? 'fa-spinner fa-spin' : ''}
-			href="create"
+			href="/posts/create"
 			wide={true}
 		/>
 	</div>

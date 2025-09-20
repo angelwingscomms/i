@@ -1,7 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import {
-	count,
 	get,
 	qdrant,
 	search_by_vector

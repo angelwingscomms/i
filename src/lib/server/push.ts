@@ -18,9 +18,20 @@ export async function sendPushToUserId(
 	}
 
 	const list: PushSubscription[] = Array.isArray(ps)
-		? (ps as any)
-		: [ps as any];
-	if (list.length === 0) {
+		? (ps as PushSubscription[])
+		: [ps as unknown as PushSubscription];
+
+	// Prune expired before sending
+	const now = Date.now();
+	const nonExpired = list.filter((s) => {
+		const exp = (s as unknown as { expirationTime?: number }).expirationTime;
+		return !(typeof exp === 'number' && exp > 0 && exp < now);
+	});
+	if (nonExpired.length !== list.length) {
+		await set(userId, { ps: nonExpired.length ? nonExpired : null });
+	}
+
+	if (nonExpired.length === 0) {
 		return {
 			ok: false as const,
 			status: 404,
@@ -34,33 +45,26 @@ export async function sendPushToUserId(
 	};
 
 	const results = await Promise.allSettled(
-		list.map((subscription) =>
+		nonExpired.map((subscription) =>
 			send_push_notif(
-				subscription as any,
+				subscription,
 				notificationPayload
 			)
 		)
 	);
 
-	// Prune gone/invalid subscriptions
-	const pruned: PushSubscription[] = [];
+	// Prune gone/invalid subscriptions post-send
+	const kept: PushSubscription[] = [];
 	results.forEach((res, idx) => {
 		if (res.status === 'fulfilled') {
-			pruned.push(list[idx]);
+			kept.push(nonExpired[idx]);
 		} else {
-			const err = res.reason;
-			// If the endpoint is gone, skip keeping it
-			console.warn(
-				'push send failed; pruning subscription',
-				err
-			);
+			console.warn('push send failed; pruning subscription', res.reason);
 		}
 	});
 
-	if (pruned.length !== list.length) {
-		await set(userId, {
-			ps: pruned.length ? pruned : null
-		});
+	if (kept.length !== nonExpired.length) {
+		await set(userId, { ps: kept.length ? kept : null });
 	}
 
 	return { ok: true as const };
