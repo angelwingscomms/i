@@ -15,6 +15,11 @@
 	let item = $state(page.data.i)
 	let files: FileList | null = $state(null);
 	let isSubmitting = $state(false);
+	let currentImages = $state(item.x || []);
+
+	function removeImage(url: string) {
+		currentImages = currentImages.filter((img) => img !== url);
+	}
 
 	onMount(() => {
 		// Page entrance animations
@@ -91,9 +96,10 @@
 			const formData = new FormData();
 			formData.append('t', item.name);
 			if (item.desc) formData.append('a', item.desc);
-			formData.append('k', item.kind.toString());
-			formData.append('v', item.price.toString());
+			formData.append('k', item.kind?.toString());
+			formData.append('v', item.price?.toString());
 			formData.append('m', item.currency);
+			formData.append('keep_x', JSON.stringify(currentImages));
 			if (files) {
 				Array.from(files).forEach((f) =>
 					formData.append('files', f)
@@ -241,25 +247,13 @@
 					</label>
 					<div class="flex gap-4">
 						<div class="relative flex-1">
-							<input
-								id="item-price"
+							<DescriptionInput
 								type="number"
 								min="0"
+								voice_typing={false}
 								step="0.01"
-								class="w-full rounded-full px-4 py-4 text-lg font-medium transition-all focus:outline-none"
-								style="border: 1px solid var(--color-theme-3); background: transparent;"
 								placeholder="0.00"
 								bind:value={item.price}
-								onfocus={(e) =>
-									((
-										e.target as HTMLInputElement
-									).style.border =
-										'1px solid var(--color-theme-1)')}
-								onblur={(e) =>
-									((
-										e.target as HTMLInputElement
-									).style.border =
-										'1px solid var(--color-theme-3)')}
 							/>
 						</div>
 						<div class="w-/12">
@@ -278,7 +272,7 @@
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
-						Images (Optional - will replace existing)
+						Add new images (optional)
 					</label>
 					<div class="relative">
 						<input
@@ -293,7 +287,7 @@
 								).files)}
 						/>
 						<div
-							class="rounded-2xl border border-dashed p-8 text-center transition-all"
+							class="rounded-2xl border-t-0 border-r-0 border border-dashed p-8 text-center transition-all"
 							style="border-color: var(--color-theme-3); background: transparent;"
 						>
 							<div class="mb-4">
@@ -315,6 +309,38 @@
 							</p>
 						</div>
 					</div>
+				</div>
+
+				<!-- Current Images -->
+				<div class="form-field opacity-0">
+					<label
+						class="mb-3 block text-lg font-bold"
+						style="color: var(--color-theme-4);"
+					>
+						Current Images
+					</label>
+					{#if currentImages.length > 0}
+					<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+						{#each currentImages as img (img)}
+						<div class="relative">
+							<img
+								src={img}
+								alt="Item image"
+								class="w-full h-32 object-cover rounded-lg"
+							/>
+							<button
+								onclick={() => removeImage(img)}
+								class="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs transition-all"
+								title="Remove image"
+							>
+								×
+							</button>
+						</div>
+						{/each}
+					</div>
+					{:else}
+					<p class="text-gray-500 text-sm">No images currently</p>
+					{/if}
 				</div>
 
 				<!-- Submit Button -->

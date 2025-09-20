@@ -1,10 +1,8 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { embed } from '$lib/util/embed';
-import {
-	search_by_payload,
-	search_by_vector
-} from '$lib/db';
+import { qdrant } from '$lib/db';
+import { collection } from '$lib/constants';
 
 export const POST: RequestHandler = async ({
 	request
@@ -29,11 +27,6 @@ export const POST: RequestHandler = async ({
 		throw error(400, 'invalid limit (1-200)');
 	}
 
-	const payload_filter: Record<string, unknown> = {
-		s: 'i',
-		...(kind !== undefined ? { k: kind } : {})
-	};
-
 	let candidates: Array<{
 		i: string;
 		t?: string;
@@ -46,19 +39,49 @@ export const POST: RequestHandler = async ({
 
 	if (q && q.trim()) {
 		const vector = await embed(q);
-		candidates = await search_by_vector({
-			vector,
+		const results = await qdrant.query(collection, {
+			query: vector,
+			filter: {
+				must: [
+					{ key: 's', match: { value: 'i' } },
+					...(kind !== undefined
+						? [{ key: 'k', match: { value: kind } }]
+						: [])
+				],
+				must_not: {
+					is_null: { key: 't' }
+				}
+			},
 			with_payload: ['t', 'd', 'k', 'a', 'q', 'x'],
-			filter: { must: payload_filter },
 			limit: Math.min(500, limit * 2)
 		});
+		candidates =
+			results.points?.map((p) => ({
+				i: p.id as string,
+				...p.payload
+			})) || [];
 	} else {
 		// No query - return all items with basic filtering
-		candidates = await search_by_payload(
-			payload_filter,
-			['t', 'd', 'k', 'a', 'q', 'x'],
-			Math.min(500, limit * 2)
-		);
+		const results = await qdrant.scroll(collection, {
+			filter: {
+				must: [
+					{ key: 's', match: { value: 'i' } },
+					...(kind !== undefined
+						? [{ key: 'k', match: { value: kind } }]
+						: [])
+				],
+				must_not: {
+					is_null: { key: 't' }
+				}
+			},
+			with_payload: ['t', 'd', 'k', 'a', 'q', 'x'],
+			limit: Math.min(500, limit * 2)
+		});
+		candidates =
+			results.points?.map((p) => ({
+				i: p.id as string,
+				...p.payload
+			})) || [];
 	}
 
 	// Sort results based on criteria

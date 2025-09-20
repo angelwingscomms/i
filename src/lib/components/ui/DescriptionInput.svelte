@@ -7,6 +7,10 @@
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
 		rows = undefined,
 		type = "text",
+		min,
+		max,
+		step,
+		voice_typing = true,
 		ontranscribe = () => {},
 		label,
 		ref = $bindable<
@@ -21,6 +25,10 @@
 		placeholder?: string;
 		rows?: number;
 		type?: string;
+		min?: string | number;
+		max?: string | number;
+		step?: string | number;
+		voice_typing?: boolean;
 		ontranscribe?: (value: string | undefined) => void;
 		label?: string;
 		ref?:
@@ -118,7 +126,7 @@
 		>
 	{/if}
 	<div
-		class="flex w-full {buttons_below ? 'flex-col items-start' : 'flex-row items-start gap-2'} rounded-t-none rounded-b-3xl rounded-br-3xl border-b-1 border-l-1 p-2"
+		class="flex w-full {buttons_below ? 'flex-col items-start' : 'flex-row items-start gap-2'} rounded-t-3xl rounded-b-3xl rounded-br-3xl border-b-1 border-l-1 p-2"
 		style="border-color: var(--color-theme-6)"
 	>
 		{#if rows}
@@ -137,6 +145,9 @@
 		{:else}
 			<input
 				type={type}
+				min={min}
+				max={max}
+				step={step}
 				id="description"
 				name="description"
 				bind:value
@@ -154,10 +165,12 @@
 					class="voice-controls flex items-center gap-2"
 				>
 					{#if !isRecording && !isTranscribing}
-						<Button
-							onclick={startRecording}
-							icon="fa-microphone"
-						/>
+						{#if voice_typing}
+							<Button
+								onclick={startRecording}
+								icon="fa-microphone"
+							/>
+						{/if}
 						{#if send}
 							<Button
 								onclick={() => send(value)}

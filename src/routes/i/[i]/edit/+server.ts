@@ -41,9 +41,11 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
 	const v = Number(data.get('v'));
 	const m = data.get('m') as string;
 	const files = data.getAll('files') as unknown as File[];
+	const keep_x_str = data.get('keep_x') as string;
+	const kept_x: string[] = keep_x_str ? JSON.parse(keep_x_str) : [];
 
 	const x = await upload_files(files);
-	const new_x = x.length > 0 ? x : item.x || [];
+	const new_x = x.length > 0 ? [...kept_x, ...x] : kept_x;
 
 	const payload = {
 		...item,

@@ -1,13 +1,27 @@
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { json, error } from '@sveltejs/kit';
+import { upload_image } from '$lib/integrations/r2_storage';
 
-export const POST: RequestHandler = async ({ request }) => {
-	const data = await request.formData();
-	const files = data.getAll('files');
+export const POST: RequestHandler = async ({ request, locals, platform }) => {
+	if (!locals.user) throw error(401, 'Unauthorized');
+	const form = await request.formData();
+	const files = form.getAll('files').filter((f): f is File => f instanceof File);
+	if (!files.length) return json({ x: [] });
 
-	// For local dev, return dummy image URL
-	const dummy_url = "https://apexlinks.org/_app/immutable/assets/items.D-CAzO1y.png";
-	const x = files.length > 0 ? [dummy_url] : [];
+	// Check if R2 is available
+	if (!platform?.env?.R2) {
+		console.warn('R2 bucket not available, skipping upload');
+		return json({ x: [] });
+	}
 
-	return json({ x });
+	const urls: string[] = [];
+	for (const file of files) {
+		try {
+			const url = await upload_image(file, undefined, platform);
+			urls.push(url);
+		} catch (e) {
+			console.error('R2 upload error', e);
+		}
+	}
+	return json({ x: urls });
 };
