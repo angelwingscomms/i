@@ -209,25 +209,6 @@
 		background: rgba(0, 0, 0, 0.4);
 		backdrop-filter: blur(10px);
 	}
-	.modal {
-		position: fixed;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		width: min(520px, 92vw);
-	}
-	.label {
-		font-size: 12px;
-		color: var(--muted);
-	}
-	.badge {
-		padding: 4px 8px;
-		border-radius: 999px;
-		background: var(--accent-emerald);
-		color: white;
-		font-weight: 700;
-		font-size: 12px;
-	}
 
 	.search-input-group {
 		display: flex;

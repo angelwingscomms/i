@@ -18,7 +18,7 @@
 	let currentImages = $state(item.x || []);
 
 	function removeImage(url: string) {
-		currentImages = currentImages.filter((img) => img !== url);
+		currentImages = currentImages.filter((img: string) => img !== url);
 	}
 
 	onMount(() => {
@@ -375,7 +375,6 @@
 						text="Delete Item"
 						icon="fa-trash"
 						onclick={deleteItem}
-						class="bg-red-500 hover:bg-red-600 text-white"
 					/>
 				</div>
 			</div>

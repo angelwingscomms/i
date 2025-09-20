@@ -8,7 +8,7 @@
 		error?: string;
 		success?: boolean;
 		message?: string;
-	} | null = null;
+	} | null = $state(null);
 
 	let tag = data.u!.t || '';
 	let description = data.u!.d || '';
@@ -238,8 +238,6 @@
 					<div class="glass rounded-lg p-1">
 						<DescriptionInput
 							bind:value={description}
-							endpoint="/api/update-description"
-							on:update={handleDescriptionUpdate}
 						/>
 					</div>
 					<input

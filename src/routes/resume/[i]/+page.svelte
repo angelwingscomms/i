@@ -43,12 +43,13 @@
 				icon="fa-expand"
 			/>
 			<Button
-				text={user?.i === r.u ? 'Edit' : 'View author'}
+				text={user?.i === r.u
+					? 'Edit'
+					: 'View author'}
 				href={user?.i === r.u
 					? `/resume/${r.i}/edit`
 					: `/u/${r.u}`}
 				icon={user?.i === r.u ? 'fa-edit' : undefined}
-				class="font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
 			/>
 		</div>
 	</div>

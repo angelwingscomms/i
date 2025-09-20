@@ -40,7 +40,7 @@
 	/>
 	<Button
 		text="Generate Resume"
-		on_click={createResume}
+		onclick={createResume}
 		wide={true}
 		disabled={!txt.trim()}
 	/>

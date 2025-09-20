@@ -8,29 +8,35 @@ import {
 import type { Room } from '$lib/types';
 import { collection } from '$lib/constants';
 
+type RoomResult = {
+	r: Array<{
+		i: string;
+		t: string;
+		l: number;
+		// m: number;
+	}>;
+};
+
 export const load: PageServerLoad = async ({
 	locals
-}) => {
+}): Promise<RoomResult> => {
 	try {
 		if (locals.user) {
-			const vector = await get(
-				locals.user.i,
-				undefined,
-				true
-			);
+			const {vector} =
+				await get(locals.user.i, undefined, true) as {vector: number[]};
 			if (vector) {
-				let rooms = await search_by_vector<Room>({
-					vector: vector.vector,
+				const rooms = await search_by_vector<Room>({
+					vector,
 					filter: { must: { s: 'r', _: '.' } },
 					with_payload: ['t', 'l', 'm'],
 					limit: 54
 				});
 				return {
 					r: rooms.map((r) => ({
-						i: r.i,
-						t: r.t,
-						l: r.l,
-						m: r.m
+						i: r.i as string,
+						t: r.t as string,
+						l: r.l as number
+						// m: r.m as number
 					}))
 				};
 			}
@@ -60,10 +66,10 @@ export const load: PageServerLoad = async ({
 					})
 					.then((result) => result.points || [])
 			).map((r) => ({
-				i: r.id,
-				t: r.payload?.t,
-				l: r.payload?.l,
-				m: r.payload?.m
+				i: r.id as string,
+				t: r.payload?.t as string,
+				l: r.payload?.l as number
+				// m: r.payload?.m as number
 			}))
 		};
 	} catch {

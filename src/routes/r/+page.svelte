@@ -7,13 +7,13 @@
 	let { data } = $props();
 	// state
 	let q = $state('');
-	let results: {
+	let results = $state<{
 		i: string;
 		t: string;
 		l?: number;
 		m?: number;
-		score?: number;
-	}[] = $state(data.r);
+		c?: number;
+	}[]>(data.r);
 	let creating = $state(false);
 	let t = $state('');
 	let d = $state('');
@@ -125,12 +125,12 @@
 								<div class="result-title">{r.t}</div>
 								<!-- <div class="result-meta muted">{r.m ?? 0} members</div> -->
 							</div>
-							{#if r.score !== undefined}
+							{#if r.c}
 								<div class="badge">
 									{Math.round(
 										Math.max(
 											0,
-											Math.min(1, r.score)
+											Math.min(1, r.c)
 										) * 100
 									)}%
 								</div>
@@ -244,9 +244,6 @@
 	.btn.ghost {
 		background: transparent;
 		color: var(--text);
-	}
-	.btn-compact {
-		width: fit-content;
 	}
 	.btn-wide {
 		padding-left: 24px;

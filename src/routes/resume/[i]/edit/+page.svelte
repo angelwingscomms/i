@@ -115,13 +115,12 @@
 		<div class="space-y-2">
 			<DescriptionInput
 				bind:value={instructions}
-				endpoint=""
 				bind:ref={ai_input}
 				placeholder="e.g., Add a skills section, make it more modern, change layout..."
 				rows={4}
 				label="AI Edit Instructions"
 				editable={true}
-				send={true}
+				send={editWithGemini}
 			/>
 			<Button
 				text={loading
@@ -160,7 +159,6 @@
 			>
 				<DescriptionInput
 					bind:value={resume.h}
-					endpoint=""
 					placeholder="Edit resume HTML here..."
 					rows={20}
 					label="Resume HTML"
