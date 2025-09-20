@@ -5,8 +5,9 @@
 		onMount,
 		createEventDispatcher
 	} from 'svelte';
-	import { fade } from 'svelte/transition';
-	import { toasts, addToast } from '$lib/util/toast';
+	import { addToast } from '$lib/util/toast';
+		import Button from '$lib/components/Button.svelte';
+
 
 	let { user = null }: { user: User | null } =
 		$props();
@@ -68,6 +69,22 @@
 		deferred_prompt = null;
 		can_install = false;
 	}
+
+
+		function handle_install_click() {
+			if (is_installed) {
+				addToast('app is already installed', 'info');
+				return;
+			}
+			if (deferred_prompt) {
+				do_install();
+			} else {
+				addToast(
+					"install not available yet. use your browser's 'add to home screen' option.",
+					'info'
+				);
+			}
+		}
 
 	function on_appinstalled() {
 		addToast('App installed', 'success');
@@ -134,6 +151,7 @@
 				{#if navigating.to}
 					<i class="fas fa-spinner fa-spin text-sm"></i>
 				{/if}
+				<Button text="install webapp" onclick={handle_install_click} variant="primary" />
 				<button
 					class="btn-icon border-none bg-transparent p-2"
 					onclick={toggle_menu}
@@ -154,50 +172,6 @@
 			</div>
 
 			<div class="hidden items-center gap-6 md:flex">
-				{#if can_install && !is_installed}
-					<button
-						class="rounded-full px-4 py-2 text-sm font-semibold text-white transition-all hover:scale-105"
-						style="background: var(--color-theme-1);"
-						onclick={do_install}
-						transition:fade
-					>
-						Install App
-					</button>
-				{/if}
-
-				<!-- Feature Navigation Links -->
-				<div class="flex items-center gap-4">
-					<a
-						href="/i"
-						class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
-						style="color: var(--color-theme-1); border: 1px solid var(--color-theme-1);"
-					>
-						<i
-							class="fa-solid fa-bag-shopping mr-2 text-[1.1em] text-current"
-						></i>
-						Items
-					</a>
-					<a
-						href="/u"
-						class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
-						style="color: var(--color-theme-2); border: 1px solid var(--color-theme-2);"
-					>
-						<i
-							class="fa-solid fa-users mr-2 text-[1.1em] text-current"
-						></i>
-						Users
-					</a>
-					<a
-						href="/r"
-						class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
-						style="color: var(--color-theme-3); border: 1px solid var(--color-theme-3);"
-					>
-						<i
-							class="far fa-comments mr-2 text-[1.1em] text-current"
-						></i>
-						Rooms
-					</a>
-				</div>
 
 				{#if user}
 					<div class="flex items-center gap-4">

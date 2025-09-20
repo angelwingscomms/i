@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
-import { get, search_by_payload } from '$lib/db';
+import { get, new_id, search_by_payload } from '$lib/db';
 import type {
 	ChatMessage,
 	DBChatMessage,

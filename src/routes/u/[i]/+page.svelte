@@ -7,6 +7,7 @@
 		stagger
 	} from 'animejs';
 	import type { PageProps } from './$types';
+	import Button from '$lib/components/Button.svelte';
 
 	let { data }: PageProps = $props();
 	console.log('d', data);
@@ -49,7 +50,7 @@
 				'-=600'
 			)
 			.add(
-				'.profile-info',
+				'.profile-info > *',
 				{
 					opacity: [0, 1],
 					translateY: [30, 0],
@@ -124,93 +125,93 @@
 	}
 	function getSocialMediaInfo(url: string): {
 		name: string;
-		iconClass: string | null;
+		faIcon: string | null;
 	} {
 		try {
 			const hostname = new URL(url).hostname;
 			if (hostname.includes('facebook.com'))
 				return {
 					name: 'Facebook',
-					iconClass: 'icon-facebook'
+					faIcon: 'fa-facebook'
 				};
 			if (
 				hostname.includes('twitter.com') ||
 				hostname.includes('x.com')
 			)
-				return { name: 'X', iconClass: 'icon-x' };
+				return { name: 'X', faIcon: 'fa-x-twitter' };
 			if (hostname.includes('instagram.com'))
 				return {
 					name: 'Instagram',
-					iconClass: 'icon-instagram'
+					faIcon: 'fa-instagram'
 				};
 			if (hostname.includes('linkedin.com'))
 				return {
 					name: 'LinkedIn',
-					iconClass: 'icon-linkedin'
+					faIcon: 'fa-linkedin'
 				};
 			if (hostname.includes('github.com'))
 				return {
 					name: 'GitHub',
-					iconClass: 'icon-github'
+					faIcon: 'fa-github'
 				};
 			if (hostname.includes('youtube.com'))
 				return {
 					name: 'YouTube',
-					iconClass: 'icon-youtube'
+					faIcon: 'fa-youtube'
 				};
 			if (hostname.includes('tiktok.com'))
 				return {
 					name: 'TikTok',
-					iconClass: 'icon-tiktok'
+					faIcon: 'fa-tiktok'
 				};
 			if (hostname.includes('discord.gg'))
 				return {
 					name: 'Discord',
-					iconClass: 'icon-discord'
+					faIcon: 'fa-discord'
 				};
 			if (hostname.includes('pinterest.com'))
 				return {
 					name: 'Pinterest',
-					iconClass: 'icon-pinterest'
+					faIcon: 'fa-pinterest'
 				};
 			if (hostname.includes('reddit.com'))
 				return {
 					name: 'Reddit',
-					iconClass: 'icon-reddit'
+					faIcon: 'fa-reddit'
 				};
 			if (hostname.includes('spotify.com'))
 				return {
 					name: 'Spotify',
-					iconClass: 'icon-spotify'
+					faIcon: 'fa-spotify'
 				};
 			if (hostname.includes('twitch.tv'))
 				return {
 					name: 'Twitch',
-					iconClass: 'icon-twitch'
+					faIcon: 'fa-twitch'
 				};
 			if (hostname.includes('medium.com'))
 				return {
 					name: 'Medium',
-					iconClass: 'icon-medium'
+					faIcon: 'fa-medium'
 				};
 			if (hostname.includes('snapchat.com'))
 				return {
 					name: 'Snapchat',
-					iconClass: 'icon-snapchat'
+					faIcon: 'fa-snapchat'
 				};
 			if (hostname.includes('telegram.org'))
 				return {
 					name: 'Telegram',
-					iconClass: 'icon-telegram'
+					faIcon: 'fa-telegram'
 				};
 			return {
 				name: new URL(url).hostname
 					.replace('www.', '')
 					.split('.')[0],
-				iconClass: null
-			}; // Generic name, no specific icon
+				faIcon: 'fa-external-link-alt'
+			}; // Generic name, generic icon
 		} catch {
-			return { name: url, iconClass: null }; // Fallback to raw URL, no specific icon
+			return { name: url, faIcon: 'fa-external-link-alt' }; // Fallback to raw URL, generic icon
 		}
 	}
 </script>
@@ -295,7 +296,7 @@
 						>
 							Age: {user.age}
 						</span>
-						<span
+						<!-- <span
 							class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
 							style="background: var(--color-theme-2);"
 						>
@@ -311,15 +312,12 @@
 										? 'online'
 										: 'offline'}</span
 								>
-								<span
-									class="badge"
-									title="in call status"
-									>{(data.u as any)?.ic
-										? 'in call'
-										: 'not in call'}</span
-								>
 							</div>
-
+						</span> -->
+						<span
+							class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
+							style="background: var(--color-theme-3);"
+						>
 							{user.gender === 0 ? 'Male' : 'Female'}
 						</span>
 					</div>
@@ -342,84 +340,38 @@
 								{#if typeof window !== 'undefined'}{window
 										.location.origin}/u/{user.i}{/if}
 							</div>
-							<button
-								class="copy-button action-button rounded-full px-6 py-3 font-semibold text-white shadow-lg transition-all"
-								style="background: var(--color-theme-3);"
+							<Button
 								onclick={copyLink}
-							>
-								{copied ? '✓ Copied!' : 'Copy Link'}
-							</button>
+								text={copied ? '✓ Copied!' : 'Copy Link'}
+								variant="secondary"
+							/>
 						</div>
 					</div>
 					{#if !is_own_profile && data.user}
 						<div class="mt-8 space-y-4">
 							<div class="flex justify-center">
-								<a
-									href="/u/{user.i}/a"
-									class="action-button group relative overflow-hidden rounded-full px-12 py-6 text-xl font-bold text-white shadow-2xl transition-all"
-									style="background: var(--color-theme-2);"
-								>
-									<div
-										class="absolute inset-0 bg-white opacity-0 transition-opacity group-hover:opacity-20"
-									></div>
-									<div
-										class="relative flex items-center gap-3"
-									>
-										<svg
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="currentColor"
-										>
-											<path
-												d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2M6,9H18V11H6V9M14,14H6V12H14V14M18,8H6V6H18V8Z"
-											/>
-										</svg>
-										chat w {user.tag} anonymously
-									</div>
-								</a>
+								<Button
+									href={`/u/${user.i}/a`}
+									text={`chat w ${user.tag} anonymously`}
+									icon="fa-comments"
+									variant="primary"
+								/>
 							</div>
 							<div class="flex justify-center">
-								<a
-									href="/u/{user.i}/c"
-									class="action-button group relative overflow-hidden rounded-full px-12 py-6 text-xl font-bold text-white shadow-2xl transition-all"
-									style="background: var(--color-theme-2);"
-								>
-									<div
-										class="absolute inset-0 bg-white opacity-0 transition-opacity group-hover:opacity-20"
-									></div>
-									<div
-										class="relative flex items-center gap-3"
-									>
-										<svg
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="currentColor"
-										>
-											<path
-												d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2M6,9H18V11H6V9M14,14H6V12H14V14M18,8H6V6H18V8Z"
-											/>
-										</svg>
-										chat w {user.tag}
-									</div>
-								</a>
+								<Button
+									href={`/u/${user.i}/c`}
+									text={`chat w ${user.tag}`}
+									icon="fa-comments"
+									variant="primary"
+								/>
 							</div>
-							<div class="flex justify-center gap-4">
-								<a
-									href="/u/{user.i}/c?call=audio"
-									class="action-button rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl"
-									style="background: var(--color-theme-3);"
-								>
-									Audio call
-								</a>
-								<a
+							<div class="flex justify-center">
+								<Button
 									href="/u/{user.i}/c?call=video"
-									class="action-button rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl"
-									style="background: var(--color-theme-1);"
-								>
-									Video call
-								</a>
+									text="Video call"
+									icon="fa-video"
+									variant="primary"
+								/>
 							</div>
 						</div>
 					{/if}
@@ -445,16 +397,7 @@
 								class="rounded-full p-3"
 								style="background: var(--color-theme-6);"
 							>
-								<svg
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="white"
-								>
-									<path
-										d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"
-									/>
-								</svg>
+								<i class="fas fa-heart" style="color: white; font-size: 1.2em;"></i>
 							</div>
 							What You Have in Common
 						</h2>
@@ -477,30 +420,12 @@
 			{:else if is_own_profile}
 				<!-- Edit Profile Action -->
 				<div class="mb-12 flex justify-center">
-					<a
+					<Button
 						href="/edit_user"
-						class="action-button group relative overflow-hidden rounded-full px-12 py-6 text-xl font-bold text-white shadow-2xl transition-all"
-						style="background: var(--color-theme-1);"
-					>
-						<div
-							class="absolute inset-0 bg-white opacity-0 transition-opacity group-hover:opacity-20"
-						></div>
-						<div
-							class="relative flex items-center gap-3"
-						>
-							<svg
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-								/>
-							</svg>
-							Edit Your Profile
-						</div>
-					</a>
+						text="Edit Your Profile"
+						icon="fa-edit"
+						variant="primary"
+					/>
 				</div>
 
 				{#if !user.description}
@@ -513,16 +438,7 @@
 								class="rounded-full p-4"
 								style="background: var(--color-theme-5);"
 							>
-								<svg
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="white"
-								>
-									<path
-										d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17Z"
-									/>
-								</svg>
+								<i class="fas fa-circle-check" style="color: white; font-size: 1.5em;"></i>
 							</div>
 						</div>
 						<p
@@ -532,23 +448,12 @@
 							Complete your profile to unlock all
 							features!
 						</p>
-						<a
+						<Button
 							href="/edit_user"
-							class="inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition-all"
-							style="background: var(--color-theme-4);"
-						>
-							Add Description
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"
-								/>
-							</svg>
-						</a>
+							text="Add Description"
+							icon="fa-arrow-right"
+							variant="secondary"
+						/>
 					</div>
 				{/if}
 			{:else}
@@ -562,16 +467,7 @@
 							class="rounded-full p-4"
 							style="background: var(--color-theme-6);"
 						>
-							<svg
-								width="32"
-								height="32"
-								viewBox="0 0 24 24"
-								fill="white"
-							>
-								<path
-									d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
-								/>
-							</svg>
+							<i class="fas fa-user" style="color: white; font-size: 1.5em;"></i>
 						</div>
 					</div>
 					<p
@@ -581,23 +477,12 @@
 						Join our community to see compatibility
 						and start conversations!
 					</p>
-					<a
+					<Button
 						href="/google"
-						class="inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg font-bold text-white transition-all"
-						style="background: var(--color-theme-2);"
-					>
-						Sign In to Connect
-						<svg
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-						>
-							<path
-								d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"
-							/>
-						</svg>
-					</a>
+						text="Sign In to Connect"
+						icon="fa-sign-in-alt"
+						variant="primary"
+					/>
 				</div>
 			{/if}
 		</section>
@@ -635,16 +520,7 @@
 							class="rounded-full p-4"
 							style="background: var(--color-theme-1);"
 						>
-							<svg
-								width="32"
-								height="32"
-								viewBox="0 0 24 24"
-								fill="white"
-							>
-								<path
-									d="M19,7H18V6A2,2 0 0,0 16,4H8A2,2 0 0,0 6,6V7H5A1,1 0 0,0 4,8V19A3,3 0 0,0 7,22H17A3,3 0 0,0 20,19V8A1,1 0 0,0 19,7M8,6H16V7H8V6M18,19A1,1 0 0,1 17,20H7A1,1 0 0,1 6,19V9H18V19Z"
-								/>
-							</svg>
+							<i class="fas fa-bag-shopping" style="color: white; font-size: 1.5em;"></i>
 						</div>
 					</div>
 					<h3
@@ -662,23 +538,12 @@
 						your area.
 					</p>
 					<div class="text-center">
-						<a
+						<Button
 							href="/i/create"
-							class="feature-link inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition-all"
-							style="background: var(--color-theme-1);"
-						>
-							Browse Items
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"
-								/>
-							</svg>
-						</a>
+							text="Browse Items"
+							icon="fa-arrow-right"
+							variant="secondary"
+						/>
 					</div>
 				</div>
 
@@ -692,16 +557,7 @@
 							class="rounded-full p-4"
 							style="background: var(--color-theme-2);"
 						>
-							<svg
-								width="32"
-								height="32"
-								viewBox="0 0 24 24"
-								fill="white"
-							>
-								<path
-									d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"
-								/>
-							</svg>
+							<i class="fas fa-location-dot" style="color: white; font-size: 1.5em;"></i>
 						</div>
 					</div>
 					<h3
@@ -717,23 +573,12 @@
 						location with smart filtering.
 					</p>
 					<div class="text-center">
-						<a
+						<Button
 							href="/i/search_nearby"
-							class="feature-link inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition-all"
-							style="background: var(--color-theme-2);"
-						>
-							Search Nearby
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"
-								/>
-							</svg>
-						</a>
+							text="Search Nearby"
+							icon="fa-arrow-right"
+							variant="secondary"
+						/>
 					</div>
 				</div>
 
@@ -747,16 +592,7 @@
 							class="rounded-full p-4"
 							style="background: var(--color-theme-3);"
 						>
-							<svg
-								width="32"
-								height="32"
-								viewBox="0 0 24 24"
-								fill="white"
-							>
-								<path
-									d="M12,3C6.5,3 2,6.58 2,11A7.18,7.18 0 0,0 2.64,14.25L1,22L8.75,20.36C9.81,20.75 10.87,21 12,21C17.5,21 22,17.42 22,13C22,8.58 17.5,5 12,5M12,3C17.5,3 22,6.58 22,11C22,15.42 17.5,19 12,19C10.87,19 9.81,18.75 8.75,18.36L1,20L2.64,12.25A7.18,7.18 0 0,1 2,9C2,4.58 6.5,1 12,1Z"
-								/>
-							</svg>
+							<i class="fas fa-comments" style="color: white; font-size: 1.5em;"></i>
 						</div>
 					</div>
 					<h3
@@ -772,23 +608,12 @@
 						with like-minded people.
 					</p>
 					<div class="text-center">
-						<a
+						<Button
 							href="/r"
-							class="feature-link inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition-all"
-							style="background: var(--color-theme-3);"
-						>
-							Join Rooms
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"
-								/>
-							</svg>
-						</a>
+							text="Join Rooms"
+							icon="fa-arrow-right"
+							variant="secondary"
+						/>
 					</div>
 				</div>
 
@@ -802,16 +627,7 @@
 							class="rounded-full p-4"
 							style="background: var(--color-theme-4);"
 						>
-							<svg
-								width="32"
-								height="32"
-								viewBox="0 0 24 24"
-								fill="white"
-							>
-								<path
-									d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
-								/>
-							</svg>
+							<i class="fas fa-users" style="color: white; font-size: 1.5em;"></i>
 						</div>
 					</div>
 					<h3
@@ -828,23 +644,12 @@
 						yourself.
 					</p>
 					<div class="text-center">
-						<a
+						<Button
 							href="/u"
-							class="feature-link inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition-all"
-							style="background: var(--color-theme-4);"
-						>
-							explore Users
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"
-								/>
-							</svg>
-						</a>
+							text="explore Users"
+							icon="fa-arrow-right"
+							variant="secondary"
+						/>
 					</div>
 				</div>
 
@@ -858,16 +663,7 @@
 							class="rounded-full p-4"
 							style="background: var(--color-theme-5);"
 						>
-							<svg
-								width="32"
-								height="32"
-								viewBox="0 0 24 24"
-								fill="white"
-							>
-								<path
-									d="M17.753,14A2.25,2.25 0 0,1 20,16.25C20,17.78 18.78,19 17.25,19H6.75C5.22,19 4,17.78 4,16.25A2.25,2.25 0 0,1 6.25,14H6V10A6,6 0 0,1 12,4A6,6 0 0,1 18,10V14H17.753M16,10A4,4 0 0,0 12,6A4,4 0 0,0 8,10V14H16V10Z"
-								/>
-							</svg>
+							<i class="fas fa-robot" style="color: white; font-size: 1.5em;"></i>
 						</div>
 					</div>
 					<h3
@@ -883,23 +679,12 @@
 						recommendations, and smart assistance.
 					</p>
 					<div class="text-center">
-						<a
+						<Button
 							href="/i"
-							class="feature-link inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition-all"
-							style="background: var(--color-theme-5);"
-						>
-							Try AI Chat
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"
-								/>
-							</svg>
-						</a>
+							text="Try AI Chat"
+							icon="fa-arrow-right"
+							variant="secondary"
+						/>
 					</div>
 				</div>
 
@@ -913,16 +698,7 @@
 							class="rounded-full p-4"
 							style="background: var(--color-theme-6);"
 						>
-							<svg
-								width="32"
-								height="32"
-								viewBox="0 0 24 24"
-								fill="white"
-							>
-								<path
-									d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M6,9H18V11H6V9M14,14H6V12H14V14M18,8H6V6H18V8Z"
-								/>
-							</svg>
+							<i class="fas fa-comment-dots" style="color: white; font-size: 1.5em;"></i>
 						</div>
 					</div>
 					<h3
@@ -938,23 +714,12 @@
 						service providers.
 					</p>
 					<div class="text-center">
-						<a
+						<Button
 							href="/u"
-							class="feature-link inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition-all"
-							style="background: var(--color-theme-6);"
-						>
-							Start Chatting
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"
-								/>
-							</svg>
-						</a>
+							text="Start Chatting"
+							icon="fa-arrow-right"
+							variant="secondary"
+						/>
 					</div>
 				</div>
 			</div>
@@ -976,7 +741,7 @@
 						class="flex flex-wrap justify-center gap-6 sm:flex-col sm:items-center"
 					>
 						{#each user.socialLinks as link (link)}
-							{@const { name } =
+							{@const { name, faIcon } =
 								getSocialMediaInfo(link)}
 							<a
 								href={link}
@@ -995,16 +760,11 @@
 										class="rounded-full p-2"
 										style="background: rgba(255,255,255,0.2);"
 									>
-										<svg
-											width="20"
-											height="20"
-											viewBox="0 0 24 24"
-											fill="currentColor"
-										>
-											<path
-												d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z"
-											/>
-										</svg>
+										{#if faIcon}
+											<i class="fas {faIcon}"></i>
+										{:else}
+											<i class="fas fa-external-link-alt"></i>
+										{/if}
 									</div>
 									{name}
 								</div>
@@ -1028,16 +788,7 @@
 						class="rounded-full p-6"
 						style="background: var(--color-theme-5);"
 					>
-						<svg
-							width="48"
-							height="48"
-							viewBox="0 0 24 24"
-							fill="white"
-						>
-							<path
-								d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
-							/>
-						</svg>
+						<i class="fas fa-user-slash" style="color: white; font-size: 2em;"></i>
 					</div>
 				</div>
 				<h2
@@ -1052,23 +803,12 @@
 					The requested user profile could not be
 					found.
 				</p>
-				<a
+				<Button
 					href="/u"
-					class="inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg font-bold text-white transition-all"
-					style="background: var(--color-theme-2);"
-				>
-					<svg
-						width="20"
-						height="20"
-						viewBox="0 0 24 24"
-						fill="currentColor"
-					>
-						<path
-							d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"
-						/>
-					</svg>
-					Back to Search
-				</a>
+					text="Back to Search"
+					icon="fa-arrow-left"
+					variant="primary"
+				/>
 			</div>
 		</div>
 	{/if}
@@ -1102,9 +842,6 @@
 		opacity: 0;
 	}
 
-	.profile-info > * {
-		opacity: 0;
-	}
 
 	.feature-card {
 		opacity: 0;

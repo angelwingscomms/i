@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({
 	)) as string[];
 	console.log('userRooms', userRooms);
 
-	const rr = await await qdrant.scroll(collection, {
+	const rr = await qdrant.scroll(collection, {
 		filter: {
 			must: [{ key: 's', match: { value: 'r' } }],
 			should: [
