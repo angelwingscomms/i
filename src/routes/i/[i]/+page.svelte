@@ -7,10 +7,7 @@
 	import type { Item } from '$lib/types/item';
 
 	let { data }: PageProps = $props();
-	let { i: item, relatedItems } = data as unknown as {
-		i: Item;
-		relatedItems?: Item[];
-	};
+	let { user, i: item } = data;
 	console.log('Loaded item:', item);
 	let selectedImageIndex = $state(0);
 	let showImageModal = $state(false);
@@ -262,6 +259,16 @@
 									/>
 								</div>
 							{/if}
+							{#if user && user.i === item.u}
+								<div class="flex gap-3">
+									<Button
+										href={`/i/${item.i}/edit`}
+										variant="secondary"
+										icon="fa-edit"
+										text="edit"
+									/>
+								</div>
+							{/if}
 						</div>
 
 						<!-- Additional Action -->
@@ -399,6 +406,16 @@
 							text="More from Owner"
 						/>
 					</div>
+					{#if user && user.i === item.u}
+						<div class="flex gap-3">
+							<Button
+								href={`/i/${item.i}/edit`}
+								variant="secondary"
+								icon="fa-edit"
+								text="edit"
+							/>
+						</div>
+					{/if}
 				</div>
 
 				<!-- Additional Action -->
@@ -624,7 +641,8 @@
 				</div>
 			</div>
 
-			<!-- Related Items Section -->
+			<!-- Related Items Section (commented out) -->
+			<!--
 			{#if relatedItems && relatedItems.length > 0}
 				<div class="mt-20 lg:mt-24">
 					<div class="card-normal group">
@@ -659,7 +677,6 @@
 									<div
 										class="card-hover bg-gradient-to-br from-white to-gray-50/50 p-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-500/10 dark:from-gray-800/50 dark:to-gray-700/20"
 									>
-										<!-- Item Image -->
 										<div class="relative mb-6">
 											<div
 												class="aspect-square overflow-hidden rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 shadow-inner dark:from-gray-700 dark:to-gray-600"
@@ -681,7 +698,6 @@
 												{/if}
 											</div>
 
-											<!-- Item Type Badge -->
 											<div
 												class="absolute -top-2 -right-2"
 											>
@@ -703,13 +719,11 @@
 												</div>
 											</div>
 
-											<!-- Hover overlay -->
 											<div
 												class="absolute inset-0 rounded-2xl bg-gradient-to-t from-purple-500/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 											></div>
 										</div>
 
-										<!-- Item Info -->
 										<div class="space-y-4">
 											<h3
 												class="line-clamp-2 text-xl leading-tight font-bold transition-colors duration-200 group-hover:text-purple-600 dark:group-hover:text-purple-400"
@@ -773,6 +787,7 @@
 					</div>
 				</div>
 			{/if}
+			-->
 		</div>
 	</div>
 
