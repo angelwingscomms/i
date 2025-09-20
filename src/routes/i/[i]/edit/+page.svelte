@@ -8,20 +8,20 @@
 	} from 'animejs';
 	import Button from '$lib/components/Button.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
-	import { goto } from '$app/navigation';
 	import axios from 'axios';
-	import type { PageProps } from './$types';
+	import type { PageData } from './$types';
 	import type { Item } from '$lib/types/item';
+	import { goto } from '$app/navigation';
 
-	let { data }: PageProps = $props();
-	let { i: item }: { i: Item } = data;
+	let { data }: PageData = $props();
+	let { user, i: item } = data;
 
-	let name = $state(item.t);
+	let name = $state(item.t || '');
 	let desc = $state(item.a || '');
-	let kind = $state(item.k ?? 0);
+	let kind = $state(item.k || 0);
+	let price = $state(item.v || 0);
+	let currency = $state(item.m || '$');
 	let files: FileList | null = $state(null);
-	let price = $state(item.v ?? 0);
-	let currentImages = $state(item.x || []);
 	let isSubmitting = $state(false);
 
 	onMount(() => {
@@ -95,14 +95,21 @@
 
 	async function submit() {
 		try {
-			const new_x = await upload_files();
-			const updated_x = [...currentImages, ...new_x];
-			const res = await axios.post(`/i/${item.i}/edit`, {
-				t: name,
-				a: desc,
-				k: kind,
-				v: price,
-				x: updated_x
+			isSubmitting = true;
+			const formData = new FormData();
+			formData.append('t', name);
+			if (desc) formData.append('a', desc);
+			formData.append('k', kind.toString());
+			formData.append('v', price.toString());
+			formData.append('m', currency);
+			if (files) {
+				Array.from(files).forEach((f) => formData.append('files', f));
+			}
+
+			const res = await axios.post(`/i/${item.i}/edit`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
 			});
 			if (res.status !== 200) throw new Error('update failed');
 
@@ -116,6 +123,7 @@
 			toast.success('item updated');
 			goto(`/i/${item.i}`);
 		} catch (error) {
+			console.error(error);
 			toast.error('failed to update item');
 		} finally {
 			isSubmitting = false;
@@ -175,25 +183,11 @@
 			<div class="space-y-8">
 				<!-- Name Field -->
 				<div class="form-field opacity-0">
-					<label
-						for="item-name"
-						class="mb-3 block text-lg font-bold"
-						style="color: var(--color-theme-4);"
-					>
-						Item Name
-					</label>
-					<input
-						id="item-name"
-						class="w-full rounded-full px-6 py-4 text-lg font-medium transition-all focus:outline-none"
-						style="border: 1px solid var(--color-theme-3); background: transparent;"
-						placeholder="Enter a catchy name for your item..."
+					<DescriptionInput
 						bind:value={name}
-						onfocus={(e) =>
-							((e.target as HTMLInputElement).style.border =
-								'1px solid var(--color-theme-1)')}
-						onblur={(e) =>
-							((e.target as HTMLInputElement).style.border =
-								'1px solid var(--color-theme-3)')}
+						placeholder="Enter a catchy name for your item..."
+						label="Item Name"
+						editable={true}
 					/>
 				</div>
 
@@ -215,9 +209,7 @@
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
-						<span style="color: var(--color-theme-1);"
-							>*</span
-						> Type
+						<span style="color: var(--color-theme-1);">*</span> Type
 					</label>
 					<div class="flex gap-4">
 						<Button
@@ -235,7 +227,7 @@
 					</div>
 				</div>
 
-				<!-- Price Field -->
+				<!-- Price and Currency Fields -->
 				<div class="form-field opacity-0">
 					<label
 						for="item-price"
@@ -244,16 +236,31 @@
 					>
 						<span style="color: var(--color-theme-1);">*</span> Price
 					</label>
-					<div class="relative">
+					<div class="flex gap-4">
+						<div class="relative flex-1">
+							<input
+								id="item-price"
+								type="number"
+								min="0"
+								step="0.01"
+								class="w-full rounded-full px-4 py-4 text-lg font-medium transition-all focus:outline-none"
+								style="border: 1px solid var(--color-theme-3); background: transparent;"
+								placeholder="0.00"
+								bind:value={price}
+								onfocus={(e) =>
+									((e.target as HTMLInputElement).style.border =
+										'1px solid var(--color-theme-1)')}
+								onblur={(e) =>
+									((e.target as HTMLInputElement).style.border =
+										'1px solid var(--color-theme-3)')}
+							/>
+						</div>
 						<input
-							id="item-price"
-							type="number"
-							min="0"
-							step="0.01"
-							class="w-full rounded-full px-12 py-4 text-lg font-medium transition-all focus:outline-none"
+							type="text"
+							class="w-24 rounded-full px-3 py-4 text-lg font-medium transition-all focus:outline-none"
 							style="border: 1px solid var(--color-theme-3); background: transparent;"
-							placeholder="0.00"
-							bind:value={price}
+							placeholder="$"
+							bind:value={currency}
 							onfocus={(e) =>
 								((e.target as HTMLInputElement).style.border =
 									'1px solid var(--color-theme-1)')}
@@ -261,12 +268,6 @@
 								((e.target as HTMLInputElement).style.border =
 									'1px solid var(--color-theme-3)')}
 						/>
-						<span
-							class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold"
-							style="color: var(--color-theme-1);"
-						>
-							$
-						</span>
 					</div>
 				</div>
 
@@ -277,18 +278,8 @@
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
-						Additional Images (Optional)
+						Images (Optional - will replace existing)
 					</label>
-					{#if currentImages.length > 0}
-						<div class="mb-4">
-							<p class="text-sm text-gray-600 mb-2">Current Images:</p>
-							<div class="flex gap-2 overflow-x-auto">
-								{#each currentImages as image}
-									<img src={image} alt="Currently viewed product pic" class="h-20 w-20 rounded object-cover" />
-								{/each}
-							</div>
-						</div>
-					{/if}
 					<div class="relative">
 						<input
 							id="file-upload"
@@ -313,8 +304,8 @@
 								style="color: var(--color-theme-4);"
 							>
 								{files && files.length > 0
-									? `${files.length} new file(s) selected`
-									: 'Click to add more images'}
+									? `${files.length} file(s) selected`
+									: 'Click to upload new images'}
 							</p>
 							<p
 								class="mt-2 text-sm"
@@ -329,12 +320,8 @@
 				<!-- Submit Button -->
 				<div class="form-field pt-4 opacity-0">
 					<Button
-						text={isSubmitting
-							? 'Updating...'
-							: 'Update Listing'}
-						icon={isSubmitting
-							? 'fa-spinner fa-spin'
-							: 'fa-edit'}
+						text={isSubmitting ? 'Updating...' : 'Update Item'}
+						icon={isSubmitting ? 'fa-spinner fa-spin' : 'fa-save'}
 						onclick={submit}
 						disabled={isSubmitting}
 					/>
@@ -373,5 +360,10 @@
 	.form-section,
 	.form-field {
 		opacity: 0;
+	}
+
+	:global(.active) {
+		background: var(--color-theme-1);
+		color: white;
 	}
 </style>

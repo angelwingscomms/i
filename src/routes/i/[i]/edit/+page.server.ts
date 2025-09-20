@@ -1,20 +1,30 @@
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { get } from '$lib/db';
+import type { Item } from '$lib/types/item';
 
 export const load: PageServerLoad = async ({
 	params,
 	locals
 }) => {
-	if (!locals.user) throw error(401, 'Unauthorized');
 	const { i } = params;
+	if (!locals.user) {
+		redirect(302, '/login');
+	}
 	if (!i) error(400, 'missing item id');
 	const item = await get<Record<string, unknown>>(i);
-	if (!item || (item as any).s !== 'i')
+	if (!item)
 		error(404, 'item not found');
-	if ((item as any).u !== locals.user.i) throw error(403, 'Not owner');
+
+	if (locals.user && locals.user.i !== item.u) {
+		error(403, "you don't own this item");
+	}
+
+	if (item.s !== 'i') {
+		error(400, 'this resource is not an item');
+	}
 
 	return {
-		i: {...item, i}
+		i: {...item as unknown as Item, i}
 	};
 };

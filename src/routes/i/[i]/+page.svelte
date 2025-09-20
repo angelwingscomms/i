@@ -611,7 +611,7 @@
 												style="color: var(--color-theme-1);"
 											>
 												{item.v
-													? `${item.v}`
+													? `${item.v} ${item.m || '$'}`
 													: 'Price not available'}
 											</span>
 										</div>

@@ -7,7 +7,8 @@
 		wide = false,
 		href,
 		icon,
-		variant = 'primary'
+		variant = 'primary',
+		active = false
 	}: {
 		onclick?: (event: MouseEvent) => void;
 		text?: string;
@@ -17,13 +18,14 @@
 		href?: string;
 		icon?: string;
 		variant?: 'primary' | 'secondary';
+		active?: boolean;
 	} = $props();
 </script>
 
 {#if href}
 	<a
 		{href}
-		class="btn-{variant} {wide ? 'btn-wide' : ''}"
+		class="btn-{variant} {wide ? 'btn-wide' : ''} {active ? 'bg-[var(--color-theme-1)] text-white' : ''}"
 		{onclick}
 	>
 		{#if loading}
@@ -37,7 +39,7 @@
 	</a>
 {:else}
 	<button
-		class="btn-{variant} {wide ? 'btn-wide' : ''}"
+		class="btn-{variant} {wide ? 'btn-wide' : ''} {active ? 'bg-[var(--color-theme-1)] text-white' : ''}"
 		{onclick}
 		disabled={loading || disabled}
 	>
