@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { v7 } from 'uuid';
 	import { fade } from 'svelte/transition';
 	import type {
 		SendChatMessage,
@@ -15,7 +14,7 @@
 	import { onMount } from 'svelte';
 	import RealtimeKitClient from '@cloudflare/realtimekit';
 	import { ROOM_NAME_DISPLAY_LIMIT } from '$lib/constants';
-	import { new_id } from '$lib/db';
+	import { new_id } from '$lib/util/new_id';
 
 	let {
 		m,

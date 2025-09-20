@@ -33,9 +33,7 @@ export async function getfirst<T>(
 }
 
 // Utility functions
-export function new_id(): string {
-	return v7()
-}
+export { new_id } from '$lib/util/new_id';
 
 export const set = async (
 	id: string,

@@ -8,7 +8,8 @@
 	import axios from 'axios';
 	import { untrack } from 'svelte';
 
-	let { data } = $props(), post: Post = data.p;
+	let { data } = $props(),
+		post: Post = data.p;
 </script>
 
 <svelte:head>

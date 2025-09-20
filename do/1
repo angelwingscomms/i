@@ -1,3 +1,0 @@
-sanitize markdown returned from gemini
-
-edit message feature, so message in UI turns to a really neat sleek minimal subtle nonintrusive input box, w/ an accept button w/ it. so on edit, the message in the db is edited such that message.m is no the new text. message versions are stored on message.v = Edit[]. Edit {d: }

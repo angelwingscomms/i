@@ -11,6 +11,8 @@ node_modules
 /build
 /r
 
+/do
+
 # OS
 .DS_Store
 Thumbs.db

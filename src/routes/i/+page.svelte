@@ -5,6 +5,7 @@
 	import ItemResultsList from '$lib/components/ItemResultsList.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Select from '$lib/components/Select.svelte';
+	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 
 
 	type Item = {
@@ -40,6 +41,16 @@
 				JSON.stringify({ query, kind, sort })
 			);
 		}
+	});
+
+	// Debounce search on query change
+	$effect(() => {
+		if (searchTimeout) {
+			clearTimeout(searchTimeout);
+		}
+		searchTimeout = setTimeout(() => {
+			search();
+		}, 300);
 	});
 
 	onMount(() => {
@@ -87,19 +98,9 @@
 		}
 	}
 
-	function debouncedSearch() {
-		if (searchTimeout) {
-			clearTimeout(searchTimeout);
-		}
-
-		searchTimeout = setTimeout(() => {
-			search();
-		}, 300);
-	}
 
 	function clearSearch() {
 		query = '';
-		search();
 	}
 </script>
 
@@ -156,18 +157,19 @@
 						Search
 					</label>
 					<div class="relative">
-						<input
+						<DescriptionInput
 							id="query"
-							type="text"
 							bind:value={query}
-							oninput={debouncedSearch}
-							placeholder="Search for items..."
-							class="w-full rounded-full border-b-2 border-l-2 [border-color:var(--color-theme-1)] bg-transparent px-4 py-3 pr-12 transition-colors focus:[border-color:var(--color-theme-1)]"
+							placeholder="search for items..."
+							rows={3}
+							label=""
+							voice_typing={true}
+							ontranscribe={() => {}}
 						/>
 						{#if query}
 							<button
 								onclick={clearSearch}
-								class="absolute top-1/2 right-3 -translate-y-1/2 transform rounded border-t border-r [border-color:var(--color-theme-1)] text-gray-400 hover:text-gray-600"
+								class="absolute top-2 right-2 z-10 rounded border-t border-r [border-color:var(--color-theme-1)] text-gray-400 hover:text-gray-600"
 								aria-label="Clear search"
 							>
 								<svg
