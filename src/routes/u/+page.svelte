@@ -41,22 +41,6 @@
 	let onlineOnly = $state(false);
 	let inCallOnly = $state(false);
 
-	function apply_sort(s: 'match' | 'age') {
-		sort = s;
-		sort_open = false;
-		results = results
-			.slice()
-			.sort((a, b) =>
-				sort === 'match'
-					? (b.score ?? 0) - (a.score ?? 0)
-					: (a.a ?? 0) - (b.a ?? 0)
-			);
-	}
-
-	function handle_click_outside() {
-		sort_open = false;
-	}
-
 	// Reactive statement to sync search query to localStorage
 	$effect(() => {
 		if (browser) {
@@ -197,11 +181,7 @@
 		bind:description
 		bind:loading
 		bind:sort
-		bind:sort_open
-		bind:sort_ref
 		{search}
-		onSort={apply_sort}
-		onClickOutside={handle_click_outside}
 	/>
 
 	{#if results.length > 0}

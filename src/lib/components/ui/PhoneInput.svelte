@@ -218,16 +218,6 @@
 </div>
 
 <style>
-	.phone-number-input:focus {
-		border-color: var(--border-focus) !important;
-		box-shadow: 0 0 0 4px
-			color-mix(
-				in srgb,
-				var(--border-focus) 20%,
-				transparent
-			);
-	}
-
 	.border-error {
 		border-color: var(--text-error) !important;
 	}

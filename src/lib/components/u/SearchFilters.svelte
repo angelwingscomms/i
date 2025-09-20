@@ -21,8 +21,6 @@
 		user_age = $bindable(0),
 		sort_open = $bindable(),
 		lock_more = $bindable(false),
-		sort_ref = $bindable(undefined),
-		onSort = $bindable(undefined),
 		onClickOutside = $bindable(undefined)
 	}: {
 		gender: number | undefined;
@@ -37,7 +35,6 @@
 		sort: 'match' | 'age';
 		sort_open: boolean;
 		sort_ref?: HTMLDivElement | null;
-		onSort?: (s: 'match' | 'age') => void;
 		onClickOutside?: () => void;
 		lock_more?: boolean;
 	} = $props();
@@ -168,10 +165,6 @@
 			<div class="ml-auto flex items-center gap-3">
 				<SortDropdown
 					bind:sort
-					bind:sort_open
-					bind:sort_ref
-					on:sort={(e) => onSort(e.detail)}
-					onclick_outside={onClickOutside}
 				/>
 				<button
 					class="btn-primary btn-md"

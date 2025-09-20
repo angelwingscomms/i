@@ -1,34 +1,25 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { outside_click } from '$lib/util/outside_click';
+
 	let {
-		sort = $bindable(),
-		sort_open = $bindable(),
-		sort_ref = $bindable()
+		sort = $bindable()
 	}: {
 		sort: 'match' | 'age';
-		sort_open: boolean;
-		sort_ref: HTMLDivElement | null;
 	} = $props();
-	const dispatch = createEventDispatcher();
+
+	let sort_open = $state(false);
 
 	function handle_sort_click(s: 'match' | 'age') {
-		dispatch('sort', s);
+		sort = s;
 		sort_open = false;
-	}
-
-	function handle_click_outside(event: MouseEvent) {
-		if (
-			sort_ref &&
-			!sort_ref.contains(event.target as Node)
-		) {
-			dispatch('click_outside');
-		}
 	}
 </script>
 
-<svelte:window onclick={handle_click_outside} />
-
-<div class="dropdown-container" bind:this={sort_ref}>
+<div
+	class="dropdown-container"
+	use:outside_click
+	outside_click={() => (sort_open = false)}
+>
 	<button
 		type="button"
 		class="dropdown-trigger"

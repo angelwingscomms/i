@@ -30,9 +30,9 @@
 		onInput?: (detail: any) => void;
 	} = $props();
 
-	let isValidating = false;
-	let isValid = initiallyValid;
-	let error = '';
+	let isValidating = $state(false);
+	let isValid = $state(initiallyValid);
+	let error = $state('');
 	let touched = false;
 	let lastValidatedValue = '';
 
@@ -117,7 +117,6 @@
 			{placeholder}
 			{disabled}
 			{required}
-			onblur
 			minlength={minLength}
 			maxlength={maxLength}
 			autocomplete="username"
