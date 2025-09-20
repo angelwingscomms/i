@@ -14,11 +14,8 @@
 
 .feature-card {
 	background: transparent;
-	border-radius: 1.5rem;
 	padding: 2.5rem;
 	position: relative;
-	overflow: hidden;
-	border: 1px solid var(--border-primary);
 }
 
 .feature-card::before {

@@ -1,7 +1,8 @@
-import { error, text } from '@sveltejs/kit';
+import { json, error } from '@sveltejs/kit';
 import { GEMINI } from '$env/static/private';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { edit_point, get } from '$lib/db';
+import { get } from '$lib/db';
+import { update_post } from '$lib/db/post';
 import type { Post } from '$lib/types';
 
 export const POST = async ({
@@ -10,39 +11,52 @@ export const POST = async ({
 	params
 }) => {
 	if (!locals.user) {
-		throw error(401);
+		throw error(401, 'Unauthorized');
 	}
 	const instructions = await request.text();
-	if (!instructions?.trim()) {
-		throw error(400, 'edit instructions required');
+	const i = params.i;
+	if (!i || !instructions?.trim()) {
+		throw error(
+			400,
+			'Post ID and edit instructions required'
+		);
 	}
-	const post = await get<Post>(params.i, [
+	const post = await get<Post>(i, [
 		'u',
-		'h',
-		'b'
+		't',
+		'b',
+		'y'
 	]);
 	if (!post) {
-		throw error(404, 'post not found');
+		throw error(404, 'Post not found');
+	}
+	if (post.s !== 'p') {
+		throw error(404, 'This entity is not a post');
 	}
 	if (post.u !== locals.user.i) {
-		throw error(403, "you don't own this post");
+		throw error(403, "You don't own this post");
 	}
 	const genAI = new GoogleGenerativeAI(GEMINI);
 	const model = genAI.getGenerativeModel({
 		model: 'gemini-2.5-flash'
 	});
-	const prompt = `Edit the post according to the given instructions.Current post:\n \`\`\`markdown\n${post.b}\`\`\`. Edit according to these instructions: ${instructions}. Output only the markdown code`;
+	const prompt = `Edit the following post based on these instructions: "${instructions}". Current post title: "${post.t || ''}". Current post body: "${post.b || ''}". Output ONLY valid JSON in this exact format: {"t": "new title", "b": "new body (markdown)"}. Do not include any other text.`;
 	const result = await model.generateContent(prompt);
 	const response = await result.response;
-	let b = response.text().trim();
-	b = b
-		.replace(/^```markdown\s*\n?/, '')
+	let new_content = response.text().trim();
+	new_content = new_content
+		.replace(/^```json\s*\n?/, '')
 		.replace(/\n?```$/, '')
 		.trim();
-	await edit_point(params.i, {
-		b,
+	const parsed = JSON.parse(new_content);
+	const { t, b } = parsed;
+	await update_post(i, {
+		t: t || post.t,
+		b: b || post.b,
 		l: Date.now()
 	});
-	console.log('b', b);
-	return text(b);
+	return json({
+		t,
+		b
+	});
 };

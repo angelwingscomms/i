@@ -14,6 +14,7 @@
 	let loading = $state(false);
 	let saving = $state(false);
 	let timeout: NodeJS.Timeout | null = null;
+	let body_input: HTMLTextAreaElement | null = $state(null);
 	let ai_input: HTMLTextAreaElement | null = $state(null);
 	let width = $state(0);
 	let isMobile = $derived(width < 768);
@@ -65,9 +66,12 @@
 	});
 
 	const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.ctrlKey && e.key === 'Enter' && !loading && ai_input) {
+		if (e.ctrlKey && e.key === 'Enter' && !loading) {
 			const activeEl = document.activeElement;
-			if (activeEl === ai_input) {
+			if (activeEl === body_input) {
+				e.preventDefault();
+				immediateSave();
+			} else if (activeEl === ai_input) {
 				e.preventDefault();
 				editWithGemini();
 			}
@@ -90,8 +94,10 @@
 			if (res.data) {
 				toast.success('Post updated with AI');
 				console.debug('edg', res.data)
-				post.b = res.data;
+				post.t = res.data.t || post.t;
+				post.b = res.data.b || post.b;
 				instructions = '';
+				saveWithDelay(post.b || '');
 			} else {
 				throw new Error('No response data');
 			}
@@ -102,6 +108,32 @@
 			loading = false;
 		}
 	}
+
+	const immediateSave = async () => {
+		if (!post.t && !post.b) return;
+		
+		saving = true;
+		try {
+			const formData = new FormData();
+			formData.append('t', post.t || '');
+			formData.append('b', post.b || '');
+			
+			const res = await axios.put(`/posts/${post.i}`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			});
+			
+			if (res.status === 200) {
+				toast.success('Post saved');
+			}
+		} catch (e) {
+			console.error('Save failed:', e);
+			toast.error('Failed to save post');
+		} finally {
+			saving = false;
+		}
+	};
 
 	async function deletePost() {
 		if (!confirm('Are you sure you want to delete this post?')) {
@@ -148,7 +180,7 @@
 						bind:value={post.b}
 						placeholder="Update your post content..."
 						rows={10}
-						bind:ref={ai_input}
+						bind:ref={body_input}
 						label="Post Content"
 						editable={true}
 					/>
@@ -158,6 +190,7 @@
 						bind:value={instructions}
 						placeholder="e.g., Add more details, make it shorter, improve language..."
 						rows={4}
+						bind:ref={ai_input}
 						label="AI Edit Instructions"
 						editable={true}
 						send={editWithGemini}
