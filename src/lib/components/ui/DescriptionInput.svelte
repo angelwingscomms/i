@@ -122,7 +122,7 @@
 				id="description"
 				name="description"
 				bind:value
-				class="description-textarea border-0 focus:ring-0 focus:outline-none"
+				class="description-textarea border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)]"
 				{placeholder}
 				{rows}
 				required
@@ -136,7 +136,7 @@
 				id="description"
 				name="description"
 				bind:value
-				class="description-textinput border-0 focus:ring-0 focus:outline-none"
+				class="description-textinput border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)]"
 				{placeholder}
 				required
 				disabled={!editable || isTranscribing}

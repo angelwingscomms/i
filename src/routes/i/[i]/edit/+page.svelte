@@ -10,12 +10,18 @@
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import { goto } from '$app/navigation';
 	import axios from 'axios';
+	import type { PageProps } from './$types';
+	import type { Item } from '$lib/types/item';
 
-	let name = $state('');
-	let desc = $state('');
-	let kind = $state<0 | 1>(0);
+	let { data }: PageProps = $props();
+	let { i: item }: { i: Item } = data;
+
+	let name = $state(item.t);
+	let desc = $state(item.a || '');
+	let kind = $state(item.k ?? 0);
 	let files: FileList | null = $state(null);
-	let price = $state(0);
+	let price = $state(item.v ?? 0);
+	let currentImages = $state(item.x || []);
 	let isSubmitting = $state(false);
 
 	onMount(() => {
@@ -89,16 +95,16 @@
 
 	async function submit() {
 		try {
-			const x = await upload_files();
-			const res = await axios.post('/i/create', {
+			const new_x = await upload_files();
+			const updated_x = [...currentImages, ...new_x];
+			const res = await axios.post(`/i/${item.i}/edit`, {
 				t: name,
 				a: desc,
 				k: kind,
 				v: price,
-				x
+				x: updated_x
 			});
-			if (res.status !== 200) throw new Error('create failed');
-			const i = res.data;
+			if (res.status !== 200) throw new Error('update failed');
 
 			// Success animation
 			animate('.form-section', {
@@ -107,10 +113,10 @@
 				ease: 'outElastic(1, .8)'
 			});
 
-			toast.success('item created');
-			goto(`/i/${i}`);
+			toast.success('item updated');
+			goto(`/i/${item.i}`);
 		} catch (error) {
-			toast.error('failed to create item');
+			toast.error('failed to update item');
 		} finally {
 			isSubmitting = false;
 		}
@@ -145,7 +151,7 @@
 				class="mb-6 text-6xl font-black sm:text-4xl"
 				style="color: var(--color-theme-4);"
 			>
-				Create Your <span
+				Edit Your <span
 					style="color: var(--color-theme-1);"
 					>Listing</span
 				>
@@ -153,8 +159,7 @@
 			<p
 				class="text-xl text-gray-600 sm:text-lg dark:text-gray-300"
 			>
-				Share your amazing products and services with
-				the community
+				Update your product or service details
 			</p>
 		</div>
 	</div>
@@ -170,11 +175,25 @@
 			<div class="space-y-8">
 				<!-- Name Field -->
 				<div class="form-field opacity-0">
-					<DescriptionInput
-						bind:value={name}
+					<label
+						for="item-name"
+						class="mb-3 block text-lg font-bold"
+						style="color: var(--color-theme-4);"
+					>
+						Item Name
+					</label>
+					<input
+						id="item-name"
+						class="w-full rounded-full px-6 py-4 text-lg font-medium transition-all focus:outline-none"
+						style="border: 1px solid var(--color-theme-3); background: transparent;"
 						placeholder="Enter a catchy name for your item..."
-						label="Item Name"
-						editable={true}
+						bind:value={name}
+						onfocus={(e) =>
+							((e.target as HTMLInputElement).style.border =
+								'1px solid var(--color-theme-1)')}
+						onblur={(e) =>
+							((e.target as HTMLInputElement).style.border =
+								'1px solid var(--color-theme-3)')}
 					/>
 				</div>
 
@@ -205,11 +224,13 @@
 							text="Product"
 							icon="fa-shopping-bag"
 							onclick={() => (kind = 0)}
+							active={kind === 0}
 						/>
 						<Button
 							text="Service"
 							icon="fa-wrench"
 							onclick={() => (kind = 1)}
+							active={kind === 1}
 						/>
 					</div>
 				</div>
@@ -256,8 +277,18 @@
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
-						Images (Optional)
+						Additional Images (Optional)
 					</label>
+					{#if currentImages.length > 0}
+						<div class="mb-4">
+							<p class="text-sm text-gray-600 mb-2">Current Images:</p>
+							<div class="flex gap-2 overflow-x-auto">
+								{#each currentImages as image}
+									<img src={image} alt="Current image" class="h-20 w-20 rounded object-cover" />
+								{/each}
+							</div>
+						</div>
+					{/if>
 					<div class="relative">
 						<input
 							id="file-upload"
@@ -282,8 +313,8 @@
 								style="color: var(--color-theme-4);"
 							>
 								{files && files.length > 0
-									? `${files.length} file(s) selected`
-									: 'Click to upload images'}
+									? `${files.length} new file(s) selected`
+									: 'Click to add more images'}
 							</p>
 							<p
 								class="mt-2 text-sm"
@@ -299,11 +330,11 @@
 				<div class="form-field pt-4 opacity-0">
 					<Button
 						text={isSubmitting
-							? 'Creating...'
-							: `Create ${kind === 0 ? 'Product' : 'Service'}`}
+							? 'Updating...'
+							: 'Update Listing'}
 						icon={isSubmitting
 							? 'fa-spinner fa-spin'
-							: 'fa-magic'}
+							: 'fa-edit'}
 						onclick={submit}
 						disabled={isSubmitting}
 					/>

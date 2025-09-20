@@ -1,5 +1,6 @@
 import { error, text } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { get } from '$lib/db';
 import { create } from '$lib/db';
 import { GEMINI } from '$env/static/private';
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -30,9 +31,15 @@ async function summarize(
 
 export const POST: RequestHandler = async ({
 	request,
+	params,
 	locals
 }) => {
 	if (!locals.user) throw error(401, 'Unauthorized');
+	const { i } = params;
+	const existing = await get<Item>(i);
+	if (!existing || existing.s !== 'i') throw error(404, 'Item not found');
+	if (existing.u !== locals.user.i) throw error(403, 'Not owner');
+
 	const { t, a, k, v, x } = (await request.json()) as {
 		t: string;
 		a: string;
@@ -41,18 +48,19 @@ export const POST: RequestHandler = async ({
 		x?: string[];
 	};
 
-	const q = a.trim().length > 1440 ? await summarize(a) : undefined;
+	const q = a.trim().length > 1440 ? await summarize(a) : existing.q;
 	const payload: Item = {
+		...existing,
 		s: 'i',
 		t: t.trim(),
 		a: a.trim(),
-		u: locals.user.i,
 		q,
-		k: k ?? 0,
-		v: v ?? 0,
-		d: Date.now(),
-		...(x?.length ? { x } : {})
+		k: k ?? existing.k ?? 0,
+		v: v ?? existing.v ?? 0,
+		...(x ? { x } : {}),
+		d: existing.d // keep original date
 	};
-	const i = await create(payload, JSON.stringify({about: a, name: payload.t }));
-	return text(i);
+	const string_to_embed = JSON.stringify({about: a, name: payload.t });
+	const id = await create(payload, string_to_embed, i);
+	return text(id);
 };

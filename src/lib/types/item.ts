@@ -4,7 +4,7 @@ export interface Item {
 	t: string; // name/title
 	a?: string; // about
 	q?: string; // about summary (gemini)
-	v?: number; // stock count
+	v?: number; // price
 	k?: 0 | 1; // kind: 0 product, 1 service
 	l?: number; // lat
 	n?: number; // lon
