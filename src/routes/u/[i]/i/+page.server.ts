@@ -2,7 +2,6 @@ import type { PageServerLoad } from '../../../i/$types';
 import { search_by_payload } from '$lib/db';
 
 export const load: PageServerLoad = async ({
-	locals
 }) => {
 	// Get recent items (products and services)
 	const items = await search_by_payload(

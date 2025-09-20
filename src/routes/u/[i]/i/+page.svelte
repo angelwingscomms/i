@@ -5,13 +5,18 @@
 		createTimeline,
 		stagger
 	} from 'animejs';
-import TextInput from '$lib/components/ui/TextInput.svelte';
+	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import type { PageData } from '../../../i/$types';
+	import type { Item } from '$lib/types/item';
 
-	let {data} = $props();
+	interface ItemPageData extends PageData {
+		items: Item[];
+	}
+
+	let { data } = $props<{ data: ItemPageData }>();
 	let search_term = $state('');
-	let filtered_items = $derived(
-		data.i.filter((item) =>
+	let filtered_items = $derived<Item[]>(
+		data.i.filter((item: Item) =>
 			item.t.toLowerCase().includes(search_term.toLowerCase()) ||
 			item.d?.toLowerCase().includes(search_term.toLowerCase())
 		)
@@ -96,11 +101,13 @@ import TextInput from '$lib/components/ui/TextInput.svelte';
 				find products and services from your community
 			</p>
 			<div class="mt-8 flex justify-center">
-				<TextInput
-					bind:value={search_term}
-					placeholder="search items..."
-					class="w-full max-w-md"
-				/>
+				<div class="w-full max-w-md">
+					<DescriptionInput
+						bind:value={search_term}
+						placeholder="search items..."
+						editable={true}
+					/>
+				</div>
 			</div>
 			{#if data.user}
 				<div class="mt-8">
@@ -157,9 +164,9 @@ import TextInput from '$lib/components/ui/TextInput.svelte';
 										: '⚡ Service'}
 								</span>
 								<span class="text-xs text-gray-500">
-									{new Date(
-										item.a
-									).toLocaleDateString()}
+									{item.a
+										? new Date(item.a).toLocaleDateString()
+										: 'n/a'}
 								</span>
 							</div>
 							<h3

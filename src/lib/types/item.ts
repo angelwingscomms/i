@@ -1,5 +1,6 @@
 export interface Item {
 	s: 'i';
+	i: string; // item id
 	t: string; // name/title
 	d?: string; // original description
 	q?: string; // description summary (gemini)
