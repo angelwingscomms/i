@@ -1,10 +1,10 @@
 <svelte:head>
 	<title
-		>apexlinks: connect like-minded people</title
+		>apexlinks</title
 	>
 	<meta
 		name="description"
-		content="connect like-minded people on apexlinks. find chatrooms sharing interests. anonymous video/text chats, groups, age/gender/location filters."
+		content="easily find products and services you want. discover chatrooms sharing interests. anonymous video/text chats, groups, age/gender/location filters."
 	/>
 	<meta
 		property="og:title"
@@ -12,7 +12,7 @@
 	/>
 	<meta
 		property="og:description"
-		content="find chatrooms sharing interests. anonymous video/text chats & groups with filters."
+		content="easily find products and services you want. discover chatrooms sharing interests. anonymous video/text chats & groups with filters."
 	/>
 	<meta property="og:type" content="website" />
 	<meta
@@ -33,24 +33,24 @@
 	/>
 	<meta
 		name="twitter:description"
-		content="find chatrooms sharing interests."
+		content="easily find products and services you want. discover chatrooms sharing interests."
 	/>
 	<meta
 		name="keywords"
-		content="connect with people, find people, chatrooms, anonymous chats, video chat, text chat, share interests, online connections, group rooms"
+		content="easily find products and services you want. connect with people, find people, chatrooms, anonymous chats, video chat, text chat, share interests, online connections, group rooms"
 	/>
 </svelte:head>
 
 <!-- hero section -->
 <section
-	class="flex flex-col items-center justify-center px-4 text-center"
+	class="flex flex-col items-center justify-center px-4 pt-16 text-center"
 >
 	<div class="max-w-4xl">
 		<h1 class="hero-title mb-4">
-			connect with people just like you
+			easily find products and services you want
 		</h1>
 		<p class="hero-subtitle mb-8">
-			share posts, discover chatrooms, and connect anonymously via video/text chats. build real connections effortlessly.
+			discover chatrooms, share posts, and connect anonymously via video/text chats. build real connections effortlessly.
 		</p>
 		<div
 			class="flex flex-col justify-center gap-4 sm:flex-row"

@@ -137,7 +137,7 @@
 				class="relative mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24"
 			>
 				<div
-					class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16"
+					class="flex flex-col items-center gap-12 lg:flex-row lg:gap-16"
 				>
 					<!-- Main Image -->
 					<div class="order-2 lg:order-1">

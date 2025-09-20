@@ -63,7 +63,7 @@
 			<div class="flex items-start justify-between">
 				<div class="min-w-0 flex-1">
 					<h3
-						class="truncate text-lg font-bold [color:var(--color-theme-4)] transition-transform group-hover:scale-105"
+						class="truncate text-lg font-bold [color:var(--color-theme-4)]"
 					>
 						{item.t ?? 'Untitled Item'}
 					</h3>

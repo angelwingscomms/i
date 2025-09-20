@@ -5,9 +5,17 @@
 		createTimeline,
 		stagger
 	} from 'animejs';
+import TextInput from '$lib/components/ui/TextInput.svelte';
 	import type { PageData } from '../../../i/$types';
 
-	let data = $props();
+	let {data} = $props();
+	let search_term = $state('');
+	let filtered_items = $derived(
+		data.i.filter((item) =>
+			item.t.toLowerCase().includes(search_term.toLowerCase()) ||
+			item.d?.toLowerCase().includes(search_term.toLowerCase())
+		)
+	);
 
 	onMount(() => {
 		// Page entrance animations
@@ -85,8 +93,15 @@
 			<p
 				class="text-xl text-gray-600 sm:text-lg dark:text-gray-300"
 			>
-				Find products and services from your community
+				find products and services from your community
 			</p>
+			<div class="mt-8 flex justify-center">
+				<TextInput
+					bind:value={search_term}
+					placeholder="search items..."
+					class="w-full max-w-md"
+				/>
+			</div>
 			{#if data.user}
 				<div class="mt-8">
 					<a
@@ -114,11 +129,11 @@
 	<div
 		class="items-grid mx-auto max-w-6xl px-4 pb-16 opacity-0"
 	>
-		{#if data.items.length > 0}
+		{#if filtered_items.length > 0}
 			<div
 				class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
 			>
-				{#each data.items as item (item.i)}
+				{#each filtered_items as item (item.i)}
 					<a
 						href="/i/{item.i}"
 						class="item-card card-hover card-normal no-underline"
@@ -193,6 +208,30 @@
 					</a>
 				{/each}
 			</div>
+		{:else if search_term}
+			<div class="py-16 text-center">
+				<div class="mb-6 text-6xl">🔍</div>
+				<h3
+					class="mb-4 text-2xl font-bold"
+					style="color: var(--color-theme-4);"
+				>
+					no results for "{search_term}"
+				</h3>
+				<p
+					class="mb-8 text-lg"
+					style="color: var(--color-theme-6);"
+				>
+					try a different search term or create a new item.
+				</p>
+				{#if data.user}
+					<a
+						href="/i/create"
+						class="btn-primary btn-lg"
+					>
+						create new item
+					</a>
+				{/if}
+			</div>
 		{:else}
 			<div class="py-16 text-center">
 				<div class="mb-6 text-6xl">📦</div>
@@ -200,27 +239,27 @@
 					class="mb-4 text-2xl font-bold"
 					style="color: var(--color-theme-4);"
 				>
-					No items yet
+					no items yet
 				</h3>
 				<p
 					class="mb-8 text-lg"
 					style="color: var(--color-theme-6);"
 				>
-					Be the first to share something amazing!
+					be the first to share something amazing!
 				</p>
 				{#if data.user}
 					<a
 						href="/i/create"
 						class="btn-primary btn-lg"
 					>
-						Create First Item
+						create first item
 					</a>
 				{:else}
 					<a
 						href="/google"
 						class="btn-primary btn-lg"
 					>
-						Sign In to Create
+						sign in to create
 					</a>
 				{/if}
 			</div>

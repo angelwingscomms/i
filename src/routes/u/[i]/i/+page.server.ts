@@ -14,9 +14,9 @@ export const load: PageServerLoad = async ({
 			direction: 'desc'
 		}
 	);
+	console.log('items', items);
 
 	return {
-		user: locals.user,
-		items
+		i
 	};
 };

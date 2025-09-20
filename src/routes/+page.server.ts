@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({
 
 	const page_title = 'Apexlinks - Connect Genuinely';
 	const page_description =
-		'Discover real chats, rooms, AI tools – anonymous and fun. Filter by age, gender, location for effortless connections.';
+		'easily find products and services you want. discover real chats, rooms, AI tools – anonymous and fun. filter by age, gender, location for effortless connections.';
 	const page_image = `${url.origin}/landing-og-image.jpg`; // Specific image for landing page
 
 	return {

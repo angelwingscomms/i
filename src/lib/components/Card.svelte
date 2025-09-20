@@ -22,7 +22,7 @@
 	} = $props();
 </script>
 
-<div class="feature-card rounded-3xl w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)] border border-[var(--border-primary)] border-t-0 border-r-0">
+<div class="feature-card rounded-3xl w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
 	{#if image}
 		<img src={image} alt={alt || title} class="w-full aspect-square object-cover rounded-t-3xl mb-4" />
 	{/if}
