@@ -297,6 +297,7 @@
 						class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
 						onclick={() =>
 							(show_room_name_modal = true)}
+						aria-label="Show room information"
 						><i class="fas fa-info-circle"
 						></i></button
 					>
@@ -306,6 +307,7 @@
 						aria-haspopup="dialog"
 						aria-controls="live-modal"
 						onclick={() => (liveOpen = true)}
+						aria-label="Open video chat"
 						><i class="fas fa-video"></i></a
 					>
 				{/if}
