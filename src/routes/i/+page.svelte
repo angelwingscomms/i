@@ -121,7 +121,8 @@
 		<div class="mx-auto max-w-4xl px-4 py-8">
 			<div class="flex items-center justify-between">
 				<div>
-					<h1 class="mb-2 text-4xl font-bold">
+					<h1 class="mb-2 text-4xl font-bold flex items-center gap-3">
+						<i class="fa-solid fa-bag-shopping text-[1.5em] text-white"></i>
 						Search Items
 					</h1>
 					<p class="text-white/80">
@@ -196,8 +197,8 @@
 					<Select
 						options={[
 							{ value: '', label: 'all items' },
-							{ value: '0', label: '🛍️ products' },
-							{ value: '1', label: '⚡ services' }
+							{ value: '0', label: 'products', icon: 'fa-shopping-bag' },
+							{ value: '1', label: 'services', icon: 'fa-wrench' }
 						]}
 						value={kind === undefined ? '' : String(kind)}
 						placeholder="select type"

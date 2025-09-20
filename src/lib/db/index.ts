@@ -8,7 +8,7 @@ import { QdrantClient } from '@qdrant/js-client-rest';
 import { collection } from '$lib/constants';
 import type { User } from '$lib/types';
 import { embed } from '$lib/util/embed';
-import { nanoid } from 'nanoid';
+import { v7 } from 'uuid';
 
 export type PayloadFilter = Record<string, unknown>;
 
@@ -34,7 +34,7 @@ export async function getfirst<T>(
 
 // Utility functions
 export function new_id(): string {
-	return nanoid(18);
+	return v7()
 }
 
 export const set = async (

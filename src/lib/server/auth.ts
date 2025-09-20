@@ -3,10 +3,10 @@ import {
 	get,
 	delete_,
 	create,
-	edit_point
+	edit_point,
+	new_id
 } from '$lib/db';
 import type { User } from '$lib/types';
-import { v7 } from 'uuid';
 import type { RequestEvent } from '@sveltejs/kit';
 import * as oslo_encoding from '@oslojs/encoding';
 
@@ -373,7 +373,7 @@ export async function validateSessionJWT(
 	if (parts.length !== 3) return null;
 
 	// Parse header
-	let header: any;
+	let header;
 	try {
 		const headerJSON = new TextDecoder().decode(
 			oslo_encoding.decodeBase64url(parts[0])
@@ -410,7 +410,7 @@ export async function validateSessionJWT(
 	if (!validSig) return null;
 
 	// Parse body
-	let body: any;
+	let body;
 	try {
 		const bodyJSON = new TextDecoder().decode(
 			oslo_encoding.decodeBase64url(parts[1])

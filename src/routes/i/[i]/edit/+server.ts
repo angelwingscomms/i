@@ -5,6 +5,7 @@ import { get } from '$lib/db';
 import type { Item } from '$lib/types/item';
 import { embed } from '$lib/util/embed';
 import { collection } from '$lib/constants';
+import axios from 'axios';
 
 async function upload_files(files: FormDataEntryValue[]): Promise<string[]> {
 	if (!files || files.length === 0) return [];
@@ -12,13 +13,17 @@ async function upload_files(files: FormDataEntryValue[]): Promise<string[]> {
 	Array.from(files).forEach((f) => {
 		if (f instanceof File) fd.append('files', f);
 	});
-	const res = await fetch('/i/upload', {
-		method: 'POST',
-		body: fd
-	});
-	if (!res.ok) return [];
-	const { x } = await res.json() as { x: string[] };
-	return x || [];
+	try {
+		const res = await axios.post('/i/upload', fd, {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		});
+		return res.data.x || [];
+	} catch (error) {
+		console.error('Upload failed:', error);
+		return [];
+	}
 }
 
 export const POST: RequestHandler = async ({ params, locals, request }) => {
@@ -69,4 +74,25 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
 	});
 
 	throw redirect(303, `/i/${i}`);
+};
+
+export const DELETE: RequestHandler = async ({ params, locals }) => {
+	if (!locals.user) {
+		return error(401, 'Unauthorized');
+	}
+
+	const { i } = params;
+	if (!i) return error(400, 'Missing item id');
+
+	const item = await get<Item>(i);
+	if (!item || item.s !== 'i' || locals.user.i !== item.u) {
+		return error(403, 'Unauthorized');
+	}
+
+	const qdrant = (await import('$lib/db')).qdrant;
+	await qdrant.delete(collection, {
+		points: [i]
+	});
+
+	throw redirect(303, '/find');
 };

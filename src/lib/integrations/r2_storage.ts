@@ -1,4 +1,5 @@
 import { dev } from '$app/environment';
+import { CLOUDFLARE_KEY, CLOUDFLARE_KEY_ID } from '$env/static/private';
 
 import { S3Client } from "@aws-sdk/client-s3";
 
@@ -33,18 +34,6 @@ interface R2Object {
 	httpMetadata?: { contentType?: string };
 }
 
-async function getR2Config() {
-  const { env } = await import('$env/dynamic/private');
-  const accessKeyId = env.R2_ACCESS_KEY_ID;
-  const secretAccessKey = env.R2_SECRET_ACCESS_KEY;
-  const accountId = env.R2_ACCOUNT_ID;
-  const bucketName = env.R2_BUCKET_NAME;
-  if (!accessKeyId || !secretAccessKey || !accountId || !bucketName) {
-    throw new Error('Missing R2 environment variables for development');
-  }
-  return { accessKeyId, secretAccessKey, accountId, bucketName };
-}
-
 export async function upload_image(
 	file: File,
 	key?: string,
@@ -63,18 +52,18 @@ export async function upload_image(
 		const uint8Array = new Uint8Array(arrayBuffer);
 
 		if (dev) {
-			const config = await getR2Config();
+			const { env } = await import('$env/dynamic/private');
 			const client = new S3Client({
 				region: "auto",
-				endpoint: `https://${config.accountId}.r2.cloudflarestorage.com`,
+				endpoint: `https://${env.R2_S3}.r2.cloudflarestorage.com`,
 				credentials: {
-					accessKeyId: config.accessKeyId,
-					secretAccessKey: config.secretAccessKey
+					accessKeyId: CLOUDFLARE_KEY_ID,
+					secretAccessKey: CLOUDFLARE_KEY
 				}
 			});
 
 			const command = new PutObjectCommand({
-				Bucket: config.bucketName,
+				Bucket: "iri",
 				Key: objectKey,
 				Body: uint8Array,
 				ContentType: file.type || 'application/octet-stream'
@@ -112,18 +101,18 @@ export async function delete_image(
 ): Promise<void> {
 	try {
 		if (dev) {
-			const config = await getR2Config();
+			const { env } = await import('$env/dynamic/private');
 			const client = new S3Client({
 				region: "auto",
-				endpoint: `https://${config.accountId}.r2.cloudflarestorage.com`,
+				endpoint: `https://${env.R2_S3}.r2.cloudflarestorage.com`,
 				credentials: {
-					accessKeyId: config.accessKeyId,
-					secretAccessKey: config.secretAccessKey
+					accessKeyId: CLOUDFLARE_KEY_ID,
+					secretAccessKey: CLOUDFLARE_KEY
 				}
 			});
 
 			const command = new DeleteObjectCommand({
-				Bucket: config.bucketName,
+				Bucket: "iri",
 				Key: key
 			});
 
@@ -153,16 +142,16 @@ export async function get_image_info(
 	 let s3Bucket: string | null = null;
 	 let r2Bucket: R2Bucket | null = null;
 	 if (dev) {
-	   const config = await getR2Config();
+	   const { env } = await import('$env/dynamic/private');
 	   s3Client = new S3Client({
 	     region: "auto",
-	     endpoint: `https://${config.accountId}.r2.cloudflarestorage.com`,
+	     endpoint: `https://${env.R2_S3}.r2.cloudflarestorage.com`,
 	     credentials: {
-	       accessKeyId: config.accessKeyId,
-	       secretAccessKey: config.secretAccessKey
+	       accessKeyId: CLOUDFLARE_KEY_ID,
+	       secretAccessKey: CLOUDFLARE_KEY
 	     }
 	   });
-	   s3Bucket = config.bucketName;
+	   s3Bucket = "iri";
 	 } else {
 	   r2Bucket = platform?.env?.R2 ?? null;
 	   if (!r2Bucket) {

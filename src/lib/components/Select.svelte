@@ -10,7 +10,7 @@
 		label = '',
 		onclick
 	} = $props<{
-		options: { value: string; label: string }[];
+		options: { value: string; label: string; icon?: string }[];
 		value: string | undefined;
 		open?: boolean;
 		placeholder?: string;
@@ -52,12 +52,19 @@
 		aria-label="select option"
 	>
 		{#if label}<span class="text-secondary">{label}</span>{/if}
-		<span class="text-primary">
+		<span class="text-primary flex items-center">
 			{#if value}
 				{@const selected = options.find(
 					(o: typeof value) => o.value === value
 				)}
-				{selected ? selected.label : placeholder}
+				{#if selected}
+					{#if selected.icon}
+						<i class="fas {selected.icon} mr-2"></i>
+					{/if}
+					{selected.label}
+				{:else}
+					{placeholder}
+				{/if}
 			{:else}
 				{placeholder}
 			{/if}
@@ -91,9 +98,12 @@
 					type="button"
 					role="option"
 					aria-selected={value === opt.value}
-					class="dropdown-item"
+					class="dropdown-item flex items-center"
 					onclick={() => handle_select(opt.value)}
 				>
+					{#if opt.icon}
+						<i class="fas {opt.icon} mr-2"></i>
+					{/if}
 					{opt.label}
 				</button>
 			{/each}

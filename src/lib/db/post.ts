@@ -23,11 +23,6 @@ export const update_post = async (
 		throw new Error('Post not found');
 	}
 	let base_data = { ...existing, ...data };
-	if (data.b) {
-		const firstLine =
-			data.b.split('\n')[0]?.trim() || '';
-		base_data.t = firstLine || base_data.t || '';
-	}
 	const update_data =
 		data.b && !base_data.y
 			? { ...base_data, y: await summarize(data.b) }

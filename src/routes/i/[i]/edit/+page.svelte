@@ -134,6 +134,18 @@
 			isSubmitting = false;
 		}
 	}
+
+	async function deleteItem() {
+		if (!confirm('Are you sure you want to delete this item? This action cannot be undone.')) return;
+		try {
+			await axios.delete(`/i/${item.i}/edit`);
+			toast.success('item deleted');
+			goto('/find');
+		} catch (error) {
+			console.error(error);
+			toast.error('failed to delete item');
+		}
+	}
 </script>
 
 <div
@@ -354,6 +366,16 @@
 							: 'fa-save'}
 						onclick={submit}
 						disabled={isSubmitting}
+					/>
+				</div>
+
+				<!-- Delete Button -->
+				<div class="form-field pt-4 opacity-0">
+					<Button
+						text="Delete Item"
+						icon="fa-trash"
+						onclick={deleteItem}
+						class="bg-red-500 hover:bg-red-600 text-white"
 					/>
 				</div>
 			</div>
