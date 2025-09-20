@@ -44,6 +44,7 @@
 		"@types/node": "^24",
 		"@types/web-push": "^3.6.4",
 		"@vitest/browser": "^3.2.4",
+		"client-s3": "github:aws-sdk/client-s3",
 		"drizzle-kit": "^0.31.4",
 		"eslint": "^9.35.0",
 		"eslint-config-prettier": "^10.1.8",
@@ -86,6 +87,7 @@
 		"axios": "^1.12.2",
 		"marked": "^16.3.0",
 		"miniflare": "^4.20250913.0",
+		"nanoid": "^5.1.5",
 		"npyjs": "^1.0.2",
 		"web-push": "^3.6.7"
 	}

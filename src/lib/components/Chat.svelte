@@ -75,7 +75,7 @@
 			const formData = new FormData();
 			formData.append('files', data);
 			formData.append('m', '');
-			formData.append('i', v7());
+			formData.append('i', new_id());
 			formData.append('_', _);
 			save_message_with_formdata(formData);
 		} else {
@@ -192,7 +192,7 @@
 			t,
 			_,
 			d: Date.now(),
-			i: v7(),
+			i: new_id(),
 			...(_ === '-' ? { a: '1' } : {}),
 			...(files.length > 0 && { f: files })
 		};

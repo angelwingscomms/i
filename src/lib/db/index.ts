@@ -5,10 +5,10 @@ import {
 	QDRANT_URL
 } from '$env/static/private';
 import { QdrantClient } from '@qdrant/js-client-rest';
-import { v7 as uuidv7 } from 'uuid';
 import { collection } from '$lib/constants';
 import type { User } from '$lib/types';
 import { embed } from '$lib/util/embed';
+import { nanoid } from 'nanoid';
 
 export type PayloadFilter = Record<string, unknown>;
 
@@ -33,8 +33,8 @@ export async function getfirst<T>(
 }
 
 // Utility functions
-export function generateId(): string {
-	return uuidv7();
+export function new_id(): string {
+	return nanoid(18)
 }
 
 export const set = async (
@@ -72,7 +72,7 @@ export async function create<T extends { s: string }>(
 	string_to_embed?: string,
 	i?: string
 ): Promise<string> {
-	const id = i || generateId();
+	const id = i || new_id();
 
 	let vector: number[] = [];
 

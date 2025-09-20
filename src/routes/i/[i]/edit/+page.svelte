@@ -287,7 +287,7 @@
 								).files)}
 						/>
 						<div
-							class="rounded-2xl border-t-0 border-r-0 border border-dashed p-8 text-center transition-all"
+							class="rounded-2xl border-t-0 border-r-0 border border-dashed rounded-t-none p-8 text-center transition-all"
 							style="border-color: var(--color-theme-3); background: transparent;"
 						>
 							<div class="mb-4">

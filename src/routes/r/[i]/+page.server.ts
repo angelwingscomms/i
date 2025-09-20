@@ -96,7 +96,7 @@ export const load: PageServerLoad = async ({
 			name: locals.user?.t || 'Anonymous',
 			// picture: locals.user?.p || '',
 			preset_name: 'group_call_participant',
-			custom_participant_id: locals.user?.i || v7()
+			custom_participant_id: locals.user?.i || new_id()
 		}
 	);
 

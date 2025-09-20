@@ -178,8 +178,8 @@ export const GET: RequestHandler = async ({
 
 			try {
 				// console.log('💾 Upserting match data to Qdrant');
-				const point1Id = v7();
-				const point2Id = v7();
+				const point1Id = new_id();
+				const point2Id = new_id();
 				// console.log('Generated UUIDs:', { point1Id, point2Id });
 
 				await qdrant.upsert(collection, {

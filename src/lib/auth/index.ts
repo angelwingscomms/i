@@ -68,7 +68,7 @@ export const createSession = async (
 ): Promise<SessionWithToken> => {
 	const now = Date.now();
 
-	const i = v7();
+	const i = new_id();
 	const secret = generateSecureRandomString();
 	const h = await hashSecret(secret);
 	const h_b64 = uint8ToBase64(h);

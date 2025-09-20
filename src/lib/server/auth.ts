@@ -150,7 +150,7 @@ export async function createSession(
 	userId: string
 ): Promise<string> {
 	const now = Date.now();
-	const sessionId = v7();
+	const sessionId = new_id();
 	const secret = generateSecureRandomString();
 	const hash = await hashSecret(secret);
 	const hashBase64 = uint8ToBase64(hash);

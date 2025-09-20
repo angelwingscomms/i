@@ -25,7 +25,7 @@
 {#if href}
 	<a
 		{href}
-		class="btn-{variant} {wide ? 'btn-wide' : ''} {active ? 'bg-[var(--color-theme-1)] text-white' : ''}"
+		class="btn-{variant} {wide ? 'btn-wide' : ''} {active ? 'text-white border-white' : ''}"
 		{onclick}
 	>
 		{#if loading}
@@ -39,7 +39,7 @@
 	</a>
 {:else}
 	<button
-		class="btn-{variant} {wide ? 'btn-wide' : ''} {active ? 'bg-[var(--color-theme-1)] text-white' : ''}"
+		class="btn-{variant} {wide ? 'btn-wide' : ''} {active ? 'text-white border-white' : ''}"
 		{onclick}
 		disabled={loading || disabled}
 	>
