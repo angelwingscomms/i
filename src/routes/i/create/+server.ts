@@ -1,4 +1,4 @@
-import { error, json } from '@sveltejs/kit';
+import { error, text } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { create } from '$lib/db';
 import { GEMINI } from '$env/static/private';
@@ -33,24 +33,24 @@ export const POST: RequestHandler = async ({
 	locals
 }) => {
 	if (!locals.user) throw error(401, 'Unauthorized');
-	const { t, d, k, x } = (await request.json()) as {
+	const { t, a, k, x } = (await request.json()) as {
 		t: string;
-		d: string;
+		a: string;
 		k?: 0 | 1;
 		x?: string[];
 	};
 
-	const q = d.trim().length > 1440 ? await summarize(d) : undefined;
+	const q = a.trim().length > 1440 ? await summarize(a) : undefined;
 	const payload: Item = {
 		s: 'i',
 		t: t.trim(),
-		d: d.trim(),
+		a: a.trim(),
 		u: locals.user.i,
 		q,
 		k: k ?? 0,
-		a: Date.now(),
+		d: Date.now(),
 		...(x?.length ? { x } : {})
 	};
-	const i = await create(payload, d);
-	return json({ i });
+	const i = await create(payload, JSON.stringify({about: a, name: payload.t }));
+	return text(i);
 };

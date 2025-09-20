@@ -8,6 +8,8 @@
 	} from 'animejs';
 	import Button from '$lib/components/Button.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
+	import { goto } from '$app/navigation';
+	import axios from 'axios';
 
 	let name = $state('');
 	let desc = $state('');
@@ -87,20 +89,14 @@
 	async function submit() {
 		try {
 			const x = await upload_files();
-			const res = await fetch('/i/create', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					t: name,
-					d: desc,
-					k: kind,
-					x
-				})
+			const res = await axios.post('/i/create', {
+				t: name,
+				a: desc,
+				k: kind,
+				x
 			});
-			if (!res.ok) throw new Error('create failed');
-			const { i } = await res.json();
+			if (res.status !== 200) throw new Error('create failed');
+			const i = res.data;
 
 			// Success animation
 			animate('.form-section', {
@@ -110,7 +106,7 @@
 			});
 
 			toast.success('item created');
-			window.location.href = `/i/${i}`;
+			goto(`/i/${i}`);
 		} catch (error) {
 			toast.error('failed to create item');
 		} finally {
@@ -202,7 +198,6 @@
 				<div class="form-field opacity-0">
 					<DescriptionInput
 						bind:value={desc}
-						endpoint=""
 						placeholder="Describe your item in detail. What makes it special?"
 						rows={5}
 						label="Description"
@@ -213,6 +208,7 @@
 				<!-- Type Selection -->
 				<div class="form-field opacity-0">
 					<label
+						for="item-type"
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
@@ -225,19 +221,11 @@
 							text="Product"
 							icon="fa-shopping-bag"
 							onclick={() => (kind = 0)}
-							class={kind === 0 ? 'active' : ''}
-							style={kind === 0
-								? `background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);`
-								: `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}
 						/>
 						<Button
 							text="Service"
 							icon="fa-wrench"
 							onclick={() => (kind = 1)}
-							class={kind === 1 ? 'active' : ''}
-							style={kind === 1
-								? `background: transparent; border: 1px solid var(--color-theme-2); color: var(--color-theme-2);`
-								: `background: transparent; border: 1px solid var(--color-theme-3); color: var(--color-theme-4);`}
 						/>
 					</div>
 				</div>
@@ -299,8 +287,6 @@
 							: 'fa-magic'}
 						onclick={submit}
 						disabled={isSubmitting}
-						class="submit-button w-full !rounded-full !px-8 !py-6 !text-2xl !font-black"
-						style="background: transparent; border: 1px solid var(--color-theme-1); color: var(--color-theme-1);"
 					/>
 				</div>
 			</div>
@@ -337,16 +323,5 @@
 	.form-section,
 	.form-field {
 		opacity: 0;
-	}
-
-	.submit-button:hover:not(:disabled) {
-		transform: translateY(-3px);
-		box-shadow: 0 20px 40px rgba(182, 55, 250, 0.3);
-	}
-
-	/* Active button glow effect */
-	.active-button:hover {
-		transform: translateY(-3px);
-		box-shadow: 0 20px 40px rgba(182, 55, 250, 0.3);
 	}
 </style>

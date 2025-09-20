@@ -1,22 +1,10 @@
 <script lang="ts">
-	import {md} from '$lib/util/marked';
+	import { md } from '$lib/util/marked';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import type { PageProps } from './$types';
 	import Button from '$lib/components/Button.svelte';
-
-	type Item = {
-		i: string;
-		t?: string;
-		d?: string; // original description
-		k?: number;
-		a?: number;
-		q?: string; // description summary
-		x?: string[];
-		score?: number;
-		u?: string;
-		s?: string;
-	};
+	import type { Item } from '$lib/types/item';
 
 	let { data }: PageProps = $props();
 	let { i: item, relatedItems } = data as unknown as {
@@ -102,11 +90,9 @@
 <svelte:head>
 	<title>{item.t || 'Item Details'} - Apexlinks</title
 	>
-	<meta
-		name="description"
-		content={item.d ||
-			'View item details and connect with the owner'}
-	/>
+	{#if item.a}
+		<meta name="about this item" content={item.a} />
+	{/if}
 </svelte:head>
 
 <div
@@ -293,7 +279,7 @@
 									navigator
 										.share?.({
 											title: item.t,
-											text: item.d || '',
+											text: item.a || '',
 											url: window.location.href
 										})
 										.catch(() => {
@@ -430,7 +416,7 @@
 							navigator
 								.share?.({
 									title: item.t,
-									text: item.d || '',
+									text: item.a || '',
 									url: window.location.href
 								})
 								.catch(() => {
@@ -489,7 +475,7 @@
 							<div
 								class="prose prose-lg max-w-none leading-relaxed text-gray-700 dark:text-gray-300"
 							>
-								{@html md(item.d)}
+								{@html md(item.a || '')}
 							</div>
 						{:else}
 							<div class="py-16 text-center">
@@ -592,7 +578,7 @@
 							</div>
 
 							<div class="space-y-6">
-								{#if item.q}
+								{#if item.v}
 									<div
 										class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
 									>
@@ -915,7 +901,7 @@
 							navigator
 								.share?.({
 									title: item.t,
-									text: item.d || '',
+									text: item.a || '',
 									url: window.location.href
 								})
 								.catch(() => {
