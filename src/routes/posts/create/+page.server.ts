@@ -1,10 +1,10 @@
 import { error, redirect } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import type { PageServerLoad } from './$types';
 import { create } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
 
 
-export const POST: RequestHandler = async ({
+export const load: PageServerLoad = async ({
 	locals
 }) => {
 	if (!locals.user) throw error(401);
