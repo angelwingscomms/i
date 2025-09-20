@@ -34,7 +34,7 @@ export async function getfirst<T>(
 
 // Utility functions
 export function new_id(): string {
-	return nanoid(18)
+	return nanoid(18);
 }
 
 export const set = async (
@@ -199,7 +199,7 @@ export async function search_by_payload<T>(
 		// Handle both search and scroll result formats
 		const points =
 			'points' in results ? results.points : results;
-		return points.map((point: any) => ({
+		return points.map((point) => ({
 			...(point.payload as T),
 			i: point.id
 		}));
@@ -233,41 +233,37 @@ export async function search_by_vector<T>({
 		must_not?: Record<string, unknown>;
 	};
 }): Promise<T[]> {
-	try {
-		const searchParams: Record<string, unknown> = {
-			vector,
-			limit,
-			with_payload,
-			with_vector: false
-		};
+	const searchParams: Record<string, unknown> = {
+		vector,
+		limit,
+		with_payload,
+		with_vector: false
+	};
 
-		if (filter) {
-			searchParams.filter = format_filter(
-				filter.must,
-				filter.must_not
-			);
-		}
-		const results = await qdrant.search(
-			collection,
-			searchParams as {
-				vector:
-					| number[]
-					| { name: string; vector: number[] };
-				limit?: number;
-				with_payload?: boolean | string[];
-				with_vector?: boolean;
-				filter?: Record<string, unknown>;
-			}
+	if (filter) {
+		searchParams.filter = format_filter(
+			filter.must,
+			filter.must_not
 		);
-
-		return results.map((point) => ({
-			...(point.payload as T),
-			i: point.id,
-			score: (point as any).score
-		}));
-	} catch (error) {
-		throw error;
 	}
+	const results = await qdrant.search(
+		collection,
+		searchParams as {
+			vector:
+				| number[]
+				| { name: string; vector: number[] };
+			limit?: number;
+			with_payload?: boolean | string[];
+			with_vector?: boolean;
+			filter?: Record<string, unknown>;
+		}
+	);
+
+	return results.map((point) => ({
+		...(point.payload as T),
+		i: point.id,
+		score: point.score
+	}));
 }
 
 export async function get<T>(

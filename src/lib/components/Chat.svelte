@@ -15,6 +15,7 @@
 	import { onMount } from 'svelte';
 	import RealtimeKitClient from '@cloudflare/realtimekit';
 	import { ROOM_NAME_DISPLAY_LIMIT } from '$lib/constants';
+	import { new_id } from '$lib/db';
 
 	let {
 		m,
@@ -368,11 +369,11 @@
 		/>
 	</div>
 
-	{#if show_room_name_modal}
+	{#if show_room_name_modal && meeting}
 		<RoomNameModal
 			full_room_name={t}
 			{meeting}
-			i={roomId}
+			{i}
 			onClose={() => (show_room_name_modal = false)}
 		/>
 	{/if}
