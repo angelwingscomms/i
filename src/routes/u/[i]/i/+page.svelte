@@ -47,7 +47,7 @@
 			} finally {
 				searching = false;
 			}
-		}, 300);
+		}, 2160);
 	};
 
 	$effect(() => {
