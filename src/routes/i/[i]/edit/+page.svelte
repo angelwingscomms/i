@@ -326,18 +326,20 @@
 				<!-- Current Images -->
 				<div class="form-field opacity-0">
 					<label
+						for="current-images"
 						class="mb-3 block text-lg font-bold"
 						style="color: var(--color-theme-4);"
 					>
 						Current Images
 					</label>
+					<div id="current-images" role="region" aria-label="Current Images">
 					{#if currentImages.length > 0}
 					<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
 						{#each currentImages as img (img)}
 						<div class="relative">
 							<img
 								src={img}
-								alt="Item image"
+								alt="item"
 								class="w-full h-32 object-cover rounded-lg"
 							/>
 							<button
@@ -353,6 +355,7 @@
 					{:else}
 					<p class="text-gray-500 text-sm">No images currently</p>
 					{/if}
+					</div>
 				</div>
 
 				<!-- Submit Button -->

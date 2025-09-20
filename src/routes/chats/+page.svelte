@@ -1,11 +1,6 @@
 <script lang="ts">
 	let { data } = $props();
-	let results: {
-		i: string;
-		t: string;
-		l?: number;
-		m?: number;
-	}[] = $state((data as any).r || []);
+	let results = $state((data as any).r || []);
 
 	async function refresh() {
 		try {

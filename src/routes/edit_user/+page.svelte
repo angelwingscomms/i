@@ -10,21 +10,18 @@
 		message?: string;
 	} | null = $state(null);
 
-	let tag = data.u!.t || '';
-	let description = data.u!.d || '';
-	let age = data.u!.a || 18;
-	let gender: 0 | 1 = (data.u!.g ?? 0) as 0 | 1;
-	let latitude = data.u!.l || 0;
-	let longitude = data.u!.n || 0;
-	let socialLinks: string[] = data.u!.x || [];
-	let usernameValid = true;
-
-	let isGettingLocation = false;
-	let isSubmitting = false;
-
-	// avatar upload (stored as small data url)
-	let avatarDataUrl: string =
-		(data.u && (data.u as any).av) || '';
+	let 
+		tag = $state(data.u!.t || ''),
+		description = $state(data.u!.d || ''),
+		age = $state(data.u!.a || 18),
+		gender = $state<0 | 1>((data.u!.g ?? 0) as 0 | 1),
+		latitude = $state(data.u!.l || 0),
+		longitude = $state(data.u!.n || 0),
+		socialLinks = $state<string[]>(data.u!.x || []),
+		usernameValid = $state(true),
+		isGettingLocation = $state(false),
+		isSubmitting = $state(false),
+		avatarDataUrl = $state((data.u && (data.u as any).av) || '');
 	function onAvatarChange(e: Event) {
 		const input = e.target as HTMLInputElement;
 		const file = input.files?.[0];

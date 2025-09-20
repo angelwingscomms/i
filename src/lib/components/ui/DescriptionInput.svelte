@@ -35,7 +35,7 @@
 			| HTMLInputElement
 			| HTMLTextAreaElement
 			| null;
-		send?: (value: string | undefined) => void;
+		send?: Function;
 		send_loading?: boolean;
 		buttons_below?: boolean;
 	} = $props();
@@ -85,7 +85,7 @@
 
 	function stopRecording() {
 		if (mediaRecorder && isRecording) {
-			insertPos = ref ? (ref.selectionStart || 0) : value.length;
+			insertPos = ref ? (ref.selectionStart || 0) : (value?.length || 0);
 			mediaRecorder.stop();
 			isRecording = false;
 			isTranscribing = true;

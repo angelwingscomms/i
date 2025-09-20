@@ -1,5 +1,3 @@
-import { get, writable } from 'svelte/store';
-
 // Define the type for a single toast notification
 export type ToastType =
 	| 'success'
@@ -20,7 +18,7 @@ export interface Toast {
 }
 
 // Create a writable store to hold an array of toasts
-export const toasts = writable<Toast[]>([]);
+export let toasts: Toast[] = $state([])
 
 // Function to add a new toast notification
 export function addToast(
@@ -32,18 +30,14 @@ export function addToast(
 	const id =
 		Date.now().toString() +
 		Math.random().toString(36).substring(2, 9); // Simple unique ID
-	const newToast: Toast = {
+
+	toasts.push({
 		id,
 		message,
 		type,
 		duration,
 		action
-	};
-
-	toasts.update((currentToasts) => [
-		...currentToasts,
-		newToast
-	]);
+	})
 
 	// Automatically remove the toast after its duration
 	setTimeout(() => {
@@ -53,9 +47,7 @@ export function addToast(
 
 // Function to remove a toast notification by its ID
 export function removeToast(id: string) {
-	toasts.update((currentToasts) =>
-		currentToasts.filter((toast) => toast.id !== id)
-	);
+	toasts = toasts.filter((toast) => toast.id !== id);
 }
 
 // Helper functions for different toast types for convenience
