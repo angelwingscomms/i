@@ -262,23 +262,12 @@
 										'1px solid var(--color-theme-3)')}
 							/>
 						</div>
-						<input
-							type="text"
-							class="w-24 rounded-full px-3 py-4 text-lg font-medium transition-all focus:outline-none"
-							style="border: 1px solid var(--color-theme-3); background: transparent;"
-							placeholder="$"
-							bind:value={item.currency}
-							onfocus={(e) =>
-								((
-									e.target as HTMLInputElement
-								).style.border =
-									'1px solid var(--color-theme-1)')}
-							onblur={(e) =>
-								((
-									e.target as HTMLInputElement
-								).style.border =
-									'1px solid var(--color-theme-3)')}
-						/>
+						<div class="w-/12">
+							<DescriptionInput
+								placeholder="currency"
+								bind:value={item.currency}
+							/>
+						</div>
 					</div>
 				</div>
 

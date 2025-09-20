@@ -6,18 +6,21 @@
 		editable = true,
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
 		rows = undefined,
+		type = "text",
 		ontranscribe = () => {},
 		label,
 		ref = $bindable<
 			HTMLInputElement | HTMLTextAreaElement | null
 		>(null),
 		send,
-		send_loading = false
+		send_loading = false,
+		buttons_below = false
 	}: {
 		value?: string;
 		editable?: boolean;
 		placeholder?: string;
 		rows?: number;
+		type?: string;
 		ontranscribe?: (value: string | undefined) => void;
 		label?: string;
 		ref?:
@@ -26,6 +29,7 @@
 			| null;
 		send?: (value: string | undefined) => void;
 		send_loading?: boolean;
+		buttons_below?: boolean;
 	} = $props();
 
 	// Constants
@@ -114,7 +118,7 @@
 		>
 	{/if}
 	<div
-		class="flex w-full flex-col items-start rounded-t-none rounded-b-3xl rounded-br-3xl border-b-1 border-l-1 p-2"
+		class="flex w-full {buttons_below ? 'flex-col items-start' : 'flex-row items-start gap-2'} rounded-t-none rounded-b-3xl rounded-br-3xl border-b-1 border-l-1 p-2"
 		style="border-color: var(--color-theme-6)"
 	>
 		{#if rows}
@@ -122,7 +126,7 @@
 				id="description"
 				name="description"
 				bind:value
-				class="description-textarea border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)]"
+				class="description-textarea border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)] {buttons_below ? '' : 'flex-1'}"
 				{placeholder}
 				{rows}
 				required
@@ -132,11 +136,11 @@
 			></textarea>
 		{:else}
 			<input
-				type="text"
+				type={type}
 				id="description"
 				name="description"
 				bind:value
-				class="description-textinput border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)]"
+				class="description-textinput border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)] {buttons_below ? '' : 'flex-1'}"
 				{placeholder}
 				required
 				disabled={!editable || isTranscribing}
