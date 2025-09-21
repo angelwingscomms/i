@@ -3,7 +3,7 @@
 	import type { Recording } from '$lib/types';
 	import { fade } from 'svelte/transition';
 	import axios from 'axios';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte';
 
 	let {
 		full_room_name,

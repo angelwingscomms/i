@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte.js';
 	import axios from 'axios';
 	import { goto } from '$app/navigation';
 	import type { Post } from '$lib/types/index';

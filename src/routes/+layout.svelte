@@ -7,7 +7,7 @@
 		toasts,
 		toast,
 		removeToast
-	} from '$lib/util/toast';
+	} from '$lib/util/toast.svelte';
 	import { fade } from 'svelte/transition';
 	import { themeStore } from '$lib/stores/theme';
 	import { onMount } from 'svelte';
@@ -19,6 +19,7 @@
 		utils
 	} from 'animejs';
 	import { defineCustomElements } from '@cloudflare/realtimekit-ui/loader';
+	import Button from '$lib/components/Button.svelte';
 
 	defineCustomElements();
 
@@ -224,6 +225,7 @@
 	on:menutoggle={() =>
 		(is_sidebar_open = !is_sidebar_open)}
 />
+
 <MobileSidebar
 	is_open={is_sidebar_open}
 	user={data?.user as any}

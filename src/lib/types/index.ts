@@ -27,7 +27,7 @@ export interface User {
 	ic?: boolean; // currently in call
 	r?: string; // realtime meeting id
 	c?: string[]; // color palette hex without #
-	c: Record<string, string>;
+	// c: Record<string, string>;
 	x?: string[]; // contact links,
 	rt?: string; // realtime room token
 	isAdmin?: boolean; // whether user is an admin
@@ -60,7 +60,7 @@ export type DBChatMessage = Pick<
 export type SendChatMessage = Pick<
 	Message,
 	'saved' | 'm' | 'i' | 'd' | 't' | 'f'
-> & { a?: string };
+> & { a?: string, _?: string };
 
 export type ChatMessage = Pick<
 	Message,

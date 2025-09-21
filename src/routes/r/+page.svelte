@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte.js';
 	import axios from 'axios';
 
 	let { data } = $props();

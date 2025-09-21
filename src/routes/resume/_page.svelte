@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte';
 	import axios from 'axios';
 	import Button from '$lib/components/Button.svelte';
 

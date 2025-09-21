@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
 	import Chat from '$lib/components/Chat.svelte';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte.js';
 	import axios from 'axios';
 	import { untrack } from 'svelte';
 

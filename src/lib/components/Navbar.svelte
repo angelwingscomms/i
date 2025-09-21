@@ -5,7 +5,7 @@
 		onMount,
 		createEventDispatcher
 	} from 'svelte';
-	import { addToast } from '$lib/util/toast';
+	import { addToast } from '$lib/util/toast.svelte';
 		import Button from '$lib/components/Button.svelte';
 
 
@@ -58,11 +58,11 @@
 		await deferred_prompt.prompt();
 		const choice = await deferred_prompt.userChoice;
 		if (choice.outcome === 'accepted') {
-			import('$lib/util/toast').then(({ addToast }) =>
+			import('$lib/util/toast.svelte').then(({ addToast }) =>
 				addToast('App installed', 'success')
 			);
 		} else {
-			import('$lib/util/toast').then(({ addToast }) =>
+			import('$lib/util/toast.svelte').then(({ addToast }) =>
 				addToast('Install dismissed', 'info')
 			);
 		}

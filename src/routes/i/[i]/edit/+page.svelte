@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte';
 	import { onMount } from 'svelte';
 	import {
 		animate,

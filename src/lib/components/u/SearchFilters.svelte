@@ -33,7 +33,7 @@
 		loading: boolean;
 		search: () => Promise<void>;
 		sort: 'match' | 'age';
-		sort_open: boolean;
+		sort_open?: boolean;
 		sort_ref?: HTMLDivElement | null;
 		onClickOutside?: () => void;
 		lock_more?: boolean;

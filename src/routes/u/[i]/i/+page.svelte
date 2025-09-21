@@ -9,7 +9,7 @@
 	import type { PageData } from '../../../i/$types';
 	import type { Item } from '$lib/types/item';
 	import axios from 'axios';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte';
 
 	interface ItemPageData extends PageData {
 		items: Item[];

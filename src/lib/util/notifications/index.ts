@@ -1,5 +1,5 @@
 import { PUBLIC_VAPID_KEY } from '$env/static/public';
-import { toast } from '../toast';
+import { toast } from '../toast.svelte';
 import axios from 'axios';
 
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import axios from 'axios';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import type { User } from '$lib/types';
@@ -43,7 +43,6 @@
 			g.toString(16).padStart(2, '0') +
 			b.toString(16).padStart(2, '0');
 		colors = [...colors, newHex];
-		if (onUpdate) onUpdate(colors);
 	}
 
 	async function editWithAI() {
@@ -57,7 +56,7 @@
 			showAI = false;
 			aiDesc = '';
 		} catch (e: any) {
-			toast(
+			toast.error(
 				e.response?.data?.message ||
 					e.message ||
 					'Failed to generate colors'
@@ -114,7 +113,6 @@
 				text={loading
 					? 'Generating...'
 					: 'Generate Colors'}
-				class="btn-primary mt-2 rounded-full px-4 py-2"
 			/>
 		</div>
 	{/if}

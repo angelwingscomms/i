@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ensurePushSubscribed, unsubscribe_push } from '$lib/util/notifications';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte';
 	import { onMount } from 'svelte';
 	import { refresh_push_subscription } from '$lib/util/notifications';
 

@@ -112,7 +112,7 @@
 			if (response.data.text) {
 				transcribedText = response.data.text;
 				const toInsert = transcribedText + ' ';
-				value = value.slice(0, insertPos) + toInsert + value.slice(insertPos);
+				value = (value || '').slice(0, insertPos) + toInsert + (value || '').slice(insertPos);
 				ontranscribe?.(value);
 			}
 		} catch (error) {

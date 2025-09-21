@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import axios from 'axios';
 	import DescriptionInput from '../ui/DescriptionInput.svelte';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte';
 
 	let {
 		// mode,

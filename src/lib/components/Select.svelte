@@ -10,7 +10,11 @@
 		label = '',
 		onclick
 	} = $props<{
-		options: { value: string; label: string; icon?: string }[];
+		options: {
+			value: string;
+			label: string;
+			icon?: string;
+		}[];
 		value: string | undefined;
 		open?: boolean;
 		placeholder?: string;
@@ -24,22 +28,11 @@
 		open = false;
 		onclick?.(v);
 	}
-
-	function handle_click_outside(event: MouseEvent) {
-		if (
-			sort_ref &&
-			!sort_ref.contains(event.target as Node)
-		) {
-			open = false;
-		}
-	}
 </script>
-
-<svelte:window onclick={handle_click_outside} />
 
 <div
 	use:outside_click
-	outside_click={handle_click_outside}
+	outside_click={() => (open = false)}
 	class="dropdown-container w-full"
 	bind:this={sort_ref}
 >
@@ -51,7 +44,9 @@
 		aria-expanded={open}
 		aria-label="select option"
 	>
-		{#if label}<span class="text-secondary">{label}</span>{/if}
+		{#if label}<span class="text-secondary"
+				>{label}</span
+			>{/if}
 		<span class="text-primary flex items-center">
 			{#if value}
 				{@const selected = options.find(

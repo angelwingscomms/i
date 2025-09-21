@@ -2,7 +2,7 @@
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	// import TextInput from '$lib/components/ui/TextInput.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte.js';
 	import axios from 'axios';
 	import Modal from '$lib/components/Modal.svelte';
 	import { goto } from '$app/navigation';

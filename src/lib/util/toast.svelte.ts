@@ -18,7 +18,7 @@ export interface Toast {
 }
 
 // Create a writable store to hold an array of toasts
-export let toasts: Toast[] = $state([])
+export const toasts: Toast[] = $state([])
 
 // Function to add a new toast notification
 export function addToast(
@@ -47,7 +47,10 @@ export function addToast(
 
 // Function to remove a toast notification by its ID
 export function removeToast(id: string) {
-	toasts = toasts.filter((toast) => toast.id !== id);
+	const index = toasts.findIndex(toast => toast.id === id);
+	if (index !== -1) {
+		toasts.splice(index, 1);
+	}
 }
 
 // Helper functions for different toast types for convenience

@@ -3,7 +3,7 @@
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Modal from '$lib/components/Modal.svelte';
-	import { toast } from '$lib/util/toast';
+	import { toast } from '$lib/util/toast.svelte.js';
 	import axios from 'axios';
 
 	let { data } = $props();
