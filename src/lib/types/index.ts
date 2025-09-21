@@ -134,6 +134,7 @@ export interface Post {
 	d: number; // created timestamp
 	l?: number; // last updated
 	r?: string; // realtime room
+	f?: string; // parent post id
 }
 
 export interface Recording {

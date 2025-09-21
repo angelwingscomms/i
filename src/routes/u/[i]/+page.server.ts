@@ -75,7 +75,6 @@ export const load: PageServerLoad = async ({
 		return {
 			u: userInfo,
 			c: comparisonResult,
-			s: locals.user?.i === (user as any).i,
 			user: locals.user ? { i: locals.user.i, t: locals.user.t } : null,
 			ld: local_description, // Pass local user's description
 			r: results.map((u) => ({

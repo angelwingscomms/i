@@ -31,6 +31,12 @@ export const POST: RequestHandler = async ({
 		s: 'p'
 	};
 
+	// Optional parent filter: only return posts whose parent id matches `f`
+	const parent = (body as any)?.f as unknown;
+	if (typeof parent === 'string' && parent.trim()) {
+		payload_filter.f = parent.trim();
+	}
+
 	if (q.trim()) {
 		const vector = await embed(q.trim());
 		const results = await search_by_vector<{

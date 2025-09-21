@@ -7,6 +7,8 @@
 	import type { Post } from '$lib/types/index';
 	import Button from '$lib/components/Button.svelte';
 
+	import PostSearch from '$lib/components/PostSearch.svelte';
+
 	let { data } = $props();
 	// state
 	let q = $state('');
@@ -73,48 +75,7 @@
 		/>
 	</div>
 
-	<div class="card gap">
-		<div class="search-input-group">
-			<input
-				class="input-underline expand"
-				placeholder="search for an idea"
-				id="room_search"
-				bind:value={q}
-				onkeydown={on_key}
-			/>
-			<button
-				class="btn-primary btn-search-icon"
-				onclick={search}
-				disabled={loading}
-			>
-				{#if loading}
-					<i class="fas fa-spinner fa-spin"></i>
-				{:else}
-					<i class="fas fa-magnifying-glass"></i>
-				{/if}
-			</button>
-		</div>
-	</div>
-
-	{#if posts.length}
-		<ul class="list" in:fade={{ duration: 120 }}>
-			{#each posts as p (p.i)}
-				<li class="item">
-					<a class="link" href={`/posts/${p.i}`}>
-						<div class="row space-between v-center">
-							<div>
-								<div class="result-title">{p.t}</div>
-							</div>
-						</div>
-					</a>
-				</li>
-			{/each}
-		</ul>
-	{:else if searched}
-		<p class="muted">no results found</p>
-	{:else}
-		<p class="muted">try searching for a post</p>
-	{/if}
+	<PostSearch bind:q bind:posts bind:loading onSearch={() => (searched = true)} />
 </div>
 
 <style>

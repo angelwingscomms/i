@@ -18,24 +18,21 @@ export const PUT = async ({
 }) => {
 	if (!locals.user) return error(401, 'Unauthorized');
 	const formData = await request.formData();
-	const t =
-		(formData.get('t') as string) || undefined;
-	const b =
-		(formData.get('b') as string) || undefined;
+	const t = (formData.get('t') as string) || undefined;
+	const b = (formData.get('b') as string) || undefined;
+	const f = (formData.get('f') as string) || undefined; // parent post id
+	if (f && f === params.i) return error(400, 'cannot set parent to self');
 	const file = formData.get('file') as File | null;
 	const r = formData.get('r') === 'true';
 	let p: string | undefined = undefined;
 	if (file && file.size > 0) {
-		const uploaded = await upload_image(
-			file,
-			locals.user.i,
-			platform
-		);
+		const uploaded = await upload_image(file, locals.user.i, platform);
 		p = uploaded;
 	} else if (r) {
 		p = undefined;
 	}
 	const update_data: Partial<Post> = { t, b };
+	if (f !== undefined) update_data.f = f;
 	if (p !== undefined) update_data.p = p;
 	await update_post(params.i, update_data);
 	return new Response();

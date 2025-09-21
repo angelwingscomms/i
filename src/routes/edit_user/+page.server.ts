@@ -9,5 +9,10 @@ export const load: PageServerLoad = async ({
 	if (!locals.user?.i) {
 		redirect(302, '/google');
 	}
-	return { u: await get<User>(locals.user.i) };
+	return {
+		u: {
+			...(await get<User>(locals.user.i)),
+			i: locals.user.i
+		}
+	};
 };

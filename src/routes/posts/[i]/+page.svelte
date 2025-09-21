@@ -35,18 +35,23 @@
 			<p class="text-sm text-[var(--text-secondary)]">
 				Posted {new Date(post.d).toLocaleDateString()}
 			</p>
+
+			{#if post.f}
+				<p class="mt-1 text-sm text-[var(--text-secondary)]">
+					reply to:
+					<a class="underline" href={`/posts/${post.f}`}>{data.pt || post.f}</a>
+				</p>
+			{/if}
+
 		</div>
-		<Button
-			text={data.user?.i === post.u
-				? 'Edit'
-				: 'View author'}
-			href={data.user?.i === post.u
-				? `/posts/${post.i}/edit`
-				: `/u/${post.u}`}
-			icon={data.user?.i === post.u
-				? 'fa-edit'
-				: undefined}
-		/>
+		<div class="flex items-center gap-2">
+			<Button
+				text={data.user?.i === post.u ? 'Edit' : 'View author'}
+				href={data.user?.i === post.u ? `/posts/${post.i}/edit` : `/u/${post.u}`}
+				icon={data.user?.i === post.u ? 'fa-edit' : undefined}
+			/>
+			<Button text="see child posts" href={`/posts/${post.i}/subposts`} />
+		</div>
 	</div>
 
 	<article class="overflow-hidden rounded-lg">

@@ -184,9 +184,11 @@
 		{search}
 	/>
 
-	{#if results.length > 0}
-		<ResultsList {results} />
-	{:else if !loading}/
-		<NoResultsState />
-	{/if}
+	<div class="mx-auto max-w-4xl px-4 py-8">
+		{#if results.length > 0}
+			<ResultsList {results} />
+		{:else if !loading}
+			<NoResultsState />
+		{/if}
+	</div>
 </div>

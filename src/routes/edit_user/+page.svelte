@@ -1,19 +1,20 @@
 <script lang="ts">
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
+	import Button from '$lib/components/Button.svelte';
 	// import UsernameInput from '$lib/components/ui/UsernameInput.svelte';
 	import axios from 'axios';
 
-	let data = $props();
+	let {data} = $props();
 	let form: {
 		error?: string;
 		success?: boolean;
 		message?: string;
 	} | null = $state(null);
 
-	let 
+	let
 		tag = $state(data.u!.t || ''),
 		description = $state(data.u!.d || ''),
-		age = $state(data.u!.a || 18),
+		ageStr = $state<string>(String(data.u!.a || 18)),
 		gender = $state<0 | 1>((data.u!.g ?? 0) as 0 | 1),
 		latitude = $state(data.u!.l || 0),
 		longitude = $state(data.u!.n || 0),
@@ -21,7 +22,8 @@
 		usernameValid = $state(true),
 		isGettingLocation = $state(false),
 		isSubmitting = $state(false),
-		avatarDataUrl = $state((data.u && (data.u as any).av) || '');
+		avatarDataUrl = $state((data.u && (data.u as any).av) || ''),
+		fileInput: HTMLInputElement | null = null;
 	function onAvatarChange(e: Event) {
 		const input = e.target as HTMLInputElement;
 		const file = input.files?.[0];
@@ -68,11 +70,6 @@
 		reader.readAsDataURL(file);
 	}
 
-	function handleDescriptionUpdate(
-		event: CustomEvent
-	) {
-		description = event.detail.value;
-	}
 
 	async function getCurrentLocation() {
 		if (!navigator.geolocation) {
@@ -120,7 +117,7 @@
 				{
 					tag,
 					description,
-					age,
+					age: parseInt(ageStr) || 18,
 					gender: +gender,
 					latitude,
 					longitude,
@@ -168,18 +165,16 @@
 
 	<div class="container-narrow min-h-screen py-8">
 		<header class="mb-8 text-center">
-			<h1 class="hero-title mb-4">Edit Profile</h1>
+			<h1 class="hero-title mb-4">edit profile</h1>
 			<p class="hero-subtitle">
-				Update your information to improve matching
+				update your information to improve matching
 			</p>
 		</header>
 
 		<div class="card-normal">
 			<!-- avatar -->
 			<div class="form-group">
-				<label class="form-label" for="avatar_input"
-					>avatar</label
-				>
+				<label class="form-label" for="avatar_input">avatar</label>
 				<div class="flex items-center gap-4">
 					<div
 						class="h-16 w-16 overflow-hidden rounded-full bg-gray-800"
@@ -198,43 +193,44 @@
 							</div>
 						{/if}
 					</div>
+					<Button
+						text="choose file"
+						variant="secondary"
+						icon="fa-camera"
+						onclick={() => fileInput?.click()}
+					/>
 					<input
 						id="avatar_input"
+						bind:this={fileInput}
 						type="file"
 						accept="image/*"
 						onchange={onAvatarChange}
-						class="input-rect"
+						class="hidden"
 					/>
 				</div>
-				<small class="form-help"
-					>square image recommended. we store a tiny
-					128px copy.</small
-				>
+				<small class="form-help">square image recommended. we store a tiny 128px copy.</small>
 			</div>
 			<form
 				onsubmit={handleSubmit}
 				class="section-spacing"
 			>
 				<div class="form-group">
-					<label for="tag" class="form-label"
-						>user tag</label
-					>
-					<input
-						type="text"
-						name="tag"
+					<label for="tag" class="form-label">user tag</label>
+					<DescriptionInput
 						bind:value={tag}
-						autocomplete="username"
-						class="input-rect w-full border-0"
+						type="text"
+						placeholder="user tag"
+						voice_typing={false}
 					/>
+					<input type="hidden" name="tag" value={tag} />
 				</div>
 
 				<div class="form-group">
-					<label for="description" class="form-label"
-						>type or record a description of yourself</label
-					>
+					<label for="description" class="form-label">description</label>
 					<div class="glass rounded-lg p-1">
 						<DescriptionInput
 							bind:value={description}
+							placeholder="describe yourself"
 						/>
 					</div>
 					<input
@@ -245,60 +241,33 @@
 				</div>
 
 				<div class="form-group">
-					<label for="age" class="form-label"
-						>Age</label
-					>
-					<input
-						id="age"
-						name="age"
+					<label for="age" class="form-label">age</label>
+					<DescriptionInput
+						bind:value={ageStr}
 						type="number"
-						bind:value={age}
-						class="input-rect w-full border-0"
-						min="0"
-						max="144"
-						required
+						min={0}
+						max={144}
+						placeholder="age"
+						voice_typing={false}
 					/>
+					<input type="hidden" name="age" value={ageStr} />
 				</div>
 
 				<div class="form-group">
-					<span class="form-label" id="gender_label"
-						>Gender</span
-					>
+					<span class="form-label" id="gender_label">gender</span>
 					<div class="choice-group">
-						<label>
-							<input
-								aria-labelledby="gender_label"
-								type="radio"
-								name="gender"
-								value={0}
-								bind:group={gender}
-								class="sr-only"
-							/>
-							<div
-								class={gender === 0
-									? 'choice-btn-active-blue'
-									: 'choice-btn-inactive'}
-							>
-								Male
-							</div>
-						</label>
-						<label>
-							<input
-								aria-labelledby="gender_label"
-								type="radio"
-								name="gender"
-								value={1}
-								bind:group={gender}
-								class="sr-only"
-							/>
-							<div
-								class={gender === 1
-									? 'choice-btn-active'
-									: 'choice-btn-inactive'}
-							>
-								Female
-							</div>
-						</label>
+						<Button
+							text="male"
+							variant="secondary"
+							active={gender === 0}
+							onclick={(e) => { e.preventDefault(); gender = 0; }}
+						/>
+						<Button
+							text="female"
+							variant="secondary"
+							active={gender === 1}
+							onclick={(e) => { e.preventDefault(); gender = 1; }}
+						/>
 					</div>
 				</div>
 
@@ -307,116 +276,60 @@
 					<label
 						class="form-label"
 						for="location_btn"
-						id="location_label">Location</label
+						id="location_label">location</label
 					>
 					<div
 						class="location-container"
 						aria-labelledby="location_label"
 					>
-						<div class="location-display">
-							{#if latitude && longitude}
-								<span class="current-location"
-									>{latitude.toFixed(6)}, {longitude.toFixed(
-										6
-									)}</span
-								>
-							{:else}
-								<span class="no-location"
-									>No location set</span
-								>
-							{/if}
-							<input
-								type="hidden"
-								name="latitude"
-								value={latitude}
-							/>
-							<input
-								type="hidden"
-								name="longitude"
-								value={longitude}
-							/>
-						</div>
-						<button
-							id="location_btn"
-							type="button"
-							class="location-btn rounded-full"
-							onclick={getCurrentLocation}
-							disabled={isGettingLocation}
-							aria-labelledby="location_label"
-						>
-							{#if isGettingLocation}
-								<svg
-									width="20"
-									height="20"
-									viewBox="0 0 24 24"
-									fill="currentColor"
-									role="img"
-									aria-hidden="true"
-								>
-									<path
-										d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"
-										class="animate-spin"
-									/>
-								</svg>
-								Getting Location...
-							{:else}
-								<svg
-									width="20"
-									height="20"
-									viewBox="0 0 24 24"
-									fill="currentColor"
-									role="img"
-									aria-hidden="true"
-								>
-									<path
-										d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M3.05,13H1V11H3.05C3.5,6.83 6.83,3.5 11,3.05V1H13V3.05C17.17,3.5 20.5,6.83 20.95,11H23V13H20.95C20.5,17.17 17.17,20.5 13,20.95V23H11V20.95C6.83,20.5 3.5,17.17 3.05,13M12,5A7,7 0 0,0 5,12A7,7 0 0,0 12,19A7,7 0 0,0 19,12A7,7 0 0,0 12,5Z"
-									/>
-								</svg>
-								Update Location
-							{/if}
-						</button>
+						{#if latitude && longitude}
+							<div class="location-display">
+								<span class="current-location">{latitude.toFixed(6)}, {longitude.toFixed(6)}</span>
+							</div>
+						{/if}
+						<input
+							type="hidden"
+							name="latitude"
+							value={latitude}
+						/>
+						<input
+							type="hidden"
+							name="longitude"
+							value={longitude}
+						/>
+						<Button
+							text="update location"
+							loading={isGettingLocation}
+							icon="fa-map-marker-alt"
+							variant="primary"
+							onclick={(e) => {e.preventDefault(); getCurrentLocation();}}
+						/>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<span class="form-label" id="social_label"
-						>Social Media Links (Optional)</span
-					>
+					<span class="form-label" id="social_label">contact/social media links</span>
 					<div class="mb-3 flex items-center gap-2">
-						<button
-							type="button"
-							onclick={() =>
-								(socialLinks = [...socialLinks, ''])}
-							class="add-link-btn flex h-8 w-8 items-center justify-center rounded-full"
-							aria-labelledby="social_label"
-						>
-							+
-						</button>
-						<small class="form-help"
-							>WhatsApp, Telegram or Social media
-							links</small
-						>
+						<Button
+							text="+"
+							variant="secondary"
+							onclick={() => socialLinks = [...socialLinks, '']}
+						/>
+						<small class="form-help">whatsapp, telegram or social media links</small>
 					</div>
 					{#each socialLinks as _, index (index)}
 						<div class="social-link-item">
-							<input
-								aria-labelledby="social_label"
-								type="url"
+							<DescriptionInput
 								bind:value={socialLinks[index]}
-								placeholder="Enter social media link"
-								class="input-rect flex-1 border-0"
+								type="url"
+								placeholder="enter social media link"
+								voice_typing={false}
 							/>
-							<button
-								type="button"
-								onclick={() =>
-									(socialLinks = socialLinks.filter(
-										(_, i) => i !== index
-									))}
-								class="remove-link-btn flex h-8 w-8 items-center justify-center rounded-full"
-								aria-labelledby="social_label"
-							>
-								×
-							</button>
+							<Button
+								text="×"
+								variant="secondary"
+								onclick={() => socialLinks = socialLinks.filter((_, i) => i !== index)}
+							/>
 						</div>
 					{/each}
 				</div>
@@ -434,23 +347,24 @@
 				{/if}
 
 				<div class="flex justify-center gap-4 pt-4">
-					<button
-						type="submit"
-						class="btn-primary btn-lg rounded-full"
-						disabled={isSubmitting}
-					>
-						{#if isSubmitting}
-							<div class="loading-spinner"></div>
-							Saving...
-						{:else}
-							Save Changes
-						{/if}
-					</button>
-					<a
+					<Button
+						text="save changes"
+						loading={isSubmitting}
+						variant="primary"
+						wide={true}
+					/>
+					<Button
+						href={`/u/${data.u.i}`}
+						text="view profile"
+						target="_blank"
+						variant="secondary"
+					/>
+					<Button
 						href="/"
-						class="btn-ghost btn-lg rounded-full"
-						>Cancel</a
-					>
+						text="cancel"
+						variant="secondary"
+						wide={true}
+					/>
 				</div>
 			</form>
 		</div>

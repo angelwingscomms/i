@@ -13,8 +13,7 @@
 	console.log('d', data);
 	let {
 		u: user,
-		c: comparison,
-		s: is_own_profile
+		c: comparison
 	} = data as unknown as {
 		u: {
 			i: string;
@@ -26,7 +25,6 @@
 			socialLinks: string[];
 		};
 		c: string;
-		s: boolean;
 	};
 
 	let copied = $state(false);
@@ -71,14 +69,6 @@
 				'-=200'
 			);
 
-		// Floating animation for avatar
-		animate('.profile-avatar', {
-			translateY: [-5, 5],
-			duration: 3000,
-			direction: 'alternate',
-			loop: true,
-			ease: 'inOutSine'
-		});
 
 		// Hover animations for interactive elements
 		const interactiveElements =
@@ -347,7 +337,47 @@
 							/>
 						</div>
 					</div>
-					{#if !is_own_profile && data.user}
+{#if data.user?.i === user.i}
+	<!-- Edit Profile Action -->
+	<div class="mt-6 flex justify-center">
+		<Button
+			href="/edit_user"
+			text="Edit Your Profile"
+			icon="fa-edit"
+			variant="primary"
+		/>
+	</div>
+
+	{#if !user.description}
+		<div
+			class="feature-card interactive-card mt-6 rounded-3xl p-8 text-center shadow-2xl"
+			style=" border: 2px solid var(--color-theme-5);"
+		>
+			<div class="mb-4 flex justify-center">
+				<div
+					class="rounded-full p-4"
+					style="background: var(--color-theme-5);"
+				>
+					<i class="fas fa-circle-check" style="color: white; font-size: 1.5em;"></i>
+				</div>
+			</div>
+			<p
+				class="mb-4 text-lg font-medium"
+				style="color: var(--color-theme-5);"
+			>
+				Complete your profile to unlock all
+				features!
+			</p>
+			<Button
+				href="/edit_user"
+				text="Add Description"
+				icon="fa-arrow-right"
+				variant="secondary"
+			/>
+		</div>
+	{/if}
+{/if}
+					{#if data.user && data.user.i !== user.i}
 						<div class="mt-8 space-y-4">
 							<div class="flex justify-center">
 								<Button
@@ -383,7 +413,7 @@
 		<section
 			class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8"
 		>
-			{#if !is_own_profile && data.user}
+			{#if data.user && data.user.i !== user.i}
 				{#if comparison}
 					<div
 						class="feature-card interactive-card mb-12 rounded-3xl p-8 shadow-2xl"
@@ -417,45 +447,8 @@
 						</p>
 					</div>
 				{/if}
-			{:else if is_own_profile}
-				<!-- Edit Profile Action -->
-				<div class="mb-12 flex justify-center">
-					<Button
-						href="/edit_user"
-						text="Edit Your Profile"
-						icon="fa-edit"
-						variant="primary"
-					/>
-				</div>
-
-				{#if !user.description}
-					<div
-						class="feature-card interactive-card mb-12 rounded-3xl p-8 text-center shadow-2xl"
-						style=" border: 2px solid var(--color-theme-5);"
-					>
-						<div class="mb-4 flex justify-center">
-							<div
-								class="rounded-full p-4"
-								style="background: var(--color-theme-5);"
-							>
-								<i class="fas fa-circle-check" style="color: white; font-size: 1.5em;"></i>
-							</div>
-						</div>
-						<p
-							class="mb-4 text-lg font-medium"
-							style="color: var(--color-theme-5);"
-						>
-							Complete your profile to unlock all
-							features!
-						</p>
-						<Button
-							href="/edit_user"
-							text="Add Description"
-							icon="fa-arrow-right"
-							variant="secondary"
-						/>
-					</div>
-				{/if}
+			{:else if data.user?.i === user.i}
+				<!-- No content for own profile in compatibility section -->
 			{:else}
 				<!-- Login Prompt -->
 				<div
@@ -487,243 +480,6 @@
 			{/if}
 		</section>
 
-		<!-- Platform Features Showcase -->
-		<section
-			class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8"
-		>
-			<div class="mb-12 text-center">
-				<h2
-					class="mb-4 text-4xl font-bold"
-					style="color: var(--color-theme-4);"
-				>
-					Explore Our Platform
-				</h2>
-				<p
-					class="text-xl"
-					style="color: var(--color-theme-6);"
-				>
-					Discover amazing features and connect with
-					your community
-				</p>
-			</div>
-
-			<div
-				class="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
-			>
-				<!-- Products & Services -->
-				<div
-					class="feature-card interactive-card rounded-3xl p-8 shadow-xl transition-all"
-					style=" border: 2px solid var(--color-theme-1);"
-				>
-					<div class="mb-4 flex justify-center">
-						<div
-							class="rounded-full p-4"
-							style="background: var(--color-theme-1);"
-						>
-							<i class="fas fa-bag-shopping" style="color: white; font-size: 1.5em;"></i>
-						</div>
-					</div>
-					<h3
-						class="mb-3 text-center text-xl font-bold"
-						style="color: var(--color-theme-4);"
-					>
-						Products & Services
-					</h3>
-					<p
-						class="mb-4 text-center"
-						style="color: var(--color-theme-6);"
-					>
-						Discover local businesses, handcrafted
-						products, and professional services in
-						your area.
-					</p>
-					<div class="text-center">
-						<Button
-							href="/i/create"
-							text="Browse Items"
-							icon="fa-arrow-right"
-							variant="secondary"
-						/>
-					</div>
-				</div>
-
-				<!-- Find Nearby -->
-				<div
-					class="feature-card interactive-card rounded-3xl p-8 shadow-xl transition-all"
-					style=" border: 2px solid var(--color-theme-2);"
-				>
-					<div class="mb-4 flex justify-center">
-						<div
-							class="rounded-full p-4"
-							style="background: var(--color-theme-2);"
-						>
-							<i class="fas fa-location-dot" style="color: white; font-size: 1.5em;"></i>
-						</div>
-					</div>
-					<h3
-						class="mb-3 text-center text-xl font-bold"
-						style="color: var(--color-theme-4);"
-					>
-						Find Nearby
-					</h3>
-					<p
-						class="mb-4 text-center text-gray-600 dark:text-gray-300"
-					>
-						Search for products and services near your
-						location with smart filtering.
-					</p>
-					<div class="text-center">
-						<Button
-							href="/i/search_nearby"
-							text="Search Nearby"
-							icon="fa-arrow-right"
-							variant="secondary"
-						/>
-					</div>
-				</div>
-
-				<!-- Chatrooms -->
-				<div
-					class="feature-card interactive-card rounded-3xl p-8 shadow-xl transition-all"
-					style=" border: 2px solid var(--color-theme-3);"
-				>
-					<div class="mb-4 flex justify-center">
-						<div
-							class="rounded-full p-4"
-							style="background: var(--color-theme-3);"
-						>
-							<i class="fas fa-comments" style="color: white; font-size: 1.5em;"></i>
-						</div>
-					</div>
-					<h3
-						class="mb-3 text-center text-xl font-bold"
-						style="color: var(--color-theme-4);"
-					>
-						Chatrooms
-					</h3>
-					<p
-						class="mb-4 text-center text-gray-600 dark:text-gray-300"
-					>
-						Join topic-based chatrooms and connect
-						with like-minded people.
-					</p>
-					<div class="text-center">
-						<Button
-							href="/r"
-							text="Join Rooms"
-							icon="fa-arrow-right"
-							variant="secondary"
-						/>
-					</div>
-				</div>
-
-				<!-- User Search -->
-				<div
-					class="feature-card interactive-card rounded-3xl p-8 shadow-xl transition-all"
-					style=" border: 2px solid var(--color-theme-4);"
-				>
-					<div class="mb-4 flex justify-center">
-						<div
-							class="rounded-full p-4"
-							style="background: var(--color-theme-4);"
-						>
-							<i class="fas fa-users" style="color: white; font-size: 1.5em;"></i>
-						</div>
-					</div>
-					<h3
-						class="mb-3 text-center text-xl font-bold"
-						style="color: var(--color-theme-4);"
-					>
-						Find Users
-					</h3>
-					<p
-						class="mb-4 text-center text-gray-600 dark:text-gray-300"
-					>
-						Search for users with detailed
-						descriptions and find people similar to
-						yourself.
-					</p>
-					<div class="text-center">
-						<Button
-							href="/u"
-							text="explore Users"
-							icon="fa-arrow-right"
-							variant="secondary"
-						/>
-					</div>
-				</div>
-
-				<!-- AI Chat -->
-				<div
-					class="feature-card interactive-card rounded-3xl p-8 shadow-xl transition-all"
-					style=" border: 2px solid var(--color-theme-5);"
-				>
-					<div class="mb-4 flex justify-center">
-						<div
-							class="rounded-full p-4"
-							style="background: var(--color-theme-5);"
-						>
-							<i class="fas fa-robot" style="color: white; font-size: 1.5em;"></i>
-						</div>
-					</div>
-					<h3
-						class="mb-3 text-center text-xl font-bold"
-						style="color: var(--color-theme-4);"
-					>
-						AI Assistant
-					</h3>
-					<p
-						class="mb-4 text-center text-gray-600 dark:text-gray-300"
-					>
-						Chat with AI about products, get
-						recommendations, and smart assistance.
-					</p>
-					<div class="text-center">
-						<Button
-							href="/i"
-							text="Try AI Chat"
-							icon="fa-arrow-right"
-							variant="secondary"
-						/>
-					</div>
-				</div>
-
-				<!-- Direct Messaging -->
-				<div
-					class="feature-card interactive-card rounded-3xl p-8 shadow-xl transition-all"
-					style=" border: 2px solid var(--color-theme-6);"
-				>
-					<div class="mb-4 flex justify-center">
-						<div
-							class="rounded-full p-4"
-							style="background: var(--color-theme-6);"
-						>
-							<i class="fas fa-comment-dots" style="color: white; font-size: 1.5em;"></i>
-						</div>
-					</div>
-					<h3
-						class="mb-3 text-center text-xl font-bold"
-						style="color: var(--color-theme-4);"
-					>
-						Direct Chat
-					</h3>
-					<p
-						class="mb-4 text-center text-gray-600 dark:text-gray-300"
-					>
-						Chat directly with product owners and
-						service providers.
-					</p>
-					<div class="text-center">
-						<Button
-							href="/u"
-							text="Start Chatting"
-							icon="fa-arrow-right"
-							variant="secondary"
-						/>
-					</div>
-				</div>
-			</div>
-		</section>
 
 		<!-- Social Links Section -->
 		{#if user.socialLinks && user.socialLinks.length > 0}

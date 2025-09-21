@@ -11,7 +11,7 @@ export const load = async ({ params, locals }) => {
 
 		let post: Pick<
 			Post,
-			't' | 'b' | 'p' | 'u' | 'd' | 's' | 'r'
+			't' | 'b' | 'p' | 'u' | 'd' | 's' | 'r' | 'f'
 		> | null;
 		try {
 			post = await get<Post>(params.i, [
@@ -21,7 +21,8 @@ export const load = async ({ params, locals }) => {
 				'u',
 				'd',
 				's',
-				'r'
+				'r',
+				'f'
 			]);
 			if (!post) throw error(404, 'Post not found');
 			if (post.s !== 'p')
@@ -32,6 +33,16 @@ export const load = async ({ params, locals }) => {
 		}
 
 		console.log('post', post);
+
+			let pt: string | undefined;
+			try {
+				if ((post as any).f) {
+					pt = (await get<string>((post as any).f as string, 't')) || undefined;
+				}
+			} catch (e) {
+				console.error('Error fetching parent post title:', e);
+			}
+
 
 		let a: string;
 		try {
@@ -113,6 +124,7 @@ export const load = async ({ params, locals }) => {
 			p: { ...post, i: params.i },
 			messages: chatMessages,
 			t: post.t,
+			pt: pt,
 			_: '.',
 			user: locals.user,
 			a

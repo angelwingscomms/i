@@ -1,6 +1,7 @@
 <script lang="ts">
 	import axios from 'axios';
 	import Button from '$lib/components/Button.svelte';
+	import { animate } from 'animejs';
 	let {
 		value = $bindable(),
 		editable = true,
@@ -48,6 +49,31 @@
 	let mediaRecorder: MediaRecorder | null = null;
 	let audioChunks: Blob[] = [];
 	let insertPos = $state(0);
+
+	let container: HTMLDivElement | null = null;
+	let _anim: any;
+
+	$effect(() => {
+		if (!container) return;
+		// ensure left border is present and right is not
+		container.style.borderRightWidth = '0px';
+		container.style.borderLeftWidth = container.style.borderLeftWidth || '2px';
+		container.style.borderStyle = container.style.borderStyle || 'solid';
+		container.style.borderLeftColor = 'rgba(248,137,250,0)';
+
+		_anim = animate(container, {
+			duration: 1440,
+			loop: true,
+			alternate: true,
+			// smooth, soothing fade in/out
+			ease: 'easeInOutSine',
+			borderLeftColor: ['rgba(248,137,250,0)', 'rgba(248,137,250,1)']
+		});
+
+		return () => {
+			try { _anim?.cancel?.(); } catch {}
+		};
+	});
 
 	async function startRecording() {
 		try {
@@ -136,8 +162,9 @@
 		>
 	{/if}
 	<div
+		bind:this={container}
 		class="flex w-full {buttons_below ? 'flex-col items-start' : 'flex-row items-start gap-2'} border-l-1"
-		style="border-color: var(--color-theme-6)"
+		style="border-left-color: var(--color-theme-6)"
 	>
 		{#if rows}
 			<textarea

@@ -5,11 +5,13 @@
 	import { toast } from '$lib/util/toast.svelte.js';
 	import axios from 'axios';
 	import Modal from '$lib/components/Modal.svelte';
+	import PostSearch from '$lib/components/PostSearch.svelte';
+
 	import { goto } from '$app/navigation';
 	import { md } from '$lib/util/marked.js';
 
 	let { data } = $props();
-	let post = $state(data.p);
+	let post: any = $state(data.p);
 	let instructions = $state('');
 	let loading = $state(false);
 	let saving = $state(false);
@@ -22,24 +24,24 @@
 
 	const saveWithDelay = async (body: string) => {
 		if (!post.t && !body) return;
-		
+
 		saving = true;
 		if (timeout) {
 			clearTimeout(timeout);
 		}
-		
+
 		timeout = setTimeout(async () => {
 			try {
 				const formData = new FormData();
 				formData.append('t', post.t || '');
 				formData.append('b', body);
-				
-				const res = await axios.put(`/posts/${post.i}`, formData, {
-					headers: {
+				if (post.f) formData.append('f', post.f);
+
+				const res = await axios.put(`/posts/${post.i}`, formData, {					headers: {
 						'Content-Type': 'multipart/form-data'
 					}
 				});
-				
+
 				if (res.status === 200) {
 					toast.success('Post auto-saved');
 				}
@@ -90,7 +92,7 @@
 				`/posts/${post.i}/edit/gemini`,
 				instructions
 			);
-			
+
 			if (res.data) {
 				toast.success('Post updated with AI');
 				console.debug('edg', res.data)
@@ -111,19 +113,19 @@
 
 	const immediateSave = async () => {
 		if (!post.t && !post.b) return;
-		
+
 		saving = true;
 		try {
 			const formData = new FormData();
 			formData.append('t', post.t || '');
 			formData.append('b', post.b || '');
-			
-			const res = await axios.put(`/posts/${post.i}`, formData, {
-				headers: {
+			if (post.f) formData.append('f', post.f);
+
+			const res = await axios.put(`/posts/${post.i}`, formData, {				headers: {
 					'Content-Type': 'multipart/form-data'
 				}
 			});
-			
+
 			if (res.status === 200) {
 				toast.success('Post saved');
 			}
@@ -196,6 +198,18 @@
 						send={editWithGemini}
 						send_loading={loading}
 					/>
+
+					<div class="space-y-2">
+						<h2 class="text-lg font-semibold">set parent post</h2>
+						{#if post.f}
+							<div class="text-sm text-[var(--muted)]">
+								current parent:
+								<a class="underline" href={`/posts/${post.f}`}>{post.f}</a>
+							</div>
+						{/if}
+						<PostSearch onSelect={(p) => { post.f = p.i; immediateSave(); }} exclude_i={post.i} />
+					</div>
+
 				</div>
 				{#if isMobile}
 					<div class="space-y-2">
