@@ -3,12 +3,11 @@ import type { PageServerLoad } from './$types';
 import { create } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
 
-
 export const load: PageServerLoad = async ({
 	locals
 }) => {
 	if (!locals.user) throw error(401);
-	
+
 	// Create realtime meeting
 	let create_meeting_res;
 	try {
@@ -16,6 +15,7 @@ export const load: PageServerLoad = async ({
 			'meetings',
 			{ title: 'post comments' }
 		);
+
 		if (
 			!create_meeting_res ||
 			create_meeting_res?.statusText === 'OK'
@@ -32,7 +32,10 @@ export const load: PageServerLoad = async ({
 		);
 	}
 
-	console.log('create_meeting_res', create_meeting_res);
+	console.log(
+		'create_meeting_res',
+		create_meeting_res
+	);
 
 	let id;
 	try {
@@ -50,10 +53,5 @@ export const load: PageServerLoad = async ({
 		throw error(500, 'Failed to create post');
 	}
 
-	try {
-		return redirect(302, `/posts/${id}/edit`);
-	} catch (e) {
-		console.error('Error redirecting:', e);
-		throw error(500, 'Failed to redirect after post creation');
-	}
+	redirect(302, `/posts/${id}/edit`);
 };
