@@ -11,7 +11,7 @@ export const load = async ({ params, locals }) => {
 
 		let post: Pick<
 			Post,
-			't' | 'b' | 'p' | 'u' | 'd' | 's' | 'r' | 'f'
+			't' | 'b' | 'p' | 'u' | 'd' | 's' | 'r' | 'f' | 'c'
 		> | null;
 		try {
 			post = await get<Post>(params.i, [
@@ -22,7 +22,8 @@ export const load = async ({ params, locals }) => {
 				'd',
 				's',
 				'r',
-				'f'
+				'f',
+				'c'
 			]);
 			if (!post) throw error(404, 'Post not found');
 			if (post.s !== 'p')
@@ -31,8 +32,32 @@ export const load = async ({ params, locals }) => {
 			console.error('Error fetching post:', e);
 			throw error(500, 'Failed to fetch post');
 		}
+	
+		let children: Post[] = [];
+		if (post.c === '.') {
+			try {
+				children = await search_by_payload(
+					{ s: 'p', f: params.i },
+					['i', 't', 'b', 'p', 'u', 'd'],
+					undefined,
+					{ d: 'asc' }
+				);
+			} catch (e) {
+				console.error('Error fetching child posts:', e);
+			}
+		}
 
 		console.log('post', post);
+
+		let author = { i: post.u, t: 'Anonymous', av: undefined };
+		if (post.u) {
+			try {
+				const authorData = await get(post.u, ['t', 'av']);
+				author = { i: post.u, t: authorData.t || 'Anonymous', av: authorData.av };
+			} catch (e) {
+				console.error('Error fetching author:', e);
+			}
+		}
 
 			let pt: string | undefined;
 			try {
@@ -122,12 +147,14 @@ export const load = async ({ params, locals }) => {
 
 		return {
 			p: { ...post, i: params.i },
+			children,
 			messages: chatMessages,
 			t: post.t,
 			pt: pt,
 			_: '.',
 			user: locals.user,
-			a
+			a,
+			author
 		};
 	} catch (e) {
 		console.error('Unexpected error:', e);

@@ -6,7 +6,8 @@
 		createEventDispatcher
 	} from 'svelte';
 	import { addToast } from '$lib/util/toast.svelte';
-		import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import { logout } from '$lib/util/logout.js';
 
 
 	let { user = null }: { user: User | null } =
@@ -140,9 +141,9 @@
 					aria-label="Home"
 				>
 					<img
-						src="/white-logo.svg"
+						src="/logo.svg"
 						alt="Home"
-						class="h-8 w-auto"
+						class="h-[27px] w-auto"
 					/>
 				</a>
 			</div>
@@ -183,11 +184,13 @@
 						>
 							<a
 								href="/u/{user.i}"
-								class="text-sm font-bold transition-all hover:scale-105"
+								class="flex items-center gap-2 text-sm font-bold transition-all hover:scale-105"
 								style="color: var(--color-theme-1);"
-								>{user.t}</a
 							>
-							<Button href="/logout" text="Logout" icon="fa-arrow-right-from-bracket" variant="secondary" />
+								<i class="fas fa-user-circle"></i>
+								{user.t}
+							</a>
+							<Button onclick={logout} text="Logout" icon="fa-arrow-right-from-bracket" variant="secondary" />
 						</div>
 					</div>
 				{:else}

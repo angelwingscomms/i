@@ -13,11 +13,7 @@
 
 <div class="mx-auto max-w-4xl p-4 md:p-8">
 	<div class="mb-6">
-		<a
-			href="/resume"
-			class="inline-flex items-center font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
-			>&larr; Back to resumes</a
-		>
+		<Button text="explore all posts" href="/resume" icon="fa-arrow-left" variant="secondary" />
 	</div>
 
 	<div class="mb-8 flex items-start justify-between">

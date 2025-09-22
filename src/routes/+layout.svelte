@@ -19,7 +19,6 @@
 		utils
 	} from 'animejs';
 	import { defineCustomElements } from '@cloudflare/realtimekit-ui/loader';
-	import Button from '$lib/components/Button.svelte';
 
 	defineCustomElements();
 

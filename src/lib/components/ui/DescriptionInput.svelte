@@ -19,7 +19,8 @@
 		>(null),
 		send,
 		send_loading = false,
-		buttons_below = false
+		buttons_below = false,
+		buttons = undefined
 	}: {
 		value?: string;
 		editable?: boolean;
@@ -39,6 +40,12 @@
 		send?: Function;
 		send_loading?: boolean;
 		buttons_below?: boolean;
+		buttons?: {
+			icon_classes?: string;
+			text?: string;
+			send?: () => void;
+			loading?: boolean;
+		}[];
 	} = $props();
 
 	// Constants
@@ -229,6 +236,18 @@
 						/>
 					{/if}
 				</div>
+			{#if buttons?.length}
+				<div class="flex items-center gap-2">
+					{#each buttons as btn}
+						<Button
+							onclick={btn.send}
+							icon={btn.icon_classes}
+							loading={btn.loading}
+							disabled={btn.loading}
+						/>
+					{/each}
+				</div>
+			{/if}
 			{/if}
 		</div>
 	</div>

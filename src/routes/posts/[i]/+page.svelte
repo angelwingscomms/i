@@ -4,12 +4,14 @@
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
 	import Chat from '$lib/components/Chat.svelte';
+	import PostSearch from '$lib/components/PostSearch.svelte';
 	import { toast } from '$lib/util/toast.svelte.js';
 	import axios from 'axios';
 	import { untrack } from 'svelte';
 
 	let { data } = $props(),
-		post: Post = data.p;
+		post: Post = data.p,
+		children = data.children || [];
 
 </script>
 
@@ -19,23 +21,37 @@
 
 <div class="mx-auto max-w-4xl p-4 md:p-8">
 	<div class="mb-6">
-		<a
-			href="/posts"
-			class="inline-flex items-center font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
-			>&larr; Back to posts</a
-		>
+		<Button text="explore all posts" href="/posts" variant="secondary" icon="fa-arrow-left" class="inline-flex items-center font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]" />
 	</div>
 
-	<div class="mb-8 flex items-start justify-between">
+	<div class="mb-8 flex flex-col md:flex-row md:items-start md:justify-start gap-4 md:gap-4">
 		<div>
 			<h1
-				class="text-3xl font-bold text-[var(--accent-primary)]"
+				class="text-2xl md:text-3xl font-bold text-[var(--accent-primary)]"
 			>
 				{post.t}
 			</h1>
-			<p class="text-sm text-[var(--text-secondary)]">
-				Posted {new Date(post.d).toLocaleDateString()}
-			</p>
+			<div class="flex flex-wrap items-center gap-2 mt-2">
+				{#if data.author.av}
+					<img
+						src={data.author.av}
+						alt="Author avatar"
+						class="w-6 h-6 rounded-full"
+					/>
+				{/if}
+				<span class="text-sm text-[var(--text-secondary)]">
+					Posted by
+				</span>
+				<Button
+					text={data.author.t}
+					href={`/u/${data.author.i}`}
+					variant="secondary"
+					class="p-0 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)]"
+				/>
+				<span class="text-sm text-[var(--text-secondary)]">
+					on {new Date(post.d).toLocaleDateString()}
+				</span>
+			</div>
 
 			{#if post.f}
 				<p class="mt-1 text-sm text-[var(--text-secondary)]">
@@ -45,7 +61,7 @@
 			{/if}
 
 		</div>
-		<div class="flex items-center gap-2">
+		<div class="w-full md:w-auto flex items-center justify-start md:justify-start gap-2">
 			<Button
 				text={data.user?.i === post.u ? 'Edit' : 'View author'}
 				href={data.user?.i === post.u ? `/posts/${post.i}/edit` : `/u/${post.u}`}
@@ -64,14 +80,21 @@
 			/>
 		{/if}
 		<div
-			class="prose prose-invert prose-lg max-w-none px-6 pt-6"
+			class="prose prose-invert prose-lg max-w-none"
 		>
 			{@html marked.parse(post.b || '')}
 		</div>
 	</article>
 
-	{#if (data.a && data.messages && data.messages.length > 0) || data.user}
+	{#if post.c === '.' && children.length > 0}
 		<div class="mt-8">
+			<h2 class="text-2xl font-bold mb-4 text-[var(--accent-primary)]">child posts</h2>
+			<PostSearch posts={children} hide_input={true} />
+		</div>
+	{/if}
+
+	{#if (data.a && data.messages && data.messages.length > 0) || data.user}
+		<div>
 			<Chat
 				m={data.messages}
 				t="comments"

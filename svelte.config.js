@@ -6,7 +6,14 @@ const config = {
 	// Consult https://svelte.dev/docs/kit/integrations
 	// for more information about preprocessors
 	preprocess: vitePreprocess(),
-	kit: { adapter: adapter() }
+	kit: {
+		adapter: adapter(),
+		vite: {
+			optimizeDeps: {
+				include: ['@node-rs/argon2-wasm32-wasi']
+			}
+		}
+	}
 };
 
 export default config;

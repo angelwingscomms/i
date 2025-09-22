@@ -1,4 +1,4 @@
-import { hash, verify } from 'argon2';
+import * as argon2 from '@node-rs/argon2-wasm32-wasi';
 import { fail, redirect } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth';
 import type {
@@ -48,7 +48,7 @@ export const actions: Actions = {
 			return fail(500);
 		}
 
-		const validPassword = await verify(
+		const validPassword = await argon2.verify(
 			existingUser.p,
 			password
 		);
@@ -103,7 +103,7 @@ export const actions: Actions = {
 		//
 		// console.log('--login')
 
-		const passwordHash = await hash(password);
+		const passwordHash = await argon2.hash(password);
 
 		try {
 			const userId = await create_user(username, {

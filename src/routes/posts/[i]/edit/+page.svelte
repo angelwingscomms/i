@@ -40,6 +40,7 @@
 				formData.append('t', post.t || '');
 				formData.append('b', post.b);
 				formData.append('v', post.v ? '.' : '');
+				formData.append('c', post.c ? '.' : '');
 				if (post.f) formData.append('f', post.f);
 
 				const res = await axios.put(
@@ -125,6 +126,7 @@
 			formData.append('t', post.t || '');
 			formData.append('b', post.b || '');
 			formData.append('v', post.v ? '.' : '');
+			formData.append('c', post.c ? '.' : '');
 			if (post.f) formData.append('f', post.f);
 			if (post.z)
 				formData.append('z', JSON.stringify(post.z));
@@ -184,7 +186,7 @@
 				<h1
 					class="text-2xl font-bold text-purple-600"
 				>
-					Edit Post
+					edit post
 				</h1>
 				<div class="flex items-center gap-2">
 					{#if saving}
@@ -229,6 +231,26 @@
 					</label>
 					<p class="mt-1 text-xs text-gray-500">
 						only you can see this post
+					</p>
+				</div>
+			
+				<!-- Show Child Posts Checkbox -->
+				<div class="space-y-2">
+					<label
+						class="flex cursor-pointer items-center space-x-2"
+					>
+						<input
+							type="checkbox"
+							bind:checked={post.c}
+							class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+						/>
+						<span
+							class="text-sm font-medium text-gray-700"
+							>show child posts on post's page</span
+						>
+					</label>
+					<p class="mt-1 text-xs text-gray-500">
+						display child posts after post body, before comments
 					</p>
 				</div>
 				<div class="space-y-2">
@@ -290,12 +312,8 @@
 		</div>
 		{#if !isMobile}
 			<div class="hidden w-1/2 p-4 md:block">
-				<div
-					class="sticky top-4 rounded-lg border p-4"
-				>
-					<h2 class="mb-2 text-xl font-semibold">
-						Preview
-					</h2>
+				<h2 class="mb-2 text-xl font-semibold text-purple-600">preview</h2>
+				<div class="sticky top-4 rounded-lg border border-purple-500 p-4">
 					<h1 class="mb-4 text-2xl font-bold">
 						{post.t || 'Untitled'}
 					</h1>

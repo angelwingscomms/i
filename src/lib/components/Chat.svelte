@@ -9,7 +9,7 @@
 	import axios from 'axios';
 	import { animate, stagger } from 'animejs';
 	import FileWidget from './FileWidget.svelte';
-	import ChatInput from './ChatInput.svelte';
+	import DescriptionInput from './ui/DescriptionInput.svelte';
 	import RoomNameModal from './RoomNameModal.svelte';
 	import { onMount } from 'svelte';
 	import RealtimeKitClient from '@cloudflare/realtimekit';
@@ -40,6 +40,8 @@
 
 	let chat_messages: ChatMessage[] = $state(m);
 	let message_text = $state('');
+	let selectedFile: File | null = $state(null);
+	let fileInputEl: HTMLInputElement | null = null;
 	let messagesEl: HTMLElement | null = null;
 	let liveOpen = $state(true);
 	let show_room_name_modal = $state(false);
@@ -178,6 +180,40 @@
 					);
 				});
 		}
+	}
+
+	let fileButton = [{
+		icon_classes: 'fas fa-paperclip',
+		send: () => fileInputEl?.click()
+	}];
+
+	let sendDisabled = $derived(!message_text.trim() && !selectedFile);
+
+	function handleFileSelect(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const file = target.files?.[0];
+		if (file) {
+			const maxSize = 50 * 1024 * 1024; // 50MB
+			if (file.size > maxSize) {
+				console.warn(`File ${file.name} is too large (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+				return;
+			}
+			selectedFile = file;
+		}
+		if (fileInputEl) {
+			fileInputEl.value = '';
+		}
+	}
+
+	function handleSend(value: string) {
+		const trimmed = value.trim();
+		if (selectedFile) {
+			onsend(selectedFile);
+		} else if (trimmed) {
+			onsend(trimmed);
+		}
+		message_text = '';
+		selectedFile = null;
 	}
 
 	function save_message(
@@ -324,7 +360,7 @@
 					class="chat_item flex w-full flex-col {msg.u ===
 					page.data.user?.i
 						? 'items-end'
-						: 'items-start'} mb-2 items-end gap-1"
+						: 'items-start'} items-end gap-1"
 					in:fade={{ duration: 150, delay: 0 }}
 					out:fade={{ duration: 150 }}
 					href={page.url.pathname
@@ -363,10 +399,34 @@
 		{/if}
 	</div>
 	<div class="input-area">
-		<ChatInput
-			{onsend}
+		{#if selectedFile}
+			<div class="file-preview flex flex-col gap-2 p-3 bg-gray-100 border border-gray-300 rounded-lg mb-2 max-h-48 overflow-y-auto">
+				<div class="file-item flex items-center gap-2 p-2 bg-white border border-gray-300 rounded text-sm">
+					<span class="file-name flex-1 font-medium text-gray-900 truncate">{selectedFile.name}</span>
+					<span class="file-size text-gray-500 text-xs">({(selectedFile.size / 1024 / 1024).toFixed(1)}MB)</span>
+					<button class="remove-file bg-none border-none text-gray-500 hover:bg-red-100 hover:text-red-500 p-1 rounded w-5 h-5 flex items-center justify-center" onclick={() => selectedFile = null} title="Remove file">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+		{/if}
+		<input
+			type="file"
+			bind:this={fileInputEl}
+			onchange={handleFileSelect}
+			accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.txt,.csv,.zip"
+			style="display: none;"
+		/>
+		<DescriptionInput
+			bind:value={message_text}
 			placeholder="Type a message..."
-			{t}
+			rows={1}
+			editable={true}
+			voice_typing={true}
+			send={handleSend}
+			buttons_below={false}
+			buttons={fileButton}
+			send_loading={sendDisabled}
 		/>
 	</div>
 

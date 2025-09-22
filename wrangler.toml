@@ -1,0 +1,9 @@
+name = "i"
+main = "build/index.js"
+compatibility_date = "2024-09-22"
+
+[build]
+command = "npm run build"
+
+[[env.production]]
+cpu_mode = "unbounded"

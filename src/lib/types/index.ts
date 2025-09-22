@@ -131,6 +131,7 @@ export interface Post {
 	y?: string; // summary
 	p?: string; // image url
 	v?: string; // private: "" public, "." private
+	c?: string; // show child posts: "" false, "." true
 	u?: string; // user id
 	d: number; // created timestamp
 	l?: number; // last updated
