@@ -17,10 +17,12 @@ async function upload_files(files: File[], platform: any): Promise<string[]> {
 	const urls: string[] = [];
 	for (const file of files) {
 		try {
+			console.log('Edit server: Attempting upload for file:', file.name, file.size);
 			const url = await upload_image(file, undefined, platform);
+			console.log('Edit server: Upload success for', file.name, 'URL:', url);
 			urls.push(url);
 		} catch (e) {
-			console.error('R2 upload error', e);
+			console.error('R2 upload error for', file.name, ':', e);
 		}
 	}
 	return urls;
@@ -45,14 +47,19 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
 	const k = Number(data.get('k')) as 0 | 1;
 	const v = Number(data.get('v'));
 	const m = data.get('m') as string;
-	const files = data.getAll('files') as unknown as File[];
+	const files = data.getAll('f') as unknown as File[];
 	console.log('Edit server: Files received from formData:', files.length, files.map(f => f?.name || 'no name'));
+	if (files.length > 0) {
+		files.forEach((f, idx) => console.log(`Edit server: File ${idx}: name=${f.name}, size=${f.size}, type=${f.type}`));
+	} else {
+		console.log('Edit server: No files in formData, full entries:', Array.from(data.entries()).map(([k,v]) => ({k, v: v instanceof File ? 'File' : v})));
+	}
 	const keep_x_str = data.get('keep_x') as string;
 	const kept_x: string[] = keep_x_str ? JSON.parse(keep_x_str) : [];
 
 	console.log('Edit server: Calling upload_files with', files.length, 'files');
 	const x = await upload_files(files);
-	console.log('Edit server: Upload returned', x.length, 'URLs');
+	console.log('Edit server: Upload returned', x.length, 'URLs:', x);
 	const new_x = x.length > 0 ? [...kept_x, ...x] : kept_x;
 
 	const payload = {

@@ -32,9 +32,9 @@ export const GET: RequestHandler = async () => {
 	// 	}
 	// });
 
-	await qdrant.delete(collection, {
-		points: ['01996853-b692-71eb-9d4d-1a67771bb15d']
-	});
+	// await qdrant.delete(collection, {
+	// 	points: ['01996853-b692-71eb-9d4d-1a67771bb15d']
+	// });
 
 	return new Response('.');
 };

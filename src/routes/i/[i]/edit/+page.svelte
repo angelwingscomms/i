@@ -73,23 +73,6 @@
 		});
 	});
 
-	async function upload_files(): Promise<string[]> {
-		if (!files || files.length === 0) return [];
-		const fd = new FormData();
-		Array.from(files).forEach((f) =>
-			fd.append('files', f)
-		);
-		const res = await fetch('/i/upload', {
-			method: 'POST',
-			body: fd
-		});
-		if (!res.ok) return [];
-		const { x } = (await res.json()) as {
-			x: string[];
-		};
-		return x || [];
-	}
-
 	async function submit() {
 		try {
 			isSubmitting = true;
@@ -101,14 +84,16 @@
 			formData.append('m', item.currency);
 			formData.append('keep_x', JSON.stringify(currentImages));
 			if (files) {
-				Array.from(files).forEach((f) =>
-					formData.append('files', f)
-				);
+				Array.from(files).forEach((f) => {
+					formData.append('files', f);
+					console.log('Frontend: Appending file:', f.name, f.size, f.type);
+				});
 				console.log('Frontend: Files selected for upload:', files.length);
 			} else {
 				console.log('Frontend: No files selected');
 			}
 
+			console.log('Frontend: Sending POST to /i/${item.i}/edit with FormData entries:', Array.from(formData.entries()).map(([k,v]) => ({k, v: v instanceof File ? `${v.name} (${v.size}B)` : v})));
 			const res = await axios.post(
 				`/i/${item.i}/edit`,
 				formData,

@@ -1,19 +1,18 @@
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { create, get, qdrant } from '$lib/db';
-import { s } from '$lib/util/s';
-import type { Room } from '$lib/types';
+import { get, qdrant } from '$lib/db';
 import { collection } from '$lib/constants';
+import { createRoom } from '$lib/room/create';
 
 export const load: PageServerLoad = async ({
 	locals,
-	params,
-	platform
+	params
 }) => {
-	const t: string | null = await get(params.i, 't');
+	const { t, s } = (await get<{ t: string | null; s: string | null; }>(params.i, ['t', 's'])) ?? { t: null, s: null };
 	if (!t) error(404, 'user not found');
+	if (s !== 'u') error(400, 'resource not user');
 	if (!locals.user) {
-		redirect(302, `/google?next=/u/${params.i}/c`);
+		redirect(302, `/login?next=/u/${params.i}/a`);
 	}
 
 	const existing_room = await qdrant.scroll(
@@ -24,10 +23,10 @@ export const load: PageServerLoad = async ({
 					{ key: 's', match: { value: 'r' } },
 					{ key: '_', match: { value: '-' } },
 					{
-						key: 'u',
+						key: 'x',
 						match: { value: locals.user.i }
 					},
-					{ key: 'r', match: { value: params.i } }
+					{ key: 'x', match: { value: params.i } }
 				]
 			},
 			with_payload: true,
@@ -41,31 +40,11 @@ export const load: PageServerLoad = async ({
 		redirect(302, `/r/${room_id}`);
 	}
 
-	const c: string = await (
-		await platform.env.r.fetch(
-			'http://./i' + (await s())
-		)
-	).text();
 
-	const room_payload: Pick<
-		Room,
-		'x' | 's' | 'c' | 'd' | '_' | 'r' | 'u'
-	> = {
-		s: 'r',
-		c,
-		d: Date.now(),
-		_: '-',
-		u: locals.user.i,
-		r: params.i
-	};
-
-	const r = await create(
-		{ ...room_payload, s: 'r' },
-		JSON.stringify({
-			room_members: [room_payload.u, room_payload.r],
-			room_type: `direct message`
-		})
-	);
+	const roomId = await createRoom({
+		users: [locals.user.i, params.i],
+		_: '-'
+	});
 	// Redirect to the newly created room
-	redirect(302, `/r/${r}`);
+	redirect(302, `/r/${roomId}`);
 };
