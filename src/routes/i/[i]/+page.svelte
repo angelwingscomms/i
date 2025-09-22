@@ -12,6 +12,7 @@
 	let selectedImageIndex = $state(0);
 	let showImageModal = $state(false);
 
+
 	onMount(() => {
 		// Add smooth scroll behavior for anchor links
 		document

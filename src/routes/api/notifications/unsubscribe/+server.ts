@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { get, set } from '$lib/db';
-import type { PushSubscription } from 'web-push';
+import type { PushSubscription } from 'web-push-browser';
 import type { User } from '$lib/types';
 import { notif_debug } from '$lib/util/notif_debug';
 

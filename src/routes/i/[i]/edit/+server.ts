@@ -5,25 +5,25 @@ import { get } from '$lib/db';
 import type { Item } from '$lib/types/item';
 import { embed } from '$lib/util/embed';
 import { collection } from '$lib/constants';
-import axios from 'axios';
+import { upload_image } from '$lib/integrations/r2_storage';
 
-async function upload_files(files: FormDataEntryValue[]): Promise<string[]> {
+async function upload_files(files: File[], platform: any): Promise<string[]> {
 	if (!files || files.length === 0) return [];
-	const fd = new FormData();
-	Array.from(files).forEach((f) => {
-		if (f instanceof File) fd.append('files', f);
-	});
-	try {
-		const res = await axios.post('/i/upload', fd, {
-			headers: {
-				'Content-Type': 'multipart/form-data'
-			}
-		});
-		return res.data.x || [];
-	} catch (error) {
-		console.error('Upload failed:', error);
+	if (!platform?.env?.R2) {
+		console.warn('R2 bucket not available, skipping upload');
 		return [];
 	}
+
+	const urls: string[] = [];
+	for (const file of files) {
+		try {
+			const url = await upload_image(file, undefined, platform);
+			urls.push(url);
+		} catch (e) {
+			console.error('R2 upload error', e);
+		}
+	}
+	return urls;
 }
 
 export const POST: RequestHandler = async ({ params, locals, request }) => {
@@ -46,10 +46,13 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
 	const v = Number(data.get('v'));
 	const m = data.get('m') as string;
 	const files = data.getAll('files') as unknown as File[];
+	console.log('Edit server: Files received from formData:', files.length, files.map(f => f?.name || 'no name'));
 	const keep_x_str = data.get('keep_x') as string;
 	const kept_x: string[] = keep_x_str ? JSON.parse(keep_x_str) : [];
 
+	console.log('Edit server: Calling upload_files with', files.length, 'files');
 	const x = await upload_files(files);
+	console.log('Edit server: Upload returned', x.length, 'URLs');
 	const new_x = x.length > 0 ? [...kept_x, ...x] : kept_x;
 
 	const payload = {

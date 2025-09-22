@@ -104,6 +104,9 @@
 				Array.from(files).forEach((f) =>
 					formData.append('files', f)
 				);
+				console.log('Frontend: Files selected for upload:', files.length);
+			} else {
+				console.log('Frontend: No files selected');
 			}
 
 			const res = await axios.post(

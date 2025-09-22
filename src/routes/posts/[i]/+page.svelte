@@ -10,6 +10,7 @@
 
 	let { data } = $props(),
 		post: Post = data.p;
+
 </script>
 
 <svelte:head>

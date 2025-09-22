@@ -6,6 +6,8 @@ export const POST: RequestHandler = async ({ request, locals, platform }) => {
 	if (!locals.user) throw error(401, 'Unauthorized');
 	const form = await request.formData();
 	const files = form.getAll('files').filter((f): f is File => f instanceof File);
+	console.log('Upload server: Files received:', files.length, files.map(f => f?.name || 'no name'));
+	console.log('Upload server: R2 available:', !!platform?.env?.R2);
 	if (!files.length) return json({ x: [] });
 
 	// Check if R2 is available
@@ -17,10 +19,12 @@ export const POST: RequestHandler = async ({ request, locals, platform }) => {
 	const urls: string[] = [];
 	for (const file of files) {
 		try {
+			console.log('Upload server: Uploading file:', file.name);
 			const url = await upload_image(file, undefined, platform);
+			console.log('Upload server: Uploaded to:', url);
 			urls.push(url);
 		} catch (e) {
-			console.error('R2 upload error', e);
+			console.error('R2 upload error for', file.name, e);
 		}
 	}
 	return json({ x: urls });
