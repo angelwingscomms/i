@@ -12,25 +12,34 @@
 	import ZoneSearch from '$lib/components/ZoneSearch.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import type { Item } from '$lib/types/item';
 
-	let init = page.data.i; // should not change
-	let item = $state(page.data.i);
-	let selectedFiles = $state<File[]>([]);
-	let previewUrls = $state<string[]>([]);
-	let isSubmitting = $state(false);
-	let currentImages = $state(item.x || []);
-	let isPrivate = $state(item.p === '.');
+	let init: Item = page.data.i, // should not change
+		item: Item = $state(page.data.i),
+		selectedFiles = $state<File[]>([]),
+		previewUrls = $state<string[]>([]),
+		saving = $state(false),
+		hidden: boolean = $state(!!item.h),
+		images_to_remove: string[] = $state([]),
+		currentZones: Zone[] = $state(item.z || []),
+		newZones: Zone[] = $state([]),
+		zonesToRemove: string[] = $state([]);
 
 	function removeImage(url: string) {
-		currentImages = currentImages.filter(
+		item.x = item.x?.filter(
 			(img: string) => img !== url
 		);
+		images_to_remove.push(url);
 	}
 
 	function removePreview(index: number) {
 		URL.revokeObjectURL(previewUrls[index]);
-		previewUrls = previewUrls.filter((_, i) => i !== index);
-		selectedFiles = selectedFiles.filter((_, i) => i !== index);
+		previewUrls = previewUrls.filter(
+			(_, i) => i !== index
+		);
+		selectedFiles = selectedFiles.filter(
+			(_, i) => i !== index
+		);
 	}
 
 	onMount(() => {
@@ -86,22 +95,25 @@
 	});
 
 	onDestroy(() => {
-		previewUrls.forEach(url => URL.revokeObjectURL(url));
+		previewUrls.forEach((url) =>
+			URL.revokeObjectURL(url)
+		);
 	});
 
-	async function submit() {
+	const save = async () => {
 		try {
-			isSubmitting = true;
+			saving = true;
 			const formData = new FormData();
-			formData.append('t', item.name);
-			if (item.desc) formData.append('a', item.desc);
-			formData.append('k', item.kind?.toString());
-			formData.append('v', item.price?.toString());
-			formData.append('p', isPrivate ? '.' : '');
-			formData.append('m', item.currency);
-			const originalImages = init.x || [];
-			const rx = originalImages.filter((img: string) => !currentImages.includes(img));
-			formData.append('rx', JSON.stringify(rx));
+			formData.append('t', item.t);
+			if (item.a) formData.append('a', item.a);
+			formData.append('k', item.k ? item.k.toString() : '0');
+			if (item.p) formData.append('p', item.p.toString());
+			formData.append('p', item.p ? '.' : '');
+			formData.append('m', item.c);
+			formData.append(
+				'rx',
+				JSON.stringify(images_to_remove)
+			);
 			if (selectedFiles.length > 0) {
 				selectedFiles.forEach((f) => {
 					formData.append('f', f);
@@ -120,8 +132,12 @@
 				console.log('Frontend: No files selected');
 			}
 
-			if (item.z !== init.z)
-				formData.append('z', JSON.stringify(item.z));
+			if (zonesToRemove.length > 0) {
+				formData.append('zr', JSON.stringify(zonesToRemove));
+			}
+			if (newZones.length > 0) {
+				formData.append('z', JSON.stringify(newZones.map(z => z.i)));
+			}
 			console.log(
 				'Frontend: Sending POST to /i/${item.i}/edit with FormData entries:',
 				Array.from(formData.entries()).map(
@@ -159,11 +175,11 @@
 			console.error(error);
 			toast.error('failed to update item');
 		} finally {
-			isSubmitting = false;
+			saving = false;
 		}
-	}
+	};
 
-	async function deleteItem() {
+	const deleteItem = async () => {
 		if (
 			!confirm(
 				'Are you sure you want to delete this item? This action cannot be undone.'
@@ -178,7 +194,7 @@
 			console.error(error);
 			toast.error('failed to delete item');
 		}
-	}
+	};
 </script>
 
 <div
@@ -187,16 +203,13 @@
 	<!-- Floating background elements -->
 	<div class="absolute inset-0 overflow-hidden">
 		<div
-			class="floating-orb absolute -top-20 -left-20 h-64 w-64 rounded-full opacity-20"
-			style="background: var(--color-theme-1);"
+			class="absolute -top-20 -left-20 h-64 w-64 animate-[bounce_8s_ease-in-out_infinite] rounded-full bg-[var(--color-theme-1)] opacity-20 blur-[40px]"
 		></div>
 		<div
-			class="floating-orb absolute -right-20 -bottom-20 h-80 w-80 rounded-full opacity-15"
-			style="background: var(--color-theme-3);"
+			class="absolute -right-20 -bottom-20 h-80 w-80 animate-[bounce_8s_ease-in-out_infinite] rounded-full bg-[var(--color-theme-3)] opacity-15 blur-[40px] [animation-delay:-2s]"
 		></div>
 		<div
-			class="floating-orb absolute top-1/4 right-1/4 h-32 w-32 rounded-full opacity-10"
-			style="background: var(--color-theme-3);"
+			class="absolute top-1/4 right-1/4 h-32 w-32 animate-[bounce_8s_ease-in-out_infinite] rounded-full bg-[var(--color-theme-3)] opacity-10 blur-[40px] [animation-delay:-4s]"
 		></div>
 	</div>
 
@@ -206,11 +219,10 @@
 	>
 		<div class="mx-auto max-w-4xl">
 			<h1
-				class="mb-6 text-6xl font-black sm:text-4xl"
-				style="color: var(--color-theme-4);"
+				class="mb-6 text-6xl font-black text-[var(--color-theme-4)] sm:text-4xl"
 			>
 				Edit Your <span
-					style="color: var(--color-theme-1);"
+					class="text-[var(--color-theme-1)]"
 					>Listing</span
 				>
 			</h1>
@@ -227,14 +239,13 @@
 		class="form-section relative z-10 mx-auto max-w-2xl px-4 pb-16 opacity-0"
 	>
 		<div
-			class="rounded-3xl p-8 sm:p-6"
-			style="background: transparent; border: 1px solid var(--color-theme-3);"
+			class="rounded-3xl border border-[var(--color-theme-3)] bg-transparent p-8 sm:p-6"
 		>
 			<div class="space-y-8">
 				<!-- Name Field -->
 				<div class="form-field opacity-0">
 					<DescriptionInput
-						bind:value={item.name}
+						bind:value={item.t}
 						placeholder="Enter a catchy name for your item..."
 						label="Item Name"
 						editable={true}
@@ -244,7 +255,7 @@
 				<!-- Description Field -->
 				<div class="form-field opacity-0">
 					<DescriptionInput
-						bind:value={item.desc}
+						bind:value={item.a}
 						placeholder="Describe your item in detail. What makes it special?"
 						rows={5}
 						label="Description"
@@ -256,10 +267,9 @@
 				<div class="form-field opacity-0">
 					<label
 						for="item-type"
-						class="mb-3 block text-lg font-bold"
-						style="color: var(--color-theme-4);"
+						class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]"
 					>
-						<span style="color: var(--color-theme-1);"
+						<span class="text-[var(--color-theme-1)]"
 							>*</span
 						> Type
 					</label>
@@ -267,27 +277,27 @@
 						<Button
 							text="Product"
 							icon="fa-shopping-bag"
-							onclick={() => (item.kind = 0)}
-							active={item.kind === 0}
+							onclick={() => (item.k = 0)}
+							active={item.k === 0}
 						/>
 						<Button
 							text="Service"
 							icon="fa-wrench"
-							onclick={() => (item.kind = 1)}
-							active={item.kind === 1}
+							onclick={() => (item.k = 1)}
+							active={item.k === 1}
 						/>
 					</div>
 				</div>
 
-				<!-- Private Checkbox -->
+				Private Checkbox
 				<div class="form-field opacity-0">
 					<label
 						class="flex cursor-pointer items-center space-x-2"
 					>
 						<input
 							type="checkbox"
-							bind:checked={isPrivate}
-							class="text-theme-1 focus:ring-theme-1 h-4 w-4 rounded border-gray-300"
+							bind:checked={hidden}
+							class="h-4 w-4 rounded border-gray-300 accent-[var(--color-theme-1)] focus:ring-[var(--color-theme-1)]"
 						/>
 						<span
 							class="text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -305,10 +315,9 @@
 				<div class="form-field opacity-0">
 					<label
 						for="item-price"
-						class="mb-3 block text-lg font-bold"
-						style="color: var(--color-theme-4);"
+						class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]"
 					>
-						<span style="color: var(--color-theme-1);"
+						<span class="text-[var(--color-theme-1)]"
 							>*</span
 						> Price
 					</label>
@@ -320,13 +329,13 @@
 								voice_typing={false}
 								step="0.01"
 								placeholder="0.00"
-								bind:value={item.price}
+								bind:value={item.p}
 							/>
 						</div>
 						<div class="w-/12">
 							<DescriptionInput
 								placeholder="currency"
-								bind:value={item.currency}
+								bind:value={item.c}
 							/>
 						</div>
 					</div>
@@ -336,8 +345,7 @@
 				<div class="form-field opacity-0">
 					<label
 						for="file-upload"
-						class="mb-3 block text-lg font-bold"
-						style="color: var(--color-theme-4);"
+						class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]"
 					>
 						Add new images (optional)
 					</label>
@@ -349,16 +357,21 @@
 							accept="image/*"
 							class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
 							onchange={(e) => {
-								const input = e.target as HTMLInputElement;
+								const input =
+									e.target as HTMLInputElement;
 								const inputFiles = input.files;
 								if (inputFiles) {
 									// Clear previous previews
-									previewUrls.forEach(URL.revokeObjectURL);
+									previewUrls.forEach(
+										URL.revokeObjectURL
+									);
 									previewUrls = [];
-									selectedFiles = Array.from(inputFiles);
+									selectedFiles =
+										Array.from(inputFiles);
 									// Generate new previews
-									selectedFiles.forEach(file => {
-										const url = URL.createObjectURL(file);
+									selectedFiles.forEach((file) => {
+										const url =
+											URL.createObjectURL(file);
 										previewUrls.push(url);
 									});
 									// Reset input to allow re-selecting same files
@@ -367,23 +380,22 @@
 							}}
 						/>
 						<div
-							class="rounded-2xl rounded-t-none border border-t-0 border-r-0 border-b-0 rounded-b-none border-none p-8 text-center transition-all"
-							style="border-color: var(--color-theme-3); background: transparent;"
+							class="rounded-2xl border border-[var(--color-theme-3)] bg-transparent p-8 text-center transition-all"
 						>
 							<div class="mb-4">
-								<i class="fas fa-camera text-4xl"></i>
+								<i
+									class="fas fa-camera text-4xl text-[var(--color-theme-4)]"
+								></i>
 							</div>
 							<p
-								class="text-lg font-medium"
-								style="color: var(--color-theme-4);"
+								class="text-lg font-medium text-[var(--color-theme-4)]"
 							>
 								{selectedFiles.length > 0
 									? `${selectedFiles.length} file(s) selected`
 									: 'Click to upload new images'}
 							</p>
 							<p
-								class="mt-2 text-sm"
-								style="color: var(--color-theme-3);"
+								class="mt-2 text-sm text-[var(--color-theme-3)]"
 							>
 								PNG, JPG, GIF up to 10MB each
 							</p>
@@ -393,10 +405,15 @@
 					<!-- New Images Preview -->
 					{#if previewUrls.length > 0}
 						<div class="mt-6">
-							<label class="mb-3 block text-lg font-bold" style="color: var(--color-theme-4);">
+							<label
+								for="preview-images"
+								class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]"
+							>
 								New Images Preview
 							</label>
-							<div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+							<div
+								class="grid grid-cols-2 gap-4 md:grid-cols-3"
+							>
 								{#each previewUrls as url, index (url)}
 									<div class="relative">
 										<img
@@ -405,7 +422,8 @@
 											class="h-32 w-full rounded-lg object-cover"
 										/>
 										<button
-											onclick={() => removePreview(index)}
+											onclick={() =>
+												removePreview(index)}
 											class="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-all hover:bg-red-600"
 											title="Remove preview"
 										>
@@ -422,8 +440,7 @@
 				<div class="form-field opacity-0">
 					<label
 						for="current-images"
-						class="mb-3 block text-lg font-bold"
-						style="color: var(--color-theme-4);"
+						class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]"
 					>
 						Current Images
 					</label>
@@ -432,11 +449,11 @@
 						role="region"
 						aria-label="Current Images"
 					>
-						{#if currentImages.length > 0}
+						{#if item.x && item.x.length > 0}
 							<div
 								class="grid grid-cols-2 gap-4 md:grid-cols-3"
 							>
-								{#each currentImages as img (img)}
+								{#each item.x as img (img)}
 									<div class="relative">
 										<img
 											src={img}
@@ -460,26 +477,70 @@
 						{/if}
 					</div>
 
+					<!-- Current Zones -->
+					<div class="form-field opacity-0">
+						<label class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]">
+							Current Zones
+						</label>
+						{#if currentZones.length > 0}
+							<div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+								{#each currentZones as z (z.i)}
+									<div class="relative p-4 border rounded-lg">
+										<span class="block text-sm">{z.n}</span>
+										<button
+											onclick={() => {
+												zonesToRemove.push(z.i);
+												currentZones = currentZones.filter(zz => zz.i !== z.i);
+											}}
+											class="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-all hover:bg-red-600"
+											title="Remove zone"
+										>
+											×
+										</button>
+									</div>
+								{/each}
+							</div>
+						{:else}
+							<p class="text-sm text-gray-500">No current zones</p>
+						{/if}
+					</div>
+
+					<!-- New Zones -->
+					<div class="form-field opacity-0">
+						<label class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]">
+							New Zones
+						</label>
+						{#if newZones.length > 0}
+							<div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+								{#each newZones as z (z.i)}
+									<div class="relative p-4 border rounded-lg">
+										<span class="block text-sm">{z.n}</span>
+										<button
+											onclick={() => {
+												newZones = newZones.filter(zz => zz.i !== z.i);
+											}}
+											class="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-all hover:bg-red-600"
+											title="Remove new zone"
+										>
+											×
+										</button>
+									</div>
+								{/each}
+							</div>
+						{/if}
+					</div>
+
+					<!-- Zone Search -->
 					<div class="form-field opacity-0">
 						<div class="space-y-2">
-							<h2 class="text-lg font-semibold">
-								assign zones
+							<h2 class="text-lg font-semibold text-[var(--color-theme-4)]">
+								Add New Zones
 							</h2>
-							{#if item.z && item.z.length > 0}
-								<div
-									class="text-sm text-[var(--muted)]"
-								>
-									current zones:
-									{#each item.z as z}
-										<div>{z.n}</div>
-									{/each}
-								</div>
-							{/if}
 							<ZoneSearch
 								onSelect={(z) => {
-									if (!item.z.includes(z.i))
-										item.z.push(z.i);
-									submit();
+									if (!newZones.some(zz => zz.i === z.i)) {
+										newZones.push(z);
+									}
 								}}
 							/>
 						</div>
@@ -489,14 +550,14 @@
 				<!-- Submit Button -->
 				<div class="form-field pt-4 opacity-0">
 					<Button
-						text={isSubmitting
+						text={saving
 							? 'Updating...'
 							: 'Update Item'}
-						icon={isSubmitting
+						icon={saving
 							? 'fa-spinner fa-spin'
 							: 'fa-save'}
-						onclick={submit}
-						disabled={isSubmitting}
+						onclick={save}
+						disabled={saving}
 					/>
 				</div>
 
@@ -512,40 +573,3 @@
 		</div>
 	</div>
 </div>
-
-<!-- Custom Styles -->
-<style>
-	.floating-orb {
-		filter: blur(40px);
-		animation: float 8s ease-in-out infinite;
-	}
-
-	.floating-orb:nth-child(2) {
-		animation-delay: -2s;
-	}
-
-	.floating-orb:nth-child(3) {
-		animation-delay: -4s;
-	}
-
-	@keyframes float {
-		0%,
-		100% {
-			transform: translateY(0px) rotate(0deg);
-		}
-		50% {
-			transform: translateY(-30px) rotate(180deg);
-		}
-	}
-
-	.page-header,
-	.form-section,
-	.form-field {
-		opacity: 0;
-	}
-
-	:global(.active) {
-		background: var(--color-theme-1);
-		color: white;
-	}
-</style>

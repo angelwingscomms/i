@@ -46,7 +46,7 @@ export const POST: RequestHandler = async ({ params, locals, request, platform }
 	const a = data.get('a') as string;
 	const k = Number(data.get('k')) as 0 | 1;
 	const v = Number(data.get('v'));
-	const p = data.get('p') as string || '';
+	const h = data.get('h') as string || '';
 	const m = data.get('m') as string;
 	const files = data.getAll('f') as unknown as File[];
 	console.log('Edit server: Files received from formData:', files.length, files.map(f => f?.name || 'no name'));
@@ -69,7 +69,7 @@ export const POST: RequestHandler = async ({ params, locals, request, platform }
 		a,
 		k,
 		v,
-		p,
+		p: h,
 		m,
 		x: new_x,
 		z: data.get('z') ? JSON.parse(data.get('z') as string) : item.z || []

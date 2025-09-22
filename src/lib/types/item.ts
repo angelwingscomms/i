@@ -1,18 +1,20 @@
+import type { Zone } from "./zone";
+
 export interface Item {
 	s: 'i';
 	i?: string; // item id
 	t: string; // name/title
 	a?: string; // about
 	q?: string; // about summary (gemini)
-	v?: number; // price
+	p?: number; // price
 	m?: string; // currency
 	k?: 0 | 1; // kind: 0 product, 1 service
 	l?: number; // lat
 	n?: number; // lon
 	u: string; // user id
-	p?: string; // private: "" public, "." private
-	c?: Record<string, unknown>; // compact map
+	h?: string; // hidden: "" public, "." private
 	x?: string[]; // images urls
+	c: string; // currency
 	d?: number; // date created
-	z?: string[]; // zones
+	z?: Zone[]; // zones
 }

@@ -22,7 +22,7 @@
 		buttons_below = false,
 		buttons = undefined
 	}: {
-		value?: string;
+		value?: string | number;
 		editable?: boolean;
 		placeholder?: string;
 		rows?: number;

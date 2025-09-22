@@ -8,11 +8,6 @@ const config = {
 	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter(),
-		vite: {
-			optimizeDeps: {
-				include: ['@node-rs/argon2-wasm32-wasi']
-			}
-		}
 	}
 };
 
