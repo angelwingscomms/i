@@ -218,22 +218,6 @@
 		<section
 			class="profile-hero relative overflow-hidden px-4 py-16 sm:px-2 sm:py-12"
 		>
-			<!-- Floating background elements -->
-			<div class="absolute inset-0 overflow-hidden">
-				<div
-					class="floating-orb absolute -top-10 -left-10 h-32 w-32 rounded-full opacity-20"
-					style="background: var(--color-theme-1);"
-				></div>
-				<div
-					class="floating-orb absolute -right-10 -bottom-10 h-40 w-40 rounded-full opacity-15"
-					style="background: var(--color-theme-6);"
-				></div>
-				<div
-					class="floating-orb absolute top-1/2 left-1/4 h-24 w-24 rounded-full opacity-10"
-					style="background: var(--color-theme-3);"
-				></div>
-			</div>
-
 			<div
 				class="relative mx-auto max-w-4xl text-center"
 			>
@@ -587,28 +571,6 @@
 
 <!-- Custom Styles for Animations -->
 <style>
-	.floating-orb {
-		animation: float 6s ease-in-out infinite;
-	}
-
-	.floating-orb:nth-child(2) {
-		animation-delay: -2s;
-	}
-
-	.floating-orb:nth-child(3) {
-		animation-delay: -4s;
-	}
-
-	@keyframes float {
-		0%,
-		100% {
-			transform: translateY(0px) rotate(0deg);
-		}
-		50% {
-			transform: translateY(-20px) rotate(180deg);
-		}
-	}
-
 	.profile-hero {
 		opacity: 0;
 	}
