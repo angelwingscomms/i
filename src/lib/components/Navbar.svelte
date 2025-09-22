@@ -140,9 +140,9 @@
 					aria-label="Home"
 				>
 					<img
-						src="/favicon.svg"
+						src="/white-logo.svg"
 						alt="Home"
-						class="h-8 w-8"
+						class="h-8 w-auto"
 					/>
 				</a>
 			</div>

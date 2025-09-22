@@ -22,8 +22,7 @@ export default defineConfig({
 					50 * 1024 * 1024 // 50 MiB to cover large WASM file
 			},
 			includeAssets: [
-				'favicon.svg',
-				'favicon.ico',
+				'logo.svg',
 				'robots.txt',
 				'apple-touch-icon.png'
 			],
