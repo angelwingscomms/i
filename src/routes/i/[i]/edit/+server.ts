@@ -28,7 +28,7 @@ async function upload_files(files: File[], platform: any): Promise<string[]> {
 	return urls;
 }
 
-export const POST: RequestHandler = async ({ params, locals, request }) => {
+export const POST: RequestHandler = async ({ params, locals, request, platform }) => {
 	if (!locals.user) {
 		return error(401, 'Unauthorized');
 	}
@@ -58,7 +58,7 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
 	const kept_x: string[] = keep_x_str ? JSON.parse(keep_x_str) : [];
 
 	console.log('Edit server: Calling upload_files with', files.length, 'files');
-	const x = await upload_files(files);
+	const x = await upload_files(files, platform);
 	console.log('Edit server: Upload returned', x.length, 'URLs:', x);
 	const new_x = x.length > 0 ? [...kept_x, ...x] : kept_x;
 
