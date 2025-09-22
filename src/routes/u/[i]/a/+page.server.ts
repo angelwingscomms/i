@@ -42,8 +42,9 @@ export const load: PageServerLoad = async ({
 
 
 	const roomId = await createRoom({
-		users: [locals.user.i, params.i],
-		_: '-'
+		users: locals.user.i,
+		_: '-',
+		extra: { r: params.i }
 	});
 	// Redirect to the newly created room
 	redirect(302, `/r/${roomId}`);

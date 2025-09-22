@@ -3,7 +3,7 @@ import { create } from '$lib/db';
 import type { Room } from '$lib/types';
 import { realtime } from '$lib/util/realtime.js';
 
-export async function createRoom({ title, about, users, _ }: { title?: string; about?: string; users: string | string[]; _ : ',' | '.' | '-' | '|' }) {
+export async function createRoom({ title, about, users, _, extra = {} }: { title?: string; about?: string; users: string | string[]; _ : ',' | '.' | '-' | '|'; extra?: object }) {
 	const trimmedTitle = title ? title.trim() : 'Untitled Room';
 	const trimmedAbout = about ? about.trim() : '';
 
@@ -40,7 +40,8 @@ export async function createRoom({ title, about, users, _ }: { title?: string; a
 		c: '',
 		q: createMeetingRes.data.data.id,
 		_: _,
-		d: Date.now() // creation timestamp
+		d: Date.now(), // creation timestamp
+		...(extra && extra)
 	};
 
 	if (typeof users === 'string') {
