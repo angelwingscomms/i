@@ -14,4 +14,5 @@ export interface Item {
 	c?: Record<string, unknown>; // compact map
 	x?: string[]; // images urls
 	d?: number; // date created
+	z?: string[]; // zones
 }

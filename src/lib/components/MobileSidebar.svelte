@@ -113,6 +113,18 @@
 					users
 				</a>
 				<a
+					href="/zones"
+					class="sidebar-nav-link"
+					style="color: var(--color-theme-1);"
+					onclick={close_sidebar}
+				>
+					<i
+						class="fa-solid fa-globe"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
+					zones
+				</a>
+				<a
 					href="/tools/youtube-video-summarize-tool"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-1);"
@@ -196,6 +208,18 @@
 						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
 					></i>
 					items
+				</a>
+				<a
+					href="/zones"
+					class="sidebar-nav-link"
+					style="color: var(--color-theme-1);"
+					onclick={close_sidebar}
+				>
+					<i
+						class="fa-solid fa-globe"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
+					zones
 				</a>
 				<a
 					href="/login"

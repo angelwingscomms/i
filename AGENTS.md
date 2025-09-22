@@ -1,4 +1,5 @@
 - always use exasearch to check the docs for anything before starting, especially SvelteKit
+- Svelte 5: Use $state for top-level variables or objects; mutate properties of $state objects for reactivity. Do not use $state for property assignments like obj.prop = $state(...); instead, initialize the object with $state and set properties directly, or use a separate $state variable for the property. For arrays like z, use let z = $state(data.z || []); and mutate z.push().
 
 ## Code Style
 

@@ -71,7 +71,8 @@ export const POST: RequestHandler = async ({ params, locals, request, platform }
 		v,
 		p,
 		m,
-		x: new_x
+		x: new_x,
+		z: data.get('z') ? JSON.parse(data.get('z') as string) : item.z || []
 	};
 
 	const embed_text = `${t || item.t} ${a || ''}`;

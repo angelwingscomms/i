@@ -135,7 +135,19 @@ export interface Post {
 	d: number; // created timestamp
 	l?: number; // last updated
 	r?: string; // realtime room
+	z?: string[]; // zones
 	f?: string; // parent post id
+}
+
+export interface Zone {
+	s: 'z'; // tenant for zones
+	i?: string; // zone id
+	n: string; // name
+	l: number; // latitude
+	g: number; // longitude
+	C?: string[]; // children (post/item ids)
+	u?: string; // user id
+	d?: number; // created timestamp
 }
 
 export interface Recording {

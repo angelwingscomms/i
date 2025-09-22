@@ -59,7 +59,7 @@
 		container.style.borderRightWidth = '0px';
 		container.style.borderLeftWidth = container.style.borderLeftWidth || '2px';
 		container.style.borderStyle = container.style.borderStyle || 'solid';
-		container.style.borderLeftColor = 'rgba(248,137,250,0)';
+		container.style.borderLeftColor = 'rgba(248,137,250,0.3)';
 
 		_anim = animate(container, {
 			duration: 1440,
@@ -67,7 +67,7 @@
 			alternate: true,
 			// smooth, soothing fade in/out
 			ease: 'easeInOutSine',
-			borderLeftColor: ['rgba(248,137,250,0)', 'rgba(248,137,250,1)']
+			borderLeftColor: ['rgba(248,137,250,0.3)', 'rgba(248,137,250,1)']
 		});
 
 		return () => {

@@ -9,10 +9,12 @@
 	import Button from '$lib/components/Button.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import axios from 'axios';
+	import ZoneSearch from '$lib/components/ZoneSearch.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
-	let item = $state(page.data.i)
+	let item = $state({ ...page.data.i });
+	if (!item.z) item.z = [];
 	let files: FileList | null = $state(null);
 	let isSubmitting = $state(false);
 	let currentImages = $state(item.x || []);
@@ -95,6 +97,7 @@
 				console.log('Frontend: No files selected');
 			}
 
+			formData.append('z', JSON.stringify(item_z));
 			console.log('Frontend: Sending POST to /i/${item.i}/edit with FormData entries:', Array.from(formData.entries()).map(([k,v]) => ({k, v: v instanceof File ? `${v.name} (${v.size}B)` : v})));
 			const res = await axios.post(
 				`/i/${item.i}/edit`,
@@ -358,6 +361,18 @@
 					{:else}
 					<p class="text-gray-500 text-sm">No images currently</p>
 					{/if}
+					</div>
+
+					<div class="form-field opacity-0">
+						<div class="space-y-2">
+							<h2 class="text-lg font-semibold">assign zones</h2>
+							{#if item.z && item.z.length > 0}
+								<div class="text-sm text-[var(--muted)]">
+									current zones: {item_z.join(', ')}
+								</div>
+							{/if}
+							<ZoneSearch onSelect={(z) => { if (!item_z.includes(z.i)) item_z.push(z.i); submit(); }} />
+						</div>
 					</div>
 				</div>
 

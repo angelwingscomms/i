@@ -6,6 +6,7 @@
 	import axios from 'axios';
 	import Modal from '$lib/components/Modal.svelte';
 	import PostSearch from '$lib/components/PostSearch.svelte';
+	import ZoneSearch from '$lib/components/ZoneSearch.svelte';
 
 	import { goto } from '$app/navigation';
 	import { md } from '$lib/util/marked.js';
@@ -17,15 +18,16 @@
 	let loading = $state(false);
 	let saving = $state(false);
 	let timeout: NodeJS.Timeout | null = null;
-	let body_input: HTMLTextAreaElement | null = $state(null);
-	let ai_input: HTMLTextAreaElement | null = $state(null);
+	let body_input: HTMLTextAreaElement | null =
+		$state(null);
+	let ai_input: HTMLTextAreaElement | null =
+		$state(null);
 	let width = $state(0);
 	let isMobile = $derived(width < 768);
 	let showModal = $state(false);
-	let isPrivate = $state(post.v === '.');
 
-	const saveWithDelay = async (body: string) => {
-		if (!post.t && !body) return;
+	const saveWithDelay = async () => {
+		post.t ??= '';
 
 		saving = true;
 		if (timeout) {
@@ -36,14 +38,19 @@
 			try {
 				const formData = new FormData();
 				formData.append('t', post.t || '');
-				formData.append('b', body);
-				formData.append('v', isPrivate ? '.' : '');
+				formData.append('b', post.b);
+				formData.append('v', post.v ? '.' : '');
 				if (post.f) formData.append('f', post.f);
 
-				const res = await axios.put(`/posts/${post.i}`, formData, {					headers: {
-						'Content-Type': 'multipart/form-data'
+				const res = await axios.put(
+					`/posts/${post.i}`,
+					formData,
+					{
+						headers: {
+							'Content-Type': 'multipart/form-data'
+						}
 					}
-				});
+				);
 
 				if (res.status === 200) {
 					toast.success('Post auto-saved');
@@ -59,15 +66,8 @@
 	};
 
 	$effect(() => {
-		if (post.b !== undefined) {
-			saveWithDelay(post.b || '');
-		}
-	});
-
-	$effect(() => {
-		if (post.t !== undefined) {
-			saveWithDelay(post.b || '');
-		}
+		JSON.stringify(post);
+		saveWithDelay();
 	});
 
 	const handleKeyDown = (e: KeyboardEvent) => {
@@ -98,17 +98,19 @@
 
 			if (res.data) {
 				toast.success('Post updated with AI');
-				console.debug('edg', res.data)
+				console.debug('edg', res.data);
 				post.t = res.data.t || post.t;
 				post.b = res.data.b || post.b;
 				instructions = '';
-				saveWithDelay(post.b || '');
 			} else {
 				throw new Error('No response data');
 			}
 		} catch (e: any) {
 			console.error('AI edit failed:', e);
-			toast.error(e.response?.data?.message || 'Failed to update post with AI');
+			toast.error(
+				e.response?.data?.message ||
+					'Failed to update post with AI'
+			);
 		} finally {
 			loading = false;
 		}
@@ -122,13 +124,20 @@
 			const formData = new FormData();
 			formData.append('t', post.t || '');
 			formData.append('b', post.b || '');
-			formData.append('v', isPrivate ? '.' : '');
+			formData.append('v', post.v ? '.' : '');
 			if (post.f) formData.append('f', post.f);
-	
-			const res = await axios.put(`/posts/${post.i}`, formData, {			headers: {
-					'Content-Type': 'multipart/form-data'
+			if (post.z)
+				formData.append('z', JSON.stringify(post.z));
+
+			const res = await axios.put(
+				`/posts/${post.i}`,
+				formData,
+				{
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
 				}
-			});
+			);
 
 			if (res.status === 200) {
 				toast.success('Post saved');
@@ -142,7 +151,11 @@
 	};
 
 	async function deletePost() {
-		if (!confirm('Are you sure you want to delete this post?')) {
+		if (
+			!confirm(
+				'Are you sure you want to delete this post?'
+			)
+		) {
 			return;
 		}
 
@@ -157,19 +170,36 @@
 	}
 </script>
 
-<svelte:window on:keydown={handleKeyDown} bind:innerWidth={width} />
+<svelte:window
+	on:keydown={handleKeyDown}
+	bind:innerWidth={width}
+/>
 
 <div class="mx-auto max-w-7xl p-4">
 	<div class="flex gap-4">
 		<div class="flex-1">
-			<div class="mb-4 flex items-center justify-between">
-				<h1 class="text-2xl font-bold text-purple-600">Edit Post</h1>
+			<div
+				class="mb-4 flex items-center justify-between"
+			>
+				<h1
+					class="text-2xl font-bold text-purple-600"
+				>
+					Edit Post
+				</h1>
 				<div class="flex items-center gap-2">
 					{#if saving}
-						<span class="text-sm text-purple-500">Saving...</span>
+						<span class="text-sm text-purple-500"
+							>Saving...</span
+						>
 					{/if}
-					<a href={`/posts/${post.i}`} class="btn-outline">View Post</a>
-					<Button text="Delete" onclick={deletePost} />
+					<a
+						href={`/posts/${post.i}`}
+						class="btn-outline">View Post</a
+					>
+					<Button
+						text="Delete"
+						onclick={deletePost}
+					/>
 				</div>
 			</div>
 			<div class="space-y-6">
@@ -184,15 +214,22 @@
 
 				<!-- Private Checkbox -->
 				<div class="space-y-2">
-					<label class="flex items-center space-x-2 cursor-pointer">
+					<label
+						class="flex cursor-pointer items-center space-x-2"
+					>
 						<input
 							type="checkbox"
-							bind:checked={isPrivate}
-							class="rounded border-gray-300 text-purple-600 focus:ring-purple-500 h-4 w-4"
+							bind:checked={post.v}
+							class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
 						/>
-						<span class="text-sm font-medium text-gray-700">make private</span>
+						<span
+							class="text-sm font-medium text-gray-700"
+							>make private</span
+						>
 					</label>
-					<p class="mt-1 text-xs text-gray-500">only you can see this post</p>
+					<p class="mt-1 text-xs text-gray-500">
+						only you can see this post
+					</p>
 				</div>
 				<div class="space-y-2">
 					<DescriptionInput
@@ -217,16 +254,29 @@
 					/>
 
 					<div class="space-y-2">
-						<h2 class="text-lg font-semibold">set parent post</h2>
+						<h2 class="text-lg font-semibold">
+							set parent post
+						</h2>
 						{#if post.f}
-							<div class="text-sm text-[var(--muted)]">
+							<div
+								class="text-sm text-[var(--muted)]"
+							>
 								current parent:
-								<a class="underline" href={`/posts/${post.f}`}>{post.f}</a>
+								<a
+									class="underline"
+									href={`/posts/${post.f}`}
+									>{post.f}</a
+								>
 							</div>
 						{/if}
-						<PostSearch onSelect={(p) => { post.f = p.i; immediateSave(); }} exclude_i={post.i} />
+						<PostSearch
+							onSelect={(p) => {
+								post.f = p.i;
+								immediateSave();
+							}}
+							exclude_i={post.i}
+						/>
 					</div>
-
 				</div>
 				{#if isMobile}
 					<div class="space-y-2">
@@ -239,11 +289,19 @@
 			</div>
 		</div>
 		{#if !isMobile}
-			<div class="hidden md:block w-1/2 p-4">
-				<div class="sticky top-4 rounded-lg border p-4">
-					<h2 class="mb-2 text-xl font-semibold">Preview</h2>
-					<h1 class="mb-4 text-2xl font-bold">{post.t || 'Untitled'}</h1>
-					<div class="prose prose-invert prose-lg">{@html marked.parse(post.b || '')}</div>
+			<div class="hidden w-1/2 p-4 md:block">
+				<div
+					class="sticky top-4 rounded-lg border p-4"
+				>
+					<h2 class="mb-2 text-xl font-semibold">
+						Preview
+					</h2>
+					<h1 class="mb-4 text-2xl font-bold">
+						{post.t || 'Untitled'}
+					</h1>
+					<div class="prose prose-invert prose-lg">
+						{@html marked.parse(post.b || '')}
+					</div>
 				</div>
 			</div>
 		{/if}
@@ -253,8 +311,12 @@
 {#if isMobile && showModal}
 	<Modal bind:open={showModal}>
 		<div class="p-4">
-			<h2 class="mb-2 text-xl font-semibold">Preview</h2>
-			<h1 class="mb-4 text-2xl font-bold">{post.t || 'Untitled'}</h1>
+			<h2 class="mb-2 text-xl font-semibold">
+				Preview
+			</h2>
+			<h1 class="mb-4 text-2xl font-bold">
+				{post.t || 'Untitled'}
+			</h1>
 			{@html md(post.b || '')}
 		</div>
 	</Modal>
