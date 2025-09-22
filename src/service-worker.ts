@@ -4,28 +4,31 @@
 // This is required for workbox injectManifest to work properly
 self.__WB_MANIFEST = [];
 
-console.log('🔧 Service worker starting...');
+console.debug('[PUSH DEBUG] Service worker starting');
 
 // Basic service worker functionality without workbox dependencies
 self.addEventListener('install', (event: Event) => {
-	console.log('📦 Service worker installing...');
+	console.debug('[PUSH DEBUG] SW installing');
 	(self as any).skipWaiting();
 });
 
 self.addEventListener('activate', (event: Event) => {
-	console.log('🚀 Service worker activating...');
+	console.debug('[PUSH DEBUG] SW activating');
 	(event as any).waitUntil(
 		(self as any).clients.claim()
 	);
 });
 
 self.addEventListener('push', (event: Event) => {
-	console.log('📱 Push notification received');
+	console.debug('[PUSH DEBUG] Push notification received');
 	let payload: any = {};
 	try {
 		const e: any = event as any;
 		payload = e.data ? e.data.json() : {};
+		console.debug('[PUSH DEBUG] Push payload keys:', Object.keys(payload));
+		console.debug('[PUSH DEBUG] Push payload data:', payload);
 	} catch (e) {
+		console.debug('[PUSH DEBUG] Push payload parse error:', e);
 		payload = {};
 	}
 
@@ -57,18 +60,21 @@ self.addEventListener('push', (event: Event) => {
 			}
 		};
 
-	(event as any).waitUntil(
-		(self as any).registration.showNotification(
-			title,
-			options
-		)
-	);
+		console.debug('[PUSH DEBUG] Showing notification: title=', title, 'options keys=', Object.keys(options));
+		(event as any).waitUntil(
+			(self as any).registration.showNotification(
+				title,
+				options
+			)
+		);
 });
 
 self.addEventListener('notificationclick', (event: any) => {
+	console.debug('[PUSH DEBUG] Notification clicked, data:', event.notification.data);
 	event.notification.close();
 	const data = event.notification.data || {};
 	const url = data.url || (data.chatId ? `/u/${data.chatId}` : '/');
+	console.debug('[PUSH DEBUG] Navigating to url:', url);
 
 	(event as any).waitUntil(
 		(async () => {

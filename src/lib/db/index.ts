@@ -9,6 +9,8 @@ import { collection } from '$lib/constants';
 import type { User } from '$lib/types';
 import { embed } from '$lib/util/embed';
 import { new_id } from '$lib/util/new_id';
+import { notif_debug } from '$lib/util/notif_debug';
+import type { PushSubscription } from 'web-push';
 
 export type PayloadFilter = Record<string, unknown>;
 
@@ -39,6 +41,10 @@ export const set = async (
 	id: string,
 	payload: Record<string, unknown>
 ) => {
+	if ('ps' in payload) {
+		const psList = payload.ps as unknown as PushSubscription[];
+		notif_debug(`Setting ps for id: ${id}, length=${psList ? psList.length : 0}`);
+	}
 	await qdrant.setPayload('i', {
 		wait: true,
 		payload,
@@ -270,6 +276,9 @@ export async function get<T>(
 	with_vector?: boolean
 ): Promise<T | null> {
 	try {
+		if (payload === 'ps') {
+			notif_debug(`Fetching ps for id: ${id}`);
+		}
 		const result = await qdrant.retrieve(collection, {
 			ids: [id],
 			with_payload:
@@ -278,6 +287,19 @@ export async function get<T>(
 					: payload,
 			with_vector
 		});
+		if (payload === 'ps' && result.length > 0) {
+			const psList = result[0].payload?.ps as unknown as PushSubscription[];
+			if (psList && Array.isArray(psList)) {
+				const now = Date.now();
+				const expiredCount = psList.filter(s => {
+					const exp = (s as any).expirationTime;
+					return typeof exp === 'number' && exp > 0 && exp < now;
+				}).length;
+				notif_debug(`Fetched ps for ${id}: total=${psList.length}, expired=${expiredCount}`);
+			} else {
+				notif_debug(`Fetched ps for ${id}: no list or empty`);
+			}
+		}
 
 		if (result.length > 0) {
 			const res = result[0].payload as T & {

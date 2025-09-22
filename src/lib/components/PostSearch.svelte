@@ -1,7 +1,8 @@
 <script lang="ts">
 	import axios from 'axios';
 	import { toast } from '$lib/util/toast.svelte.js';
-
+	import DescriptionInput from './ui/DescriptionInput.svelte';
+	import Button from './Button.svelte';
 	let {
 		q = $bindable(''),
 		posts = $bindable<any[]>([]),
@@ -13,6 +14,7 @@
 		onSearch = (_q?: string) => {}
 	} = $props();
 
+	let inputRef: HTMLInputElement | null = null;
 	async function search() {
 		loading = true;
 		try {
@@ -31,11 +33,19 @@
 		}
 	}
 
-	function on_key(e: KeyboardEvent) {
-		if (e.key === 'Enter') search();
-	}
+	$effect(() => {
+		if (!inputRef) return;
+		const handleKeydown = (e: KeyboardEvent) => {
+			if (e.key === 'Enter') {
+				search();
+			}
+		};
+		inputRef.addEventListener('keydown', handleKeydown);
+		return () => {
+			inputRef?.removeEventListener('keydown', handleKeydown);
+		};
+	});
 </script>
-
 <div class="grid gap-3">
 	{#if !hide_input}
 		<div class="flex items-center gap-2 rounded-xl border border-[var(--color-theme-6)] p-3">

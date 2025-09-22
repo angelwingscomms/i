@@ -1,48 +1,49 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { ensurePushSubscribed } from '$lib/util/notifications';
+	import { notif_debug } from '$lib/util/notif_debug';
 
 	let { userId }: { userId?: string } = $props();
 	let showBanner = $state(false);
 	let isLoading = $state(false);
 
 	onMount(async () => {
-		if (!userId || typeof window === 'undefined')
+		if (!userId || typeof window === 'undefined') {
+			notif_debug(`Banner init skipped: no userId or server-side`);
 			return;
+		}
+		notif_debug(`Banner init for user ${userId}`);
 
 		// Check if browser supports push notifications
 		if (
 			!('serviceWorker' in navigator) ||
 			!('PushManager' in window)
 		) {
-			console.log(
-				'Push notifications not supported in this browser'
-			);
+			notif_debug('Push notifications not supported in this browser');
 			return;
 		}
 
 		// Check if notification permissions are already granted
 		if (Notification.permission === 'granted') {
+			notif_debug('Permissions already granted, skipping banner');
 			return;
 		}
 
 		// Check if we have an existing subscription saved
 		try {
+			notif_debug(`Checking existing sub for ${userId}`);
 			const response = await fetch(
 				`/u/${userId}/push_notifications/check_subscription`
 			);
 			const data = await response.json();
 			if (data.subscribed) {
-				console.log(
-					'User already has a push notification subscription'
-				);
+				notif_debug(`User ${userId} already subscribed, skipping banner`);
 				return;
 			}
+			notif_debug(`No existing sub for ${userId}, showing banner`);
+			showBanner = true;
 		} catch (e) {
-			console.log(
-				'Error checking subscription status:',
-				e
-			);
+			notif_debug(`Error checking sub status for ${userId}: ${e instanceof Error ? e.message : String(e)}`);
 		}
 
 		// Show banner if permissions not granted and no subscription
@@ -54,11 +55,14 @@
 
 		isLoading = true;
 		try {
+			notif_debug(`Handling accept for user ${userId}`);
 			const result =
 				await ensurePushSubscribed(userId);
 			if (result.ok) {
+				notif_debug(`Accept successful for ${userId}`);
 				showBanner = false;
 			} else {
+				notif_debug(`Accept failed for ${userId}: reason=${result.reason}`);
 				// Handle different failure reasons
 				switch (result.reason) {
 					case 'denied':
@@ -79,10 +83,7 @@
 				}
 			}
 		} catch (e) {
-			console.error(
-				'Error requesting push notification permissions:',
-				e
-			);
+			notif_debug(`Accept error for ${userId}: ${e instanceof Error ? e.message : String(e)}`);
 			// Keep banner visible so user can try again
 		} finally {
 			isLoading = false;

@@ -33,7 +33,7 @@ export const POST: RequestHandler = async ({
 					{
 						parts: [
 							{
-								text: 'Please transcribe this audio file to text. Only return the transcribed text, no additional commentary.'
+								text: 'You are a skilled scribe listening to someone dictate text. Listen carefully and transcribe what they mean to say, not just what they say. Intelligently handle natural speech patterns like pauses, corrections, backtracking, and second thoughts. Clean up filler words, false starts, and self-corrections. Return only the refined, clear transcription without any commentary.'
 							},
 							{
 								inline_data: {
