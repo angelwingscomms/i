@@ -25,7 +25,8 @@ export const POST = async ({
 		'u',
 		't',
 		'b',
-		'y'
+		'y',
+		's'
 	]);
 	if (!post) {
 		throw error(404, 'Post not found');
