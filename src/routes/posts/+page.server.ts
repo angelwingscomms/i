@@ -22,11 +22,12 @@ export const load: PageServerLoad = async ({
 				const posts = await search_by_vector<Post>({
 					vector,
 					filter: { must: { s: 'p' } },
-					with_payload: ['t', 'l', 'm'],
+					with_payload: ['t', 'l', 'm', 'u', 'v'],
 					limit: 54
 				});
+				const filtered = posts.filter(r => r.v !== '.' || r.u === locals.user.i);
 				return {
-					p: posts.map((r) => ({
+					p: filtered.map((r) => ({
 						i: r.i,
 						t: r.t,
 						l: r.l
@@ -34,25 +35,29 @@ export const load: PageServerLoad = async ({
 				};
 			}
 		}
+		const allPosts = await qdrant
+			.scroll(collection, {
+				filter: {
+					must: [
+						{
+							key: 's',
+							match: {
+								value: 'p'
+							}
+						}
+					]
+				},
+				with_payload: ['t', 'l', 'u', 'v'],
+				limit: 54
+			})
+			.then((result) => result.points || []);
+
+		const filtered = locals.user
+			? allPosts.filter(r => r.payload.v !== '.' || r.payload.u === locals.user.i)
+			: allPosts.filter(r => r.payload.v !== '.');
+
 		return {
-			p: (
-				await qdrant
-					.scroll(collection, {
-						filter: {
-							must: [
-								{
-									key: 's',
-									match: {
-										value: 'p'
-									}
-								}
-							]
-						},
-						with_payload: ['t', 'l'],
-						limit: 54
-					})
-					.then((result) => result.points || [])
-			).map((r) => ({
+			p: filtered.map((r) => ({
 				i: r.id,
 				t: r.payload?.t,
 				l: r.payload?.l

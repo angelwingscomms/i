@@ -41,23 +41,16 @@ export const POST = async ({
 	const model = genAI.getGenerativeModel({
 		model: 'gemini-2.5-flash'
 	});
-	const prompt = `Edit the following post based on these instructions: "${instructions}". Current post title: "${post.t || ''}". Current post body: "${post.b || ''}". Output ONLY valid JSON in this exact format: {"t": "new title", "b": "new body (markdown)"}. Do not include any other text.`;
+	const prompt = `Edit the following post based on these instructions: "${instructions}". Current post body: "${post.b || ''}". Output the edited post body in markdown format. Do not include any other text or formatting.`;
 	const result = await model.generateContent(prompt);
 	const response = await result.response;
-	let new_content = response.text().trim();
-	new_content = new_content
-		.replace(/^```json\s*\n?/, '')
-		.replace(/\n?```$/, '')
-		.trim();
-	const parsed = JSON.parse(new_content);
-	const { t, b } = parsed;
+	const new_content = response.text().trim();
+	
 	await update_post(i, {
-		t: t || post.t,
-		b: b || post.b,
+		b: new_content || post.b,
 		l: Date.now()
 	});
 	return json({
-		t,
-		b
+		b: new_content
 	});
 };

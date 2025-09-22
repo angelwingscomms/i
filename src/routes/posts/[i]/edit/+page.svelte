@@ -9,6 +9,7 @@
 
 	import { goto } from '$app/navigation';
 	import { md } from '$lib/util/marked.js';
+	import { marked } from 'marked';
 
 	let { data } = $props();
 	let post: any = $state(data.p);
@@ -21,6 +22,7 @@
 	let width = $state(0);
 	let isMobile = $derived(width < 768);
 	let showModal = $state(false);
+	let isPrivate = $state(post.v === '.');
 
 	const saveWithDelay = async (body: string) => {
 		if (!post.t && !body) return;
@@ -35,6 +37,7 @@
 				const formData = new FormData();
 				formData.append('t', post.t || '');
 				formData.append('b', body);
+				formData.append('v', isPrivate ? '.' : '');
 				if (post.f) formData.append('f', post.f);
 
 				const res = await axios.put(`/posts/${post.i}`, formData, {					headers: {
@@ -119,9 +122,10 @@
 			const formData = new FormData();
 			formData.append('t', post.t || '');
 			formData.append('b', post.b || '');
+			formData.append('v', isPrivate ? '.' : '');
 			if (post.f) formData.append('f', post.f);
-
-			const res = await axios.put(`/posts/${post.i}`, formData, {				headers: {
+	
+			const res = await axios.put(`/posts/${post.i}`, formData, {			headers: {
 					'Content-Type': 'multipart/form-data'
 				}
 			});
@@ -177,6 +181,19 @@
 						editable={true}
 					/>
 				</div>
+
+				<!-- Private Checkbox -->
+				<div class="space-y-2">
+					<label class="flex items-center space-x-2 cursor-pointer">
+						<input
+							type="checkbox"
+							bind:checked={isPrivate}
+							class="rounded border-gray-300 text-purple-600 focus:ring-purple-500 h-4 w-4"
+						/>
+						<span class="text-sm font-medium text-gray-700">make private</span>
+					</label>
+					<p class="mt-1 text-xs text-gray-500">only you can see this post</p>
+				</div>
 				<div class="space-y-2">
 					<DescriptionInput
 						bind:value={post.b}
@@ -226,7 +243,7 @@
 				<div class="sticky top-4 rounded-lg border p-4">
 					<h2 class="mb-2 text-xl font-semibold">Preview</h2>
 					<h1 class="mb-4 text-2xl font-bold">{post.t || 'Untitled'}</h1>
-					{@html md(post.b || '')}
+					<div class="prose prose-invert prose-lg">{@html marked.parse(post.b || '')}</div>
 				</div>
 			</div>
 		{/if}

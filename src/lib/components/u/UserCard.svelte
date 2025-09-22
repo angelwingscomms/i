@@ -33,7 +33,6 @@
 		<div class="relative flex-shrink-0">
 			<div
 				class="h-12 w-12 overflow-hidden rounded-full"
-				style="border: 1px solid var(--color-theme-6);"
 			>
 				{#if u.av}
 					<img

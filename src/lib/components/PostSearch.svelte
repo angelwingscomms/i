@@ -8,18 +8,28 @@
 		posts = $bindable<any[]>([]),
 		loading = $bindable(false),
 		onSelect = undefined as undefined | ((post: any) => void),
-		filter = $bindable<{ f?: string } | undefined>(undefined),
+		filter = $bindable<Record<string, unknown> | undefined>(undefined),
 		hide_input = false,
 		exclude_i = undefined as string | undefined,
-		onSearch = (_q?: string) => {}
+		onSearch = (_q?: string) => {},
+		showPrivateFilter = $bindable(false)
 	} = $props();
+
+	let showPrivate = $state(false);
 
 	let inputRef: HTMLInputElement | null = null;
 	async function search() {
 		loading = true;
 		try {
 			const body: Record<string, unknown> = { q };
-			if (filter?.f) body.f = filter.f;
+			if (filter) {
+				for (const [key, value] of Object.entries(filter)) {
+					if (value !== undefined && value !== null) {
+						body[key] = value;
+					}
+				}
+			}
+			if (showPrivateFilter && showPrivate) body.private = true;
 			const res = await axios.post('/posts/search', body);
 			posts = (res.data || []).filter((p: any) =>
 				exclude_i ? p.i !== exclude_i : true
@@ -48,31 +58,31 @@
 </script>
 <div class="grid gap-3">
 	{#if !hide_input}
-		<div class="flex items-center gap-2 rounded-xl border border-[var(--color-theme-6)] p-3">
+		<DescriptionInput
+			bind:value={q}
+			placeholder="search for a post"
+			send={() => search()}
+			send_loading={loading}
+			bind:ref={inputRef}
+		/>
+	{/if}
+
+	{#if showPrivateFilter}
+		<label class="flex items-center space-x-2 cursor-pointer">
 			<input
-				class="flex-1 bg-transparent outline-none border-b border-[var(--color-theme-6)] px-2 py-1"
-				placeholder="search for a post"
-				bind:value={q}
-				onkeydown={on_key}
+				type="checkbox"
+				bind:checked={showPrivate}
+				class="rounded border-gray-300 text-purple-600 focus:ring-purple-500 h-4 w-4"
+				onchange={() => search()}
 			/>
-			<button
-				class="btn-primary px-3 py-2 rounded"
-				onclick={search}
-				disabled={loading}
-			>
-				{#if loading}
-					<i class="fas fa-spinner fa-spin"></i>
-				{:else}
-					<i class="fas fa-magnifying-glass"></i>
-				{/if}
-			</button>
-		</div>
+			<span class="text-sm font-medium text-gray-700">show private posts</span>
+		</label>
 	{/if}
 
 	{#if posts?.length}
 		<ul class="grid gap-2">
 			{#each posts as p (p.i)}
-				<li class="rounded-lg border border-[var(--color-theme-6)]">
+				<li class="rounded-tr-3xl rounded-br-3xl border-l border-l-[var(--color-theme-6)]">
 					{#if onSelect}
 						<button class="w-full text-left px-3 py-2 hover:bg-[var(--color-theme-6)]/20" onclick={() => onSelect?.(p)}>
 							<div class="flex items-center justify-between">

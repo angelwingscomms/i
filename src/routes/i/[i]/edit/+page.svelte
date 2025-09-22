@@ -16,6 +16,7 @@
 	let files: FileList | null = $state(null);
 	let isSubmitting = $state(false);
 	let currentImages = $state(item.x || []);
+	let isPrivate = $state(item.p === '.');
 
 	function removeImage(url: string) {
 		currentImages = currentImages.filter((img: string) => img !== url);
@@ -81,6 +82,7 @@
 			if (item.desc) formData.append('a', item.desc);
 			formData.append('k', item.kind?.toString());
 			formData.append('v', item.price?.toString());
+			formData.append('p', isPrivate ? '.' : '');
 			formData.append('m', item.currency);
 			formData.append('keep_x', JSON.stringify(currentImages));
 			if (files) {
@@ -232,6 +234,19 @@
 							active={item.kind === 1}
 						/>
 					</div>
+				</div>
+
+				<!-- Private Checkbox -->
+				<div class="form-field opacity-0">
+					<label class="flex items-center space-x-2 cursor-pointer">
+						<input
+							type="checkbox"
+							bind:checked={isPrivate}
+							class="rounded border-gray-300 text-theme-1 focus:ring-theme-1 h-4 w-4"
+						/>
+						<span class="text-sm font-medium text-gray-700 dark:text-gray-300">make private</span>
+					</label>
+					<p class="mt-1 text-xs text-gray-500 dark:text-gray-400">only you can see this post</p>
 				</div>
 
 				<!-- Price and Currency Fields -->

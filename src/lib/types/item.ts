@@ -10,6 +10,7 @@ export interface Item {
 	l?: number; // lat
 	n?: number; // lon
 	u: string; // user id
+	p?: string; // private: "" public, "." private
 	c?: Record<string, unknown>; // compact map
 	x?: string[]; // images urls
 	d?: number; // date created

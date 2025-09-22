@@ -247,8 +247,7 @@
 							style="background: var(--color-theme-1);"
 						></div>
 						<div
-							class="relative h-32 w-32 overflow-hidden rounded-full border-4 border-white shadow-2xl"
-							style="border-color: var(--color-theme-6);"
+							class="relative h-32 w-32 overflow-hidden rounded-full shadow-2xl"
 						>
 							{#if user.avatar}
 								<img
@@ -347,6 +346,14 @@
 			variant="primary"
 		/>
 	</div>
+	<div class="mt-4 flex justify-center">
+		<Button
+			href={`/u/${user.i}/posts`}
+			text="view posts"
+			icon="fa-newspaper"
+			variant="primary"
+		/>
+	</div>
 
 	{#if !user.description}
 		<div
@@ -400,6 +407,14 @@
 									href="/u/{user.i}/c?call=video"
 									text="Video call"
 									icon="fa-video"
+									variant="primary"
+								/>
+							</div>
+							<div class="flex justify-center">
+								<Button
+									href={`/u/${user.i}/posts`}
+									text="view posts"
+									icon="fa-newspaper"
 									variant="primary"
 								/>
 							</div>

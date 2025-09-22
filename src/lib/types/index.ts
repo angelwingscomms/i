@@ -130,6 +130,7 @@ export interface Post {
 	b?: string; // body (markdown)
 	y?: string; // summary
 	p?: string; // image url
+	v?: string; // private: "" public, "." private
 	u?: string; // user id
 	d: number; // created timestamp
 	l?: number; // last updated

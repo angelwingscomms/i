@@ -175,16 +175,7 @@
 
 				{#if user}
 					<div class="flex items-center gap-4">
-						<a
-							href="/settings"
-							class="nav-link group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
-							style="color: var(--color-theme-1); border: 1px solid var(--color-theme-1);"
-						>
-							<i
-								class="fa-solid fa-gear mr-2 text-[1.1em] text-current"
-							></i>
-							Settings
-						</a>
+						<Button href="/settings" text="Settings" icon="fa-gear" variant="primary" />
 
 						<div
 							class="flex items-center gap-3 pl-4"
@@ -196,16 +187,7 @@
 								style="color: var(--color-theme-1);"
 								>{user.t}</a
 							>
-							<a
-								href="/logout"
-								class="group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all hover:scale-105"
-								style="color: var(--color-theme-5); border: 1px solid var(--color-theme-5);"
-							>
-								<i
-									class="fa-solid fa-arrow-right-from-bracket mr-2 text-[1.1em] text-current"
-								></i>
-								Logout
-							</a>
+							<Button href="/logout" text="Logout" icon="fa-arrow-right-from-bracket" variant="secondary" />
 						</div>
 					</div>
 				{:else}

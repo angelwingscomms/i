@@ -31,10 +31,17 @@ export const POST: RequestHandler = async ({
 		s: 'p'
 	};
 
-	// Optional parent filter: only return posts whose parent id matches `f`
-	const parent = (body as any)?.f as unknown;
-	if (typeof parent === 'string' && parent.trim()) {
-		payload_filter.f = parent.trim();
+	// General filters from body.f
+	const filters = body.f || {} as Record<string, unknown>;
+	for (const [key, value] of Object.entries(filters)) {
+		if (value !== undefined && value !== null) {
+			payload_filter[key] = value;
+		}
+	}
+
+	// Private filter
+	if (body.private) {
+		payload_filter.v = '.';
 	}
 
 	if (q.trim()) {

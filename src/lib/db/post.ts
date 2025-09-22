@@ -9,7 +9,7 @@ export const create_post = async (
 	user_id: string
 ): Promise<string> => {
 	return create(
-		{ s: 'p', u: user_id, d: Date.now() },
+		{ s: 'p', u: user_id, d: Date.now(), v: '' },
 		''
 	);
 };

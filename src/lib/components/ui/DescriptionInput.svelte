@@ -171,7 +171,7 @@
 				id="description"
 				name="description"
 				bind:value
-				class="description-textarea border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
+				class="description-textarea border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
 				{placeholder}
 				{rows}
 				required
@@ -188,7 +188,7 @@
 				id="description"
 				name="description"
 				bind:value
-				class="description-textinput border-0 focus:ring-0 focus:outline-none placeholder:text-[var(--color-theme-4)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
+				class="description-textinput border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
 				{placeholder}
 				required
 				disabled={!editable || isTranscribing}
@@ -212,6 +212,7 @@
 							<Button
 								onclick={() => send(value)}
 								icon={send_loading ? "fa-spinner" : "fa-paper-plane"}
+								loading={send_loading}
 								disabled={send_loading}
 							/>
 						{/if}
