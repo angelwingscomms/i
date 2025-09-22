@@ -99,10 +99,9 @@
 			formData.append('v', item.price?.toString());
 			formData.append('p', isPrivate ? '.' : '');
 			formData.append('m', item.currency);
-			formData.append(
-				'keep_x',
-				JSON.stringify(currentImages)
-			);
+			const originalImages = init.x || [];
+			const rx = originalImages.filter((img: string) => !currentImages.includes(img));
+			formData.append('rx', JSON.stringify(rx));
 			if (selectedFiles.length > 0) {
 				selectedFiles.forEach((f) => {
 					formData.append('f', f);
@@ -368,7 +367,7 @@
 							}}
 						/>
 						<div
-							class="rounded-2xl rounded-t-none border border-t-0 border-r-0 border-dashed p-8 text-center transition-all"
+							class="rounded-2xl rounded-t-none border border-t-0 border-r-0 border-b-0 rounded-b-none border-none p-8 text-center transition-all"
 							style="border-color: var(--color-theme-3); background: transparent;"
 						>
 							<div class="mb-4">
