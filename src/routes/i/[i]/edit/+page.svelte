@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { toast } from '$lib/util/toast.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import {
 		animate,
 		createTimeline,
@@ -13,15 +13,24 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
-	let item = $state({ ...page.data.i });
-	if (!item.z) item.z = [];
-	let files: FileList | null = $state(null);
+	let init = page.data.i; // should not change
+	let item = $state(page.data.i);
+	let selectedFiles = $state<File[]>([]);
+	let previewUrls = $state<string[]>([]);
 	let isSubmitting = $state(false);
 	let currentImages = $state(item.x || []);
 	let isPrivate = $state(item.p === '.');
 
 	function removeImage(url: string) {
-		currentImages = currentImages.filter((img: string) => img !== url);
+		currentImages = currentImages.filter(
+			(img: string) => img !== url
+		);
+	}
+
+	function removePreview(index: number) {
+		URL.revokeObjectURL(previewUrls[index]);
+		previewUrls = previewUrls.filter((_, i) => i !== index);
+		selectedFiles = selectedFiles.filter((_, i) => i !== index);
 	}
 
 	onMount(() => {
@@ -76,6 +85,10 @@
 		});
 	});
 
+	onDestroy(() => {
+		previewUrls.forEach(url => URL.revokeObjectURL(url));
+	});
+
 	async function submit() {
 		try {
 			isSubmitting = true;
@@ -86,19 +99,42 @@
 			formData.append('v', item.price?.toString());
 			formData.append('p', isPrivate ? '.' : '');
 			formData.append('m', item.currency);
-			formData.append('keep_x', JSON.stringify(currentImages));
-			if (files) {
-				Array.from(files).forEach((f) => {
-					formData.append('files', f);
-					console.log('Frontend: Appending file:', f.name, f.size, f.type);
+			formData.append(
+				'keep_x',
+				JSON.stringify(currentImages)
+			);
+			if (selectedFiles.length > 0) {
+				selectedFiles.forEach((f) => {
+					formData.append('f', f);
+					console.log(
+						'Frontend: Appending file:',
+						f.name,
+						f.size,
+						f.type
+					);
 				});
-				console.log('Frontend: Files selected for upload:', files.length);
+				console.log(
+					'Frontend: Files selected for upload:',
+					selectedFiles.length
+				);
 			} else {
 				console.log('Frontend: No files selected');
 			}
 
-			formData.append('z', JSON.stringify(item_z));
-			console.log('Frontend: Sending POST to /i/${item.i}/edit with FormData entries:', Array.from(formData.entries()).map(([k,v]) => ({k, v: v instanceof File ? `${v.name} (${v.size}B)` : v})));
+			if (item.z !== init.z)
+				formData.append('z', JSON.stringify(item.z));
+			console.log(
+				'Frontend: Sending POST to /i/${item.i}/edit with FormData entries:',
+				Array.from(formData.entries()).map(
+					([k, v]) => ({
+						k,
+						v:
+							v instanceof File
+								? `${v.name} (${v.size}B)`
+								: v
+					})
+				)
+			);
 			const res = await axios.post(
 				`/i/${item.i}/edit`,
 				formData,
@@ -129,7 +165,12 @@
 	}
 
 	async function deleteItem() {
-		if (!confirm('Are you sure you want to delete this item? This action cannot be undone.')) return;
+		if (
+			!confirm(
+				'Are you sure you want to delete this item? This action cannot be undone.'
+			)
+		)
+			return;
 		try {
 			await axios.delete(`/i/${item.i}/edit`);
 			toast.success('item deleted');
@@ -241,15 +282,24 @@
 
 				<!-- Private Checkbox -->
 				<div class="form-field opacity-0">
-					<label class="flex items-center space-x-2 cursor-pointer">
+					<label
+						class="flex cursor-pointer items-center space-x-2"
+					>
 						<input
 							type="checkbox"
 							bind:checked={isPrivate}
-							class="rounded border-gray-300 text-theme-1 focus:ring-theme-1 h-4 w-4"
+							class="text-theme-1 focus:ring-theme-1 h-4 w-4 rounded border-gray-300"
 						/>
-						<span class="text-sm font-medium text-gray-700 dark:text-gray-300">make private</span>
+						<span
+							class="text-sm font-medium text-gray-700 dark:text-gray-300"
+							>make private</span
+						>
 					</label>
-					<p class="mt-1 text-xs text-gray-500 dark:text-gray-400">only you can see this post</p>
+					<p
+						class="mt-1 text-xs text-gray-500 dark:text-gray-400"
+					>
+						only you can see this post
+					</p>
 				</div>
 
 				<!-- Price and Currency Fields -->
@@ -299,13 +349,26 @@
 							multiple
 							accept="image/*"
 							class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-							onchange={(e) =>
-								(files = (
-									e.target as HTMLInputElement
-								).files)}
+							onchange={(e) => {
+								const input = e.target as HTMLInputElement;
+								const inputFiles = input.files;
+								if (inputFiles) {
+									// Clear previous previews
+									previewUrls.forEach(URL.revokeObjectURL);
+									previewUrls = [];
+									selectedFiles = Array.from(inputFiles);
+									// Generate new previews
+									selectedFiles.forEach(file => {
+										const url = URL.createObjectURL(file);
+										previewUrls.push(url);
+									});
+									// Reset input to allow re-selecting same files
+									input.value = '';
+								}
+							}}
 						/>
 						<div
-							class="rounded-2xl border-t-0 border-r-0 border border-dashed rounded-t-none p-8 text-center transition-all"
+							class="rounded-2xl rounded-t-none border border-t-0 border-r-0 border-dashed p-8 text-center transition-all"
 							style="border-color: var(--color-theme-3); background: transparent;"
 						>
 							<div class="mb-4">
@@ -315,8 +378,8 @@
 								class="text-lg font-medium"
 								style="color: var(--color-theme-4);"
 							>
-								{files && files.length > 0
-									? `${files.length} file(s) selected`
+								{selectedFiles.length > 0
+									? `${selectedFiles.length} file(s) selected`
 									: 'Click to upload new images'}
 							</p>
 							<p
@@ -327,6 +390,33 @@
 							</p>
 						</div>
 					</div>
+
+					<!-- New Images Preview -->
+					{#if previewUrls.length > 0}
+						<div class="mt-6">
+							<label class="mb-3 block text-lg font-bold" style="color: var(--color-theme-4);">
+								New Images Preview
+							</label>
+							<div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+								{#each previewUrls as url, index (url)}
+									<div class="relative">
+										<img
+											src={url}
+											alt="preview"
+											class="h-32 w-full rounded-lg object-cover"
+										/>
+										<button
+											onclick={() => removePreview(index)}
+											class="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-all hover:bg-red-600"
+											title="Remove preview"
+										>
+											×
+										</button>
+									</div>
+								{/each}
+							</div>
+						</div>
+					{/if}
 				</div>
 
 				<!-- Current Images -->
@@ -338,40 +428,61 @@
 					>
 						Current Images
 					</label>
-					<div id="current-images" role="region" aria-label="Current Images">
-					{#if currentImages.length > 0}
-					<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-						{#each currentImages as img (img)}
-						<div class="relative">
-							<img
-								src={img}
-								alt="item"
-								class="w-full h-32 object-cover rounded-lg"
-							/>
-							<button
-								onclick={() => removeImage(img)}
-								class="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs transition-all"
-								title="Remove image"
+					<div
+						id="current-images"
+						role="region"
+						aria-label="Current Images"
+					>
+						{#if currentImages.length > 0}
+							<div
+								class="grid grid-cols-2 gap-4 md:grid-cols-3"
 							>
-								×
-							</button>
-						</div>
-						{/each}
-					</div>
-					{:else}
-					<p class="text-gray-500 text-sm">No images currently</p>
-					{/if}
+								{#each currentImages as img (img)}
+									<div class="relative">
+										<img
+											src={img}
+											alt="item"
+											class="h-32 w-full rounded-lg object-cover"
+										/>
+										<button
+											onclick={() => removeImage(img)}
+											class="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-all hover:bg-red-600"
+											title="Remove image"
+										>
+											×
+										</button>
+									</div>
+								{/each}
+							</div>
+						{:else}
+							<p class="text-sm text-gray-500">
+								No images currently
+							</p>
+						{/if}
 					</div>
 
 					<div class="form-field opacity-0">
 						<div class="space-y-2">
-							<h2 class="text-lg font-semibold">assign zones</h2>
+							<h2 class="text-lg font-semibold">
+								assign zones
+							</h2>
 							{#if item.z && item.z.length > 0}
-								<div class="text-sm text-[var(--muted)]">
-									current zones: {item_z.join(', ')}
+								<div
+									class="text-sm text-[var(--muted)]"
+								>
+									current zones:
+									{#each item.z as z}
+										<div>{z.n}</div>
+									{/each}
 								</div>
 							{/if}
-							<ZoneSearch onSelect={(z) => { if (!item_z.includes(z.i)) item_z.push(z.i); submit(); }} />
+							<ZoneSearch
+								onSelect={(z) => {
+									if (!item.z.includes(z.i))
+										item.z.push(z.i);
+									submit();
+								}}
+							/>
 						</div>
 					</div>
 				</div>

@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({
 		i = await create({
 			s: 'i',
 			u: locals.user.i,
-			d: Date.now()
+			d: Date.now(),
 		});
 	} catch (e) {
 		console.error('create item error:', e);
