@@ -1,6 +1,6 @@
-import * as argon2 from '@node-rs/argon2-wasm32-wasi';
 import { fail, redirect } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth';
+import { hashPassword, verifyPassword } from 'worker-password-auth';
 import type {
 	Actions,
 	PageServerLoad
@@ -48,11 +48,8 @@ export const actions: Actions = {
 			return fail(500);
 		}
 
-		const validPassword = await argon2.verify(
-			existingUser.p,
-			password
-		);
-		if (!validPassword) {
+		const isValid = await verifyPassword(password, existingUser.p);
+		if (!isValid) {
 			return fail(400, {
 				message: 'Incorrect password'
 			});
@@ -72,7 +69,9 @@ export const actions: Actions = {
 				createdAt: new Date()
 			});
 			auth.setSessionJwtCookie(event, jwt);
-		} catch {}
+		} catch {
+			
+		}
 
 		const next = event.cookies.get('login_next');
 		if (next && next.startsWith('/')) {
@@ -83,33 +82,33 @@ export const actions: Actions = {
 
 	register: async (event) => {
 		const formData = await event.request.formData();
-		const username = formData.get(
-			'username'
-		) as string;
-		const password = formData.get(
-			'password'
-		) as string;
+		const username = formData.get('username');
+		const password = formData.get('password');
 
-		if (await find_user_by_tag(username as string)) {
+		if (!validateUsername(username)) {
+			return fail(400, {
+				message:
+					'Invalid username (min 3, max 31 characters, alphanumeric only)'
+			});
+		}
+		if (!validatePassword(password)) {
+			return fail(400, {
+				message:
+					'Invalid password (min 6, max 255 characters)'
+			});
+		}
+
+		if (await find_user_by_tag(username)) {
 			return fail(400, { message: 'tag taken' });
 		}
 
-		// if (!validateUsername(username)) {
-		// 	return fail(400, { message: 'Invalid username' });
-		// }
-		// if (!validatePassword(password)) {
-		// 	return fail(400, { message: 'Invalid password' });
-		// }
-		//
-		// console.log('--login')
-
-		const passwordHash = await argon2.hash(password);
+		const passwordHash = await hashPassword(password);
 
 		try {
 			const userId = await create_user(username, {
 				p: passwordHash
 			});
-			// console.log('created user', user)
+			// console.log('created user', userId)
 
 			// console.log('i--', userId)
 			const session = await auth.createSession(

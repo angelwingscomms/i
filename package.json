@@ -79,7 +79,6 @@
 		"@fortawesome/free-regular-svg-icons": "^7.0.1",
 		"@google/genai": "^1.20.0",
 		"@google/generative-ai": "^0.24.1",
-		"@node-rs/argon2-wasm32-wasi": "^2.0.2",
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
 		"@qdrant/js-client-rest": "^1.15.1",
@@ -90,6 +89,7 @@
 		"marked": "^16.3.0",
 		"miniflare": "^4.20250913.0",
 		"nanoid": "^5.1.5",
-		"npyjs": "^1.0.2"
+		"npyjs": "^1.0.2",
+		"worker-password-auth": "^1.0.0"
 	}
 }
