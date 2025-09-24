@@ -10,7 +10,8 @@
 		href,
 		icon,
 		variant = 'primary',
-		active = false
+		active = false,
+		formaction
 	}: {
 		onclick?: (event: MouseEvent) => void;
 		text?: string;
@@ -21,6 +22,7 @@
 		icon?: string;
 		variant?: 'primary' | 'secondary';
 		active?: boolean;
+		formaction?: string;
 	} = $props();
 
 	const effectiveLoading = $derived.by(
@@ -45,7 +47,7 @@
 			<i class="fas fa-spinner fa-spin"></i>
 		{:else}
 			{#if icon}
-				<i class="fas {icon}"></i>
+				<i class={icon?.includes(' ') ? icon : `fas ${icon}`}></i>
 			{/if}
 			{text}
 		{/if}
@@ -56,13 +58,14 @@
 			? 'btn-wide'
 			: ''} {active ? 'border-white text-white' : ''}"
 		{onclick}
+		{formaction}
 		disabled={effectiveLoading || disabled}
 	>
 		{#if effectiveLoading}
 			<i class="fas fa-spinner fa-spin"></i>
 		{:else}
 			{#if icon}
-				<i class="fas {icon}"></i>
+				<i class={icon?.includes(' ') ? icon : `fas ${icon}`}></i>
 			{/if}
 			{text}
 		{/if}

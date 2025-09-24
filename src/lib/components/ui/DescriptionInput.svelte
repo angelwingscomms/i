@@ -2,8 +2,9 @@
 	import axios from 'axios';
 	import Button from '$lib/components/Button.svelte';
 	import { animate } from 'animejs';
+	import type { FullAutoFill } from 'svelte/elements';
 	let {
-		value = $bindable(),
+		value = $bindable(''),
 		editable = true,
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
 		rows = undefined,
@@ -14,15 +15,19 @@
 		voice_typing = true,
 		ontranscribe = () => {},
 		label,
+		id = 'description',
+		name = 'description',
 		ref = $bindable<
 			HTMLInputElement | HTMLTextAreaElement | null
 		>(null),
 		send,
 		send_loading = false,
 		buttons_below = false,
-		buttons = undefined
+		buttons = undefined,
+		autocomplete,
+		...rest
 	}: {
-		value?: string | number;
+		value?: string;
 		editable?: boolean;
 		placeholder?: string;
 		rows?: number;
@@ -33,6 +38,8 @@
 		voice_typing?: boolean;
 		ontranscribe?: (value: string | undefined) => void;
 		label?: string;
+		id?: string;
+		name?: string;
 		ref?:
 			| HTMLInputElement
 			| HTMLTextAreaElement
@@ -46,6 +53,7 @@
 			send?: () => void;
 			loading?: boolean;
 		}[];
+		autocomplete?: FullAutoFill;
 	} = $props();
 
 	// Constants
@@ -118,7 +126,7 @@
 
 	function stopRecording() {
 		if (mediaRecorder && isRecording) {
-			insertPos = ref ? (ref.selectionStart || 0) : (value?.length || 0);
+			insertPos = ref ? (ref.selectionStart || 0) : value.length;
 			mediaRecorder.stop();
 			isRecording = false;
 			isTranscribing = true;
@@ -145,7 +153,7 @@
 			if (response.data.text) {
 				transcribedText = response.data.text;
 				const toInsert = transcribedText + ' ';
-				value = (value || '').slice(0, insertPos) + toInsert + (value || '').slice(insertPos);
+				value = value.slice(0, insertPos) + toInsert + value.slice(insertPos);
 				ontranscribe?.(value);
 			}
 		} catch (error) {
@@ -164,7 +172,7 @@
 
 <div class="description-container">
 	{#if label}
-		<label for="description" class="text-accent"
+		<label for={id} class="text-accent"
 			>{label}</label
 		>
 	{/if}
@@ -175,8 +183,8 @@
 	>
 		{#if rows}
 			<textarea
-				id="description"
-				name="description"
+				id={id}
+				name={name}
 				bind:value
 				class="description-textarea border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
 				{placeholder}
@@ -185,6 +193,7 @@
 				disabled={!editable || isTranscribing}
 				readonly={!editable}
 				bind:this={ref}
+				{...rest}
 			></textarea>
 		{:else}
 			<input
@@ -192,15 +201,18 @@
 				min={min}
 				max={max}
 				step={step}
-				id="description"
-				name="description"
+				id={id}
+				name={name}
 				bind:value
-				class="description-textinput border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
+				autocomplete={autocomplete}
+				
+				class="description-textinput border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden bg-transparent"
 				{placeholder}
 				required
 				disabled={!editable || isTranscribing}
 				readonly={!editable}
 				bind:this={ref}
+				{...rest}
 			/>
 		{/if}
 		<div class="description-controls flex-shrink-0">

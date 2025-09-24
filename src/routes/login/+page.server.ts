@@ -1,6 +1,9 @@
 import { fail, redirect } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth';
-import { hashPassword, verifyPassword } from 'worker-password-auth';
+import {
+	hashPassword,
+	verifyPassword
+} from 'worker-password-auth';
 import type {
 	Actions,
 	PageServerLoad
@@ -48,7 +51,10 @@ export const actions: Actions = {
 			return fail(500);
 		}
 
-		const isValid = await verifyPassword(password, existingUser.p);
+		const isValid = await verifyPassword(
+			password,
+			existingUser.p
+		);
 		if (!isValid) {
 			return fail(400, {
 				message: 'Incorrect password'
@@ -69,8 +75,9 @@ export const actions: Actions = {
 				createdAt: new Date()
 			});
 			auth.setSessionJwtCookie(event, jwt);
-		} catch {
-			
+		} catch (e) {
+			console.error('create session error:', e);
+			return fail(500);
 		}
 
 		const next = event.cookies.get('login_next');
@@ -126,7 +133,10 @@ export const actions: Actions = {
 					createdAt: new Date()
 				});
 				auth.setSessionJwtCookie(event, jwt);
-			} catch {}
+			} catch (e) {
+				console.error('create session error:', e);
+				return fail(500);
+			}
 		} catch {
 			return fail(500, {
 				message: 'An error has occurred'
