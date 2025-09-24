@@ -84,6 +84,8 @@ export const POST: RequestHandler = async ({
 			})) || [];
 	}
 
+	console.log('candidates', candidates);
+
 	// Sort results based on criteria
 	switch (sort) {
 		case 'newest':

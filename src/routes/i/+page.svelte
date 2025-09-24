@@ -20,6 +20,7 @@
 
 	let { data } = $props();
 	let user = $derived(data?.user);
+	let results = $derived(data?.results || [] as Item[]);
 
 	let query = $state('');
 	let kind = $state<0 | 1 | undefined>(undefined);
@@ -27,7 +28,6 @@
 		'relevance' | 'newest' | 'oldest'
 	>('relevance');
 	let searching = $state(false);
-	let results = $state<Item[]>([]);
 	let searchTimeout = $state<NodeJS.Timeout | null>(
 		null
 	);
@@ -52,9 +52,8 @@
 				query = q || '';
 				kind = k;
 				sort = s || 'relevance';
+				search();
 			}
-			// Load initial results
-			search();
 		}
 	});
 

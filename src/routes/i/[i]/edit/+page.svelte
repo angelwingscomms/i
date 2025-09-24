@@ -13,6 +13,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { Item } from '$lib/types/item';
+	import type { Zone } from '$lib/types/zone';
 
 	let init: Item = page.data.i, // should not change
 		item: Item = $state(page.data.i),
@@ -24,6 +25,8 @@
 		currentZones: Zone[] = $state(item.z || []),
 		newZones: Zone[] = $state([]),
 		zonesToRemove: string[] = $state([]);
+
+		// if (!item.a) item.a = ''
 
 	function removeImage(url: string) {
 		item.x = item.x?.filter(
@@ -200,18 +203,6 @@
 <div
 	class="from-bg-primary via-bg-secondary to-bg-tertiary min-h-screen bg-gradient-to-br"
 >
-	<!-- Floating background elements -->
-	<div class="absolute inset-0 overflow-hidden">
-		<div
-			class="absolute -top-20 -left-20 h-64 w-64 animate-[bounce_8s_ease-in-out_infinite] rounded-full bg-[var(--color-theme-1)] opacity-20 blur-[40px]"
-		></div>
-		<div
-			class="absolute -right-20 -bottom-20 h-80 w-80 animate-[bounce_8s_ease-in-out_infinite] rounded-full bg-[var(--color-theme-3)] opacity-15 blur-[40px] [animation-delay:-2s]"
-		></div>
-		<div
-			class="absolute top-1/4 right-1/4 h-32 w-32 animate-[bounce_8s_ease-in-out_infinite] rounded-full bg-[var(--color-theme-3)] opacity-10 blur-[40px] [animation-delay:-4s]"
-		></div>
-	</div>
 
 	<!-- Page Header -->
 	<div
@@ -248,7 +239,6 @@
 						bind:value={item.t}
 						placeholder="Enter a catchy name for your item..."
 						label="Item Name"
-						editable={true}
 					/>
 				</div>
 
@@ -259,7 +249,6 @@
 						placeholder="Describe your item in detail. What makes it special?"
 						rows={5}
 						label="Description"
-						editable={true}
 					/>
 				</div>
 
@@ -479,9 +468,9 @@
 
 					<!-- Current Zones -->
 					<div class="form-field opacity-0">
-						<label class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]">
+						<div class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]">
 							Current Zones
-						</label>
+						</div>
 						{#if currentZones.length > 0}
 							<div class="grid grid-cols-2 gap-4 md:grid-cols-3">
 								{#each currentZones as z (z.i)}
@@ -504,12 +493,12 @@
 							<p class="text-sm text-gray-500">No current zones</p>
 						{/if}
 					</div>
-
+p
 					<!-- New Zones -->
 					<div class="form-field opacity-0">
-						<label class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]">
+						<div class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]">
 							New Zones
-						</label>
+						</div>
 						{#if newZones.length > 0}
 							<div class="grid grid-cols-2 gap-4 md:grid-cols-3">
 								{#each newZones as z (z.i)}

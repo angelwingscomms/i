@@ -4,7 +4,7 @@
 	import { animate } from 'animejs';
 	import type { FullAutoFill } from 'svelte/elements';
 	let {
-		value = $bindable(''),
+		value = $bindable(),
 		editable = true,
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
 		rows = undefined,
@@ -18,8 +18,8 @@
 		id = 'description',
 		name = 'description',
 		ref = $bindable<
-			HTMLInputElement | HTMLTextAreaElement | null
-		>(null),
+			HTMLInputElement | HTMLTextAreaElement | undefined | null
+		>(),
 		send,
 		send_loading = false,
 		buttons_below = false,
@@ -27,7 +27,7 @@
 		autocomplete,
 		...rest
 	}: {
-		value?: string;
+		value?: string | number | undefined;
 		editable?: boolean;
 		placeholder?: string;
 		rows?: number;
@@ -43,7 +43,7 @@
 		ref?:
 			| HTMLInputElement
 			| HTMLTextAreaElement
-			| null;
+			| undefined | null;
 		send?: Function;
 		send_loading?: boolean;
 		buttons_below?: boolean;
@@ -126,7 +126,7 @@
 
 	function stopRecording() {
 		if (mediaRecorder && isRecording) {
-			insertPos = ref ? (ref.selectionStart || 0) : value.length;
+			insertPos = ref ? (ref.selectionStart || 0) : value ? value?.toString().length: 0;
 			mediaRecorder.stop();
 			isRecording = false;
 			isTranscribing = true;
@@ -153,7 +153,7 @@
 			if (response.data.text) {
 				transcribedText = response.data.text;
 				const toInsert = transcribedText + ' ';
-				value = value.slice(0, insertPos) + toInsert + value.slice(insertPos);
+				value = value ? value.toString().slice(0, insertPos) + toInsert + value.toString().slice(insertPos): toInsert;
 				ontranscribe?.(value);
 			}
 		} catch (error) {

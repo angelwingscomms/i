@@ -4,7 +4,6 @@
 	import { fade } from 'svelte/transition';
 	import type { PageProps } from './$types';
 	import Button from '$lib/components/Button.svelte';
-	import type { Item } from '$lib/types/item';
 
 	let { data }: PageProps = $props();
 	let { user, i: item } = data;

@@ -140,17 +140,6 @@ export interface Post {
 	f?: string; // parent post id
 }
 
-export interface Zone {
-	s: 'z'; // tenant for zones
-	i?: string; // zone id
-	n: string; // name
-	l: number; // latitude
-	g: number; // longitude
-	C?: string[]; // children (post/item ids)
-	u?: string; // user id
-	d?: number; // created timestamp
-}
-
 export interface Recording {
 	id: string; // recording id from RealtimeKit
 	// Add fields like start_time, duration if needed for display

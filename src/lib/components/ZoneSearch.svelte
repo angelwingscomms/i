@@ -2,21 +2,31 @@
 	import axios from 'axios';
 	import { toast } from '$lib/util/toast.svelte.js';
 	import DescriptionInput from './ui/DescriptionInput.svelte';
+	import type { Zone } from '$lib/types/zone';
+	type Props = {
+		q?: string;
+		zones?: any[];
+		onSelect?: (zone: any) => void;
+		filter?: Record<string, unknown>;
+		hide_input?: boolean;
+		exclude_i?: string;
+		onSearch?: (q?: string) => void;
+		showPrivateFilter?: boolean;
+	}
+
 	let {
-		q = $bindable(''),
-		zones = $bindable<any[]>([]),
-		loading = $bindable(false),
-		onSelect = undefined as undefined | ((zone: any) => void),
-		filter = $bindable<Record<string, unknown> | undefined>(undefined),
+		q = $bindable(),
+		onSelect = undefined,
+		filter = undefined,
 		hide_input = false,
-		exclude_i = undefined as string | undefined,
+		exclude_i = undefined,
 		onSearch = (_q?: string) => {},
-		showPrivateFilter = $bindable(false)
-	} = $props();
+		showPrivateFilter = false
+	}: Props = $props();
 
-	let showPrivate = $state(false);
+	let showPrivate = $state(false), loading = $state(false), zones: Zone[] = $state([]);
 
-	let inputRef: HTMLInputElement | null = null;
+	let inputRef: HTMLInputElement | null = $state(null);
 	async function search() {
 		loading = true;
 		try {

@@ -13,6 +13,8 @@ export const load: PageServerLoad = async ({
 			s: 'i',
 			u: locals.user.i,
 			d: Date.now(),
+			a: '',
+			
 		});
 	} catch (e) {
 		console.error('create item error:', e);
