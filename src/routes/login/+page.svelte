@@ -13,13 +13,17 @@
 <main class="flex min-h-screen items-center justify-center px-4 py-12">
 	<div class="w-full max-w-md">
 		<div class="mb-8 text-center">
-			<h1 class="text-2xl font-bold tracking-tight text-slate-900">login / register</h1>
+			<h1 class="text-2xl font-bold tracking-tight text-purple-500">login / register</h1>
 			<p class="mt-1 text-sm text-slate-600">sign in with your username or continue with google</p>
 		</div>
 
 		{#if form?.message}
 			<div class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
 				{form.message}
+			</div>
+	
+			<div class="mt-4 text-center">
+				<Button href="/google" text="continue with google" variant="primary" wide icon="fab fa-google" />
 			</div>
 		{/if}
 
@@ -51,9 +55,6 @@
 					<Button text="register" variant="secondary" wide formaction="?/register" />
 				</div>
 
-				<div class="pt-2">
-					<Button href="/google" text="continue with google" variant="primary" wide icon="fab fa-google" />
-				</div>
 			</form>
 		</div>
 	</div>
