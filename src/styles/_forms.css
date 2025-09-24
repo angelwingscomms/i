@@ -80,35 +80,6 @@
 }
 
 /* Description Input Specific */
-@utility description-container {
-	@apply relative flex w-full flex-col items-start gap-1;
-}
-
-@utility description-textarea {
-	@apply textarea w-full;
-}
-
-@utility description-textinput {
-	@apply textinput w-full;
-}
-
-@utility description-controls {
-	@apply mt-2 flex items-center justify-between;
-}
-
-@utility char-count {
-	@apply text-xs;
-	color: var(--text-tertiary);
-}
-
-@utility char-count-over {
-	@apply char-count;
-	color: var(--text-error);
-}
-
-@utility voice-controls {
-	@apply flex gap-2;
-}
 
 @utility voice-btn {
 	@apply btn-sm flex items-center gap-2 transition-all duration-300;

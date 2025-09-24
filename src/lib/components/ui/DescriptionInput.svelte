@@ -170,7 +170,7 @@
 	}
 </script>
 
-<div class="description-container">
+<div class="relative flex w-full flex-col items-start gap-1 rounded-none">
 	{#if label}
 		<label for={id} class="text-accent"
 			>{label}</label
@@ -178,7 +178,7 @@
 	{/if}
 	<div
 		bind:this={container}
-		class="flex w-full {buttons_below ? 'flex-col items-start' : 'flex-row items-start gap-2'} border-l-1"
+		class="flex w-full {buttons_below ? 'flex-col items-start' : 'flex-row items-start gap-2'} border-l-1 rounded-none"
 		style="border-left-color: var(--color-theme-6)"
 	>
 		{#if rows}
@@ -186,7 +186,7 @@
 				id={id}
 				name={name}
 				bind:value
-				class="description-textarea border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
+				class="px-4 py-3 font-light transition-all duration-300 bg-transparent text-[var(--text-primary)] min-h-[120px] rounded-none border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
 				{placeholder}
 				{rows}
 				required
@@ -206,7 +206,7 @@
 				bind:value
 				autocomplete={autocomplete}
 				
-				class="description-textinput border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden bg-transparent"
+				class="px-4 py-3 font-light transition-all duration-300 bg-transparent text-[var(--text-primary)] rounded-none border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden bg-transparent"
 				{placeholder}
 				required
 				disabled={!editable || isTranscribing}
@@ -215,10 +215,10 @@
 				{...rest}
 			/>
 		{/if}
-		<div class="description-controls flex-shrink-0">
+		<div class="mt-2 flex items-center justify-between flex-shrink-0">
 			{#if editable}
 				<div
-					class="voice-controls flex items-center gap-2"
+					class="flex items-center gap-2"
 				>
 					{#if !isRecording && !isTranscribing}
 						{#if voice_typing}

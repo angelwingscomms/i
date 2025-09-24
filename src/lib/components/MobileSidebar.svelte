@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { User } from '$lib/types';
-
+	import { logout } from '$lib/util/logout';
 	let {
 		is_open,
 		user = null,
@@ -173,10 +173,9 @@
 					{user.t}
 				</a>
 				<a
-					href="/logout"
 					class="sidebar-nav-link text-error"
 					style="color: var(--color-theme-5);"
-					onclick={close_sidebar}
+					onclick={async () => { close_sidebar(); await logout(); }}
 				>
 					<i
 						class="fa-solid fa-arrow-right-from-bracket"
