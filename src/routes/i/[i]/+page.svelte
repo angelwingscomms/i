@@ -353,7 +353,7 @@
 						class="text-sm font-medium text-white/70"
 					>
 						{item.a
-							? new Date(item.a).toLocaleDateString(
+							? new Date(item.d).toLocaleDateString(
 									'en-US',
 									{
 										year: 'numeric',

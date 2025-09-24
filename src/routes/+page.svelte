@@ -83,10 +83,10 @@
 	<div class="mx-auto max-w-6xl px-4 flex flex-wrap gap-8 justify-center">
 		<Card
 			themeColor="var(--color-theme-2)"
-			title="discover items & services"
+			title="discover products & services"
 			description="browse nearby user offerings. connect with creators and share yours."
 			href="/i"
-			buttonText="explore items →"
+			buttonText="explore items"
 			image={DiscoverItems}
 			alt="cute 3d render of a shopping bag viewed at 3/4 angle in darker pink-magenta on black background"
 		/>
@@ -96,7 +96,7 @@
 			title="share posts"
 			description="create posts with text/images. engage in community discussions and build connections."
 			href="/posts"
-			buttonText="explore posts →"
+			buttonText="explore posts"
 			image={SharePosts}
 			alt="cute 3d render of a sticky note viewed at 3/4 angle in darker purple-magenta on black background"
 		/>
@@ -106,7 +106,7 @@
 			title="chatrooms"
 			description="build or join group chats on shared interests. connect via text/video anonymously."
 			href="/r"
-			buttonText="explore rooms →"
+			buttonText="explore rooms"
 			image={Chatrooms}
 			alt="cute 3d render of a chat bubble viewed at 3/4 angle in darker pink-magenta on black background"
 		/>
@@ -116,7 +116,7 @@
 			title="video chat"
 			description="live video with filters for age/gender/location. find like-minded people quickly."
 			href="/find"
-			buttonText="try video chat →"
+			buttonText="try video chat"
 			image={VideoChat}
 			alt="cute 3d render of a video camera, bright magenta on black background"
 		/>
@@ -126,7 +126,7 @@
 			title="connect with like minds"
 			description="highlight interests; search nearby for matches. connect anonymously."
 			href="/i/create"
-			buttonText="build profile →"
+			buttonText="build profile"
 			image={BuildProfile}
 			alt="cute 3d renders of three user avatars in different site theme colors, viewed at 3/4 angle on black background"
 		/>

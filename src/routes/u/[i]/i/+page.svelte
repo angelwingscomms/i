@@ -122,9 +122,9 @@
 				class="mb-6 text-6xl font-black sm:text-4xl"
 				style="color: var(--color-theme-4);"
 			>
-				Discover Amazing <span
+				discover amazing <span
 					style="color: var(--color-theme-1);"
-					>Items</span
+					>items</span
 				>
 			</h1>
 			<p
@@ -159,7 +159,7 @@
 								d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
 							/>
 						</svg>
-						Create Item
+						create item
 					</a>
 				</div>
 			{/if}
@@ -194,8 +194,8 @@
 										: '2'});"
 								>
 									{item.k === 0
-										? '🛍️ Product'
-										: '⚡ Service'}
+										? '🛍️ product'
+										: '⚡ service'}
 								</span>
 								<span class="text-xs text-gray-500">
 									{item.a
@@ -234,7 +234,7 @@
 							class="flex items-center justify-between text-sm"
 						>
 							<span class="text-gray-500"
-								>View Details</span
+								>view details</span
 							>
 							<svg
 								width="16"
