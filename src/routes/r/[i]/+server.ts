@@ -179,6 +179,14 @@ export const POST: RequestHandler = async ({
 	// 	} satisfies ChatMessage)
 	// });
 
+	// Fetch sender's avatar for push notification icon
+	let senderAv: string | undefined;
+	if (locals.user?.i) {
+		const sender = await get(locals.user.i, ['av']);
+		senderAv = sender?.av;
+	}
+	const iconUrl = senderAv || '/icons/icon-192.png';
+
 	// Push notifications for private rooms (one-on-one: room._ === '|')
 	try {
 		notif_debug(`Push notify entry for room ${params.i}, message ${m.i}`);
@@ -229,7 +237,7 @@ export const POST: RequestHandler = async ({
 						title: m.a ? 'New message' : `Message from ${sender_name}`,
 						body: m.m,
 						tag: `room-${params.i}`,
-						icon: '/icons/icon-192.png',
+						icon: iconUrl,
 						data: {
 							roomId: params.i,
 							url: `/r/${params.i}?message=${m.i}`,

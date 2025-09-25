@@ -8,17 +8,21 @@
 		editable = true,
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
 		rows = undefined,
-		type = "text",
+		type = 'text',
 		min,
 		max,
 		step,
 		voice_typing = true,
 		ontranscribe = () => {},
+		oninput,
 		label,
 		id = 'description',
 		name = 'description',
 		ref = $bindable<
-			HTMLInputElement | HTMLTextAreaElement | undefined | null
+			| HTMLInputElement
+			| HTMLTextAreaElement
+			| undefined
+			| null
 		>(),
 		send,
 		send_loading = false,
@@ -36,14 +40,24 @@
 		max?: string | number;
 		step?: string | number;
 		voice_typing?: boolean;
-		ontranscribe?: (value: string | undefined) => void;
+		ontranscribe?: (
+			value: string | undefined
+		) => void;
+		oninput?: (
+			event: Event & {
+				currentTarget:
+					| HTMLInputElement
+					| HTMLTextAreaElement;
+			}
+		) => void;
 		label?: string;
 		id?: string;
 		name?: string;
 		ref?:
 			| HTMLInputElement
 			| HTMLTextAreaElement
-			| undefined | null;
+			| undefined
+			| null;
 		send?: Function;
 		send_loading?: boolean;
 		buttons_below?: boolean;
@@ -72,9 +86,12 @@
 		if (!container) return;
 		// ensure left border is present and right is not
 		container.style.borderRightWidth = '0px';
-		container.style.borderLeftWidth = container.style.borderLeftWidth || '2px';
-		container.style.borderStyle = container.style.borderStyle || 'solid';
-		container.style.borderLeftColor = 'rgba(248,137,250,0.3)';
+		container.style.borderLeftWidth =
+			container.style.borderLeftWidth || '2px';
+		container.style.borderStyle =
+			container.style.borderStyle || 'solid';
+		container.style.borderLeftColor =
+			'rgba(248,137,250,0.3)';
 
 		_anim = animate(container, {
 			duration: 1440,
@@ -82,11 +99,16 @@
 			alternate: true,
 			// smooth, soothing fade in/out
 			ease: 'easeInOutSine',
-			borderLeftColor: ['rgba(248,137,250,0.3)', 'rgba(248,137,250,1)']
+			borderLeftColor: [
+				'rgba(248,137,250,0.3)',
+				'rgba(248,137,250,1)'
+			]
 		});
 
 		return () => {
-			try { _anim?.cancel?.(); } catch {}
+			try {
+				_anim?.cancel?.();
+			} catch {}
 		};
 	});
 
@@ -126,7 +148,11 @@
 
 	function stopRecording() {
 		if (mediaRecorder && isRecording) {
-			insertPos = ref ? (ref.selectionStart || 0) : value ? value?.toString().length: 0;
+			insertPos = ref
+				? ref.selectionStart || 0
+				: value
+					? value?.toString().length
+					: 0;
 			mediaRecorder.stop();
 			isRecording = false;
 			isTranscribing = true;
@@ -153,7 +179,11 @@
 			if (response.data.text) {
 				transcribedText = response.data.text;
 				const toInsert = transcribedText + ' ';
-				value = value ? value.toString().slice(0, insertPos) + toInsert + value.toString().slice(insertPos): toInsert;
+				value = value
+					? value.toString().slice(0, insertPos) +
+						toInsert +
+						value.toString().slice(insertPos)
+					: toInsert;
 				ontranscribe?.(value);
 			}
 		} catch (error) {
@@ -162,7 +192,8 @@
 		} finally {
 			isTranscribing = false;
 			if (ref && transcribedText) {
-				const newPos = insertPos + transcribedText.length + 1;
+				const newPos =
+					insertPos + transcribedText.length + 1;
 				ref.setSelectionRange(newPos, newPos);
 				ref.focus();
 			}
@@ -170,56 +201,64 @@
 	}
 </script>
 
-<div class="relative flex w-full flex-col items-start gap-1 rounded-none">
+<div
+	class="relative flex w-full flex-col items-start gap-1 rounded-none"
+>
 	{#if label}
-		<label for={id} class="text-accent"
-			>{label}</label
+		<label for={id} class="text-accent">{label}</label
 		>
 	{/if}
 	<div
 		bind:this={container}
-		class="flex w-full {buttons_below ? 'flex-col items-start' : 'flex-row items-start gap-2'} border-l-1 rounded-none"
+		class="flex w-full {buttons_below
+			? 'flex-col items-start'
+			: 'flex-row items-start gap-2'} rounded-none border-l-1"
 		style="border-left-color: var(--color-theme-6)"
 	>
 		{#if rows}
 			<textarea
-				id={id}
-				name={name}
+				{id}
+				{name}
 				bind:value
-				class="px-4 py-3 font-light transition-all duration-300 bg-transparent text-[var(--text-primary)] min-h-[120px] rounded-none border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
+				class="min-h-[120px] rounded-none border-0 bg-transparent px-4 py-3 font-light text-[var(--text-primary)] transition-all duration-300 placeholder:text-[rgba(248,137,250,0.6)] focus:ring-0 focus:outline-none {buttons_below
+					? ''
+					: 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
 				{placeholder}
 				{rows}
 				required
 				disabled={!editable || isTranscribing}
 				readonly={!editable}
 				bind:this={ref}
+				{oninput}
 				{...rest}
 			></textarea>
 		{:else}
 			<input
-				type={type}
-				min={min}
-				max={max}
-				step={step}
-				id={id}
-				name={name}
+				{type}
+				{min}
+				{max}
+				{step}
+				{id}
+				{name}
 				bind:value
-				autocomplete={autocomplete}
-				
-				class="px-4 py-3 font-light transition-all duration-300 bg-transparent text-[var(--text-primary)] rounded-none border-0 focus:ring-0 focus:outline-none placeholder:text-[rgba(248,137,250,0.6)] {buttons_below ? '' : 'flex-1'} appearance-none [::-webkit-clear-button]:hidden bg-transparent"
+				{autocomplete}
+				class="rounded-none border-0 bg-transparent px-4 py-3 font-light text-[var(--text-primary)] transition-all duration-300 placeholder:text-[rgba(248,137,250,0.6)] focus:ring-0 focus:outline-none {buttons_below
+					? ''
+					: 'flex-1'} appearance-none bg-transparent [::-webkit-clear-button]:hidden"
 				{placeholder}
 				required
 				disabled={!editable || isTranscribing}
 				readonly={!editable}
 				bind:this={ref}
+				{oninput}
 				{...rest}
 			/>
 		{/if}
-		<div class="mt-2 flex items-center justify-between flex-shrink-0">
+		<div
+			class="mt-2 flex flex-shrink-0 items-center justify-between"
+		>
 			{#if editable}
-				<div
-					class="flex items-center gap-2"
-				>
+				<div class="flex items-center gap-2">
 					{#if !isRecording && !isTranscribing}
 						{#if voice_typing}
 							<Button
@@ -230,7 +269,9 @@
 						{#if send}
 							<Button
 								onclick={() => send(value)}
-								icon={send_loading ? "fa-spinner" : "fa-paper-plane"}
+								icon={send_loading
+									? 'fa-spinner'
+									: 'fa-paper-plane'}
 								loading={send_loading}
 								disabled={send_loading}
 							/>
@@ -248,18 +289,18 @@
 						/>
 					{/if}
 				</div>
-			{#if buttons?.length}
-				<div class="flex items-center gap-2">
-					{#each buttons as btn}
-						<Button
-							onclick={btn.send}
-							icon={btn.icon_classes}
-							loading={btn.loading}
-							disabled={btn.loading}
-						/>
-					{/each}
-				</div>
-			{/if}
+				{#if buttons?.length}
+					<div class="flex items-center gap-2">
+						{#each buttons as btn}
+							<Button
+								onclick={btn.send}
+								icon={btn.icon_classes}
+								loading={btn.loading}
+								disabled={btn.loading}
+							/>
+						{/each}
+					</div>
+				{/if}
 			{/if}
 		</div>
 	</div>

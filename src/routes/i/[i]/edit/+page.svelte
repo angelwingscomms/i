@@ -8,6 +8,7 @@
 	} from 'animejs';
 	import Button from '$lib/components/Button.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
+	import Combo from '$lib/components/Combo.svelte';
 	import axios from 'axios';
 	import ZoneSearch from '$lib/components/ZoneSearch.svelte';
 	import { goto } from '$app/navigation';
@@ -25,6 +26,12 @@
 		currentZones: Zone[] = $state(item.z || []),
 		newZones: Zone[] = $state([]),
 		zonesToRemove: string[] = $state([]);
+
+	let currencies = $state([
+		{ value: '₦', label: 'Naira (₦)' },
+		{ value: '₵', label: 'Cedi (₵)' },
+		{ value: '$', label: 'US Dollar ($)' }
+	]);
 
 		// if (!item.a) item.a = ''
 
@@ -173,7 +180,6 @@
 			});
 
 			toast.success('item updated');
-			goto(`/i/${item.i}`);
 		} catch (error) {
 			console.error(error);
 			toast.error('failed to update item');
@@ -321,10 +327,11 @@
 								bind:value={item.p}
 							/>
 						</div>
-						<div class="w-/12">
-							<DescriptionInput
-								placeholder="currency"
+						<div class="w-24">
+							<Combo
+								items={currencies}
 								bind:value={item.c}
+								placeholder="₦"
 							/>
 						</div>
 					</div>
@@ -536,8 +543,9 @@ p
 					</div>
 				</div>
 
+				<div class="pt-4 space-y-0">
 				<!-- Submit Button -->
-				<div class="form-field pt-4 opacity-0">
+					<div class="form-field opacity-0">
 					<Button
 						text={saving
 							? 'Updating...'
@@ -550,14 +558,24 @@ p
 					/>
 				</div>
 
+				<!-- View Item Button -->
+					<div class="form-field opacity-0">
+					<Button
+						text="view item"
+						icon="fa-eye"
+						onclick={() => goto(`/i/${item.i}`)}
+					/>
+				</div>
+
 				<!-- Delete Button -->
-				<div class="form-field pt-4 opacity-0">
+					<div class="form-field opacity-0">
 					<Button
 						text="Delete Item"
 						icon="fa-trash"
 						onclick={deleteItem}
 					/>
 				</div>
+			</div>
 			</div>
 		</div>
 	</div>
