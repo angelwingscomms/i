@@ -1,3 +1,4 @@
+let src/routes/resource_name/[i]/edit/+page.server.ts example also check if r.s === resource_tenant_id, if not error(400, 'this resource is not a {resource type}'). let src/routes/resource_name/[i]/+server.ts delete route use get() to get the resource and check if r.s === resource_tenant_id, if not error(400, 'this resource is not a {resource type}'). also let it just return new Response() on success. same for put route. let src/routes/resource_name/+page.server.ts use get() to get the resource. let src/routes/resource_name/+page.server.ts search for the resources and return them, like src/routes/posts/+page.server.ts
 
 central auth control in hooks.server
 
