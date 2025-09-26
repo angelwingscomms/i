@@ -1,3 +1,4 @@
+import { error } from '@sveltejs/kit';
 import type { Handle } from '@sveltejs/kit';
 import {
 	validateSessionToken,
@@ -11,6 +12,7 @@ import {
 
 import { get as getDb } from '$lib/db';
 import type { User } from '$lib/types';
+import { dev } from '$app/environment';
 
 type MinimalSession = {
 	u: string;
@@ -24,6 +26,10 @@ export const handle: Handle = async ({
 	event,
 	resolve
 }) => {
+	if (event.url.pathname.includes('resource_name') && !dev) {
+		throw error(404, 'Not found');
+	}
+
 	const sessionToken = event.cookies.get(
 		sessionCookieName
 	);

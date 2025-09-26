@@ -1,7 +1,7 @@
 <script lang="ts">
 	type Item = {
 		i: string;
-		t?: string;
+		n?: string;
 		d?: string;
 		k?: number;
 		a?: number;
@@ -26,22 +26,22 @@
 	href={`/i/${item.i}`}
 >
 	<div
-		class="flex items-start gap-4 rounded-3xl p-4 transition-all duration-500 border-l border-t-0 border-r-0 border-b-0 [border-left-color:var(--color-theme-6)] [background:transparent] group-hover:-translate-y-0.5 group-hover:[border-left-color:var(--color-theme-1)]"
+		class="flex h-64 w-64 flex-col items-center justify-center rounded-3xl border-t-0 border-r-0 border-b-0 border-l [border-left-color:var(--color-theme-6)] p-4 transition-all duration-500 [background:transparent] group-hover:-translate-y-0.5 group-hover:[border-left-color:var(--color-theme-1)]"
 	>
 		<!-- Item Image -->
 		<div class="relative flex-shrink-0">
-			<div class="h-16 w-16 overflow-hidden rounded">
+			<div class="h-32 w-32 overflow-hidden rounded">
 				{#if item.x && item.x.length > 0}
 					<img
 						src={item.x[0]}
-						alt={item.t}
+						alt={item.n}
 						class="h-full w-full object-cover"
 					/>
 				{:else}
 					<div
-						class="flex h-full w-full items-center justify-center text-xl font-bold [color:var(--text-primary)] [background:transparent]"
+						class="flex h-full w-full items-center justify-center text-2xl font-bold [color:var(--text-primary)] [background:transparent]"
 					>
-						{item.t?.charAt(0).toUpperCase() ?? '?'}
+						{item.n?.charAt(0).toUpperCase() ?? '?'}
 					</div>
 				{/if}
 			</div>
@@ -59,13 +59,13 @@
 		</div>
 
 		<!-- Item Info -->
-		<div class="min-w-0 flex-1">
+		<div class="min-w-0 flex-1 text-center">
 			<div class="flex items-start justify-between">
 				<div class="min-w-0 flex-1">
 					<h3
 						class="truncate text-lg font-bold [color:var(--color-theme-4)]"
 					>
-						{item.t ?? 'Untitled Item'}
+						{item.n ?? 'Untitled Item'}
 					</h3>
 
 					<!-- Description -->

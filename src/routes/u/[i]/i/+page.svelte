@@ -5,7 +5,7 @@
 		createTimeline,
 		stagger
 	} from 'animejs';
-	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
+	import ItemSearch from '$lib/components/ItemSearch.svelte';
 	import type { PageData } from '../../../i/$types';
 	import type { Item } from '$lib/types/item';
 	import axios from 'axios';
@@ -16,43 +16,31 @@
 	}
 
 	let { data } = $props<{ data: ItemPageData }>();
-	let search_term = $state(''), searching = $state(false);
+	let query = $state(''),
+		searching = $state(false);
 	let filtered_items = $state(data.i);
-	let timeout: NodeJS.Timeout | undefined = undefined;
 
-	const searchItems = async (term: string) => {
-		if (timeout) {
-			clearTimeout(timeout);
+	async function search() {
+		searching = true;
+		if (!query) {
+			filtered_items = data.i;
+			searching = false;
+			return;
 		}
-		searching = true
-		timeout = setTimeout(async () => {
-			if (!term) {
-				filtered_items = data.i;
-				searching = false;
-				return;
-			}
 
-			try {
-				const response = await axios.post('/i', {
-					q: term.trim(),
-					limit: 50
-				});
-				filtered_items = response.data;
-			} catch (error) {
-				console.error(
-					'Error searching items:',
-					error
-				);
-				toast.error('Failed to search items');
-			} finally {
-				searching = false;
-			}
-		}, 2160);
-	};
-
-	$effect(() => {
-		searchItems(search_term);
-	});
+		try {
+			const response = await axios.post('/i', {
+				q: query.trim(),
+				limit: 50
+			});
+			filtered_items = response.data;
+		} catch (error) {
+			console.error('Error searching items:', error);
+			toast.error('Failed to search items');
+		} finally {
+			searching = false;
+		}
+	}
 
 	onMount(() => {
 		// Page entrance animations
@@ -134,12 +122,12 @@
 			</p>
 			<div class="mt-8 flex justify-center">
 				<div class="w-full max-w-md">
-					<DescriptionInput
-						send={searchItems}
-						send_loading={searching}
-						bind:value={search_term}
-						placeholder="search items..."
-						editable={true}
+					<ItemSearch
+						bind:query
+						onsearch={search}
+						{searching}
+						showKind={false}
+						showSort={false}
 					/>
 				</div>
 			</div>
@@ -209,7 +197,7 @@
 								class="mb-2 text-xl font-bold"
 								style="color: var(--color-theme-4);"
 							>
-								{item.t}
+								{item.n}
 							</h3>
 							{#if item.d}
 								<p
@@ -224,7 +212,7 @@
 							<div class="mb-4">
 								<img
 									src={item.x[0]}
-									alt={item.t}
+									alt={item.n}
 									class="h-32 w-full rounded-lg object-cover"
 								/>
 							</div>

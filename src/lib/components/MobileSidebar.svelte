@@ -1,13 +1,12 @@
 <script lang="ts">
-	import type { User } from '$lib/types';
+	import { page } from '$app/state';
+import type { User } from '$lib/types';
 	import { logout } from '$lib/util/logout';
 	let {
 		is_open,
-		user = null,
 		onClose
 	}: {
 		is_open: boolean;
-		user: User | null;
 		onClose?: () => void;
 	} = $props();
 
@@ -51,7 +50,7 @@
 				></i>
 				Home
 			</a>
-			{#if user}
+			{#if page.data.user}
 				<a
 					href="/i"
 					class="sidebar-nav-link"
@@ -161,7 +160,7 @@
 					resume
 				</a>
 				<a
-					href="/u/{user.i}"
+					href="/u/{page.data.user.i}"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-4);"
 					onclick={close_sidebar}
@@ -170,7 +169,7 @@
 						class="far fa-user"
 						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
 					></i>
-					{user.t}
+					{page.data.user.t}
 				</a>
 				<a
 					class="sidebar-nav-link text-error"

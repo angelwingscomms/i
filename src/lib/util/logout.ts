@@ -7,7 +7,6 @@ export async function logout() {
 	try {
 		await axios.post('/api/logout');
 	} catch (e) {
-		console.error(e.response?.data || e.message);
+		console.error('error logging out: ', e);
 	}
-	goto('/');
 }

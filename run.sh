@@ -1,1 +1,0 @@
-cd r; npm run dev && cd ..; npm run dev

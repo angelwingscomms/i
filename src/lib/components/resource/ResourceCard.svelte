@@ -1,12 +1,30 @@
 <script lang="ts">
-	import type { Resource } from '$lib/types/resource';
+	type Resource = {
+		s: 'resource';
+		i: string;
+		n: string;
+		b?: string;
+		p?: string[];
+		u: string;
+		d: number;
+		a?: string;
+		score?: number;
+	};
 
 	let { resource } = $props<{ resource: Resource }>();
+
+	function matchPercent(score?: number) {
+		if (typeof score !== 'number') return null;
+		const pct = Math.max(0, Math.min(1, score)) * 100;
+		return Math.round(pct);
+	}
+
+	const p = matchPercent(resource.score);
 </script>
 
 <a
 	class="group block no-underline"
-	href={`/resource/${resource.n}`}
+	href={`/resource_name/${resource.i}`}
 >
 	<div
 		class="flex items-start gap-4 rounded-3xl border-t-0 border-r-0 border-b-0 border-l [border-left-color:var(--color-theme-6)] p-4 transition-all duration-500 [background:transparent] group-hover:-translate-y-0.5 group-hover:[border-left-color:var(--color-theme-1)]"
@@ -24,7 +42,7 @@
 					<div
 						class="flex h-full w-full items-center justify-center text-xl font-bold [color:var(--text-primary)] [background:transparent]"
 					>
-						{resource.n.charAt(0).toUpperCase() ??
+						{resource.n?.charAt(0).toUpperCase() ??
 							'?'}
 					</div>
 				{/if}
@@ -38,27 +56,36 @@
 					<h3
 						class="truncate text-lg font-bold [color:var(--color-theme-4)]"
 					>
-						{resource.n}
+						{resource.n ?? 'Untitled Resource'}
 					</h3>
 
 					<!-- Description -->
-					{#if resource.a}
+					{#if resource.b}
 						<p
 							class="mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-400"
+						>
+							{resource.b}
+						</p>
+					{/if}
+
+					<!-- Summary -->
+					{#if resource.a}
+						<p
+							class="mt-1 text-xs text-gray-500 italic"
 						>
 							{resource.a}
 						</p>
 					{/if}
-
-					<!-- Body Summary -->
-					{#if resource.b}
-						<p
-							class="mt-1 text-xs text-gray-500 italic"
-						>
-							{resource.b.substring(0, 100)}...
-						</p>
-					{/if}
 				</div>
+
+				<!-- Match Score -->
+				{#if p !== null}
+					<span
+						class="ml-2 flex-shrink-0 rounded px-2 py-1 text-xs font-bold [color:var(--color-theme-1)] [background:transparent]"
+					>
+						{p}%
+					</span>
+				{/if}
 			</div>
 
 			<!-- Date -->

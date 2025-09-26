@@ -26,19 +26,38 @@
 	let open = $state(false);
 	let search = $state('');
 
-	const defaultFilter = (query: string, items: Item[]): Item[] => {
-		if (!query) return [...items].sort((a: Item, b: Item) => a.label.localeCompare(b.label));
+	const defaultFilter = (
+		query: string,
+		items: Item[]
+	): Item[] => {
+		if (!query)
+			return [...items].sort((a: Item, b: Item) =>
+				a.label.localeCompare(b.label)
+			);
 		const fuse = new Fuse(items, {
 			keys: ['label'],
 			threshold: 0.3
 		});
 		const results = fuse.search(query);
-		return results.map(r => r.item).sort((a: Item, b: Item) => a.label.localeCompare(b.label));
+		return results
+			.map((r) => r.item)
+			.sort((a: Item, b: Item) =>
+				a.label.localeCompare(b.label)
+			);
 	};
 
-	let filteredItems = $derived(customFilter ? customFilter(search, items) : defaultFilter(search, items));
+	let filteredItems = $derived(
+		customFilter
+			? customFilter(search, items)
+			: defaultFilter(search, items)
+	);
 
-	let displayValue = $derived(value ? items.find((i: Item) => i.value === value)?.value || '' : '');
+	let displayValue = $derived(
+		value
+			? items.find((i: Item) => i.value === value)
+					?.value || ''
+			: ''
+	);
 
 	$effect(() => {
 		search = displayValue;
@@ -62,7 +81,7 @@
 	}
 
 	function handleFocus(e: FocusEvent) {
-		e.preventDefault()
+		e.preventDefault();
 		open = true;
 	}
 
@@ -73,28 +92,29 @@
 </script>
 
 <div
-	use:outside_click
-	outsideclick={() => (open = false)}
-	class="combo-container w-full relative"
+	use:outside_click={() => (open = false)}
+	class="combo-container relative w-full"
 >
 	{#if label}
-		<label class="text-accent block mb-1">{label}</label>
+		<label class="text-accent mb-1 block"
+			>{label}</label
+		>
 	{/if}
-	<div class="flex w-full relative">
+	<div class="relative flex w-full">
 		<DescriptionInput
 			bind:value={search}
 			oninput={onInput}
 			onfocus={handleFocus}
 			onclick={onInputClick}
 			onmousedown={handleFocus}
-			placeholder={placeholder}
+			{placeholder}
 			aria-haspopup="listbox"
 			aria-expanded={open}
 			buttons_below={false}
 		/>
 		{#if open}
 			<svg
-				class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+				class="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 transform text-gray-400"
 				width="10"
 				height="6"
 				viewBox="0 0 10 6"
@@ -114,14 +134,17 @@
 	{#if open && filteredItems.length > 0}
 		<div
 			role="listbox"
-			class="combo-panel absolute z-50 w-full mt-1 bg-transparent border border-gray-300 rounded-md shadow-lg animate-fade-in max-h-60 overflow-auto"
+			class="combo-panel animate-fade-in pointer-events-auto absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-300 bg-white/80 shadow-lg backdrop-blur-sm"
 		>
 			{#each filteredItems as item}
 				<button
 					type="button"
 					role="option"
 					aria-selected={value === item.value}
-					class="combo-item w-full text-left px-4 py-2 hover:bg-gray-100/50 flex items-center {value === item.value ? 'bg-gray-100/50' : ''}"
+					class="combo-item flex w-full items-center px-4 py-2 text-left hover:bg-gray-100/50 {value ===
+					item.value
+						? 'bg-gray-100/50'
+						: ''}"
 					onclick={() => handleSelect(item.value)}
 				>
 					{#if item.icon}
@@ -132,7 +155,9 @@
 			{/each}
 		</div>
 	{:else if open && search && filteredItems.length === 0}
-		<div class="combo-panel absolute z-50 w-full mt-1 bg-transparent border border-gray-300 rounded-md shadow-lg animate-fade-in p-2 text-gray-500">
+		<div
+			class="combo-panel animate-fade-in pointer-events-auto absolute z-50 mt-1 w-full rounded-md border border-gray-300 bg-white/80 p-2 text-gray-500 shadow-lg backdrop-blur-sm"
+		>
 			No matching items
 		</div>
 	{/if}
@@ -143,7 +168,13 @@
 		animation: fadeIn 0.2s ease-in;
 	}
 	@keyframes fadeIn {
-		from { opacity: 0; transform: translateY(-10px); }
-		to { opacity: 1; transform: translateY(0); }
+		from {
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 </style>

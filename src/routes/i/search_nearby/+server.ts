@@ -81,8 +81,8 @@ export const POST: RequestHandler = async ({
 			...it,
 			dist:
 				typeof it.l === 'number' &&
-				typeof it.n === 'number'
-					? haversine_m(lat, lon, it.l, it.n)
+				typeof it.g === 'number'
+					? haversine_m(lat, lon, it.l, it.g)
 					: Number.MAX_VALUE
 		}))
 		.filter((it) => it.dist <= radius_m)

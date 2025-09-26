@@ -4,8 +4,7 @@
 	import { onMount } from 'svelte';
 	import ItemResultsList from '$lib/components/ItemResultsList.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import Select from '$lib/components/Select.svelte';
-	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
+	import ItemSearch from '$lib/components/ItemSearch.svelte';
 
 	type Item = {
 		i: string;
@@ -20,7 +19,9 @@
 
 	let { data } = $props();
 	let user = $derived(data?.user);
-	let results = $derived(data?.results || [] as Item[]);
+	let results = $derived(
+		data?.results || ([] as Item[])
+	);
 
 	let query = $state('');
 	let kind = $state<0 | 1 | undefined>(undefined);
@@ -140,113 +141,13 @@
 	<!-- Search Form -->
 	<div class="mx-auto max-w-4xl px-4 py-8">
 		<div class="mb-8 rounded-lg p-6 shadow-lg">
-			<div
-				class="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
-			>
-				<!-- Search Query -->
-				<div class="md:col-span-2">
-					<label
-						for="query"
-						class="text-theme-4 mb-2 block text-sm font-medium"
-					>
-						Search
-					</label>
-					<div class="relative">
-						<DescriptionInput
-							bind:value={query}
-							placeholder="search for items..."
-							send={search}
-							send_loading={searching}
-							label=""
-							voice_typing={true}
-							ontranscribe={() => {}}
-						/>
-						{#if query}
-							<button
-								onclick={clearSearch}
-								class="absolute top-2 right-2 z-10 rounded border-t border-r [border-color:var(--color-theme-1)] text-gray-400 hover:text-gray-600"
-								aria-label="Clear search"
-							>
-								<svg
-									width="20"
-									height="20"
-									viewBox="0 0 24 24"
-									fill="currentColor"
-									aria-hidden="true"
-								>
-									<path
-										d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-									/>
-								</svg>
-							</button>
-						{/if}
-					</div>
-				</div>
-
-				<!-- Item Type -->
-				<!-- <div>
-					<label
-						for="kind"
-						class="text-theme-4 mb-2 block text-sm font-medium"
-					>
-						type
-					</label>
-					<Select
-						options={[
-							{ value: '', label: 'all items' },
-							{
-								value: '0',
-								label: 'products',
-								icon: 'fa-shopping-bag'
-							},
-							{
-								value: '1',
-								label: 'services',
-								icon: 'fa-wrench'
-							}
-						]}
-						value={kind === undefined
-							? ''
-							: String(kind)}
-						placeholder="select type"
-						onclick={(v) => {
-							kind = v
-								? (Number(v) as 0 | 1)
-								: undefined;
-							search();
-						}}
-					/>
-				</div> -->
-
-				<!-- Sort -->
-				<!-- <div>
-					<label
-						for="sort"
-						class="text-theme-4 mb-2 block text-sm font-medium"
-					>
-						sort by
-					</label>
-					<Select
-						options={[
-							{
-								value: 'relevance',
-								label: 'relevance'
-							},
-							{ value: 'newest', label: 'newest' },
-							{ value: 'oldest', label: 'oldest' }
-						]}
-						value={sort}
-						placeholder="select sort"
-						onclick={(v) => {
-							sort = v as
-								| 'relevance'
-								| 'newest'
-								| 'oldest';
-							search();
-						}}
-					/>
-				</div> -->
-			</div>
+			<ItemSearch
+				bind:query
+				bind:kind
+				bind:sort
+				onsearch={search}
+				{searching}
+			/>
 		</div>
 
 		<!-- Results -->

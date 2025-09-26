@@ -4,7 +4,7 @@ import { collection } from '$lib/constants';
 
 type SearchItem = {
 	i: string;
-	t?: string;
+	n?: string;
 	d?: string;
 	k?: number;
 	a?: number;
@@ -13,28 +13,36 @@ type SearchItem = {
 	score?: number;
 };
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({
+	locals
+}) => {
 	const user = locals.user;
 
 	let candidates: SearchItem[] = [];
 
-	const scrollResults = await qdrant.scroll(collection, {
-		filter: {
-			must: [
-				{ key: 's', match: { value: 'i' } },
-			],
-			must_not: {
-				is_null: { key: 't' }
+	try {
+		const scrollResults = await qdrant.scroll(
+			collection,
+			{
+				filter: {
+					must: [{ key: 's', match: { value: 'i' } }],
+					must_not: {
+						is_null: { key: 'n' }
+					}
+				},
+				with_payload: ['n', 'd', 'k', 'a', 'q', 'x'],
+				limit: 100
 			}
-		},
-		with_payload: ['t', 'd', 'k', 'a', 'q', 'x'],
-		limit: 100
-	});
+		);
 
-	candidates = scrollResults.points?.map((p: any) => ({
-		i: p.id as string,
-		...p.payload
-	})) || [];
+		candidates =
+			scrollResults.points?.map((p) => ({
+				i: p.id as string,
+				...p.payload
+			})) || [];
+	} catch {
+		candidates = [];
+	}
 
 	candidates.sort((a, b) => (b.a || 0) - (a.a || 0));
 

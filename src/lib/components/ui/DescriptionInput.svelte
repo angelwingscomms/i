@@ -15,6 +15,9 @@
 		voice_typing = true,
 		ontranscribe = () => {},
 		oninput,
+		onfocus,
+		onclick,
+		onmousedown,
 		label,
 		id = 'description',
 		name = 'description',
@@ -50,6 +53,11 @@
 					| HTMLTextAreaElement;
 			}
 		) => void;
+		onfocus?: (event: FocusEvent) => void;
+		onclick?: (event: MouseEvent) => void;
+		onmousedown?: (event: MouseEvent) => void;
+		'aria-haspopup'?: 'listbox' | undefined;
+		'aria-expanded'?: boolean;
 		label?: string;
 		id?: string;
 		name?: string;

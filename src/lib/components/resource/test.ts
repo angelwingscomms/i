@@ -3,80 +3,93 @@ import {
 	render,
 	screen
 } from '@testing-library/svelte';
-import ResourceSearch from './ResourceSearch.svelte';
-import type { Resource } from '$lib/types/resource';
+import ResourceCard from './ResourceCard.svelte';
 
-describe('ResourceSearch', () => {
-	const mockResources: Resource[] = [
-		{
-			n: 'Test Resource 1',
-			b: 'This is the body of the first resource',
-			p: ['image1.jpg', 'image2.jpg'],
-			u: 'user1',
-			d: Date.now(),
-			a: 'About the first resource'
-		},
-		{
-			n: 'Test Resource 2',
-			b: 'This is the body of the second resource',
-			p: [],
-			u: 'user2',
-			d: Date.now() - 86400000,
-			a: 'About the second resource'
-		}
-	];
+describe('ResourceCard', () => {
+	const mockResource = {
+		s: 'resource' as const,
+		i: 'test-id',
+		n: 'Test Resource',
+		b: 'This is a test resource description',
+		p: [
+			'https://example.com/image1.jpg',
+			'https://example.com/image2.jpg'
+		],
+		u: 'user-id',
+		d: Date.now(),
+		a: 'Test summary'
+	};
 
-	it('renders resources correctly', () => {
-		render(ResourceSearch, {
-			results: mockResources
+	it('renders resource name', () => {
+		render(ResourceCard, {
+			props: { resource: mockResource }
 		});
-
 		expect(
-			screen.getByText('Test Resource 1')
-		).toBeInTheDocument();
-		expect(
-			screen.getByText('Test Resource 2')
-		).toBeInTheDocument();
-		expect(
-			screen.getByText('About the first resource')
-		).toBeInTheDocument();
-		expect(
-			screen.getByText('About the second resource')
+			screen.getByText('Test Resource')
 		).toBeInTheDocument();
 	});
 
-	it('displays no resources message when empty', () => {
-		render(ResourceSearch, { results: [] });
-
-		expect(
-			screen.getByText('No resources found')
-		).toBeInTheDocument();
+	it('renders resource description', () => {
+		render(ResourceCard, {
+			props: { resource: mockResource }
+		});
 		expect(
 			screen.getByText(
-				'Try adjusting your search terms or filters'
+				'This is a test resource description'
 			)
 		).toBeInTheDocument();
 	});
 
-	it('renders resource links correctly', () => {
-		render(ResourceSearch, {
-			results: mockResources
+	it('renders resource summary', () => {
+		render(ResourceCard, {
+			props: { resource: mockResource }
 		});
+		expect(
+			screen.getByText('Test summary')
+		).toBeInTheDocument();
+	});
 
-		const link1 = screen.getByRole('link', {
-			name: /Test Resource 1/
+	it('displays first image when images are present', () => {
+		render(ResourceCard, {
+			props: { resource: mockResource }
 		});
-		const link2 = screen.getByRole('link', {
-			name: /Test Resource 2/
-		});
+		const img = screen.getByAltText('Test Resource');
+		expect(img).toBeInTheDocument();
+		expect(img).toHaveAttribute(
+			'src',
+			'https://example.com/image1.jpg'
+		);
+	});
 
-		expect(link1).toHaveAttribute(
+	it('displays fallback when no images', () => {
+		const resourceWithoutImages = {
+			...mockResource,
+			p: undefined
+		};
+		render(ResourceCard, {
+			props: { resource: resourceWithoutImages }
+		});
+		expect(screen.getByText('T')).toBeInTheDocument(); // First letter of name
+	});
+
+	it('links to resource detail page', () => {
+		render(ResourceCard, {
+			props: { resource: mockResource }
+		});
+		const link = screen.getByRole('link');
+		expect(link).toHaveAttribute(
 			'href',
-			'/resource/Test Resource 1'
+			'/resource_name/test-id'
 		);
-		expect(link2).toHaveAttribute(
-			'href',
-			'/resource/Test Resource 2'
+	});
+
+	it('displays formatted date', () => {
+		render(ResourceCard, {
+			props: { resource: mockResource }
+		});
+		const dateElement = screen.getByText(
+			new Date(mockResource.d).toLocaleDateString()
 		);
+		expect(dateElement).toBeInTheDocument();
 	});
 });

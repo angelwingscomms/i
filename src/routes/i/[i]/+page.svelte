@@ -11,7 +11,6 @@
 	let selectedImageIndex = $state(0);
 	let showImageModal = $state(false);
 
-
 	onMount(() => {
 		// Add smooth scroll behavior for anchor links
 		document
@@ -85,7 +84,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
-	<title>{item.t || 'Item Details'} - Apexlinks</title
+	<title>{item.n || 'Item Details'} - Apexlinks</title
 	>
 	{#if item.a}
 		<meta name="about this item" content={item.a} />
@@ -143,7 +142,7 @@
 							>
 								<img
 									src={item.x[selectedImageIndex]}
-									alt={item.t}
+									alt={item.n}
 									class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
 								/>
 								<!-- Subtle overlay on hover -->
@@ -177,7 +176,7 @@
 									>
 										<img
 											src={image}
-											alt={`${item.t} ${index + 1}`}
+											alt={`${item.n} ${index + 1}`}
 											class="h-full w-full object-cover"
 										/>
 									</button>
@@ -220,7 +219,7 @@
 						<h1
 							class="mb-6 text-4xl leading-tight font-bold tracking-tight text-white lg:text-6xl"
 						>
-							{item.t}
+							{item.n}
 						</h1>
 
 						{#if item.q}
@@ -285,7 +284,7 @@
 								onclick={() =>
 									navigator
 										.share?.({
-											title: item.t,
+											title: item.n,
 											text: item.a || '',
 											url: window.location.href
 										})
@@ -368,7 +367,7 @@
 				<h1
 					class="mb-6 text-5xl leading-tight font-bold tracking-tight text-white lg:text-6xl"
 				>
-					{item.t}
+					{item.n}
 				</h1>
 
 				{#if item.q}
@@ -432,7 +431,7 @@
 						onclick={() =>
 							navigator
 								.share?.({
-									title: item.t,
+									title: item.n,
 									text: item.a || '',
 									url: window.location.href
 								})
@@ -822,7 +821,7 @@
 			>
 				<!-- Modal Title (hidden but for accessibility) -->
 				<h2 id="modal-title" class="sr-only">
-					Image Gallery - {item.t}
+					Image Gallery - {item.n}
 				</h2>
 
 				<!-- Close button -->
@@ -841,7 +840,7 @@
 					>
 						<img
 							src={item.x[selectedImageIndex]}
-							alt={`${item.t} ${selectedImageIndex + 1}`}
+							alt={`${item.n} ${selectedImageIndex + 1}`}
 							class="max-h-[75vh] max-w-full object-contain transition-transform duration-500"
 							style="display: block;"
 						/>
@@ -904,7 +903,7 @@
 						<h3
 							class="text-lg font-semibold text-white"
 						>
-							{item.t}
+							{item.n}
 						</h3>
 					</div>
 
@@ -915,7 +914,7 @@
 							e.stopPropagation();
 							navigator
 								.share?.({
-									title: item.t,
+									title: item.n,
 									text: item.a || '',
 									url: window.location.href
 								})
@@ -948,7 +947,7 @@
 							>
 								<img
 									src={image}
-									alt={`${item.t} ${index + 1}`}
+									alt={`${item.n} ${index + 1}`}
 									class="h-full w-full object-cover"
 								/>
 							</button>

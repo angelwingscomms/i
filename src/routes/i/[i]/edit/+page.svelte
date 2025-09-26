@@ -33,7 +33,7 @@
 		{ value: '$', label: 'US Dollar ($)' }
 	]);
 
-		// if (!item.a) item.a = ''
+	// if (!item.a) item.a = ''
 
 	function removeImage(url: string) {
 		item.x = item.x?.filter(
@@ -114,10 +114,14 @@
 		try {
 			saving = true;
 			const formData = new FormData();
-			formData.append('t', item.t);
+			formData.append('n', item.n);
 			if (item.a) formData.append('a', item.a);
-			formData.append('k', item.k ? item.k.toString() : '0');
-			if (item.p) formData.append('p', item.p.toString());
+			formData.append(
+				'k',
+				item.k ? item.k.toString() : '0'
+			);
+			if (item.p)
+				formData.append('p', item.p.toString());
 			formData.append('p', item.p ? '.' : '');
 			formData.append('m', item.c);
 			formData.append(
@@ -143,10 +147,16 @@
 			}
 
 			if (zonesToRemove.length > 0) {
-				formData.append('zr', JSON.stringify(zonesToRemove));
+				formData.append(
+					'zr',
+					JSON.stringify(zonesToRemove)
+				);
 			}
 			if (newZones.length > 0) {
-				formData.append('z', JSON.stringify(newZones.map(z => z.i)));
+				formData.append(
+					'z',
+					JSON.stringify(newZones.map((z) => z.i))
+				);
 			}
 			console.log(
 				'Frontend: Sending POST to /i/${item.i}/edit with FormData entries:',
@@ -209,7 +219,6 @@
 <div
 	class="from-bg-primary via-bg-secondary to-bg-tertiary min-h-screen bg-gradient-to-br"
 >
-
 	<!-- Page Header -->
 	<div
 		class="page-header relative z-10 px-4 py-16 text-center opacity-0 sm:py-12"
@@ -242,7 +251,7 @@
 				<!-- Name Field -->
 				<div class="form-field opacity-0">
 					<DescriptionInput
-						bind:value={item.t}
+						bind:value={item.n}
 						placeholder="Enter a catchy name for your item..."
 						label="Item Name"
 					/>
@@ -475,18 +484,29 @@
 
 					<!-- Current Zones -->
 					<div class="form-field opacity-0">
-						<div class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]">
+						<div
+							class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]"
+						>
 							Current Zones
 						</div>
 						{#if currentZones.length > 0}
-							<div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+							<div
+								class="grid grid-cols-2 gap-4 md:grid-cols-3"
+							>
 								{#each currentZones as z (z.i)}
-									<div class="relative p-4 border rounded-lg">
-										<span class="block text-sm">{z.n}</span>
+									<div
+										class="relative rounded-lg border p-4"
+									>
+										<span class="block text-sm"
+											>{z.n}</span
+										>
 										<button
 											onclick={() => {
 												zonesToRemove.push(z.i);
-												currentZones = currentZones.filter(zz => zz.i !== z.i);
+												currentZones =
+													currentZones.filter(
+														(zz) => zz.i !== z.i
+													);
 											}}
 											class="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-all hover:bg-red-600"
 											title="Remove zone"
@@ -497,23 +517,35 @@
 								{/each}
 							</div>
 						{:else}
-							<p class="text-sm text-gray-500">No current zones</p>
+							<p class="text-sm text-gray-500">
+								No current zones
+							</p>
 						{/if}
 					</div>
-p
+					p
 					<!-- New Zones -->
 					<div class="form-field opacity-0">
-						<div class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]">
+						<div
+							class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]"
+						>
 							New Zones
 						</div>
 						{#if newZones.length > 0}
-							<div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+							<div
+								class="grid grid-cols-2 gap-4 md:grid-cols-3"
+							>
 								{#each newZones as z (z.i)}
-									<div class="relative p-4 border rounded-lg">
-										<span class="block text-sm">{z.n}</span>
+									<div
+										class="relative rounded-lg border p-4"
+									>
+										<span class="block text-sm"
+											>{z.n}</span
+										>
 										<button
 											onclick={() => {
-												newZones = newZones.filter(zz => zz.i !== z.i);
+												newZones = newZones.filter(
+													(zz) => zz.i !== z.i
+												);
 											}}
 											class="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-all hover:bg-red-600"
 											title="Remove new zone"
@@ -529,12 +561,18 @@ p
 					<!-- Zone Search -->
 					<div class="form-field opacity-0">
 						<div class="space-y-2">
-							<h2 class="text-lg font-semibold text-[var(--color-theme-4)]">
+							<h2
+								class="text-lg font-semibold text-[var(--color-theme-4)]"
+							>
 								Add New Zones
 							</h2>
 							<ZoneSearch
 								onSelect={(z) => {
-									if (!newZones.some(zz => zz.i === z.i)) {
+									if (
+										!newZones.some(
+											(zz) => zz.i === z.i
+										)
+									) {
 										newZones.push(z);
 									}
 								}}
@@ -543,39 +581,39 @@ p
 					</div>
 				</div>
 
-				<div class="pt-4 space-y-0">
-				<!-- Submit Button -->
+				<div class="space-y-0 pt-4">
+					<!-- Submit Button -->
 					<div class="form-field opacity-0">
-					<Button
-						text={saving
-							? 'Updating...'
-							: 'Update Item'}
-						icon={saving
-							? 'fa-spinner fa-spin'
-							: 'fa-save'}
-						onclick={save}
-						disabled={saving}
-					/>
-				</div>
+						<Button
+							text={saving
+								? 'Updating...'
+								: 'Update Item'}
+							icon={saving
+								? 'fa-spinner fa-spin'
+								: 'fa-save'}
+							onclick={save}
+							disabled={saving}
+						/>
+					</div>
 
-				<!-- View Item Button -->
+					<!-- View Item Button -->
 					<div class="form-field opacity-0">
-					<Button
-						text="view item"
-						icon="fa-eye"
-						onclick={() => goto(`/i/${item.i}`)}
-					/>
-				</div>
+						<Button
+							text="view item"
+							icon="fa-eye"
+							onclick={() => goto(`/i/${item.i}`)}
+						/>
+					</div>
 
-				<!-- Delete Button -->
+					<!-- Delete Button -->
 					<div class="form-field opacity-0">
-					<Button
-						text="Delete Item"
-						icon="fa-trash"
-						onclick={deleteItem}
-					/>
+						<Button
+							text="Delete Item"
+							icon="fa-trash"
+							onclick={deleteItem}
+						/>
+					</div>
 				</div>
-			</div>
 			</div>
 		</div>
 	</div>
