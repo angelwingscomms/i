@@ -27,6 +27,8 @@
 		newZones: Zone[] = $state([]),
 		zonesToRemove: string[] = $state([]);
 
+		console.log(item, 'item')
+
 	let currencies = $state([
 		{ value: '₦', label: 'Naira (₦)' },
 		{ value: '₵', label: 'Cedi (₵)' },

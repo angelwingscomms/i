@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { GEMINI } from '$env/static/private';
+import { GROQ_API_KEY } from '$env/static/private';
 import axios from 'axios';
 
 export const POST: RequestHandler = async ({
@@ -25,39 +25,27 @@ export const POST: RequestHandler = async ({
 		// Get the mime type
 		const mimeType = audioFile.type || 'audio/webm';
 
-		// Call Gemini API for speech-to-text
+		// Call Groq Whisper API for speech-to-text
+		const formDataForGroq = new FormData();
+		formDataForGroq.append('file', audioFile);
+		formDataForGroq.append(
+			'model',
+			'whisper-large-v3-turbo'
+		);
+		formDataForGroq.append('response_format', 'json');
+
 		const response = await axios.post(
-			'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
-			{
-				contents: [
-					{
-						parts: [
-							{
-								text: 'You are a skilled scribe listening to someone dictate text. Listen carefully and transcribe what they mean to say, not just what they say. Intelligently handle natural speech patterns like pauses, corrections, backtracking, and second thoughts. Clean up filler words, false starts, and self-corrections. Return only the refined, clear transcription without any commentary.'
-							},
-							{
-								inline_data: {
-									mime_type: mimeType,
-									data: base64Audio
-								}
-							}
-						]
-					}
-				]
-			},
+			'https://api.groq.com/openai/v1/audio/transcriptions',
+			formDataForGroq,
 			{
 				headers: {
-					'Content-Type': 'application/json'
-				},
-				params: {
-					key: GEMINI
+					Authorization: `Bearer ${GROQ_API_KEY}`,
+					'Content-Type': 'multipart/form-data'
 				}
 			}
 		);
 
-		const transcribedText =
-			response.data.candidates?.[0]?.content
-				?.parts?.[0]?.text;
+		const transcribedText = response.data.text;
 
 		if (!transcribedText) {
 			return json(

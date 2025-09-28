@@ -30,12 +30,12 @@
 	>
 		<!-- Item Image -->
 		<div class="relative flex-shrink-0">
-			<div class="h-32 w-32 overflow-hidden rounded">
+			<div class="h-40 w-40 overflow-hidden rounded">
 				{#if item.x && item.x.length > 0}
 					<img
 						src={item.x[0]}
 						alt={item.n}
-						class="h-full w-full object-cover"
+						class="h-full w-full object-contain"
 					/>
 				{:else}
 					<div
@@ -53,7 +53,11 @@
 						? '1'
 						: '2'})] [color:white]"
 				>
-					{item.k === 0 ? '🛍️' : '⚡'}
+					<i
+						class="fas {item.k === 0
+							? 'fa-shopping-bag'
+							: 'fa-wrench'}"
+					></i>
 				</span>
 			</div>
 		</div>
@@ -98,9 +102,9 @@
 			</div>
 
 			<!-- Date -->
-			{#if item.a}
+			{#if item.d}
 				<div class="mt-2 text-xs text-gray-500">
-					{new Date(item.a).toLocaleDateString()}
+					{new Date(item.d).toLocaleDateString()}
 				</div>
 			{/if}
 		</div>

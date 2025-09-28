@@ -3,7 +3,6 @@
 	import axios from 'axios';
 	import { toast } from '$lib/util/toast.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
-	import Button from '$lib/components/Button.svelte';
 	import type { User } from '$lib/types';
 
 	let colors = $state<string[]>([]);
@@ -48,7 +47,7 @@
 	async function editWithAI() {
 		loading = true;
 		try {
-			const prompt = `${aiDesc.trim()}\n\nCurrent colors: ${colors.map(c => '#' + c).join(', ')}`;
+			const prompt = `${aiDesc.trim()}\n\nCurrent colors: ${colors.map((c) => '#' + c).join(', ')}`;
 			const res = await axios.post('/color', {
 				d: prompt
 			});
@@ -106,13 +105,8 @@
 				placeholder="describe the color theme you'd like"
 				bind:value={aiDesc}
 				editable={true}
-			/>
-			<Button
-				onclick={editWithAI}
-				{loading}
-				text={loading
-					? 'Generating...'
-					: 'Generate Colors'}
+				send={editWithAI}
+				send_loading={loading}
 			/>
 		</div>
 	{/if}

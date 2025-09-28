@@ -134,10 +134,14 @@
 			};
 
 			mediaRecorder.onstop = async () => {
-				const audioBlob = new Blob(audioChunks, {
-					type: 'audio/webm'
-				});
-				await transcribeAudio(audioBlob);
+				const audioFile = new File(
+					audioChunks,
+					'audio.webm',
+					{
+						type: 'audio/webm'
+					}
+				);
+				await transcribeAudio(audioFile);
 				stream
 					.getTracks()
 					.forEach((track) => track.stop());
@@ -167,12 +171,12 @@
 		}
 	}
 
-	async function transcribeAudio(audioBlob: Blob) {
+	async function transcribeAudio(audioFile: File) {
 		isTranscribing = true;
 		let transcribedText = '';
 		try {
 			const formData = new FormData();
-			formData.append('audio', audioBlob);
+			formData.append('audio', audioFile);
 
 			const response = await axios.post(
 				'/api/transcribe',

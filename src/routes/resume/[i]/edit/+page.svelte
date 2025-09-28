@@ -69,20 +69,17 @@
 				instructions
 			);
 			if (res.statusText === 'OK') {
-				toast.success('Resume updated with AI');
-				resume = {
-					...res.data.resume,
-					h: res.data.resume.h || ''
-				};
+				resume = res.data;
 				instructions = '';
+				toast.success('Resume updated');
 			} else {
 				toast.error(
 					res.data || 'Failed to update resume'
 				);
 			}
+			loading = false;
 		} catch (e) {
 			toast.error('An error occurred');
-		} finally {
 			loading = false;
 		}
 	}
@@ -121,14 +118,7 @@
 				label="AI Edit Instructions"
 				editable={true}
 				send={editWithGemini}
-			/>
-			<Button
-				text={loading
-					? 'Updating...'
-					: 'Update with AI'}
-				onclick={editWithGemini}
-				{loading}
-				disabled={loading || !instructions.trim()}
+				send_loading={loading}
 			/>
 		</div>
 		<div class="space-y-2">
