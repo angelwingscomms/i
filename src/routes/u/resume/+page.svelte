@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
-	import { toast } from '$lib/util/toast.svelte.js';
+	import { toast } from '$lib/util/toast.svelte';
 	import axios from 'axios';
 
 	let { data } = $props();
 	let resumes = $state(data.e || []);
 	let user = $state(data.user);
-	let target_user = $state(data.target_user);
+	let targetUserId = $state(data.targetUserId);
 	let creating = $state(false);
 
 	function formatDate(timestamp: number): string {
@@ -19,11 +19,9 @@
 	class="mx-auto flex max-w-2xl flex-col gap-y-5 p-4"
 >
 	<h1 class="text-2xl font-bold">
-		{target_user === user.i
-			? 'My Resumes'
-			: `${target_user}'s Resumes`}
+		{targetUserId}'s Resumes
 	</h1>
-	{#if target_user === user.i}
+	{#if targetUserId === user?.i}
 		<Button
 			text="Create Resume"
 			loading={creating}
@@ -49,7 +47,7 @@
 				>
 					<a href={`/resume/${r.i}`} class="block">
 						<div class="font-semibold">
-							{target_user} - {formatDate(
+							{targetUserId} - {formatDate(
 								r.l || r.d || 0
 							)}
 						</div>

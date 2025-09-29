@@ -4,18 +4,21 @@ import type { PageServerLoad } from './$types';
 import type { Resume } from '$lib/types';
 
 export const load: PageServerLoad = async ({
-	locals,
-	params
+	url,
+	locals
 }) => {
-	if (!locals.user) {
-		throw error(401, 'Unauthorized');
+	const userId = url.searchParams.get('user');
+	if (!userId) {
+		throw error(400, 'User parameter required');
 	}
+
 	const resumes = await search_by_payload<
 		Pick<Resume, 'i' | 'd' | 'l' | 'h'>
-	>({ s: 'e', u: params.user_id }, true, 100);
+	>({ s: 'e', u: userId }, true, 100);
+
 	return {
 		e: resumes,
 		user: locals.user,
-		target_user: params.user_id
+		targetUserId: userId
 	};
 };
