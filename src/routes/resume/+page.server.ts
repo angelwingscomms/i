@@ -11,6 +11,6 @@ export const load: PageServerLoad = async ({
 	}
 	const resumes = await search_by_payload<
 		Pick<Resume, 'i' | 'd' | 'l' | 'h'>
-	>({ s: 'e', u: locals.user.i }, true, 100);
+	>({ s: 'e' }, true, 100);
 	return { e: resumes, user: locals.user };
 };

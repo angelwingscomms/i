@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { GROQ_API_KEY } from '$env/static/private';
+import { GROQ } from '$env/static/private';
 import axios from 'axios';
 
 export const POST: RequestHandler = async ({
@@ -39,7 +39,7 @@ export const POST: RequestHandler = async ({
 			formDataForGroq,
 			{
 				headers: {
-					Authorization: `Bearer ${GROQ_API_KEY}`,
+					Authorization: `Bearer ${GROQ}`,
 					'Content-Type': 'multipart/form-data'
 				}
 			}

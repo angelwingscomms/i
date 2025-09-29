@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
-import { GROQ_API_KEY } from '$env/static/private';
+import { GROQ } from '$env/static/private';
 import Groq from 'groq-sdk';
 
 export const POST: RequestHandler = async ({
@@ -37,7 +37,7 @@ export const POST: RequestHandler = async ({
 		}
 
 		const groq = new Groq({
-			apiKey: GROQ_API_KEY
+			apiKey: GROQ
 		});
 
 		// step 1: transcribe audio with groq whisper

@@ -45,14 +45,14 @@ You can preview the production build with `npm run preview`.
 Place secrets in the appropriate SvelteKit env locations.
 
 - GEMINI: Google API key for Gemini (used across features)
-- GROQ_API_KEY: Groq API key for fast transcription (used by /api/transcribe)
+- GROQ: Groq API key for fast transcription (used by /api/transcribe)
 - YOUTUBE_API_KEY: YouTube Data API v3 key (used by /api/youtube/search)
 
 For local dev, you can add to .env (not committed):
 
 ```
 GEMINI=your_gemini_api_key
-GROQ_API_KEY=your_groq_api_key
+GROQ=your_GROQ
 YOUTUBE_API_KEY=your_youtube_api_key
 ```
 
