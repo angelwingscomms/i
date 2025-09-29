@@ -17,7 +17,7 @@
 <div
 	class="mx-auto flex max-w-2xl flex-col gap-y-5 p-4"
 >
-	<h1 class="text-2xl font-bold">My Resumes</h1>
+	<h1 class="text-2xl font-bold">All Resumes</h1>
 	<Button
 		text="Create Resume"
 		loading={creating}
