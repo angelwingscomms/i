@@ -6,6 +6,7 @@
 
 	let { data } = $props();
 	let resumes = $state(data.e || []);
+	let user = $state(data.user);
 	let creating = $state(false);
 
 	function formatDate(timestamp: number): string {
@@ -40,7 +41,7 @@
 				>
 					<a href={`/resume/${r.i}`} class="block">
 						<div class="font-semibold">
-							{formatDate(r.d || 0)}
+							{user.t} - {formatDate(r.l || r.d || 0)}
 						</div>
 						{#if r.h}
 							<div
