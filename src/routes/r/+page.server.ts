@@ -22,8 +22,11 @@ export const load: PageServerLoad = async ({
 }): Promise<RoomResult> => {
 	try {
 		if (locals.user) {
-			const {vector} =
-				await get(locals.user.i, undefined, true) as {vector: number[]};
+			const { vector } = (await get(
+				locals.user.i,
+				undefined,
+				true
+			)) as { vector: number[] };
 			if (vector) {
 				const rooms = await search_by_vector<Room>({
 					vector,

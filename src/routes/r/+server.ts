@@ -8,7 +8,12 @@ export async function POST({ request, locals }) {
 
 	const { t, a } = await request.json();
 
-	const roomId = await createRoom({ title: t, about: a, users: locals.user.i, _ : '.' });
+	const roomId = await createRoom({
+		title: t,
+		about: a,
+		users: locals.user.i,
+		_: '.'
+	});
 
 	return text(roomId);
 }

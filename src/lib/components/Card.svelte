@@ -22,16 +22,29 @@
 	} = $props();
 </script>
 
-<div class="feature-card rounded-3xl w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
+<div
+	class="feature-card w-full rounded-3xl md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]"
+>
 	{#if image}
-		<img src={image} alt={alt || title} class="w-full aspect-square object-cover rounded-t-3xl mb-4" />
+		<img
+			src={image}
+			alt={alt || title}
+			class="mb-4 aspect-square w-full rounded-t-3xl object-cover"
+		/>
 	{/if}
 	{#if icon}
-		<div class="feature-icon" style="background-color: {themeColor};">
+		<div
+			class="feature-icon"
+			style="background-color: {themeColor};"
+		>
 			<i class={icon}></i>
 		</div>
 	{/if}
 	<h3 class="feature-title">{title}</h3>
 	<p class="feature-description">{description}</p>
-	<Button {href} variant="secondary" text={buttonText} />
+	<Button
+		{href}
+		variant="secondary"
+		text={buttonText}
+	/>
 </div>

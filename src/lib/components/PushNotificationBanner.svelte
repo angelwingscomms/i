@@ -9,7 +9,9 @@
 
 	onMount(async () => {
 		if (!userId || typeof window === 'undefined') {
-			notif_debug(`Banner init skipped: no userId or server-side`);
+			notif_debug(
+				`Banner init skipped: no userId or server-side`
+			);
 			return;
 		}
 		notif_debug(`Banner init for user ${userId}`);
@@ -19,31 +21,43 @@
 			!('serviceWorker' in navigator) ||
 			!('PushManager' in window)
 		) {
-			notif_debug('Push notifications not supported in this browser');
+			notif_debug(
+				'Push notifications not supported in this browser'
+			);
 			return;
 		}
 
 		// Check if notification permissions are already granted
 		if (Notification.permission === 'granted') {
-			notif_debug('Permissions already granted, skipping banner');
+			notif_debug(
+				'Permissions already granted, skipping banner'
+			);
 			return;
 		}
 
 		// Check if we have an existing subscription saved
 		try {
-			notif_debug(`Checking existing sub for ${userId}`);
+			notif_debug(
+				`Checking existing sub for ${userId}`
+			);
 			const response = await fetch(
 				`/u/${userId}/push_notifications/check_subscription`
 			);
 			const data = await response.json();
 			if (data.subscribed) {
-				notif_debug(`User ${userId} already subscribed, skipping banner`);
+				notif_debug(
+					`User ${userId} already subscribed, skipping banner`
+				);
 				return;
 			}
-			notif_debug(`No existing sub for ${userId}, showing banner`);
+			notif_debug(
+				`No existing sub for ${userId}, showing banner`
+			);
 			showBanner = true;
 		} catch (e) {
-			notif_debug(`Error checking sub status for ${userId}: ${e instanceof Error ? e.message : String(e)}`);
+			notif_debug(
+				`Error checking sub status for ${userId}: ${e instanceof Error ? e.message : String(e)}`
+			);
 		}
 
 		// Show banner if permissions not granted and no subscription
@@ -55,14 +69,20 @@
 
 		isLoading = true;
 		try {
-			notif_debug(`Handling accept for user ${userId}`);
+			notif_debug(
+				`Handling accept for user ${userId}`
+			);
 			const result =
 				await ensurePushSubscribed(userId);
 			if (result.ok) {
-				notif_debug(`Accept successful for ${userId}`);
+				notif_debug(
+					`Accept successful for ${userId}`
+				);
 				showBanner = false;
 			} else {
-				notif_debug(`Accept failed for ${userId}: reason=${result.reason}`);
+				notif_debug(
+					`Accept failed for ${userId}: reason=${result.reason}`
+				);
 				// Handle different failure reasons
 				switch (result.reason) {
 					case 'denied':
@@ -83,7 +103,9 @@
 				}
 			}
 		} catch (e) {
-			notif_debug(`Accept error for ${userId}: ${e instanceof Error ? e.message : String(e)}`);
+			notif_debug(
+				`Accept error for ${userId}: ${e instanceof Error ? e.message : String(e)}`
+			);
 			// Keep banner visible so user can try again
 		} finally {
 			isLoading = false;

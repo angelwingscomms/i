@@ -42,8 +42,11 @@ export const set = async (
 	payload: Record<string, unknown>
 ) => {
 	if ('ps' in payload) {
-		const psList = payload.ps as unknown as PushSubscription[];
-		notif_debug(`Setting ps for id: ${id}, length=${psList ? psList.length : 0}`);
+		const psList =
+			payload.ps as unknown as PushSubscription[];
+		notif_debug(
+			`Setting ps for id: ${id}, length=${psList ? psList.length : 0}`
+		);
 	}
 	await qdrant.setPayload('i', {
 		wait: true,
@@ -288,16 +291,25 @@ export async function get<T>(
 			with_vector
 		});
 		if (payload === 'ps' && result.length > 0) {
-			const psList = result[0].payload?.ps as unknown as PushSubscription[];
+			const psList = result[0].payload
+				?.ps as unknown as PushSubscription[];
 			if (psList && Array.isArray(psList)) {
 				const now = Date.now();
-				const expiredCount = psList.filter(s => {
+				const expiredCount = psList.filter((s) => {
 					const exp = (s as any).expirationTime;
-					return typeof exp === 'number' && exp > 0 && exp < now;
+					return (
+						typeof exp === 'number' &&
+						exp > 0 &&
+						exp < now
+					);
 				}).length;
-				notif_debug(`Fetched ps for ${id}: total=${psList.length}, expired=${expiredCount}`);
+				notif_debug(
+					`Fetched ps for ${id}: total=${psList.length}, expired=${expiredCount}`
+				);
 			} else {
-				notif_debug(`Fetched ps for ${id}: no list or empty`);
+				notif_debug(
+					`Fetched ps for ${id}: no list or empty`
+				);
 			}
 		}
 

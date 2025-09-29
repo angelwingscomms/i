@@ -45,7 +45,7 @@ export const POST = async ({
 	const result = await model.generateContent(prompt);
 	const response = await result.response;
 	const new_content = response.text().trim();
-	
+
 	await update_post(i, {
 		b: new_content || post.b,
 		l: Date.now()

@@ -1,5 +1,9 @@
 import { error } from '@sveltejs/kit';
-import { search_by_payload, get, new_id } from '$lib/db';
+import {
+	search_by_payload,
+	get,
+	new_id
+} from '$lib/db';
 import { realtime } from '$lib/util/realtime';
 import type { Post } from '$lib/types';
 import type { ChatMessage } from '$lib/types/index';
@@ -11,7 +15,15 @@ export const load = async ({ params, locals }) => {
 
 		let post: Pick<
 			Post,
-			't' | 'b' | 'p' | 'u' | 'd' | 's' | 'r' | 'f' | 'c'
+			| 't'
+			| 'b'
+			| 'p'
+			| 'u'
+			| 'd'
+			| 's'
+			| 'r'
+			| 'f'
+			| 'c'
 		> | null;
 		try {
 			post = await get<Post>(params.i, [
@@ -32,7 +44,7 @@ export const load = async ({ params, locals }) => {
 			console.error('Error fetching post:', e);
 			throw error(500, 'Failed to fetch post');
 		}
-	
+
 		let children: Post[] = [];
 		if (post.c === '.') {
 			try {
@@ -43,31 +55,51 @@ export const load = async ({ params, locals }) => {
 					{ d: 'asc' }
 				);
 			} catch (e) {
-				console.error('Error fetching child posts:', e);
+				console.error(
+					'Error fetching child posts:',
+					e
+				);
 			}
 		}
 
 		console.log('post', post);
 
-		let author = { i: post.u, t: 'Anonymous', av: undefined };
+		let author = {
+			i: post.u,
+			t: 'Anonymous',
+			av: undefined
+		};
 		if (post.u) {
 			try {
-				const authorData = await get(post.u, ['t', 'av']);
-				author = { i: post.u, t: authorData.t || 'Anonymous', av: authorData.av };
+				const authorData = await get(post.u, [
+					't',
+					'av'
+				]);
+				author = {
+					i: post.u,
+					t: authorData.t || 'Anonymous',
+					av: authorData.av
+				};
 			} catch (e) {
 				console.error('Error fetching author:', e);
 			}
 		}
 
-			let pt: string | undefined;
-			try {
-				if ((post as any).f) {
-					pt = (await get<string>((post as any).f as string, 't')) || undefined;
-				}
-			} catch (e) {
-				console.error('Error fetching parent post title:', e);
+		let pt: string | undefined;
+		try {
+			if ((post as any).f) {
+				pt =
+					(await get<string>(
+						(post as any).f as string,
+						't'
+					)) || undefined;
 			}
-
+		} catch (e) {
+			console.error(
+				'Error fetching parent post title:',
+				e
+			);
+		}
 
 		let a: string;
 		try {
@@ -82,7 +114,10 @@ export const load = async ({ params, locals }) => {
 			);
 			a = realtime_res.data.data.token;
 		} catch (e) {
-			console.error('Error with realtime:', await e.response?.data);
+			console.error(
+				'Error with realtime:',
+				await e.response?.data
+			);
 			throw error(
 				500,
 				'Failed to setup realtime communication'

@@ -1,7 +1,16 @@
+<!-- features section -->
+<script lang="ts">
+	import Button from '$lib/components/Button.svelte';
+	import Card from '$lib/components/Card.svelte';
+	import DiscoverItems from '$lib/images/items.png';
+	import SharePosts from '$lib/images/posts.png';
+	import Chatrooms from '$lib/images/chat.png';
+	import VideoChat from '$lib/images/video.png';
+	import BuildProfile from '$lib/images/users.png';
+</script>
+
 <svelte:head>
-	<title
-		>apexlinks</title
-	>
+	<title>apexlinks</title>
 	<meta
 		name="description"
 		content="easily find products and services you want. discover chatrooms sharing interests. anonymous video/text chats, groups, age/gender/location filters."
@@ -50,13 +59,23 @@
 			easily find products and services you want
 		</h1>
 		<p class="hero-subtitle mb-8">
-			discover chatrooms, share posts, and connect anonymously via video/text chats. build real connections effortlessly.
+			discover chatrooms, share posts, and connect
+			anonymously via video/text chats. build real
+			connections effortlessly.
 		</p>
 		<div
 			class="flex flex-col justify-center gap-4 sm:flex-row"
 		>
-			<Button href="/i" variant="secondary" text="find items" />
-			<Button href="/posts" variant="primary" text="explore posts" />
+			<Button
+				href="/i"
+				variant="secondary"
+				text="find items"
+			/>
+			<Button
+				href="/posts"
+				variant="primary"
+				text="explore posts"
+			/>
 		</div>
 	</div>
 	<!-- static background orbs -->
@@ -68,19 +87,10 @@
 	></div>
 </section>
 
-<!-- features section -->
-<script lang="ts">
-	import Button from '$lib/components/Button.svelte';
-	import Card from '$lib/components/Card.svelte';
-	import DiscoverItems from '$lib/images/items.png';
-	import SharePosts from '$lib/images/posts.png';
-	import Chatrooms from '$lib/images/chat.png';
-	import VideoChat from '$lib/images/video.png';
-	import BuildProfile from '$lib/images/users.png';
-</script>
-
 <section class="features-grid py-16">
-	<div class="mx-auto max-w-6xl px-4 flex flex-wrap gap-8 justify-center">
+	<div
+		class="mx-auto flex max-w-6xl flex-wrap justify-center gap-8 px-4"
+	>
 		<Card
 			themeColor="var(--color-theme-2)"
 			title="discover products & services"
@@ -163,17 +173,14 @@
 		<p class="mb-4 text-[var(--text-secondary)]">
 			quick links: <a
 				href="/find"
-				class="feature-link mx-1"
-				>find matches</a
+				class="feature-link mx-1">find matches</a
 			>
 			|
 			<a href="/chats" class="feature-link mx-1"
 				>anonymous chats</a
 			>
 			|
-			<a href="/r" class="feature-link mx-1"
-				>rooms</a
-			>
+			<a href="/r" class="feature-link mx-1">rooms</a>
 			|
 			<a href="/u" class="feature-link mx-1"
 				>find nearby</a

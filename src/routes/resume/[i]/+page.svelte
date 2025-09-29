@@ -13,7 +13,12 @@
 
 <div class="mx-auto max-w-4xl p-4 md:p-8">
 	<div class="mb-6">
-		<Button text="explore all posts" href="/resume" icon="fa-arrow-left" variant="secondary" />
+		<Button
+			text="explore all posts"
+			href="/resume"
+			icon="fa-arrow-left"
+			variant="secondary"
+		/>
 	</div>
 
 	<div class="mb-8 flex items-start justify-between">

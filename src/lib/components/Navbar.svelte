@@ -9,7 +9,6 @@
 	import Button from '$lib/components/Button.svelte';
 	import { logout } from '$lib/util/logout.js';
 
-
 	let { user = null }: { user: User | null } =
 		$props();
 
@@ -59,33 +58,34 @@
 		await deferred_prompt.prompt();
 		const choice = await deferred_prompt.userChoice;
 		if (choice.outcome === 'accepted') {
-			import('$lib/util/toast.svelte').then(({ addToast }) =>
-				addToast('App installed', 'success')
+			import('$lib/util/toast.svelte').then(
+				({ addToast }) =>
+					addToast('App installed', 'success')
 			);
 		} else {
-			import('$lib/util/toast.svelte').then(({ addToast }) =>
-				addToast('Install dismissed', 'info')
+			import('$lib/util/toast.svelte').then(
+				({ addToast }) =>
+					addToast('Install dismissed', 'info')
 			);
 		}
 		deferred_prompt = null;
 		can_install = false;
 	}
 
-
-		function handle_install_click() {
-			if (is_installed) {
-				addToast('app is already installed', 'info');
-				return;
-			}
-			if (deferred_prompt) {
-				do_install();
-			} else {
-				addToast(
-					"install not available yet. use your browser's 'add to home screen' option.",
-					'info'
-				);
-			}
+	function handle_install_click() {
+		if (is_installed) {
+			addToast('app is already installed', 'info');
+			return;
 		}
+		if (deferred_prompt) {
+			do_install();
+		} else {
+			addToast(
+				"install not available yet. use your browser's 'add to home screen' option.",
+				'info'
+			);
+		}
+	}
 
 	function on_appinstalled() {
 		addToast('App installed', 'success');
@@ -150,9 +150,14 @@
 
 			<div class="flex items-center gap-2">
 				{#if navigating.to}
-					<i class="fas fa-spinner fa-spin text-sm"></i>
+					<i class="fas fa-spinner fa-spin text-sm"
+					></i>
 				{/if}
-				<Button text="install webapp" onclick={handle_install_click} variant="primary" />
+				<Button
+					text="install webapp"
+					onclick={handle_install_click}
+					variant="primary"
+				/>
 				<button
 					class="btn-icon border-none bg-transparent p-2"
 					onclick={toggle_menu}
@@ -173,10 +178,14 @@
 			</div>
 
 			<div class="hidden items-center gap-6 md:flex">
-
 				{#if user}
 					<div class="flex items-center gap-4">
-						<Button href="/settings" text="Settings" icon="fa-gear" variant="primary" />
+						<Button
+							href="/settings"
+							text="Settings"
+							icon="fa-gear"
+							variant="primary"
+						/>
 
 						<div
 							class="flex items-center gap-3 pl-4"
@@ -190,11 +199,21 @@
 								<i class="fas fa-user-circle"></i>
 								{user.t}
 							</a>
-							<Button onclick={logout} text="Logout" icon="fa-arrow-right-from-bracket" variant="secondary" />
+							<Button
+								onclick={logout}
+								text="Logout"
+								icon="fa-arrow-right-from-bracket"
+								variant="secondary"
+							/>
 						</div>
 					</div>
 				{:else}
-					<Button href="/login" text="login" icon="far fa-user h-4 w-4" variant="secondary" />
+					<Button
+						href="/login"
+						text="login"
+						icon="far fa-user h-4 w-4"
+						variant="secondary"
+					/>
 				{/if}
 			</div>
 		</div>

@@ -22,7 +22,9 @@
 		<h1
 			class="text-2xl font-bold text-[var(--accent-primary)]"
 		>
-			<span class="text-sm opacity-50">subposts of</span><br/>{data.parent?.t}
+			<span class="text-sm opacity-50"
+				>subposts of</span
+			><br />{data.parent?.t}
 		</h1>
 		<Button
 			href={`/posts/${page.params.i}/subposts/create`}

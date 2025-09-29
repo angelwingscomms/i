@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {md} from '$lib/util/marked';
+	import { md } from '$lib/util/marked';
 	import { onMount } from 'svelte';
 	import {
 		animate,
@@ -11,21 +11,19 @@
 
 	let { data }: PageProps = $props();
 	console.log('d', data);
-	let {
-		u: user,
-		c: comparison
-	} = data as unknown as {
-		u: {
-			i: string;
-			tag: string;
-			avatar?: string;
-			age?: number;
-			gender?: number;
-			description?: string;
-			socialLinks: string[];
+	let { u: user, c: comparison } =
+		data as unknown as {
+			u: {
+				i: string;
+				tag: string;
+				avatar?: string;
+				age?: number;
+				gender?: number;
+				description?: string;
+				socialLinks: string[];
+			};
+			c: string;
 		};
-		c: string;
-	};
 
 	let copied = $state(false);
 
@@ -68,7 +66,6 @@
 				},
 				'-=200'
 			);
-
 
 		// Hover animations for interactive elements
 		const interactiveElements =
@@ -201,7 +198,10 @@
 				faIcon: 'fa-external-link-alt'
 			}; // Generic name, generic icon
 		} catch {
-			return { name: url, faIcon: 'fa-external-link-alt' }; // Fallback to raw URL, generic icon
+			return {
+				name: url,
+				faIcon: 'fa-external-link-alt'
+			}; // Fallback to raw URL, generic icon
 		}
 	}
 </script>
@@ -315,59 +315,64 @@
 							</div>
 							<Button
 								onclick={copyLink}
-								text={copied ? '✓ Copied!' : 'Copy Link'}
+								text={copied
+									? '✓ Copied!'
+									: 'Copy Link'}
 								variant="secondary"
 							/>
 						</div>
 					</div>
-{#if data.user?.i === user.i}
-	<!-- Edit Profile Action -->
-	<div class="mt-6 flex justify-center">
-		<Button
-			href="/edit_user"
-			text="Edit Your Profile"
-			icon="fa-edit"
-			variant="primary"
-		/>
-	</div>
-	<div class="mt-4 flex justify-center">
-		<Button
-			href={`/u/${user.i}/posts`}
-			text="view posts"
-			icon="fa-newspaper"
-			variant="primary"
-		/>
-	</div>
+					{#if data.user?.i === user.i}
+						<!-- Edit Profile Action -->
+						<div class="mt-6 flex justify-center">
+							<Button
+								href="/edit_user"
+								text="Edit Your Profile"
+								icon="fa-edit"
+								variant="primary"
+							/>
+						</div>
+						<div class="mt-4 flex justify-center">
+							<Button
+								href={`/u/${user.i}/posts`}
+								text="view posts"
+								icon="fa-newspaper"
+								variant="primary"
+							/>
+						</div>
 
-	{#if !user.description}
-		<div
-			class="feature-card interactive-card mt-6 rounded-3xl p-8 text-center shadow-2xl"
-			style=" border: 2px solid var(--color-theme-5);"
-		>
-			<div class="mb-4 flex justify-center">
-				<div
-					class="rounded-full p-4"
-					style="background: var(--color-theme-5);"
-				>
-					<i class="fas fa-circle-check" style="color: white; font-size: 1.5em;"></i>
-				</div>
-			</div>
-			<p
-				class="mb-4 text-lg font-medium"
-				style="color: var(--color-theme-5);"
-			>
-				Complete your profile to unlock all
-				features!
-			</p>
-			<Button
-				href="/edit_user"
-				text="Add Description"
-				icon="fa-arrow-right"
-				variant="secondary"
-			/>
-		</div>
-	{/if}
-{/if}
+						{#if !user.description}
+							<div
+								class="feature-card interactive-card mt-6 rounded-3xl p-8 text-center shadow-2xl"
+								style=" border: 2px solid var(--color-theme-5);"
+							>
+								<div class="mb-4 flex justify-center">
+									<div
+										class="rounded-full p-4"
+										style="background: var(--color-theme-5);"
+									>
+										<i
+											class="fas fa-circle-check"
+											style="color: white; font-size: 1.5em;"
+										></i>
+									</div>
+								</div>
+								<p
+									class="mb-4 text-lg font-medium"
+									style="color: var(--color-theme-5);"
+								>
+									Complete your profile to unlock all
+									features!
+								</p>
+								<Button
+									href="/edit_user"
+									text="Add Description"
+									icon="fa-arrow-right"
+									variant="secondary"
+								/>
+							</div>
+						{/if}
+					{/if}
 					{#if data.user && data.user.i !== user.i}
 						<div class="mt-8 space-y-4">
 							<div class="flex justify-center">
@@ -426,7 +431,10 @@
 								class="rounded-full p-3"
 								style="background: var(--color-theme-6);"
 							>
-								<i class="fas fa-heart" style="color: white; font-size: 1.2em;"></i>
+								<i
+									class="fas fa-heart"
+									style="color: white; font-size: 1.2em;"
+								></i>
 							</div>
 							What You Have in Common
 						</h2>
@@ -459,7 +467,10 @@
 							class="rounded-full p-4"
 							style="background: var(--color-theme-6);"
 						>
-							<i class="fas fa-user" style="color: white; font-size: 1.5em;"></i>
+							<i
+								class="fas fa-user"
+								style="color: white; font-size: 1.5em;"
+							></i>
 						</div>
 					</div>
 					<p
@@ -478,7 +489,6 @@
 				</div>
 			{/if}
 		</section>
-
 
 		<!-- Social Links Section -->
 		{#if user.socialLinks && user.socialLinks.length > 0}
@@ -518,7 +528,9 @@
 										{#if faIcon}
 											<i class="fas {faIcon}"></i>
 										{:else}
-											<i class="fas fa-external-link-alt"></i>
+											<i
+												class="fas fa-external-link-alt"
+											></i>
 										{/if}
 									</div>
 									{name}
@@ -543,7 +555,10 @@
 						class="rounded-full p-6"
 						style="background: var(--color-theme-5);"
 					>
-						<i class="fas fa-user-slash" style="color: white; font-size: 2em;"></i>
+						<i
+							class="fas fa-user-slash"
+							style="color: white; font-size: 2em;"
+						></i>
 					</div>
 				</div>
 				<h2
@@ -574,7 +589,6 @@
 	.profile-hero {
 		opacity: 0;
 	}
-
 
 	.feature-card {
 		opacity: 0;

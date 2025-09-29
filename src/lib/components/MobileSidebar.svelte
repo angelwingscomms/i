@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-import type { User } from '$lib/types';
+	import type { User } from '$lib/types';
 	import { logout } from '$lib/util/logout';
 	let {
 		is_open,
@@ -174,7 +174,10 @@ import type { User } from '$lib/types';
 				<a
 					class="sidebar-nav-link text-error"
 					style="color: var(--color-theme-5);"
-					onclick={async () => { close_sidebar(); await logout(); }}
+					onclick={async () => {
+						close_sidebar();
+						await logout();
+					}}
 				>
 					<i
 						class="fa-solid fa-arrow-right-from-bracket"

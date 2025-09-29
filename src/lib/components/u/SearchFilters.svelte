@@ -163,9 +163,7 @@
 
 			<!-- TODO-PUTBACK -->
 			<div class="ml-auto flex items-center gap-3">
-				<SortDropdown
-					bind:sort
-				/>
+				<SortDropdown bind:sort />
 				<button
 					class="btn-primary btn-md"
 					onclick={search}

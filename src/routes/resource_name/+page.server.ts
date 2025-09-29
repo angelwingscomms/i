@@ -78,7 +78,10 @@ export const load: PageServerLoad = async ({
 				})) || [];
 		}
 	} catch (e) {
-		error(500, 'an error occured searching for resources')
+		error(
+			500,
+			'an error occured searching for resources'
+		);
 		console.error('resources qdrant error', e);
 		results = [];
 	}

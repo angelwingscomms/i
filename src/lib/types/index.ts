@@ -60,7 +60,7 @@ export type DBChatMessage = Pick<
 export type SendChatMessage = Pick<
 	Message,
 	'saved' | 'm' | 'i' | 'd' | 't' | 'f'
-> & { a?: string, _?: string };
+> & { a?: string; _?: string };
 
 export type ChatMessage = Pick<
 	Message,

@@ -25,7 +25,9 @@ export const load: PageServerLoad = async ({
 					with_payload: ['t', 'l', 'm', 'u', 'v'],
 					limit: 54
 				});
-				const filtered = posts.filter(r => r.v !== '.' || r.u === locals.user.i);
+				const filtered = posts.filter(
+					(r) => r.v !== '.' || r.u === locals.user.i
+				);
 				return {
 					p: filtered.map((r) => ({
 						i: r.i,
@@ -53,8 +55,12 @@ export const load: PageServerLoad = async ({
 			.then((result) => result.points || []);
 
 		const filtered = locals.user
-			? allPosts.filter(r => r.payload.v !== '.' || r.payload.u === locals.user.i)
-			: allPosts.filter(r => r.payload.v !== '.');
+			? allPosts.filter(
+					(r) =>
+						r.payload.v !== '.' ||
+						r.payload.u === locals.user.i
+				)
+			: allPosts.filter((r) => r.payload.v !== '.');
 
 		return {
 			p: filtered.map((r) => ({

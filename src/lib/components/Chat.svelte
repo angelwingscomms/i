@@ -182,12 +182,16 @@
 		}
 	}
 
-	let fileButton = [{
-		icon_classes: 'fas fa-paperclip',
-		send: () => fileInputEl?.click()
-	}];
+	let fileButton = [
+		{
+			icon_classes: 'fas fa-paperclip',
+			send: () => fileInputEl?.click()
+		}
+	];
 
-	let sendDisabled = $derived(!message_text.trim() && !selectedFile);
+	let sendDisabled = $derived(
+		!message_text.trim() && !selectedFile
+	);
 
 	function handleFileSelect(event: Event) {
 		const target = event.target as HTMLInputElement;
@@ -195,7 +199,9 @@
 		if (file) {
 			const maxSize = 50 * 1024 * 1024; // 50MB
 			if (file.size > maxSize) {
-				console.warn(`File ${file.name} is too large (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+				console.warn(
+					`File ${file.name} is too large (${(file.size / 1024 / 1024).toFixed(1)}MB)`
+				);
 				return;
 			}
 			selectedFile = file;
@@ -400,11 +406,29 @@
 	</div>
 	<div class="input-area">
 		{#if selectedFile}
-			<div class="file-preview flex flex-col gap-2 p-3 bg-gray-100 border border-gray-300 rounded-lg mb-2 max-h-48 overflow-y-auto">
-				<div class="file-item flex items-center gap-2 p-2 bg-white border border-gray-300 rounded text-sm">
-					<span class="file-name flex-1 font-medium text-gray-900 truncate">{selectedFile.name}</span>
-					<span class="file-size text-gray-500 text-xs">({(selectedFile.size / 1024 / 1024).toFixed(1)}MB)</span>
-					<button class="remove-file bg-none border-none text-gray-500 hover:bg-red-100 hover:text-red-500 p-1 rounded w-5 h-5 flex items-center justify-center" onclick={() => selectedFile = null} title="Remove file">
+			<div
+				class="file-preview mb-2 flex max-h-48 flex-col gap-2 overflow-y-auto rounded-lg border border-gray-300 bg-gray-100 p-3"
+			>
+				<div
+					class="file-item flex items-center gap-2 rounded border border-gray-300 bg-white p-2 text-sm"
+				>
+					<span
+						class="file-name flex-1 truncate font-medium text-gray-900"
+						>{selectedFile.name}</span
+					>
+					<span
+						class="file-size text-xs text-gray-500"
+						>({(
+							selectedFile.size /
+							1024 /
+							1024
+						).toFixed(1)}MB)</span
+					>
+					<button
+						class="remove-file flex h-5 w-5 items-center justify-center rounded border-none bg-none p-1 text-gray-500 hover:bg-red-100 hover:text-red-500"
+						onclick={() => (selectedFile = null)}
+						title="Remove file"
+					>
 						<i class="fas fa-times"></i>
 					</button>
 				</div>

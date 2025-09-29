@@ -233,7 +233,7 @@
 						only you can see this post
 					</p>
 				</div>
-			
+
 				<!-- Show Child Posts Checkbox -->
 				<div class="space-y-2">
 					<label
@@ -250,7 +250,8 @@
 						>
 					</label>
 					<p class="mt-1 text-xs text-gray-500">
-						display child posts after post body, before comments
+						display child posts after post body,
+						before comments
 					</p>
 				</div>
 				<div class="space-y-2">
@@ -312,8 +313,14 @@
 		</div>
 		{#if !isMobile}
 			<div class="hidden w-1/2 p-4 md:block">
-				<h2 class="mb-2 text-xl font-semibold text-purple-600">preview</h2>
-				<div class="sticky top-4 rounded-lg border border-purple-500 p-4">
+				<h2
+					class="mb-2 text-xl font-semibold text-purple-600"
+				>
+					preview
+				</h2>
+				<div
+					class="sticky top-4 rounded-lg border border-purple-500 p-4"
+				>
 					<h1 class="mb-4 text-2xl font-bold">
 						{post.t || 'Untitled'}
 					</h1>

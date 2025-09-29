@@ -68,14 +68,19 @@
 	<div class="row space-between v-center mb-md">
 		<h1 class="title">posts</h1>
 		<Button
-			text='create post'
+			text="create post"
 			icon={creating ? 'fa-spinner fa-spin' : ''}
 			href="/posts/create"
 			wide={true}
 		/>
 	</div>
 
-	<PostSearch bind:q bind:posts bind:loading onSearch={() => (searched = true)} />
+	<PostSearch
+		bind:q
+		bind:posts
+		bind:loading
+		onSearch={() => (searched = true)}
+	/>
 </div>
 
 <style>

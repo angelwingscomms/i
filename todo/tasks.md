@@ -12,16 +12,16 @@ tasks have notes
 tasks have a done boolean
 
 type Task {
-  i: string
-  n: string // name
-  desc?: string
-  subtasks: Task[]
-  f: FileEntry[]
-  d: boolean
+i: string
+n: string // name
+desc?: string
+subtasks: Task[]
+f: FileEntry[]
+d: boolean
 }
 
 type FileEntry {
-  p: string // path
-  n: string // name
-  t: string // type
+p: string // path
+n: string // name
+t: string // type
 }

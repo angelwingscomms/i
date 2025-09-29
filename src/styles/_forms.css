@@ -139,14 +139,19 @@
 	); /* Use theme color for fill */
 }
 
-input[type="password"]:-webkit-autofill,
-input[type="password"]:-webkit-autofill:hover,
-input[type="password"]:-webkit-autofill:focus,
-input[type="password"]:-webkit-autofill:active {
-  /* -webkit-box-shadow: 0 0 0 1000px transparent inset !important; */
-  background-color: transparent !important;
-  /* Smooth transition to avoid flashing */
-  transition: background-color 5000s ease-in-out 0s !important;
-  /* Optional: Match text color for visibility */
-  /* -webkit-text-fill-color: inherit; Or a specific color like #fff */
+input[type='password']:-webkit-autofill,
+input[type='password']:-webkit-autofill:hover,
+input[type='password']:-webkit-autofill:focus,
+input[type='password']:-webkit-autofill:active {
+	/* -webkit-box-shadow: 0 0 0 1000px transparent inset !important; */
+	background-color: transparent !important;
+	/* Smooth transition to avoid flashing */
+	transition: background-color 5000s ease-in-out 0s !important;
+	/* Optional: Match text color for visibility */
+	/* -webkit-text-fill-color: inherit; Or a specific color like #fff */
+}
+
+/* Hide clear button on inputs */
+input::-webkit-clear-button {
+	display: none;
 }

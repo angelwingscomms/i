@@ -18,7 +18,7 @@ export interface Toast {
 }
 
 // Create a writable store to hold an array of toasts
-export const toasts: Toast[] = $state([])
+export const toasts: Toast[] = $state([]);
 
 // Function to add a new toast notification
 export function addToast(
@@ -37,7 +37,7 @@ export function addToast(
 		type,
 		duration,
 		action
-	})
+	});
 
 	// Automatically remove the toast after its duration
 	setTimeout(() => {
@@ -47,7 +47,9 @@ export function addToast(
 
 // Function to remove a toast notification by its ID
 export function removeToast(id: string) {
-	const index = toasts.findIndex(toast => toast.id === id);
+	const index = toasts.findIndex(
+		(toast) => toast.id === id
+	);
 	if (index !== -1) {
 		toasts.splice(index, 1);
 	}

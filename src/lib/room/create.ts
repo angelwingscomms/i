@@ -3,8 +3,22 @@ import { create } from '$lib/db';
 import type { Room } from '$lib/types';
 import { realtime } from '$lib/util/realtime.js';
 
-export async function createRoom({ title, about, users, _, extra = {} }: { title?: string; about?: string; users: string | string[]; _ : ',' | '.' | '-' | '|'; extra?: object }) {
-	const trimmedTitle = title ? title.trim() : 'Untitled Room';
+export async function createRoom({
+	title,
+	about,
+	users,
+	_,
+	extra = {}
+}: {
+	title?: string;
+	about?: string;
+	users: string | string[];
+	_: ',' | '.' | '-' | '|';
+	extra?: object;
+}) {
+	const trimmedTitle = title
+		? title.trim()
+		: 'Untitled Room';
 	const trimmedAbout = about ? about.trim() : '';
 
 	let createMeetingRes;
@@ -53,7 +67,12 @@ export async function createRoom({ title, about, users, _, extra = {} }: { title
 	console.log('room_payload', roomPayload);
 
 	try {
-		const metadata: { room_name_or_tag: string; room_description: string; room_type: string; room_created_by?: string } = {
+		const metadata: {
+			room_name_or_tag: string;
+			room_description: string;
+			room_type: string;
+			room_created_by?: string;
+		} = {
 			room_name_or_tag: roomPayload.t,
 			room_description: roomPayload.a || '',
 			room_type: 'public'

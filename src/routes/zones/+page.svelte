@@ -58,14 +58,19 @@
 	<div class="row space-between v-center mb-md">
 		<h1 class="title">zones</h1>
 		<Button
-			text='add zone'
+			text="add zone"
 			icon={creating ? 'fa-spinner fa-spin' : ''}
 			href="/zones/create"
 			wide={true}
 		/>
 	</div>
 
-	<ZoneSearch bind:q bind:zones bind:loading onSearch={() => (searched = true)} />
+	<ZoneSearch
+		bind:q
+		bind:zones
+		bind:loading
+		onSearch={() => (searched = true)}
+	/>
 </div>
 
 <style>

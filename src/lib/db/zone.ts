@@ -8,7 +8,15 @@ export const create_zone = async (
 	user_id: string
 ): Promise<string> => {
 	return create(
-		{ s: 'z', u: user_id, d: Date.now(), n: '', l: 0, g: 0, C: [] },
+		{
+			s: 'z',
+			u: user_id,
+			d: Date.now(),
+			n: '',
+			l: 0,
+			g: 0,
+			C: []
+		},
 		''
 	);
 };
@@ -40,11 +48,16 @@ export const update_zone = async (
 	});
 };
 
-export const get_zone = async (id: string): Promise<Zone | null> => {
+export const get_zone = async (
+	id: string
+): Promise<Zone | null> => {
 	return await get<Zone>(id);
 };
 
-export const search_zones = async (q?: string, limit = 20): Promise<Zone[]> => {
+export const search_zones = async (
+	q?: string,
+	limit = 20
+): Promise<Zone[]> => {
 	const filter = {
 		must: [
 			{
@@ -63,7 +76,7 @@ export const search_zones = async (q?: string, limit = 20): Promise<Zone[]> => {
 			filter,
 			with_payload: true
 		});
-		return results.map(r => r.payload as Zone);
+		return results.map((r) => r.payload as Zone);
 	} else {
 		const results = await qdrant.scroll(collection, {
 			filter,
@@ -71,6 +84,8 @@ export const search_zones = async (q?: string, limit = 20): Promise<Zone[]> => {
 			with_payload: true,
 			with_vectors: false
 		});
-		return results.points.map(p => p.payload as Zone);
+		return results.points.map(
+			(p) => p.payload as Zone
+		);
 	}
 };

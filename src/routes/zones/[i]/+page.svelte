@@ -24,11 +24,15 @@
 
 	<div class="mb-8 flex items-start justify-between">
 		<div>
-			<h1 class="text-3xl font-bold text-[var(--accent-primary)]">
+			<h1
+				class="text-3xl font-bold text-[var(--accent-primary)]"
+			>
 				{zone.n}
 			</h1>
 			<p class="text-sm text-[var(--text-secondary)]">
-				Created {new Date(zone.d).toLocaleDateString()}
+				Created {new Date(
+					zone.d
+				).toLocaleDateString()}
 			</p>
 		</div>
 		<div class="flex items-center gap-2">
@@ -43,7 +47,9 @@
 	</div>
 
 	<article class="overflow-hidden rounded-lg">
-		<div class="prose prose-invert prose-lg max-w-none px-6 pt-6">
+		<div
+			class="prose prose-invert prose-lg max-w-none px-6 pt-6"
+		>
 			<div class="space-y-4">
 				<p><strong>Latitude:</strong> {zone.l}</p>
 				<p><strong>Longitude:</strong> {zone.g}</p>
@@ -53,7 +59,11 @@
 						<ul class="list-disc pl-6">
 							{#each zone.C as childId}
 								<li>
-									<a href={`/posts/${childId}`} class="underline">Post/Item {childId}</a>
+									<a
+										href={`/posts/${childId}`}
+										class="underline"
+										>Post/Item {childId}</a
+									>
 								</li>
 							{/each}
 						</ul>

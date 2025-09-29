@@ -1,4 +1,5 @@
-- always follow the patterns in the example files perfectly 
+- always search the net when it might help
+- always follow the patterns in the example files perfectly
 
 ## Example Files
 

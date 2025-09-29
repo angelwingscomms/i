@@ -1,5 +1,9 @@
 import { redirect, error, fail } from '@sveltejs/kit';
-import { create_zone, get_zone, update_zone } from '$lib/db/zone';
+import {
+	create_zone,
+	get_zone,
+	update_zone
+} from '$lib/db/zone';
 
 export const load = async ({ locals }) => {
 	const user = locals.user;

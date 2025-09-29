@@ -4,15 +4,14 @@
 	// import UsernameInput from '$lib/components/ui/UsernameInput.svelte';
 	import axios from 'axios';
 
-	let {data} = $props();
+	let { data } = $props();
 	let form: {
 		error?: string;
 		success?: boolean;
 		message?: string;
 	} | null = $state(null);
 
-	let
-		tag = $state(data.u!.t || ''),
+	let tag = $state(data.u!.t || ''),
 		description = $state(data.u!.d || ''),
 		ageStr = $state<string>(String(data.u!.a || 18)),
 		gender = $state<0 | 1>((data.u!.g ?? 0) as 0 | 1),
@@ -22,7 +21,9 @@
 		usernameValid = $state(true),
 		isGettingLocation = $state(false),
 		isSubmitting = $state(false),
-		avatarDataUrl = $state((data.u && (data.u as any).av) || ''),
+		avatarDataUrl = $state(
+			(data.u && (data.u as any).av) || ''
+		),
 		fileInput: HTMLInputElement | null = null;
 	function onAvatarChange(e: Event) {
 		const input = e.target as HTMLInputElement;
@@ -69,7 +70,6 @@
 		};
 		reader.readAsDataURL(file);
 	}
-
 
 	async function getCurrentLocation() {
 		if (!navigator.geolocation) {
@@ -174,7 +174,9 @@
 		<div class="card-normal">
 			<!-- avatar -->
 			<div class="form-group">
-				<label class="form-label" for="avatar_input">avatar</label>
+				<label class="form-label" for="avatar_input"
+					>avatar</label
+				>
 				<div class="flex items-center gap-4">
 					<div
 						class="h-16 w-16 overflow-hidden rounded-full bg-gray-800"
@@ -208,25 +210,36 @@
 						class="hidden"
 					/>
 				</div>
-				<small class="form-help">square image recommended. we store a tiny 128px copy.</small>
+				<small class="form-help"
+					>square image recommended. we store a tiny
+					128px copy.</small
+				>
 			</div>
 			<form
 				onsubmit={handleSubmit}
 				class="section-spacing"
 			>
 				<div class="form-group">
-					<label for="tag" class="form-label">user tag</label>
+					<label for="tag" class="form-label"
+						>user tag</label
+					>
 					<DescriptionInput
 						bind:value={tag}
 						type="text"
 						placeholder="user tag"
 						voice_typing={false}
 					/>
-					<input type="hidden" name="tag" value={tag} />
+					<input
+						type="hidden"
+						name="tag"
+						value={tag}
+					/>
 				</div>
 
 				<div class="form-group">
-					<label for="description" class="form-label">description</label>
+					<label for="description" class="form-label"
+						>description</label
+					>
 					<div class="glass rounded-lg p-1">
 						<DescriptionInput
 							bind:value={description}
@@ -241,7 +254,9 @@
 				</div>
 
 				<div class="form-group">
-					<label for="age" class="form-label">age</label>
+					<label for="age" class="form-label"
+						>age</label
+					>
 					<DescriptionInput
 						bind:value={ageStr}
 						type="number"
@@ -250,23 +265,35 @@
 						placeholder="age"
 						voice_typing={false}
 					/>
-					<input type="hidden" name="age" value={ageStr} />
+					<input
+						type="hidden"
+						name="age"
+						value={ageStr}
+					/>
 				</div>
 
 				<div class="form-group">
-					<span class="form-label" id="gender_label">gender</span>
+					<span class="form-label" id="gender_label"
+						>gender</span
+					>
 					<div class="choice-group">
 						<Button
 							text="male"
 							variant="secondary"
 							active={gender === 0}
-							onclick={(e) => { e.preventDefault(); gender = 0; }}
+							onclick={(e) => {
+								e.preventDefault();
+								gender = 0;
+							}}
 						/>
 						<Button
 							text="female"
 							variant="secondary"
 							active={gender === 1}
-							onclick={(e) => { e.preventDefault(); gender = 1; }}
+							onclick={(e) => {
+								e.preventDefault();
+								gender = 1;
+							}}
 						/>
 					</div>
 				</div>
@@ -284,7 +311,11 @@
 					>
 						{#if latitude && longitude}
 							<div class="location-display">
-								<span class="current-location">{latitude.toFixed(6)}, {longitude.toFixed(6)}</span>
+								<span class="current-location"
+									>{latitude.toFixed(6)}, {longitude.toFixed(
+										6
+									)}</span
+								>
 							</div>
 						{/if}
 						<input
@@ -302,20 +333,29 @@
 							loading={isGettingLocation}
 							icon="fa-map-marker-alt"
 							variant="primary"
-							onclick={(e) => {e.preventDefault(); getCurrentLocation();}}
+							onclick={(e) => {
+								e.preventDefault();
+								getCurrentLocation();
+							}}
 						/>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<span class="form-label" id="social_label">contact/social media links</span>
+					<span class="form-label" id="social_label"
+						>contact/social media links</span
+					>
 					<div class="mb-3 flex items-center gap-2">
 						<Button
 							text="+"
 							variant="secondary"
-							onclick={() => socialLinks = [...socialLinks, '']}
+							onclick={() =>
+								(socialLinks = [...socialLinks, ''])}
 						/>
-						<small class="form-help">whatsapp, telegram or social media links</small>
+						<small class="form-help"
+							>whatsapp, telegram or social media
+							links</small
+						>
 					</div>
 					{#each socialLinks as _, index (index)}
 						<div class="social-link-item">
@@ -328,7 +368,10 @@
 							<Button
 								text="×"
 								variant="secondary"
-								onclick={() => socialLinks = socialLinks.filter((_, i) => i !== index)}
+								onclick={() =>
+									(socialLinks = socialLinks.filter(
+										(_, i) => i !== index
+									))}
 							/>
 						</div>
 					{/each}

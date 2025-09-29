@@ -7,8 +7,12 @@
 		q = $bindable(''),
 		posts = $bindable<any[]>([]),
 		loading = $bindable(false),
-		onSelect = undefined as undefined | ((post: any) => void),
-		filter = $bindable<Record<string, unknown> | undefined>(undefined),
+		onSelect = undefined as
+			| undefined
+			| ((post: any) => void),
+		filter = $bindable<
+			Record<string, unknown> | undefined
+		>(undefined),
 		hide_input = false,
 		exclude_i = undefined as string | undefined,
 		onSearch = (_q?: string) => {},
@@ -23,14 +27,20 @@
 		try {
 			const body: Record<string, unknown> = { q };
 			if (filter) {
-				for (const [key, value] of Object.entries(filter)) {
+				for (const [key, value] of Object.entries(
+					filter
+				)) {
 					if (value !== undefined && value !== null) {
 						body[key] = value;
 					}
 				}
 			}
-			if (showPrivateFilter && showPrivate) body.private = true;
-			const res = await axios.post('/posts/search', body);
+			if (showPrivateFilter && showPrivate)
+				body.private = true;
+			const res = await axios.post(
+				'/posts/search',
+				body
+			);
 			posts = (res.data || []).filter((p: any) =>
 				exclude_i ? p.i !== exclude_i : true
 			);
@@ -50,12 +60,19 @@
 				search();
 			}
 		};
-		inputRef.addEventListener('keydown', handleKeydown);
+		inputRef.addEventListener(
+			'keydown',
+			handleKeydown
+		);
 		return () => {
-			inputRef?.removeEventListener('keydown', handleKeydown);
+			inputRef?.removeEventListener(
+				'keydown',
+				handleKeydown
+			);
 		};
 	});
 </script>
+
 <div class="grid gap-3">
 	{#if !hide_input}
 		<DescriptionInput
@@ -68,30 +85,46 @@
 	{/if}
 
 	{#if showPrivateFilter}
-		<label class="flex items-center space-x-2 cursor-pointer">
+		<label
+			class="flex cursor-pointer items-center space-x-2"
+		>
 			<input
 				type="checkbox"
 				bind:checked={showPrivate}
-				class="rounded border-gray-300 text-purple-600 focus:ring-purple-500 h-4 w-4"
+				class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
 				onchange={() => search()}
 			/>
-			<span class="text-sm font-medium text-gray-700">show private posts</span>
+			<span class="text-sm font-medium text-gray-700"
+				>show private posts</span
+			>
 		</label>
 	{/if}
 
 	{#if posts?.length}
 		<ul class="grid gap-2">
 			{#each posts as p (p.i)}
-				<li class="rounded-tr-3xl rounded-br-3xl border-l border-l-[var(--color-theme-6)]">
+				<li
+					class="rounded-tr-3xl rounded-br-3xl border-l border-l-[var(--color-theme-6)]"
+				>
 					{#if onSelect}
-						<button class="w-full text-left px-3 py-2 hover:bg-[var(--color-theme-6)]/20" onclick={() => onSelect?.(p)}>
-							<div class="flex items-center justify-between">
+						<button
+							class="w-full px-3 py-2 text-left hover:bg-[var(--color-theme-6)]/20"
+							onclick={() => onSelect?.(p)}
+						>
+							<div
+								class="flex items-center justify-between"
+							>
 								<div class="font-semibold">{p.t}</div>
-								<i class="fas fa-plus text-[var(--muted)]"></i>
+								<i
+									class="fas fa-plus text-[var(--muted)]"
+								></i>
 							</div>
 						</button>
 					{:else}
-						<a class="block px-3 py-2 hover:bg-[var(--color-theme-6)]/20" href={`/posts/${p.i}`}>
+						<a
+							class="block px-3 py-2 hover:bg-[var(--color-theme-6)]/20"
+							href={`/posts/${p.i}`}
+						>
 							<div class="font-semibold">{p.t}</div>
 						</a>
 					{/if}
@@ -102,4 +135,3 @@
 		<p class="text-[var(--muted)]">no results</p>
 	{/if}
 </div>
-

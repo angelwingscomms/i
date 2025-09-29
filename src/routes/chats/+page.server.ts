@@ -5,7 +5,15 @@ import { collection } from '$lib/constants';
 
 export const load: PageServerLoad = async ({
 	locals
-}): Promise<{ r: Array<{ i: string; t?: string; l?: number; _?: string; x?: string[] }> }> => {
+}): Promise<{
+	r: Array<{
+		i: string;
+		t?: string;
+		l?: number;
+		_?: string;
+		x?: string[];
+	}>;
+}> => {
 	if (!locals.user || !locals.user.i) {
 		redirect(302, '/login');
 	}
@@ -16,7 +24,7 @@ export const load: PageServerLoad = async ({
 	)) as string[];
 	console.log('userRooms', userRooms);
 
-	const rr= await qdrant.scroll(collection, {
+	const rr = await qdrant.scroll(collection, {
 		filter: {
 			must: [{ key: 's', match: { value: 'r' } }],
 			should: [

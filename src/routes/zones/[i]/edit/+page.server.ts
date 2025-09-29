@@ -1,9 +1,15 @@
 import { error } from '@sveltejs/kit';
 import { get_zone, update_zone } from '$lib/db/zone';
 import type { Zone } from '$lib/types';
-import type { PageServerLoad, Actions } from './$types';
+import type {
+	PageServerLoad,
+	Actions
+} from './$types';
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({
+	params,
+	locals
+}) => {
 	const user = locals.user;
 	if (!user) {
 		throw error(401, 'Not logged in');
@@ -45,7 +51,10 @@ export const actions: Actions = {
 		const l = parseFloat(l_str);
 		const g = parseFloat(g_str);
 		if (!n || isNaN(l) || isNaN(g)) {
-			return { success: false, message: 'Invalid input' };
+			return {
+				success: false,
+				message: 'Invalid input'
+			};
 		}
 		await update_zone(params.i, { n, l, g });
 		return { success: true };

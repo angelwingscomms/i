@@ -8,7 +8,10 @@ export const load: PageServerLoad = async ({
 	locals,
 	params
 }) => {
-	const { t, s } = (await get<{ t: string | null; s: string | null; }>(params.i, ['t', 's'])) ?? { t: null, s: null };
+	const { t, s } = (await get<{
+		t: string | null;
+		s: string | null;
+	}>(params.i, ['t', 's'])) ?? { t: null, s: null };
 	if (!t) error(404, 'user not found');
 	if (s !== 'u') error(400, 'resource not user');
 	if (!locals.user) {
@@ -39,7 +42,6 @@ export const load: PageServerLoad = async ({
 		const room_id = existing_room.points[0].id;
 		redirect(302, `/r/${room_id}`);
 	}
-
 
 	const roomId = await createRoom({
 		users: locals.user.i,

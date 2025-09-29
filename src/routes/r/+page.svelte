@@ -7,13 +7,15 @@
 	let { data } = $props();
 	// state
 	let q = $state('');
-	let results = $state<{
-		i: string;
-		t: string;
-		l?: number;
-		m?: number;
-		c?: number;
-	}[]>(data.r);
+	let results = $state<
+		{
+			i: string;
+			t: string;
+			l?: number;
+			m?: number;
+			c?: number;
+		}[]
+	>(data.r);
 	let creating = $state(false);
 	let t = $state('');
 	let d = $state('');
@@ -128,10 +130,8 @@
 							{#if r.c}
 								<div class="badge">
 									{Math.round(
-										Math.max(
-											0,
-											Math.min(1, r.c)
-										) * 100
+										Math.max(0, Math.min(1, r.c)) *
+											100
 									)}%
 								</div>
 							{/if}

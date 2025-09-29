@@ -9,7 +9,8 @@ export const load = async ({ params, locals }) => {
 			name: locals.user?.t || 'Anonymous',
 			// picture: locals.user?.p || '',
 			preset_name: 'group_call_participant',
-			custom_participant_id: locals.user?.i || new_id()
+			custom_participant_id:
+				locals.user?.i || new_id()
 		}
 	);
 	return { q: realtime_res.data.data.token };

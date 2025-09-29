@@ -12,7 +12,7 @@
 		exclude_i?: string;
 		onSearch?: (q?: string) => void;
 		showPrivateFilter?: boolean;
-	}
+	};
 
 	let {
 		q = $bindable(),
@@ -24,22 +24,31 @@
 		showPrivateFilter = false
 	}: Props = $props();
 
-	let showPrivate = $state(false), loading = $state(false), zones: Zone[] = $state([]);
+	let showPrivate = $state(false),
+		loading = $state(false),
+		zones: Zone[] = $state([]);
 
-	let inputRef: HTMLInputElement | null = $state(null);
+	let inputRef: HTMLInputElement | null =
+		$state(null);
 	async function search() {
 		loading = true;
 		try {
 			const body: Record<string, unknown> = { q };
 			if (filter) {
-				for (const [key, value] of Object.entries(filter)) {
+				for (const [key, value] of Object.entries(
+					filter
+				)) {
 					if (value !== undefined && value !== null) {
 						body[key] = value;
 					}
 				}
 			}
-			if (showPrivateFilter && showPrivate) body.private = true;
-			const res = await axios.post('/zones/search', body);
+			if (showPrivateFilter && showPrivate)
+				body.private = true;
+			const res = await axios.post(
+				'/zones/search',
+				body
+			);
 			zones = (res.data || []).filter((z: any) =>
 				exclude_i ? z.i !== exclude_i : true
 			);
@@ -59,9 +68,15 @@
 				search();
 			}
 		};
-		inputRef.addEventListener('keydown', handleKeydown);
+		inputRef.addEventListener(
+			'keydown',
+			handleKeydown
+		);
 		return () => {
-			inputRef?.removeEventListener('keydown', handleKeydown);
+			inputRef?.removeEventListener(
+				'keydown',
+				handleKeydown
+			);
 		};
 	});
 </script>
@@ -78,30 +93,46 @@
 	{/if}
 
 	{#if showPrivateFilter}
-		<label class="flex items-center space-x-2 cursor-pointer">
+		<label
+			class="flex cursor-pointer items-center space-x-2"
+		>
 			<input
 				type="checkbox"
 				bind:checked={showPrivate}
-				class="rounded border-gray-300 text-purple-600 focus:ring-purple-500 h-4 w-4"
+				class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
 				onchange={() => search()}
 			/>
-			<span class="text-sm font-medium text-gray-700">show private zones</span>
+			<span class="text-sm font-medium text-gray-700"
+				>show private zones</span
+			>
 		</label>
 	{/if}
 
 	{#if zones?.length}
 		<ul class="grid gap-2">
 			{#each zones as z (z.i)}
-				<li class="rounded-tr-3xl rounded-br-3xl border-l border-l-[var(--color-theme-6)]">
+				<li
+					class="rounded-tr-3xl rounded-br-3xl border-l border-l-[var(--color-theme-6)]"
+				>
 					{#if onSelect}
-						<button class="w-full text-left px-3 py-2 hover:bg-[var(--color-theme-6)]/20" onclick={() => onSelect?.(z)}>
-							<div class="flex items-center justify-between">
+						<button
+							class="w-full px-3 py-2 text-left hover:bg-[var(--color-theme-6)]/20"
+							onclick={() => onSelect?.(z)}
+						>
+							<div
+								class="flex items-center justify-between"
+							>
 								<div class="font-semibold">{z.n}</div>
-								<i class="fas fa-plus text-[var(--muted)]"></i>
+								<i
+									class="fas fa-plus text-[var(--muted)]"
+								></i>
 							</div>
 						</button>
 					{:else}
-						<a class="block px-3 py-2 hover:bg-[var(--color-theme-6)]/20" href={`/zones/${z.i}`}>
+						<a
+							class="block px-3 py-2 hover:bg-[var(--color-theme-6)]/20"
+							href={`/zones/${z.i}`}
+						>
 							<div class="font-semibold">{z.n}</div>
 						</a>
 					{/if}

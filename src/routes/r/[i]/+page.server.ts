@@ -1,6 +1,10 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
-import { get, new_id, search_by_payload } from '$lib/db';
+import {
+	get,
+	new_id,
+	search_by_payload
+} from '$lib/db';
 import type {
 	ChatMessage,
 	DBChatMessage,
@@ -95,7 +99,8 @@ export const load: PageServerLoad = async ({
 			name: locals.user?.t || 'Anonymous',
 			// picture: locals.user?.p || '',
 			preset_name: 'group_call_participant',
-			custom_participant_id: locals.user?.i || new_id()
+			custom_participant_id:
+				locals.user?.i || new_id()
 		}
 	);
 

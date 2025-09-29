@@ -32,8 +32,11 @@ export const POST: RequestHandler = async ({
 	};
 
 	// General filters from body.f
-	const filters = body.f || {} as Record<string, unknown>;
-	for (const [key, value] of Object.entries(filters)) {
+	const filters =
+		body.f || ({} as Record<string, unknown>);
+	for (const [key, value] of Object.entries(
+		filters
+	)) {
 		if (value !== undefined && value !== null) {
 			payload_filter[key] = value;
 		}

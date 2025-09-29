@@ -189,52 +189,94 @@ export const POST: RequestHandler = async ({
 
 	// Push notifications for private rooms (one-on-one: room._ === '|')
 	try {
-		notif_debug(`Push notify entry for room ${params.i}, message ${m.i}`);
+		notif_debug(
+			`Push notify entry for room ${params.i}, message ${m.i}`
+		);
 		const room = await get<Room>(params.i);
 		if (room) {
-			notif_debug(`Room fetched for ${params.i}: _=${room._}, u=${room.u}, x=${JSON.stringify(room.x)}`);
+			notif_debug(
+				`Room fetched for ${params.i}: _=${room._}, u=${room.u}, x=${JSON.stringify(room.x)}`
+			);
 		}
 		if (room && room._ === '|') {
-			notif_debug(`Private room detected for ${params.i}`);
+			notif_debug(
+				`Private room detected for ${params.i}`
+			);
 			const ids = Array.isArray(room.x)
 				? room.x
 				: room.u
-				? [room.u]
-				: [];
+					? [room.u]
+					: [];
 			const recipients = ids.filter(
 				(id) => id && id !== locals.user?.i
 			);
-			notif_debug(`Recipients for ${params.i}: ${recipients.join(', ')}`);
+			notif_debug(
+				`Recipients for ${params.i}: ${recipients.join(', ')}`
+			);
 			if (recipients.length) {
-				const pair_subs: { id: string; sub: PushSubscription }[] = [];
-				const subs_by_user: Record<string, PushSubscription[]> = {};
+				const pair_subs: {
+					id: string;
+					sub: PushSubscription;
+				}[] = [];
+				const subs_by_user: Record<
+					string,
+					PushSubscription[]
+				> = {};
 				for (const id of recipients) {
-					notif_debug(`Processing recipient ${id} for room ${params.i}`);
-					const psVal = (await get<User['ps']>(id, 'ps')) || [];
-					const list: PushSubscription[] = Array.isArray(psVal)
-						? (psVal as PushSubscription[])
-						: psVal
-						? [psVal as unknown as PushSubscription]
-						: [];
-					notif_debug(`Raw ps list for ${id}: length=${list.length}`);
+					notif_debug(
+						`Processing recipient ${id} for room ${params.i}`
+					);
+					const psVal =
+						(await get<User['ps']>(id, 'ps')) || [];
+					const list: PushSubscription[] =
+						Array.isArray(psVal)
+							? (psVal as PushSubscription[])
+							: psVal
+								? [
+										psVal as unknown as PushSubscription
+									]
+								: [];
+					notif_debug(
+						`Raw ps list for ${id}: length=${list.length}`
+					);
 					const now = Date.now();
 					const filtered = list.filter((s) => {
-						const exp = (s as unknown as { expirationTime?: number }).expirationTime;
-						return !(typeof exp === 'number' && exp > 0 && exp < now);
+						const exp = (
+							s as unknown as {
+								expirationTime?: number;
+							}
+						).expirationTime;
+						return !(
+							typeof exp === 'number' &&
+							exp > 0 &&
+							exp < now
+						);
 					});
-					notif_debug(`Filtered non-expired for ${id}: ${filtered.length}/${list.length}`);
+					notif_debug(
+						`Filtered non-expired for ${id}: ${filtered.length}/${list.length}`
+					);
 					if (filtered.length !== list.length) {
-						notif_debug(`Pruning expired subs for ${id}`);
-						await set(id, { ps: filtered.length ? filtered : null });
+						notif_debug(
+							`Pruning expired subs for ${id}`
+						);
+						await set(id, {
+							ps: filtered.length ? filtered : null
+						});
 					}
 					subs_by_user[id] = filtered;
-					for (const sub of filtered) pair_subs.push({ id, sub });
+					for (const sub of filtered)
+						pair_subs.push({ id, sub });
 				}
-				notif_debug(`Total pair_subs: ${pair_subs.length}`);
+				notif_debug(
+					`Total pair_subs: ${pair_subs.length}`
+				);
 				if (pair_subs.length) {
-					const sender_name = locals.user?.t || 'someone';
+					const sender_name =
+						locals.user?.t || 'someone';
 					const notificationPayload = {
-						title: m.a ? 'New message' : `Message from ${sender_name}`,
+						title: m.a
+							? 'New message'
+							: `Message from ${sender_name}`,
 						body: m.m,
 						tag: `room-${params.i}`,
 						icon: iconUrl,
@@ -245,50 +287,91 @@ export const POST: RequestHandler = async ({
 						},
 						vibrate: [200, 100, 200]
 					};
-					notif_debug(`Payload for room ${params.i}: title="${notificationPayload.title}", body="${notificationPayload.body}", tag="${notificationPayload.tag}"`);
+					notif_debug(
+						`Payload for room ${params.i}: title="${notificationPayload.title}", body="${notificationPayload.body}", tag="${notificationPayload.tag}"`
+					);
 					const results = await Promise.allSettled(
 						pair_subs.map((p) => {
-							notif_debug(`Attempting send for ${p.id}, endpoint=${p.sub.endpoint}`);
-							return send_push_notif(p.sub, notificationPayload);
+							notif_debug(
+								`Attempting send for ${p.id}, endpoint=${p.sub.endpoint}`
+							);
+							return send_push_notif(
+								p.sub,
+								notificationPayload
+							);
 						})
 					);
-					notif_debug(`Send results for room ${params.i}: ${results.filter(r => r.status === 'fulfilled').length} success, ${results.filter(r => r.status === 'rejected').length} failed`);
-					const to_prune: Record<string, string[]> = {};
+					notif_debug(
+						`Send results for room ${params.i}: ${results.filter((r) => r.status === 'fulfilled').length} success, ${results.filter((r) => r.status === 'rejected').length} failed`
+					);
+					const to_prune: Record<string, string[]> =
+						{};
 					results.forEach((res, idx) => {
 						if (res.status === 'rejected') {
-							type MaybeWebPushErr = { statusCode?: number; status?: number; response?: { status?: number } };
-							const err = res.reason as MaybeWebPushErr;
-							const status = err.statusCode ?? err.status ?? err.response?.status;
+							type MaybeWebPushErr = {
+								statusCode?: number;
+								status?: number;
+								response?: { status?: number };
+							};
+							const err =
+								res.reason as MaybeWebPushErr;
+							const status =
+								err.statusCode ??
+								err.status ??
+								err.response?.status;
 							const { id, sub } = pair_subs[idx];
-							notif_debug(`Send failed for ${id}, endpoint=${sub.endpoint}: status=${status}, err=${err}`);
+							notif_debug(
+								`Send failed for ${id}, endpoint=${sub.endpoint}: status=${status}, err=${err}`
+							);
 							if (status === 404 || status === 410) {
-								(to_prune[id] ||= []).push(sub.endpoint);
-								notif_debug(`Marking for prune: endpoint=${sub.endpoint} for ${id}`);
+								(to_prune[id] ||= []).push(
+									sub.endpoint
+								);
+								notif_debug(
+									`Marking for prune: endpoint=${sub.endpoint} for ${id}`
+								);
 							}
 						}
 					});
 					for (const id of Object.keys(to_prune)) {
 						const current = subs_by_user[id] || [];
-						const pruned = current.filter((s) => !to_prune[id].includes(s.endpoint));
-						notif_debug(`Pruning ${to_prune[id].length} invalid subs for ${id}, new length=${pruned.length}`);
+						const pruned = current.filter(
+							(s) =>
+								!to_prune[id].includes(s.endpoint)
+						);
+						notif_debug(
+							`Pruning ${to_prune[id].length} invalid subs for ${id}, new length=${pruned.length}`
+						);
 						if (pruned.length !== current.length) {
-							await set(id, { ps: pruned.length ? pruned : null });
+							await set(id, {
+								ps: pruned.length ? pruned : null
+							});
 						}
 					}
 					if (Object.keys(to_prune).length > 0) {
-						notif_debug(`Final prune completed for room ${params.i}`);
+						notif_debug(
+							`Final prune completed for room ${params.i}`
+						);
 					}
 				} else {
-					notif_debug(`No pair_subs for room ${params.i}, skipping send`);
+					notif_debug(
+						`No pair_subs for room ${params.i}, skipping send`
+					);
 				}
 			} else {
-				notif_debug(`No recipients for room ${params.i}, skipping push`);
+				notif_debug(
+					`No recipients for room ${params.i}, skipping push`
+				);
 			}
 		} else {
-			notif_debug(`Not private room for ${params.i}: _=${room?._ || 'null'}`);
+			notif_debug(
+				`Not private room for ${params.i}: _=${room?._ || 'null'}`
+			);
 		}
 	} catch (e) {
-		notif_debug(`Push notify error for room ${params.i}: ${e instanceof Error ? e.message : String(e)}`);
+		notif_debug(
+			`Push notify error for room ${params.i}: ${e instanceof Error ? e.message : String(e)}`
+		);
 	}
 
 	return new Response();

@@ -12,7 +12,6 @@
 	let { data } = $props(),
 		post: Post = data.p,
 		children = data.children || [];
-
 </script>
 
 <svelte:head>
@@ -21,25 +20,37 @@
 
 <div class="mx-auto max-w-4xl p-4 md:p-8">
 	<div class="mb-6">
-		<Button text="explore all posts" href="/posts" variant="secondary" icon="fa-arrow-left" class="inline-flex items-center font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]" />
+		<Button
+			text="explore all posts"
+			href="/posts"
+			variant="secondary"
+			icon="fa-arrow-left"
+			class="inline-flex items-center font-medium text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
+		/>
 	</div>
 
-	<div class="mb-8 flex flex-col md:flex-row md:items-start md:justify-start gap-4 md:gap-4">
+	<div
+		class="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-start md:gap-4"
+	>
 		<div>
 			<h1
-				class="text-2xl md:text-3xl font-bold text-[var(--accent-primary)]"
+				class="text-2xl font-bold text-[var(--accent-primary)] md:text-3xl"
 			>
 				{post.t}
 			</h1>
-			<div class="flex flex-wrap items-center gap-2 mt-2">
+			<div
+				class="mt-2 flex flex-wrap items-center gap-2"
+			>
 				{#if data.author.av}
 					<img
 						src={data.author.av}
 						alt="Author avatar"
-						class="w-6 h-6 rounded-full"
+						class="h-6 w-6 rounded-full"
 					/>
 				{/if}
-				<span class="text-sm text-[var(--text-secondary)]">
+				<span
+					class="text-sm text-[var(--text-secondary)]"
+				>
 					Posted by
 				</span>
 				<Button
@@ -48,26 +59,44 @@
 					variant="secondary"
 					class="p-0 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)]"
 				/>
-				<span class="text-sm text-[var(--text-secondary)]">
+				<span
+					class="text-sm text-[var(--text-secondary)]"
+				>
 					on {new Date(post.d).toLocaleDateString()}
 				</span>
 			</div>
 
 			{#if post.f}
-				<p class="mt-1 text-sm text-[var(--text-secondary)]">
+				<p
+					class="mt-1 text-sm text-[var(--text-secondary)]"
+				>
 					reply to:
-					<a class="underline" href={`/posts/${post.f}`}>{data.pt || post.f}</a>
+					<a
+						class="underline"
+						href={`/posts/${post.f}`}
+						>{data.pt || post.f}</a
+					>
 				</p>
 			{/if}
-
 		</div>
-		<div class="w-full md:w-auto flex items-center justify-start md:justify-start gap-2">
+		<div
+			class="flex w-full items-center justify-start gap-2 md:w-auto md:justify-start"
+		>
 			<Button
-				text={data.user?.i === post.u ? 'Edit' : 'View author'}
-				href={data.user?.i === post.u ? `/posts/${post.i}/edit` : `/u/${post.u}`}
-				icon={data.user?.i === post.u ? 'fa-edit' : undefined}
+				text={data.user?.i === post.u
+					? 'Edit'
+					: 'View author'}
+				href={data.user?.i === post.u
+					? `/posts/${post.i}/edit`
+					: `/u/${post.u}`}
+				icon={data.user?.i === post.u
+					? 'fa-edit'
+					: undefined}
 			/>
-			<Button text="see child posts" href={`/posts/${post.i}/subposts`} />
+			<Button
+				text="see child posts"
+				href={`/posts/${post.i}/subposts`}
+			/>
 		</div>
 	</div>
 
@@ -88,8 +117,15 @@
 
 	{#if post.c === '.' && children.length > 0}
 		<div class="mt-8">
-			<h2 class="text-2xl font-bold mb-4 text-[var(--accent-primary)]">child posts</h2>
-			<PostSearch posts={children} hide_input={true} />
+			<h2
+				class="mb-4 text-2xl font-bold text-[var(--accent-primary)]"
+			>
+				child posts
+			</h2>
+			<PostSearch
+				posts={children}
+				hide_input={true}
+			/>
 		</div>
 	{/if}
 

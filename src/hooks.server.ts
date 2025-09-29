@@ -26,7 +26,10 @@ export const handle: Handle = async ({
 	event,
 	resolve
 }) => {
-	if (event.url.pathname.includes('resource_name') && !dev) {
+	if (
+		event.url.pathname.includes('resource_name') &&
+		!dev
+	) {
 		throw error(404, 'Not found');
 	}
 

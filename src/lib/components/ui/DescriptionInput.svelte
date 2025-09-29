@@ -256,7 +256,7 @@
 				{autocomplete}
 				class="rounded-none border-0 bg-transparent px-4 py-3 font-light text-[var(--text-primary)] transition-all duration-300 placeholder:text-[rgba(248,137,250,0.6)] focus:ring-0 focus:outline-none {buttons_below
 					? ''
-					: 'flex-1'} appearance-none bg-transparent [::-webkit-clear-button]:hidden"
+					: 'flex-1'} appearance-none bg-transparent [::-webkit-clear-button]:hidden [::-webkit-search-cancel-button]:hidden"
 				{placeholder}
 				required
 				disabled={!editable || isTranscribing}
@@ -272,6 +272,12 @@
 			{#if editable}
 				<div class="flex items-center gap-2">
 					{#if !isRecording && !isTranscribing}
+						{#if value}
+							<Button
+								onclick={() => (value = '')}
+								icon="fa-times"
+							/>
+						{/if}
 						{#if voice_typing}
 							<Button
 								onclick={startRecording}

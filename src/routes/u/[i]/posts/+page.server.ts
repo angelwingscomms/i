@@ -9,14 +9,23 @@ export const load: PageServerLoad = async ({
 }) => {
 	const { i } = params;
 	if (!i) error(400, 'missing user id');
-	const targetUserRaw = await get<Record<string, unknown>>(i);
-	if (!targetUserRaw || (targetUserRaw as any).s !== 'u')
+	const targetUserRaw =
+		await get<Record<string, unknown>>(i);
+	if (
+		!targetUserRaw ||
+		(targetUserRaw as any).s !== 'u'
+	)
 		error(404, 'user not found');
 
-	const targetUser: User = { ...targetUserRaw, i } as User;
+	const targetUser: User = {
+		...targetUserRaw,
+		i
+	} as User;
 
 	return {
-		user: locals.user ? { i: locals.user.i, t: locals.user.t } : null,
+		user: locals.user
+			? { i: locals.user.i, t: locals.user.t }
+			: null,
 		targetUser
 	};
 };

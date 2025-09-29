@@ -47,7 +47,11 @@
 			<i class="fas fa-spinner fa-spin"></i>
 		{:else}
 			{#if icon}
-				<i class={icon?.includes(' ') ? icon : `fas ${icon}`}></i>
+				<i
+					class={icon?.includes(' ')
+						? icon
+						: `fas ${icon}`}
+				></i>
 			{/if}
 			{text}
 		{/if}
@@ -65,7 +69,11 @@
 			<i class="fas fa-spinner fa-spin"></i>
 		{:else}
 			{#if icon}
-				<i class={icon?.includes(' ') ? icon : `fas ${icon}`}></i>
+				<i
+					class={icon?.includes(' ')
+						? icon
+						: `fas ${icon}`}
+				></i>
 			{/if}
 			{text}
 		{/if}
