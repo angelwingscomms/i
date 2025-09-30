@@ -14,7 +14,7 @@
 <div class="mx-auto max-w-4xl p-4 md:p-8">
 	<div class="mb-6">
 		<Button
-			text="explore all posts"
+			text="explore all resumes"
 			href="/resume"
 			icon="fa-arrow-left"
 			variant="secondary"

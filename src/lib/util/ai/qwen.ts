@@ -15,8 +15,14 @@ export async function qwen(
 			max_tokens: 40960
 		});
 
-	return (
+	let content =
 		chatCompletion.choices[0]?.message?.content?.trim() ||
-		''
-	);
+		'';
+
+	// Remove <think>...</think> block from the beginning of the response
+	content = content
+		.replace(/^<think>[\s\S]*?<\/think>/i, '')
+		.trim();
+
+	return content;
 }
