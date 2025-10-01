@@ -16,9 +16,6 @@
 - src/routes/resource_name/[i]/+server.ts
 - src/routes/resource_name/create/+page.server.ts
 - src/routes/resource_name/+page.server.ts
-- src/Component.svelte
-- src/page.svelte
-- src/util.ts
 
 ## Code Style
 
