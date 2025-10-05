@@ -1,11 +1,11 @@
 import { error, redirect } from '@sveltejs/kit';
 import { search_by_payload } from '$lib/db';
-import type { PageServerLoad } from './mine/$types';
+import type { PageServerLoad } from './$types';
 import type { Resume } from '$lib/types';
 
 export const load: PageServerLoad = async ({
 	locals
-}) => {
+}: Parameters<PageServerLoad>[0]) => {
 	if (!locals.user) {
 		redirect(302, '/google?next=/resume/mine');
 	}

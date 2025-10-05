@@ -15,6 +15,7 @@ type SearchBody = {
 		direction: 'asc' | 'desc';
 	} | null; // sort, ignored for vector search
 	l?: number; // optional limit
+	private?: boolean;
 };
 
 export const POST: RequestHandler = async ({

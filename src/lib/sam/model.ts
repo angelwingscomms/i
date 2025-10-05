@@ -13,8 +13,8 @@ export function model_data({
 	const image_embedding = tensor as ort.Tensor;
 	let point_coords: Float32Array;
 	let point_labels: Float32Array;
-	let point_coords_tensor: ort.Tensor;
-	let point_labels_tensor: ort.Tensor;
+	let point_coords_tensor: ort.Tensor | undefined;
+	let point_labels_tensor: ort.Tensor | undefined;
 
 	if (clicks) {
 		const n = clicks.length;

@@ -1,5 +1,10 @@
 import { env } from '$env/dynamic/private';
 
+import type {
+	R2Bucket,
+	R2Object
+} from '@cloudflare/workers-types';
+
 // R2 binding will be available in the platform environment
 interface Platform {
 	env: {

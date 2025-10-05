@@ -221,7 +221,7 @@
 
 <Navbar
 	user={data?.user as any}
-	on:menutoggle={() =>
+	onmenutoggle={() =>
 		(is_sidebar_open = !is_sidebar_open)}
 />
 

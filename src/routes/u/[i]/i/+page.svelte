@@ -5,7 +5,7 @@
 		createTimeline,
 		stagger
 	} from 'animejs';
-	import ItemSearch from '$lib/components/ItemSearch.svelte';
+import { ItemSearch } from '$lib/components/i';
 	import type { PageData } from '../../../i/$types';
 	import type { Item } from '$lib/types/item';
 	import axios from 'axios';

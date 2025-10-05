@@ -5,7 +5,7 @@ import {
 	new_id
 } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
-import type { Post } from '$lib/types';
+import type { Post, User, Message } from '$lib/types';
 import type { ChatMessage } from '$lib/types/index';
 
 export const load = async ({ params, locals }) => {
@@ -71,15 +71,20 @@ export const load = async ({ params, locals }) => {
 		};
 		if (post.u) {
 			try {
-				const authorData = await get(post.u, [
-					't',
-					'av'
-				]);
-				author = {
-					i: post.u,
-					t: authorData.t || 'Anonymous',
-					av: authorData.av
-				};
+				const authorData = await get<
+					Pick<User, 't' | 'av'>
+				>(post.u, ['t', 'av']);
+				if (authorData) {
+					const data = authorData as Pick<
+						User,
+						't' | 'av'
+					>;
+					author = {
+						i: post.u,
+						t: data.t || 'Anonymous',
+						av: data.av
+					};
+				}
 			} catch (e) {
 				console.error('Error fetching author:', e);
 			}
@@ -116,7 +121,7 @@ export const load = async ({ params, locals }) => {
 		} catch (e) {
 			console.error(
 				'Error with realtime:',
-				await e.response?.data
+				await (e as any).response?.data
 			);
 			throw error(
 				500,
@@ -124,7 +129,8 @@ export const load = async ({ params, locals }) => {
 			);
 		}
 
-		let messages, userMap;
+		let messages: Message[],
+			userMap: Record<string, string>;
 		try {
 			const messagePayloads = [
 				'u',
@@ -133,7 +139,7 @@ export const load = async ({ params, locals }) => {
 				'd',
 				'f'
 			];
-			messages = await search_by_payload(
+			messages = await search_by_payload<Message>(
 				{ s: 'm', r: params.i },
 				messagePayloads,
 				undefined,
@@ -147,16 +153,16 @@ export const load = async ({ params, locals }) => {
 						.map((m) => m.u)
 						.filter(Boolean)
 				)
-			];
+			] as string[];
 
-			const users = await Promise.all(
+			const users = (await Promise.all(
 				userIds.map((id) =>
 					get(id, 't').catch(() => ({
 						i: id,
 						t: 'Anonymous'
 					}))
 				)
-			);
+			)) as Array<{ i: string; t: string }>;
 
 			userMap = Object.fromEntries(
 				users.map((u) => [u.i, u.t])

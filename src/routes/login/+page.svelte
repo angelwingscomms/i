@@ -88,7 +88,7 @@
 			class="rounded-xl p-6 shadow-lg backdrop-blur"
 		>
 			<form
-				on:submit|preventDefault
+				onsubmit={(e) => e.preventDefault()}
 				class="space-y-5"
 				autocomplete="on"
 				novalidate

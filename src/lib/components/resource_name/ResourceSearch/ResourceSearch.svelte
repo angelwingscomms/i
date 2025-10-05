@@ -136,6 +136,7 @@
 						Search
 					</label>
 					<div class="relative">
+						<!-- always use DescriptionInput.svelte for all text input -->
 						<DescriptionInput
 							bind:value={query}
 							placeholder="search for resources..."

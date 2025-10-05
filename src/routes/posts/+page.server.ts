@@ -13,11 +13,12 @@ export const load: PageServerLoad = async ({
 }) => {
 	try {
 		if (locals.user) {
-			const { vector } = await get(
+			const userData = (await get(
 				locals.user.i,
 				undefined,
 				true
-			);
+			)) as { vector: number[] } | null;
+			const { vector } = userData || {};
 			if (vector) {
 				const posts = await search_by_vector<Post>({
 					vector,

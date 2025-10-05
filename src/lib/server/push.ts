@@ -84,7 +84,7 @@ export async function sendPushToUserId(
 				`sendPushToUserId: attempting send to endpoint=${subscription.endpoint} for ${userId}`
 			);
 			return send_push_notif(
-				subscription,
+				subscription as any,
 				notificationPayload
 			);
 		})

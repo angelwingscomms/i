@@ -103,7 +103,7 @@
   }
 </script>
 
-<svelte:window on:resize={fit_to_page} />
+<svelte:window onresize={fit_to_page} />
 
 <div class="flex items-center justify-center w-full h-screen">
   <div class="flex items-center justify-center relative w-[90%] h-[90%]">
@@ -112,10 +112,10 @@
         src={$image.src}
         alt="dogs"
         class="object-contain {should_fit_to_width ? 'w-full' : 'h-full'}"
-        on:mousemove={mouse_handler}
-        on:touchmove={mouse_handler}
-        on:mouseout={handle_mouse_out}
-        on:touchend={handle_mouse_out}
+        onmousemove={mouse_handler}
+        ontouchmove={mouse_handler}
+        onmouseout={handle_mouse_out}
+        ontouchend={handle_mouse_out}
       />
     {/if}
     {#if $mask_img}

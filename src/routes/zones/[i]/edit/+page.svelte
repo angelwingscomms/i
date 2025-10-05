@@ -1,26 +1,26 @@
 <script lang="ts">
-	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
-	import Button from '$lib/components/Button.svelte';
-	import { toast } from '$lib/util/toast.svelte.js';
+import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
+import Button from '$lib/components/Button.svelte';
+import { ZoneMap } from '$lib/components/zone';
+import { toast } from '$lib/util/toast.svelte.js';
 	import { enhance } from '$app/forms';
 
 	let { data } = $props();
-	let zone = $state(data.z);
+let zone = $state(data.z);
+let map_visible = $state(true);
 </script>
 
 <div class="mx-auto max-w-2xl p-4">
 	<div class="mb-6">
 		<a
 			href={`/zones/${zone.i}`}
-			class="inline-flex items-center font-medium text-[var(--text-accent)] hover:text-[var(--accent-primary)]"
-			>&larr; Back to zone</a
+			class="inline-flex items-center font-medium lowercase text-[var(--text-accent)] hover:text-[var(--accent-primary)]"
+			>&larr; back to zone</a
 		>
 	</div>
 
-	<h1
-		class="mb-6 text-2xl font-bold text-[var(--accent-primary)]"
-	>
-		Edit Zone
+	<h1 class="mb-6 text-2xl font-bold lowercase text-[var(--accent-primary)]">
+		edit zone
 	</h1>
 
 	<form
@@ -29,21 +29,20 @@
 			onError: (e) =>
 				toast.error(
 					e.detail.result.message ||
-						'Failed to update zone'
+						'failed to update zone'
 				)
 		}}
 	>
 		<input type="hidden" name="i" value={zone.i} />
 
-		<div class="space-y-6">
+	<div class="space-y-6">
 			<div>
-				<label
-					class="mb-2 block text-sm font-medium text-[var(--text-secondary)]"
-					>Name</label
-				>
+				<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]">
+					name
+				</label>
 				<DescriptionInput
 					bind:value={zone.n}
-					placeholder="Enter zone name"
+					placeholder="enter zone name"
 					label=""
 					editable={true}
 				/>
@@ -51,39 +50,56 @@
 
 			<div class="grid grid-cols-2 gap-4">
 				<div>
-					<label
-						class="mb-2 block text-sm font-medium text-[var(--text-secondary)]"
-						>Latitude</label
-					>
+					<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]">
+						latitude
+					</label>
 					<input
 						type="number"
 						step="any"
-						name="l"
-						value={zone.l}
-						placeholder="Latitude"
+					name="l"
+					bind:value={zone.l}
+						placeholder="latitude"
 						class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-[var(--text)]"
 						required
 					/>
 				</div>
 				<div>
-					<label
-						class="mb-2 block text-sm font-medium text-[var(--text-secondary)]"
-						>Longitude</label
-					>
+					<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]">
+						longitude
+					</label>
 					<input
 						type="number"
 						step="any"
-						name="g"
-						value={zone.g}
-						placeholder="Longitude"
+					name="g"
+					bind:value={zone.g}
+						placeholder="longitude"
 						class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-[var(--text)]"
 						required
 					/>
 				</div>
 			</div>
 
+		{#if map_visible && zone.l !== undefined && zone.g !== undefined}
+			<div class="space-y-2">
+				<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]">
+					adjust location
+				</label>
+				<ZoneMap
+					lat={zone.l || 0}
+					lon={zone.g || 0}
+					onchange={({ detail }) => {
+						zone.l = Number(detail.lat.toFixed(6));
+						zone.g = Number(detail.lon.toFixed(6));
+					}}
+				/>
+				<p class="text-xs lowercase text-[var(--color-theme-3)]">
+					move the pin or tap the map to set the exact spot
+				</p>
+			</div>
+		{/if}
+
 			<Button
-				text="Update Zone"
+				text="update zone"
 				type="submit"
 				wide={true}
 			/>

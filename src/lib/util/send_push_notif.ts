@@ -41,10 +41,10 @@ export const send_push_notif = async (
 		);
 
 		// Send via fetch (Workers-compatible)
-		const res = await fetch(
-			subscription.endpoint,
-			payload
-		);
+		const res = await fetch(subscription.endpoint, {
+			...payload,
+			body: payload.body as any
+		});
 
 		notif_debug(
 			`send_push_notif success: status=${res.status}, endpoint=${subscription.endpoint}`

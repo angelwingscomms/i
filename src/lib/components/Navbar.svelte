@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { navigating } from '$app/state';
 	import type { User } from '$lib/types';
-	import {
-		onMount,
-		createEventDispatcher
-	} from 'svelte';
+	import { onMount } from 'svelte';
 	import { addToast } from '$lib/util/toast.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { logout } from '$lib/util/logout.js';
 
-	let { user = null }: { user: User | null } =
+	let {
+		user = null,
+		onmenu
+	}: { user: User | null; onmenu: () => void } =
 		$props();
 
 	let can_install = false;
@@ -17,12 +17,6 @@
 		null;
 
 	let is_installed = false;
-
-	const dispatch = createEventDispatcher();
-
-	function toggle_menu() {
-		dispatch('menutoggle');
-	}
 
 	type BeforeInstallPromptEvent = Event & {
 		prompt: () => Promise<void>;
@@ -160,7 +154,7 @@
 				/>
 				<button
 					class="btn-icon border-none bg-transparent p-2"
-					onclick={toggle_menu}
+					onclick={onmenu}
 					aria-label="Toggle menu"
 				>
 					<svg

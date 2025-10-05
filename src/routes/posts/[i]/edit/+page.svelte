@@ -6,7 +6,6 @@
 	import axios from 'axios';
 	import Modal from '$lib/components/Modal.svelte';
 	import PostSearch from '$lib/components/PostSearch.svelte';
-	import ZoneSearch from '$lib/components/ZoneSearch.svelte';
 
 	import { goto } from '$app/navigation';
 	import { md } from '$lib/util/marked.js';
@@ -173,7 +172,7 @@
 </script>
 
 <svelte:window
-	on:keydown={handleKeyDown}
+	onkeydown={handleKeyDown}
 	bind:innerWidth={width}
 />
 

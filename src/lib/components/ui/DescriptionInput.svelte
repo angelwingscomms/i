@@ -6,6 +6,7 @@
 	let {
 		value = $bindable(),
 		editable = true,
+		disabled = false,
 		placeholder = `beliefs, interests, hobbies, stuff you could talk about for hours...`,
 		rows = undefined,
 		type = 'text',
@@ -36,6 +37,7 @@
 	}: {
 		value?: string | number | undefined;
 		editable?: boolean;
+		disabled?: boolean;
 		placeholder?: string;
 		rows?: number;
 		type?: string;
@@ -238,7 +240,9 @@
 				{placeholder}
 				{rows}
 				required
-				disabled={!editable || isTranscribing}
+				disabled={disabled ||
+					!editable ||
+					isTranscribing}
 				readonly={!editable}
 				bind:this={ref}
 				{oninput}
@@ -259,7 +263,9 @@
 					: 'flex-1'} appearance-none bg-transparent [::-webkit-clear-button]:hidden [::-webkit-search-cancel-button]:hidden"
 				{placeholder}
 				required
-				disabled={!editable || isTranscribing}
+				disabled={disabled ||
+					!editable ||
+					isTranscribing}
 				readonly={!editable}
 				bind:this={ref}
 				{oninput}
@@ -276,12 +282,14 @@
 							<Button
 								onclick={() => (value = '')}
 								icon="fa-times"
+								type="button"
 							/>
 						{/if}
 						{#if voice_typing}
 							<Button
 								onclick={startRecording}
 								icon="fa-microphone"
+								type="button"
 							/>
 						{/if}
 						{#if send}
@@ -292,18 +300,21 @@
 									: 'fa-paper-plane'}
 								loading={send_loading}
 								disabled={send_loading}
+								type="button"
 							/>
 						{/if}
 					{:else if isRecording}
 						<Button
 							onclick={stopRecording}
 							icon="fa-circle"
+							type="button"
 						/>
 					{:else}
 						<Button
 							icon="fa-spinner"
 							disabled={true}
 							loading={true}
+							type="button"
 						/>
 					{/if}
 				</div>
@@ -315,6 +326,7 @@
 								icon={btn.icon_classes}
 								loading={btn.loading}
 								disabled={btn.loading}
+								type="button"
 							/>
 						{/each}
 					</div>

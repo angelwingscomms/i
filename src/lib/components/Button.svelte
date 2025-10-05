@@ -11,7 +11,8 @@
 		icon,
 		variant = 'primary',
 		active = false,
-		formaction
+	formaction,
+	type = 'submit'
 	}: {
 		onclick?: (event: MouseEvent) => void;
 		text?: string;
@@ -22,7 +23,8 @@
 		icon?: string;
 		variant?: 'primary' | 'secondary';
 		active?: boolean;
-		formaction?: string;
+	formaction?: string;
+	type?: 'button' | 'submit' | 'reset';
 	} = $props();
 
 	const effectiveLoading = $derived.by(
@@ -63,6 +65,7 @@
 			: ''} {active ? 'border-white text-white' : ''}"
 		{onclick}
 		{formaction}
+		type={type}
 		disabled={effectiveLoading || disabled}
 	>
 		{#if effectiveLoading}

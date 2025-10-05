@@ -85,7 +85,7 @@
 	}
 </script>
 
-<svelte:window on:keydown={handleKeyDown} />
+<svelte:window onkeydown={handleKeyDown} />
 
 <div class="mx-auto max-w-2xl p-4">
 	<div class="mb-4 flex items-center justify-between">

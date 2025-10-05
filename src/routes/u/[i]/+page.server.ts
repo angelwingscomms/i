@@ -64,7 +64,9 @@ export const load: PageServerLoad = async ({
 	> = [];
 	if (user.d) {
 		const vector = await embed(user.d);
-		results = await search_by_vector<User>({
+		results = await search_by_vector<
+			Pick<User, 't' | 'av' | 'a' | 'g'>
+		>({
 			vector,
 			with_payload: ['t', 'a', 'g', 'av'],
 			filter: { must: { s: 'u' }, must_not: { i } },

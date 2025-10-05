@@ -325,7 +325,7 @@
 				<button
 					id="record-btn"
 					class="mb-4 rounded-lg bg-[var(--color-theme-1)] px-8 py-4 font-medium text-white transition-colors duration-200 hover:bg-[var(--color-theme-1-hover)]"
-					on:click={toggleRecording}
+					onclick={toggleRecording}
 				>
 					<span id="record-text">start recording</span
 					>

@@ -3,7 +3,6 @@ import { error, json, text } from '@sveltejs/kit';
 import { get } from '$lib/db';
 import type { Room } from '$lib/types';
 import { s } from '$lib/util/s';
-import { REALTIME_API_TOKEN } from '$env/static/private';
 import axios from 'axios';
 import { realtime } from '$lib/util/realtime';
 
@@ -77,9 +76,9 @@ export const POST: RequestHandler = async ({
 			}
 		);
 
-		if (!response?.ok)
+		if (response.status !== 200)
 			throw new Error('Failed to get token');
-		const data = await response.json();
+		const data = response.data;
 		if (!data?.success)
 			throw new Error('Invalid response');
 		token = data.data.token;

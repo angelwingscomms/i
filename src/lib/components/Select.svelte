@@ -31,8 +31,7 @@
 </script>
 
 <div
-	use:outside_click
-	outside_click={() => (open = false)}
+	use:outside_click={() => (open = false)}
 	class="dropdown-container w-full"
 	bind:this={sort_ref}
 >

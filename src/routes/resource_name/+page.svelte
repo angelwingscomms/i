@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ResourceSearch from '$lib/components/resource/ResourceSearch.svelte';
+	import { ResourceSearch } from '$lib/components/resource_name';
 
 	let { data } = $props();
 </script>

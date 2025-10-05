@@ -1,18 +1,29 @@
-import type { Action } from 'svelte/action';
-
-export const outside_click =
-	(callback: () => void): Action =>
-	(node) => {
-		document.addEventListener(
-			'click',
-			(event) => {
-				if (
-					node &&
-					!node.contains(event.target as Node) &&
-					!event.defaultPrevented
-				)
-					callback();
-			},
-			true
-		);
+export const outside_click = (
+	node: HTMLElement,
+	callback: () => void
+) => {
+	const handleClick = (event: Event) => {
+		if (
+			node &&
+			!node.contains(event.target as Node) &&
+			!event.defaultPrevented
+		)
+			callback();
 	};
+
+	document.addEventListener(
+		'click',
+		handleClick,
+		true
+	);
+
+	return {
+		destroy() {
+			document.removeEventListener(
+				'click',
+				handleClick,
+				true
+			);
+		}
+	};
+};

@@ -1,5 +1,5 @@
 import { collection } from '$lib/constants';
-import { get, qdrant, set } from '$lib/db';
+import { get, qdrant, set, new_id } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
 import { error, text } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
@@ -61,7 +61,7 @@ export const GET: RequestHandler = async ({
 				deets.g = Number(url.searchParams.get('g'));
 			}
 			// console.debug('deets', deets)
-			const must = [
+			const must: Array<Record<string, unknown>> = [
 				{ key: 'f', match: { value: 1 } }
 			];
 
@@ -189,10 +189,10 @@ export const GET: RequestHandler = async ({
 								u: locals.user.i,
 								r: res.points[0].id as string,
 								d: Date.now(),
-								a: other_user.a,
-								g: other_user.g
+								a: other_user!.a,
+								g: other_user!.g
 							},
-							vector: other_user.vector
+							vector: other_user!.vector
 						},
 						{
 							id: point2Id,
@@ -201,10 +201,10 @@ export const GET: RequestHandler = async ({
 								u: res.points[0].id,
 								r: locals.user.i,
 								d: Date.now(),
-								a: self.a,
-								g: self.g
+								a: self!.a,
+								g: self!.g
 							},
-							vector: self.vector
+							vector: self!.vector
 						}
 					],
 					wait: true
@@ -352,7 +352,7 @@ export const GET: RequestHandler = async ({
 		// console.error('Error type:', err.constructor.name);
 		// console.error('Stack trace:', err.stack);
 		// console.error('Full error object:', JSON.stringify(err, null, 2));
-		if (err.status) throw err;
+		if ((err as any).status) throw err;
 		throw error(500, 'Internal server error');
 	}
 };

@@ -7,6 +7,7 @@ export interface LocalsUser {
 	av?: string;
 	a?: number;
 	g?: number;
+	p?: string;
 }
 
 export interface User {
@@ -25,7 +26,7 @@ export interface User {
 	dc?: number; // date created
 	on?: number; // last online timestamp (ms)
 	ic?: boolean; // currently in call
-	r?: string; // realtime meeting id
+	r?: string[]; // rooms the user belongs to
 	c?: string[]; // color palette hex without #
 	// c: Record<string, string>;
 	x?: string[]; // contact links,
@@ -145,4 +146,40 @@ export interface Recording {
 	// Add fields like start_time, duration if needed for display
 }
 
+export interface World {
+	s: 'w';
+	i?: string;
+	u: string;
+	n: string;
+	a?: string;
+	j?: Record<string, unknown>;
+	d: number;
+	l?: number;
+}
+
+export interface Character {
+	s: 'wc';
+	i?: string;
+	u: string;
+	w: string;
+	n: string;
+	a?: string;
+	j?: Record<string, unknown>;
+	d: number;
+	l?: number;
+}
+
+export interface Environment {
+	s: 'we';
+	i?: string;
+	u: string;
+	w: string;
+	n: string;
+	a?: string;
+	j?: Record<string, unknown>;
+	d: number;
+	l?: number;
+}
+
 export type { Resume } from './resume';
+export type { Zone } from './zone';

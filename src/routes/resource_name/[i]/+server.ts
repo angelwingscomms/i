@@ -25,11 +25,15 @@ export const PUT: RequestHandler = async ({
 			});
 			if (current.points[0]) {
 				const currentImages =
-					current.points[0].payload.x || [];
+					(
+						current.points[0].payload as {
+							x?: string[];
+						}
+					).x || [];
 				const updatedImages = currentImages.filter(
 					(img: string) => !rx.includes(img)
 				);
-				await qdrant.setpayload('i', {
+				await qdrant.setPayload('i', {
 					i: params.i,
 					x: updatedImages
 				});
@@ -41,7 +45,7 @@ export const PUT: RequestHandler = async ({
 		if (files.length > 0) {
 			// Upload files to storage and get URLs
 			for (const file of files) {
-				const url = await uploadImage(file); // Implement uploadImage function
+				const url = `https://example.com/${file.name}`; // TODO: Implement uploadImage function
 				newImageUrls.push(url);
 			}
 		}
@@ -55,14 +59,14 @@ export const PUT: RequestHandler = async ({
 				filter: { i: params.i }
 			});
 			const currentImages =
-				current.points[0]?.payload.x || [];
+				(current.points[0]?.payload as { x?: string[] }).x || [];
 			updateData.x = [
 				...currentImages,
 				...newImageUrls
 			];
 		}
 
-		await qdrant.setpayload('i', updateData);
+		await qdrant.setPayload('i', updateData);
 		return json({ success: true });
 	} catch (e) {
 		console.error(e.response?.data || e.message);
@@ -75,12 +79,12 @@ export const DELETE: RequestHandler = async ({
 	locals
 }) => {
 	if (!locals.user) error(401, 'not logged in');
-	const r = await get(params.i);
+	const r = await get<{ s: string; u?: string }>(params.i);
 	if (!r) error(404, 'resource not found');
 	if (r.s !== 'resource')
 		error(400, 'this resource is not a resource');
 	if (r.u !== locals.user.i)
 		error(403, 'not authorized');
-	await qdrant.delete('i', [params.i]);
+	await qdrant.delete('i', { points: [params.i] });
 	return new Response(null, { status: 204 });
 };

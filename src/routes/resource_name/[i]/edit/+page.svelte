@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import axios from 'axios';
-	import { toast } from '$lib/util/toast.svelte ';
+	import { toast } from '$lib/util/toast.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import type { ResourceName } from '$lib/types/resource_name.js';
 	let { data } = $props(),
 		r: ResourceName = data.r;
 

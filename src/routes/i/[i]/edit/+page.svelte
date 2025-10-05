@@ -10,7 +10,7 @@
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import Combo from '$lib/components/Combo.svelte';
 	import axios from 'axios';
-	import ZoneSearch from '$lib/components/ZoneSearch.svelte';
+	import {ZoneSearch} from '$lib/components/zone';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { Item } from '$lib/types/item';

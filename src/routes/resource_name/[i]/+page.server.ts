@@ -7,7 +7,9 @@ export const load: PageServerLoad = async ({
 	locals
 }) => {
 	if (!params.i) error(400, 'missing resource id');
-	const r = await get(params.i);
+	const r = await get<{ s: string; u?: string }>(
+		params.i
+	);
 	if (!r) error(404, 'resource not found');
 	if (r.s !== 'resource')
 		error(400, 'this resource is not a resource');

@@ -17,6 +17,9 @@ export const load: PageServerLoad = async ({
 		throw error(404, 'This entity is not a resume');
 	}
 
+	if (!resume.u) {
+		throw error(404, 'Resume has no owner');
+	}
 	const owner = await get<Pick<User, 't' | 's'>>(
 		resume.u,
 		['t', 's']

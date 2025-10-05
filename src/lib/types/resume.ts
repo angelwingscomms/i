@@ -5,4 +5,5 @@ export interface Resume {
 	d: number; // created
 	l?: number; // last updated
 	i?: string; // id
+	txt?: string; // text content
 }

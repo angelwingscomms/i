@@ -1,5 +1,6 @@
 import { create, get, set } from '$lib/db';
 import type { RequestHandler } from './$types';
+import type { R2Bucket } from '@cloudflare/workers-types';
 import type {
 	DBChatMessage,
 	SendChatMessage,
@@ -56,11 +57,12 @@ export const POST: RequestHandler = async ({
 					const url = await upload_image(
 						file,
 						undefined,
-						platform as unknown as {
+						{
+							...platform,
 							env: {
-								R2: R2Bucket;
-								[key: string]: unknown;
-							};
+								...platform.env,
+								R2: platform.env.R2 as R2Bucket
+							}
 						}
 					);
 					fileUrls.push(url);
@@ -92,7 +94,6 @@ export const POST: RequestHandler = async ({
 		m: m.m,
 		d: m.d,
 		i: m.i,
-		_: m._,
 		h: 0,
 		t: m.t,
 		r: params.i,
@@ -182,7 +183,10 @@ export const POST: RequestHandler = async ({
 	// Fetch sender's avatar for push notification icon
 	let senderAv: string | undefined;
 	if (locals.user?.i) {
-		const sender = await get(locals.user.i, ['av']);
+		const sender = await get<{ av?: string }>(
+			locals.user.i,
+			['av']
+		);
 		senderAv = sender?.av;
 	}
 	const iconUrl = senderAv || '/icons/icon-192.png';
@@ -296,7 +300,7 @@ export const POST: RequestHandler = async ({
 								`Attempting send for ${p.id}, endpoint=${p.sub.endpoint}`
 							);
 							return send_push_notif(
-								p.sub,
+								p.sub as any,
 								notificationPayload
 							);
 						})

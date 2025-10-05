@@ -1,4 +1,4 @@
-import { get } from '$lib/db';
+import { get, new_id } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
 
 export const load = async ({ params, locals }) => {

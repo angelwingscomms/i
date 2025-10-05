@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { search_by_payload } from '$lib/db';
 
 export const POST: RequestHandler = async ({
 	request
@@ -43,10 +44,14 @@ export const POST: RequestHandler = async ({
 		}
 
 		// Check if username already exists in database
+		const existingUsers = await search_by_payload(
+			{ s: 'u', t: username },
+			['i']
+		);
 		const existingUser =
-			await db.query.user.findFirst({
-				where: (user, { eq }) => eq(user.t, username)
-			});
+			existingUsers.length > 0
+				? existingUsers[0]
+				: null;
 
 		if (existingUser) {
 			return json(
