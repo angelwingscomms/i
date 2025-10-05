@@ -340,6 +340,14 @@
 								variant="primary"
 							/>
 						</div>
+						<div class="mt-4 flex justify-center">
+							<Button
+								href={`/u/${user.i}/i`}
+								text="view items"
+								icon="fa-bag-shopping"
+								variant="primary"
+							/>
+						</div>
 
 						{#if !user.description}
 							<div
@@ -404,6 +412,14 @@
 									href={`/u/${user.i}/posts`}
 									text="view posts"
 									icon="fa-newspaper"
+									variant="primary"
+								/>
+							</div>
+							<div class="flex justify-center">
+								<Button
+									href={`/u/${user.i}/i`}
+									text="view items"
+									icon="fa-bag-shopping"
 									variant="primary"
 								/>
 							</div>
