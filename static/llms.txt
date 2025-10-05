@@ -59,7 +59,7 @@ The app is deployed as a Cloudflare Worker for serverless execution, with static
 
 ### Advanced Features
 - **Real-Time Rooms**: Live sessions with recording download links.
-- **SAM Integration**: Possible image masking/scaling (`src/lib/sam/`), though usage unclear.
+
 - **Dev Tools**: Transcribe API (`/api/transcribe`), though implementation details sparse.
 - **Offline Support**: Service worker (`service-worker.ts`), manifest (`manifest.webmanifest`), offline page.
 

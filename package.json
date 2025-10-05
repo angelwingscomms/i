@@ -95,8 +95,6 @@
 		"marked": "^16.3.0",
 		"miniflare": "^4.20250923.0",
 		"nanoid": "^5.1.6",
-		"npyjs": "^1.0.2",
-		"onnxruntime-web": "^1.23.0",
 		"worker-password-auth": "^1.0.0"
 	}
 }
