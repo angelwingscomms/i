@@ -125,9 +125,7 @@
 
 <nav class="nav">
 	<div class="container-main">
-		<div
-			class="flex h-16 items-center justify-between"
-		>
+		<div class="flex h-16 items-center">
 			<div class="flex items-center">
 				<a
 					href="/"
@@ -142,16 +140,39 @@
 				</a>
 			</div>
 
-			<div class="flex items-center gap-2">
+			<Button
+				text="install webapp"
+				onclick={handle_install_click}
+				variant="primary"
+			/>
+
+			<div class="ml-auto flex items-center gap-2">
 				{#if navigating.to}
 					<i class="fas fa-spinner fa-spin text-sm"
 					></i>
 				{/if}
-				<Button
-					text="install webapp"
-					onclick={handle_install_click}
-					variant="primary"
-				/>
+				{#if user}
+					<div
+						class="flex items-center gap-3 pl-4"
+						style="border-left: 2px solid var(--color-theme-6);"
+					>
+						<a
+							href="/u/{user.i}"
+							class="flex items-center gap-2 text-sm font-bold transition-all hover:scale-105"
+							style="color: var(--color-theme-1);"
+						>
+							<i class="fas fa-user-circle"></i>
+							{user.t}
+						</a>
+					</div>
+				{:else}
+					<Button
+						href="/login"
+						text="login"
+						icon="far fa-user h-4 w-4"
+						variant="secondary"
+					/>
+				{/if}
 				<button
 					class="btn-icon border-none bg-transparent p-2"
 					onclick={onmenu}
@@ -169,46 +190,6 @@
 						/>
 					</svg>
 				</button>
-			</div>
-
-			<div class="hidden items-center gap-6 md:flex">
-				{#if user}
-					<div class="flex items-center gap-4">
-						<Button
-							href="/settings"
-							text="Settings"
-							icon="fa-gear"
-							variant="primary"
-						/>
-
-						<div
-							class="flex items-center gap-3 pl-4"
-							style="border-left: 2px solid var(--color-theme-6);"
-						>
-							<a
-								href="/u/{user.i}"
-								class="flex items-center gap-2 text-sm font-bold transition-all hover:scale-105"
-								style="color: var(--color-theme-1);"
-							>
-								<i class="fas fa-user-circle"></i>
-								{user.t}
-							</a>
-							<Button
-								onclick={logout}
-								text="Logout"
-								icon="fa-arrow-right-from-bracket"
-								variant="secondary"
-							/>
-						</div>
-					</div>
-				{:else}
-					<Button
-						href="/login"
-						text="login"
-						icon="far fa-user h-4 w-4"
-						variant="secondary"
-					/>
-				{/if}
 			</div>
 		</div>
 	</div>
