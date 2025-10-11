@@ -157,7 +157,7 @@
 						style="border-left: 2px solid var(--color-theme-6);"
 					>
 						<a
-							href="/u/{user.i}"
+							href="/{user.t}"
 							class="flex items-center gap-2 text-sm font-bold transition-all hover:scale-105"
 							style="color: var(--color-theme-1);"
 						>

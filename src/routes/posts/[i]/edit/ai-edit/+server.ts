@@ -1,7 +1,7 @@
 import { json, error } from '@sveltejs/kit';
 import { get } from '$lib/db';
 import { update_post } from '$lib/db/post';
-import { qwen } from '$lib/util/ai/qwen';
+import { generate } from '$lib/util/ai/generate';
 import type { Post } from '$lib/types';
 
 export const POST = async ({
@@ -37,7 +37,7 @@ export const POST = async ({
 		throw error(403, "You don't own this post");
 	}
 	const prompt = `Edit the following post based on these instructions: "${instructions}". Current post body: "${post.b || ''}". Output the edited post body in markdown format. Do not include any other text or formatting.`;
-	const new_content = (await qwen(prompt)).trim();
+	const new_content = (await generate(prompt)).trim();
 
 	await update_post(i, {
 		b: new_content || post.b,

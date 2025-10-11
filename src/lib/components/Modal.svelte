@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { outside_click } from '$lib/util/outside_click';
 	import { createBubbler } from 'svelte/legacy';
 	import { fade } from 'svelte/transition';
 
@@ -21,7 +22,7 @@
 		title = '',
 		showClose = true,
 		closeOnBackdrop = true,
-		closeOnEscape = true,
+		closeOnEscape = false,
 		width = 'min(720px, 92vw)',
 		height = 'auto'
 	}: ModalProps = $props();
@@ -43,7 +44,8 @@
 		class="modal-backdrop"
 		role="dialog"
 		tabindex="-1"
-		onclick={() => closeOnBackdrop && handleClose()}
+		use:outside_click
+		outside_click={() => closeOnBackdrop && handleClose()}
 		onkeydown={handleKeydown}
 		in:fade={{ duration: 200 }}
 		out:fade={{ duration: 150 }}
@@ -51,6 +53,7 @@
 		<div
 			class="modal"
 			style="width: {width}; height: {height};"
+			onclick={(e) => e.stopPropagation()}
 			in:fade={{ duration: 200, delay: 50 }}
 			out:fade={{ duration: 150 }}
 		>

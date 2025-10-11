@@ -160,7 +160,7 @@
 					resume
 				</a>
 				<a
-					href="/u/{page.data.user.i}"
+					href="/{page.data.user.t}"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-4);"
 					onclick={close_sidebar}

@@ -397,7 +397,7 @@
 						wide={true}
 					/>
 					<Button
-						href={`/u/${data.u.i}`}
+						href={`/${data.u.t}`}
 						text="view profile"
 						target="_blank"
 						variant="secondary"

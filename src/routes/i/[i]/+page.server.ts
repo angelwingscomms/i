@@ -14,10 +14,19 @@ export const load: PageServerLoad = async ({
 	if (item.s !== 'i')
 		error(400, 'this resource is not an item');
 
+	let ownerTag = 'Unknown';
+	if (item.u) {
+		const owner = await get<{ t: string }>(
+			item.u as string,
+			't'
+		);
+		if (owner) ownerTag = owner.t;
+	}
+
 	return {
 		user: locals.user
 			? { i: locals.user.i, t: locals.user.t }
 			: null,
-		i: { ...(item as unknown as Item), i }
+		i: { ...(item as unknown as Item), i, ownerTag }
 	};
 };

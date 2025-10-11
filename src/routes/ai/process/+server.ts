@@ -53,10 +53,10 @@ export const POST: RequestHandler = async ({
 			throw error(500, 'failed to transcribe audio');
 		}
 
-		// step 2: generate ai response with qwen3 32b
+		// step 2: generate ai response with llama-3.1-8b-instant
 		const chatCompletion =
 			await groq.chat.completions.create({
-				model: 'qwen/qwen3-32b',
+				model: 'llama-3.1-8b-instant',
 				messages: [
 					{
 						role: 'system',

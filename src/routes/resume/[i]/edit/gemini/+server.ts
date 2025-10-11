@@ -1,7 +1,7 @@
 import { json, error, text } from '@sveltejs/kit';
 import { edit_point, get } from '$lib/db';
 import { get_user_colors } from '$lib/util/colors';
-import { qwen } from '$lib/util/ai/qwen';
+import { generate } from '$lib/util/ai/generate';
 import type { Resume } from '$lib/types';
 
 export const POST = async ({
@@ -36,7 +36,7 @@ export const POST = async ({
 		.map((c) => `#${c}`)
 		.join(', ');
 	const prompt = `Write a complete HTML/CSS resume page. Current resume HTML: ${resume.h}. Current text content: ${resume.txt}. Edit according to these instructions: ${instructions}. Incorporate these user colors into the design where appropriate: ${colorStr}. Output only the HTML code with embedded CSS in the <style> tag. Make it professional and responsive.`;
-	let new_h = await qwen(prompt);
+	let new_h = await generate(prompt);
 	new_h = new_h
 		.replace(/^```html\s*\n?/, '')
 		.replace(/\n?```$/, '')

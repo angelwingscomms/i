@@ -1,4 +1,4 @@
-import { qwen } from '$lib/util/ai/qwen';
+import { generate } from '$lib/util/ai/generate';
 import type { Actions } from './$types';
 
 export const actions: Actions = {
@@ -13,10 +13,10 @@ export const actions: Actions = {
 		}
 
 		try {
-			const response = await qwen(message);
+			const response = await generate(message);
 			return { response };
 		} catch (error) {
-			console.error('Error calling qwen:', error);
+			console.error('Error calling generate:', error);
 			return { error: 'Failed to get response' };
 		}
 	}

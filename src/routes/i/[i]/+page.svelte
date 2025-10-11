@@ -239,19 +239,19 @@
 									class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row"
 								>
 									<Button
-										href="/u/{item.u}/c"
+										href="/{item.ownerTag}/c"
 										text="Chat with Owner"
 										icon="fa-comments"
 										variant="primary"
 									/>
 									<Button
-										href="/u/{item.u}"
+										href="/{item.ownerTag}"
 										variant="secondary"
 										icon="fa-user"
 										text="View Owner Profile"
 									/>
 									<Button
-										href="/u/{item.u}/i"
+										href="/{item.ownerTag}/i"
 										variant="secondary"
 										icon="fa-shopping-bag"
 										text="More from Owner"
@@ -383,7 +383,7 @@
 				>
 					<div class="flex-1 sm:flex-none">
 						<Button
-							href="/u/{item.u}/c"
+							href="/{item.ownerTag}/c"
 							text="Chat with Owner"
 							icon="fa-comments"
 							variant="primary"
@@ -393,13 +393,13 @@
 						class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row"
 					>
 						<Button
-							href="/u/{item.u}"
+							href="/{item.ownerTag}"
 							variant="secondary"
 							icon="fa-user"
 							text="View Owner Profile"
 						/>
 						<Button
-							href="/u/{item.u}/i"
+							href="/{item.ownerTag}/i"
 							variant="secondary"
 							icon="fa-shopping-bag"
 							text="More from Owner"
@@ -776,7 +776,7 @@
 						{#if relatedItems.length >= 6}
 							<div class="mt-10 text-center">
 								<Button
-									href="/u/{item.u}/i"
+							href="/{item.ownerTag}/i"
 									variant="secondary"
 									icon="fa-eye"
 									text="View All Items from This Seller"

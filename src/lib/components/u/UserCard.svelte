@@ -23,7 +23,7 @@
 
 <a
 	class="user-card group block no-underline"
-	href={`/u/${u.i}`}
+	href={`/${u.t}`}
 >
 	<div
 		class="flex items-center gap-4 rounded-2xl p-4 transition-all duration-300"

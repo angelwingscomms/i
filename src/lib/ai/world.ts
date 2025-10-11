@@ -1,4 +1,4 @@
-import { qwen } from '$lib/util/ai/qwen';
+import { generate } from '$lib/util/ai/generate';
 
 export interface GeneratedCharacter {
 	name: string;
@@ -62,7 +62,7 @@ output valid json matching:
   }
 }`;
 
-	const response = await qwen(prompt);
+	const response = await generate(prompt);
 	try {
 		const parsed = JSON.parse(response);
 		return {
@@ -132,7 +132,7 @@ output valid json matching:
   }
 }`;
 
-	const response = await qwen(prompt);
+	const response = await generate(prompt);
 	try {
 		const parsed = JSON.parse(response);
 		return {

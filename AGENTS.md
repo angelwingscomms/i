@@ -26,3 +26,4 @@
 - when styling, always use vars in src/styles/\_variables.css. always use Tailwind only. DON'T USE STYLEBLOCKS OR INLINE STYLES.
 - never start the dev server
 - always use all lowercase for all UI text
+- always run `npm run lint` before ending

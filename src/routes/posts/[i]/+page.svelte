@@ -55,7 +55,7 @@
 				</span>
 				<Button
 					text={data.author.t}
-					href={`/u/${data.author.i}`}
+					href={`/${data.author.t}`}
 					variant="secondary"
 					class="p-0 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)]"
 				/>
@@ -88,7 +88,7 @@
 					: 'View author'}
 				href={data.user?.i === post.u
 					? `/posts/${post.i}/edit`
-					: `/u/${post.u}`}
+					: `/${data.author.t}`}
 				icon={data.user?.i === post.u
 					? 'fa-edit'
 					: undefined}

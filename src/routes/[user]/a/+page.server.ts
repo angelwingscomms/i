@@ -1,6 +1,10 @@
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { get, qdrant } from '$lib/db';
+import {
+	get,
+	qdrant,
+	find_user_by_tag
+} from '$lib/db';
 import { collection } from '$lib/constants';
 import { createRoom } from '$lib/room/create';
 
@@ -8,14 +12,11 @@ export const load: PageServerLoad = async ({
 	locals,
 	params
 }) => {
-	const { t, s } = (await get<{
-		t: string | null;
-		s: string | null;
-	}>(params.i, ['t', 's'])) ?? { t: null, s: null };
-	if (!t) error(404, 'user not found');
-	if (s !== 'u') error(400, 'resource not user');
+	const user = await find_user_by_tag(params.user);
+	if (!user) error(404, 'user not found');
+	if (user.s !== 'u') error(400, 'resource not user');
 	if (!locals.user) {
-		redirect(302, `/login?next=/u/${params.i}/a`);
+		redirect(302, `/login?next=/${params.user}/a`);
 	}
 
 	const existing_room = await qdrant.scroll(
@@ -29,7 +30,7 @@ export const load: PageServerLoad = async ({
 						key: 'x',
 						match: { value: locals.user.i }
 					},
-					{ key: 'x', match: { value: params.i } }
+					{ key: 'x', match: { value: user.i } }
 				]
 			},
 			with_payload: true,
@@ -46,7 +47,7 @@ export const load: PageServerLoad = async ({
 	const roomId = await createRoom({
 		users: locals.user.i,
 		_: '-',
-		extra: { r: params.i }
+		extra: { r: user.i }
 	});
 	// Redirect to the newly created room
 	redirect(302, `/r/${roomId}`);

@@ -1,7 +1,7 @@
 import { GROQ } from '$env/static/private';
 import Groq from 'groq-sdk';
 
-export async function qwen(
+export async function generate(
 	prompt: string
 ): Promise<string> {
 	const client = new Groq({
@@ -11,7 +11,7 @@ export async function qwen(
 	const chatCompletion =
 		await client.chat.completions.create({
 			messages: [{ role: 'user', content: prompt }],
-			model: 'qwen/qwen3-32b',
+			model: 'llama-3.1-8b-instant',
 			max_tokens: 40960
 		});
 

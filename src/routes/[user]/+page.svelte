@@ -94,7 +94,7 @@
 	async function copyLink() {
 		try {
 			await navigator.clipboard.writeText(
-				`${window.location.origin}/u/${user?.i ?? ''}`
+				`${window.location.origin}/${user?.tag ?? ''}`
 			);
 			copied = true;
 
@@ -311,7 +311,7 @@
 								style="background: var(--accent-lilac-light); color: var(--color-theme-4);"
 							>
 								{#if typeof window !== 'undefined'}{window
-										.location.origin}/u/{user.i}{/if}
+										.location.origin}/{user.tag}{/if}
 							</div>
 							<Button
 								onclick={copyLink}
@@ -334,7 +334,7 @@
 						</div>
 						<div class="mt-4 flex justify-center">
 							<Button
-								href={`/u/${user.i}/posts`}
+								href={`/${user.tag}/posts`}
 								text="view posts"
 								icon="fa-newspaper"
 								variant="primary"
@@ -342,7 +342,7 @@
 						</div>
 						<div class="mt-4 flex justify-center">
 							<Button
-								href={`/u/${user.i}/i`}
+								href={`/${user.tag}/i`}
 								text="view items"
 								icon="fa-bag-shopping"
 								variant="primary"
@@ -385,7 +385,7 @@
 						<div class="mt-8 space-y-4">
 							<div class="flex justify-center">
 								<Button
-									href={`/u/${user.i}/a`}
+									href={`/${user.tag}/a`}
 									text={`chat w ${user.tag} anonymously`}
 									icon="fa-comments"
 									variant="primary"
@@ -393,7 +393,7 @@
 							</div>
 							<div class="flex justify-center">
 								<Button
-									href={`/u/${user.i}/c`}
+									href={`/${user.tag}/c`}
 									text={`chat w ${user.tag}`}
 									icon="fa-comments"
 									variant="primary"
@@ -401,7 +401,7 @@
 							</div>
 							<div class="flex justify-center">
 								<Button
-									href="/u/{user.i}/c?call=video"
+									href="/{user.tag}/c?call=video"
 									text="Video call"
 									icon="fa-video"
 									variant="primary"
@@ -409,7 +409,7 @@
 							</div>
 							<div class="flex justify-center">
 								<Button
-									href={`/u/${user.i}/posts`}
+									href={`/${user.tag}/posts`}
 									text="view posts"
 									icon="fa-newspaper"
 									variant="primary"
@@ -417,7 +417,7 @@
 							</div>
 							<div class="flex justify-center">
 								<Button
-									href={`/u/${user.i}/i`}
+									href={`/${user.tag}/i`}
 									text="view items"
 									icon="fa-bag-shopping"
 									variant="primary"

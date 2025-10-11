@@ -1,21 +1,21 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { sendPushToUserId } from '$lib/server/push';
-import { get } from '$lib/db';
+import { find_user_by_tag } from '$lib/db';
 
 export const POST: RequestHandler = async ({
 	params,
 	request
 }) => {
 	try {
-		const { i } = params;
+		const { user: tag } = params;
 		const { userTag, chatId } = await request.json();
-		if (!i)
+		if (!tag)
 			return json(
-				{ error: 'missing user id' },
+				{ error: 'missing user tag' },
 				{ status: 400 }
 			);
-		const user = await get(i);
+		const user = await find_user_by_tag(tag);
 		if (!user)
 			return json(
 				{ error: 'user not found' },
@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({
 			);
 
 		const res = await sendPushToUserId(
-			i,
+			user.i,
 			userTag,
 			chatId
 		);
