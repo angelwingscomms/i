@@ -1,28 +1,25 @@
-import { GROQ } from '$env/static/private';
-import Groq from 'groq-sdk';
+import { GEMINI } from '$env/static/private';
+import { google } from '@ai-sdk/google';
+import { generateText } from 'ai';
+
+const google_provider = GEMINI
+	? google({ apiKey: GEMINI })
+	: null;
 
 export async function generate(
 	prompt: string
 ): Promise<string> {
-	const client = new Groq({
-		apiKey: GROQ
+	if (!google_provider) {
+		throw new Error('missing gemini api key');
+	}
+
+	const { text } = await generateText({
+		model: google_provider('gemini-flash-latest'),
+		prompt
 	});
 
-	const chatCompletion =
-		await client.chat.completions.create({
-			messages: [{ role: 'user', content: prompt }],
-			model: 'llama-3.1-8b-instant',
-			max_tokens: 40960
-		});
-
-	let content =
-		chatCompletion.choices[0]?.message?.content?.trim() ||
-		'';
-
-	// Remove <think>...</think> block from the beginning of the response
-	content = content
-		.replace(/^<think>[\s\S]*?<\/think>/i, '')
+	return text
+		.replace(/^```(?:html)?\s*\n?/, '')
+		.replace(/\n?```$/, '')
 		.trim();
-
-	return content;
 }

@@ -74,6 +74,7 @@
 		"wrangler": "^4.39.0"
 	},
 	"dependencies": {
+		"@ai-sdk/google": "^2.0.20",
 		"@block65/webcrypto-web-push": "^1.0.2",
 		"@cloudflare/realtimekit": "^1.1.7",
 		"@cloudflare/realtimekit-recording-sdk": "^0.0.1",
@@ -85,6 +86,7 @@
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
 		"@qdrant/js-client-rest": "^1.15.1",
+		"ai": "^5.0.68",
 		"animejs": "^4.1.4",
 		"arctic": "^3.7.0",
 		"argon2": "^0.44.0",

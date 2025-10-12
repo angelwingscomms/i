@@ -5,5 +5,6 @@ export interface Resume {
 	d: number; // created
 	l?: number; // last updated
 	i?: string; // id
+	xt?: string; // user tag
 	txt?: string; // text content
 }

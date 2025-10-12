@@ -1,9 +1,9 @@
 import { error } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import { search_by_payload } from '$lib/db';
-import type { PageServerLoad } from './$types';
 import type { Resume, User } from '$lib/types';
 
-export const load: PageServerLoad = async ({
+export const GET: RequestHandler = async ({
 	params
 }) => {
 	const u = (
@@ -31,9 +31,10 @@ export const load: PageServerLoad = async ({
 	if (r.s !== 'e') {
 		throw error(404, 'This entity is not a resume');
 	}
-
-	return {
-		r,
-		u
-	};
+	return new Response(r.h || '', {
+		status: 200,
+		headers: {
+			'content-type': 'text/html; charset=utf-8'
+		}
+	});
 };

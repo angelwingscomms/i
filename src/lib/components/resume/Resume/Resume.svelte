@@ -2,13 +2,22 @@
 	import type { Resume } from '$lib/types';
 	import Button from '$lib/components/Button.svelte';
 	let { data } = $props();
-	let r: Resume = data.r;
-	let user = data.user;
-	let owner = data.owner;
+	const resume: Resume = data.r;
+	const viewer = data.user ?? null;
+	const owner_tag =
+		data.u?.t ?? resume.xt ?? 'unknown user';
+	const owner_label = owner_tag.toLowerCase();
+	const viewer_is_owner =
+		Boolean(viewer?.i) && viewer?.i === resume.u;
+	const owner_link =
+		owner_tag === 'unknown user'
+			? '/'
+			: `/${owner_tag}`;
+	const updated_at = new Date(resume.l ?? resume.d);
 </script>
 
 <svelte:head>
-	<title>{owner.t || 'Resume'}</title>
+	<title>{owner_label}</title>
 </svelte:head>
 
 <div class="mx-auto max-w-4xl p-4 md:p-8">
@@ -26,31 +35,29 @@
 			<h1
 				class="text-3xl font-bold text-[var(--accent-primary)]"
 			>
-				{owner.t}<span
+				{owner_label}<span
 					class="text-[var(--text-accent)]"
 					>'s resume</span
 				>
 			</h1>
 			<p class="text-sm text-[var(--text-secondary)]">
-				Last updated {new Date(
-					r.l || r.d
-				).toLocaleDateString()}
+				last updated {updated_at.toLocaleDateString()}
 			</p>
 		</div>
 		<div class="flex gap-2">
 			<Button
-				text="Full page view"
-				href={`/resume/${r.i}/full_page_view`}
+				text="full page view"
+				href={`/resume/${resume.i}/full_page_view`}
 				icon="fa-expand"
 			/>
 			<Button
-				text={user?.i === r.u
-					? 'Edit'
-					: 'View author'}
-				href={user?.i === r.u
-					? `/resume/${r.i}/edit`
-					: `/${owner.t}`}
-				icon={user?.i === r.u ? 'fa-edit' : undefined}
+				text={viewer_is_owner
+					? 'edit'
+					: 'view author'}
+				href={viewer_is_owner
+					? `/resume/${resume.i}/edit`
+					: owner_link}
+				icon={viewer_is_owner ? 'fa-edit' : undefined}
 			/>
 		</div>
 	</div>
@@ -58,14 +65,22 @@
 	<div
 		class="mx-auto max-w-[21cm] overflow-hidden rounded-lg"
 	>
-		{#if r.h}
-			<div class="bg-secondary rounded-lg p-4">
+		{#if resume.h}
+			<div
+				class="rounded-lg bg-[var(--bg-secondary)] p-4"
+			>
 				<iframe
-					srcdoc={r.h}
+					srcdoc={resume.h}
 					class="mx-auto h-[29.7cm] w-[21cm] rounded border-0"
-					title="Resume preview"
+					title="resume preview"
 				></iframe>
 			</div>
+		{:else}
+			<p
+				class="text-center text-sm text-[var(--text-secondary)]"
+			>
+				no resume content yet
+			</p>
 		{/if}
 	</div>
 </div>

@@ -7,59 +7,61 @@
 	import axios from 'axios';
 
 	let { data } = $props();
-	console.log('data', data);
 	let resume = $state({
 		...data.r,
 		h: data.r.h || ''
 	});
-	console.log('resume.i', resume.i);
 	let instructions = $state('');
 	let loading = $state(false);
-	let showPreview = $state(false);
-	let showHtmlEditor = $state(false);
+	let show_preview = $state(false);
+	let show_html_editor = $state(false);
 	let saving = $state(false);
 	let timeout: NodeJS.Timeout | null = null;
 	let ai_input: HTMLTextAreaElement | null =
 		$state(null);
 
 	$effect(() => {
-		if (resume.h) {
-			if (timeout) {
-				clearTimeout(timeout);
-			}
-			timeout = setTimeout(async () => {
-				saving = true;
-				try {
-					const res = await axios.put(
-						`/resume/${resume.i}`,
-						resume.h
-					);
-					if (res.statusText !== 'OK') {
-						toast.error('save error occured');
-					}
-				} catch (e) {
-					toast.error('save error occured');
-					console.error('Auto-save failed', e);
-				}
-				saving = false;
-				timeout = null;
-			}, 1440);
+		if (!resume.h) {
+			return;
 		}
+		if (timeout) {
+			clearTimeout(timeout);
+		}
+		timeout = setTimeout(async () => {
+			saving = true;
+			try {
+				const res = await axios.put(
+					`/resume/${resume.i}`,
+					resume.h
+				);
+				if (res.status !== 200) {
+					toast.error('save error occurred');
+				}
+			} catch (err) {
+				toast.error('save error occurred');
+			}
+			saving = false;
+			timeout = null;
+		}, 1440);
 	});
 
-	const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.ctrlKey && e.key === 'Enter' && !loading) {
-			const activeEl = document.activeElement;
-			if (activeEl && activeEl === ai_input) {
-				e.preventDefault();
-				editWithGemini();
+	const handle_key_down = (event: KeyboardEvent) => {
+		if (
+			event.ctrlKey &&
+			event.key === 'Enter' &&
+			!loading
+		) {
+			const active = document.activeElement;
+			if (active && active === ai_input) {
+				event.preventDefault();
+				edit_with_gemini();
 			}
 		}
 	};
 
-	async function editWithGemini() {
+	const edit_with_gemini = async () => {
 		if (!instructions.trim()) {
-			toast.error('Please enter edit instructions');
+			toast.error('add edit instructions first');
 			return;
 		}
 		loading = true;
@@ -68,44 +70,42 @@
 				`/resume/${resume.i}/edit/gemini`,
 				instructions
 			);
-			if (res.statusText === 'OK') {
-				resume = res.data;
+			if (res.status === 200) {
+				resume = { ...resume, h: res.data.h };
 				instructions = '';
-				toast.success('Resume updated');
+				toast.success('resume updated');
 			} else {
-				toast.error(
-					res.data || 'Failed to update resume'
-				);
+				toast.error('failed to update resume');
 			}
-			loading = false;
-		} catch (e) {
-			toast.error('An error occurred');
+		} catch (err) {
+			toast.error('an error occurred');
+		} finally {
 			loading = false;
 		}
-	}
+	};
 </script>
 
-<svelte:window onkeydown={handleKeyDown} />
+<svelte:window onkeydown={handle_key_down} />
 
 <div class="mx-auto max-w-2xl p-4">
 	<div class="mb-4 flex items-center justify-between">
-		<h1 class="text-2xl font-bold">Edit Resume</h1>
+		<h1 class="text-2xl font-bold">edit resume</h1>
 		<div class="flex items-center gap-2">
 			{#if saving}
 				<span class="text-sm text-gray-500"
-					>Saving...</span
+					>saving...</span
 				>
 			{/if}
 			<a
 				href={`/resume/${resume.i}`}
-				class="btn-outline">View Resume</a
+				class="btn-outline">view resume</a
 			>
 		</div>
 	</div>
 	<div class="space-y-6">
 		<div class="space-y-2">
 			<label class="block text-sm font-medium"
-				>Color Palette</label
+				>color palette</label
 			>
 			<Color />
 		</div>
@@ -113,22 +113,22 @@
 			<DescriptionInput
 				bind:value={instructions}
 				bind:ref={ai_input}
-				placeholder="e.g., Add a skills section, make it more modern, change layout..."
+				placeholder="e.g., add a skills section, make it more modern, change layout..."
 				rows={4}
-				label="AI Edit Instructions"
+				label="ai edit instructions"
 				editable={true}
-				send={editWithGemini}
+				send={edit_with_gemini}
 				send_loading={loading}
 			/>
 		</div>
 		<div class="space-y-2">
 			<Button
-				text={showPreview
-					? 'Hide Preview'
-					: 'Show Preview'}
-				onclick={() => (showPreview = !showPreview)}
+				text={show_preview
+					? 'hide preview'
+					: 'show preview'}
+				onclick={() => (show_preview = !show_preview)}
 			/>
-			<Modal bind:open={showPreview} title="Preview">
+			<Modal bind:open={show_preview} title="preview">
 				<iframe
 					srcdoc={resume.h}
 					class="h-96 w-full rounded border border-gray-300"
@@ -137,21 +137,21 @@
 		</div>
 		<div class="space-y-2">
 			<Button
-				text={showHtmlEditor
-					? 'Hide HTML'
-					: 'Show HTML'}
+				text={show_html_editor
+					? 'hide html'
+					: 'show html'}
 				onclick={() =>
-					(showHtmlEditor = !showHtmlEditor)}
+					(show_html_editor = !show_html_editor)}
 			/>
 			<Modal
-				bind:open={showHtmlEditor}
-				title="Edit HTML"
+				bind:open={show_html_editor}
+				title="edit html"
 			>
 				<DescriptionInput
 					bind:value={resume.h}
-					placeholder="Edit resume HTML here..."
+					placeholder="edit resume html here..."
 					rows={20}
-					label="Resume HTML"
+					label="resume html"
 					editable={true}
 				/>
 			</Modal>

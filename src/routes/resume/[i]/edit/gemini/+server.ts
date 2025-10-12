@@ -1,4 +1,4 @@
-import { json, error, text } from '@sveltejs/kit';
+import { json, error } from '@sveltejs/kit';
 import { edit_point, get } from '$lib/db';
 import { get_user_colors } from '$lib/util/colors';
 import { generate } from '$lib/util/ai/generate';
@@ -45,5 +45,5 @@ export const POST = async ({
 		h: new_h,
 		l: Date.now()
 	});
-	return text(new_h);
+	return json({ h: new_h });
 };
