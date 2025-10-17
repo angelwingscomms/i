@@ -1,8 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import {
-	render,
-	screen
-} from '@testing-library/svelte';
+import { render } from 'vitest-browser-svelte';
+import { describe, expect, it } from 'vitest';
 import ResourceCard from './ResourceCard.svelte';
 
 describe('ResourceCard', () => {
@@ -21,39 +18,39 @@ describe('ResourceCard', () => {
 	};
 
 	it('renders resource name', () => {
-		render(ResourceCard, {
+		const { page } = render(ResourceCard, {
 			props: { resource: mockResource }
 		});
 		expect(
-			screen.getByText('Test Resource')
+			page.getByText('Test Resource')
 		).toBeInTheDocument();
 	});
 
 	it('renders resource description', () => {
-		render(ResourceCard, {
+		const { page } = render(ResourceCard, {
 			props: { resource: mockResource }
 		});
 		expect(
-			screen.getByText(
+			page.getByText(
 				'This is a test resource description'
 			)
 		).toBeInTheDocument();
 	});
 
 	it('renders resource summary', () => {
-		render(ResourceCard, {
+		const { page } = render(ResourceCard, {
 			props: { resource: mockResource }
 		});
 		expect(
-			screen.getByText('Test summary')
+			page.getByText('Test summary')
 		).toBeInTheDocument();
 	});
 
 	it('displays first image when images are present', () => {
-		render(ResourceCard, {
+		const { page } = render(ResourceCard, {
 			props: { resource: mockResource }
 		});
-		const img = screen.getByAltText('Test Resource');
+		const img = page.getByAltText('Test Resource');
 		expect(img).toBeInTheDocument();
 		expect(img).toHaveAttribute(
 			'src',
@@ -66,17 +63,17 @@ describe('ResourceCard', () => {
 			...mockResource,
 			p: undefined
 		};
-		render(ResourceCard, {
+		const { page } = render(ResourceCard, {
 			props: { resource: resourceWithoutImages }
 		});
-		expect(screen.getByText('T')).toBeInTheDocument(); // First letter of name
+		expect(page.getByText('T')).toBeInTheDocument(); // First letter of name
 	});
 
 	it('links to resource detail page', () => {
-		render(ResourceCard, {
+		const { page } = render(ResourceCard, {
 			props: { resource: mockResource }
 		});
-		const link = screen.getByRole('link');
+		const link = page.getByRole('link');
 		expect(link).toHaveAttribute(
 			'href',
 			'/resource_name/test-id'
@@ -84,10 +81,10 @@ describe('ResourceCard', () => {
 	});
 
 	it('displays formatted date', () => {
-		render(ResourceCard, {
+		const { page } = render(ResourceCard, {
 			props: { resource: mockResource }
 		});
-		const dateElement = screen.getByText(
+		const dateElement = page.getByText(
 			new Date(mockResource.d).toLocaleDateString()
 		);
 		expect(dateElement).toBeInTheDocument();

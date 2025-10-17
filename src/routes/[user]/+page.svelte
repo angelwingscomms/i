@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { ItemResultsList } from '$lib/components/i';
+	import Button from '$lib/components/Button.svelte';
+	import type { Item } from '$lib/types/item';
+	import type { PageProps } from './$types';
 	import { md } from '$lib/util/marked';
 	import { onMount } from 'svelte';
 	import {
@@ -6,12 +10,10 @@
 		createTimeline,
 		stagger
 	} from 'animejs';
-	import type { PageProps } from './$types';
-	import Button from '$lib/components/Button.svelte';
 
 	let { data }: PageProps = $props();
 	console.log('d', data);
-	let { u: user, c: comparison } =
+	let { u: user, c: comparison, it: items } =
 		data as unknown as {
 			u: {
 				i: string;
@@ -24,6 +26,7 @@
 				socialLinks: string[];
 			};
 			c: string;
+			it: Array<Item & { i: string }>;
 		};
 
 	let copied = $state(false);
@@ -432,6 +435,18 @@
 				</div>
 			</div>
 		</section>
+
+		{#if items.length > 0}
+			<section class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8">
+				<h2
+					class="mb-8 text-3xl font-bold"
+					style="color: var(--color-theme-4);"
+				>
+					{user.tag}'s items
+				</h2>
+				<ItemResultsList results={items} />
+			</section>
+		{/if}
 
 		<!-- Compatibility & Actions Section -->
 		<section

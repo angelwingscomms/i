@@ -1,12 +1,7 @@
 import { GEMINI, GROQ } from '$env/static/private';
 import { google } from '@ai-sdk/google';
 import { createGroq } from '@ai-sdk/groq';
-import {
-	generateText,
-	streamText,
-	structuredOutput,
-	type JsonSchema
-} from 'ai';
+import { generateObject, streamText, type JsonSchema } from 'ai';
 import { item_schema_prompt } from './schema';
 
 const google_provider = GEMINI
@@ -50,9 +45,21 @@ export const item_schema: JsonSchema = {
 	}
 };
 
-type ItemSchema = typeof item_schema;
-
-export type ItemExtraction = structuredOutput.Infer<ItemSchema>;
+export type ItemExtraction = {
+	n: string;
+	a?: string;
+	p?: number;
+	c?: string;
+	k?: 0 | 1;
+	m?: string;
+	q?: string;
+	t?: string[];
+	x?: string[];
+	z?: {
+		i?: string;
+		n: string;
+	}[];
+};
 
 const ensure_google = () => {
 	if (!google_provider) throw new Error('missing gemini api key');
@@ -69,14 +76,14 @@ export const extract_item_from_text = async (
 	ctx: string
 ): Promise<ItemExtraction> => {
 	const provider = ensure_google();
-	const { object } = await generateText({
+	const { object } = await generateObject({
 		model: provider('gemini-2.0-flash-exp'),
+		schema: item_schema,
 		prompt: `${item_schema_prompt}
 context: ${ctx}
-text: ${text}`,
-		output: structuredOutput({ schema: item_schema })
+	text: ${text}`
 	});
-	return object;
+	return object as ItemExtraction;
 };
 
 export const extract_item_from_image = async (
@@ -84,21 +91,28 @@ export const extract_item_from_image = async (
 	ctx: string
 ): Promise<ItemExtraction> => {
 	const provider = ensure_google();
-	const { object } = await generateText({
+	const { object } = await generateObject({
 		model: provider('gemini-flash-latest'),
 		messages: [
 			{
 				role: 'user',
 				content: [
-					{ type: 'input_text', text: `${item_schema_prompt}
-context: ${ctx}` },
-					{ type: 'input_image', image: { mimeType: file.type, data: await file.arrayBuffer() } }
+					{
+						type: 'text',
+						text: `${item_schema_prompt}
+context: ${ctx}`
+					},
+					{
+						type: 'file',
+						data: await file.arrayBuffer(),
+						mediaType: file.type
+					}
 				]
 			}
 		],
-		output: structuredOutput({ schema: item_schema })
+		schema: item_schema
 	});
-	return object;
+	return object as ItemExtraction;
 };
 
 export const transcribe_audio = async (
