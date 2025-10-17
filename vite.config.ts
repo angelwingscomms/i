@@ -79,6 +79,13 @@ export default defineConfig({
 		devtoolsJson()
 	],
 
+	build: {
+		runtimeChunk: 'single',
+		rollupOptions: {
+			external: ['cloudflare:email']
+		}
+	},
+
 	test: {
 		projects: [
 			{

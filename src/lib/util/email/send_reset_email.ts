@@ -37,7 +37,9 @@ async function load_email_message_ctor() {
 		return cached_email_message_ctor;
 	}
 	try {
-		const module = await import('cloudflare:email');
+		const module = await import(
+			/* @vite-ignore */ 'cloudflare:email'
+		);
 		cached_email_message_ctor = module.EmailMessage;
 		return cached_email_message_ctor;
 	} catch (error) {

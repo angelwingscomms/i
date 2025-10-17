@@ -21,7 +21,7 @@
 
 	let showPrivate = $state(false);
 
-	let inputRef: HTMLInputElement | null = null;
+	let inputRef: HTMLInputElement | null = $state(null);
 	async function search() {
 		loading = true;
 		try {

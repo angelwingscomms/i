@@ -75,6 +75,7 @@
 	},
 	"dependencies": {
 		"@ai-sdk/google": "^2.0.20",
+		"@ai-sdk/groq": "^2.0.24",
 		"@block65/webcrypto-web-push": "^1.0.2",
 		"@cloudflare/realtimekit": "^1.1.7",
 		"@cloudflare/realtimekit-recording-sdk": "^0.0.1",

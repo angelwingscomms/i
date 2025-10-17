@@ -36,55 +36,59 @@ let map_visible = $state(true);
 		<input type="hidden" name="i" value={zone.i} />
 
 	<div class="space-y-6">
-			<div>
-				<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]">
-					name
-				</label>
-				<DescriptionInput
-					bind:value={zone.n}
-					placeholder="enter zone name"
-					label=""
-					editable={true}
-				/>
-			</div>
+		<div>
+			<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]" for="zone-name">
+				name
+			</label>
+			<DescriptionInput
+				id="zone-name"
+				bind:value={zone.n}
+				placeholder="enter zone name"
+				label=""
+				editable={true}
+			/>
+		</div>
 
-			<div class="grid grid-cols-2 gap-4">
-				<div>
-					<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]">
-						latitude
-					</label>
-					<input
-						type="number"
-						step="any"
-					name="l"
-					bind:value={zone.l}
-						placeholder="latitude"
-						class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-[var(--text)]"
-						required
-					/>
-				</div>
-				<div>
-					<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]">
-						longitude
-					</label>
-					<input
-						type="number"
-						step="any"
-					name="g"
-					bind:value={zone.g}
-						placeholder="longitude"
-						class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-[var(--text)]"
-						required
-					/>
-				</div>
-			</div>
+		<div class="grid grid-cols-2 gap-4">
+		<div>
+			<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]" for="zone-lat">
+				latitude
+			</label>
+			<input
+				id="zone-lat"
+				type="number"
+				step="any"
+				name="l"
+				bind:value={zone.l}
+				placeholder="latitude"
+				class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-[var(--text)]"
+				required
+			/>
+		</div>
+		<div>
+			<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]" for="zone-lon">
+				longitude
+			</label>
+			<input
+				id="zone-lon"
+				type="number"
+				step="any"
+				name="g"
+				bind:value={zone.g}
+				placeholder="longitude"
+				class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-[var(--text)]"
+				required
+			/>
+		</div>
+		</div>
 
 		{#if map_visible && zone.l !== undefined && zone.g !== undefined}
 			<div class="space-y-2">
-				<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]">
+				<label class="mb-2 block text-sm font-medium lowercase text-[var(--text-secondary)]" for="zone-map">
 					adjust location
 				</label>
 				<ZoneMap
+					id="zone-map"
 					lat={zone.l || 0}
 					lon={zone.g || 0}
 					onchange={({ detail }) => {

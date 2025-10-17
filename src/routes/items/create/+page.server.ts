@@ -6,7 +6,7 @@ export const load: PageServerLoad = async ({
 	locals
 }) => {
 	if (!locals.user)
-		redirect(302, '/google?next=/i/create');
+		redirect(302, '/google?next=/items/create');
 	let i;
 	try {
 		i = await create({
@@ -19,5 +19,5 @@ export const load: PageServerLoad = async ({
 		console.error('create item error:', e);
 		throw error(500, 'Failed to create item');
 	}
-	redirect(302, `/i/${i}/edit`);
+	redirect(302, `/items/${i}/edit`);
 };

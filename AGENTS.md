@@ -26,6 +26,7 @@
 - never start the dev server
 - always use all lowercase for all UI text
 - always run `npm run lint` before ending
+- write unit and e2e tests for every feature
 - fonts go in static/fonts
 
 # Svelte MCP

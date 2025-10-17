@@ -1,4 +1,4 @@
-import type { PageServerLoad } from '../../../i/$types';
+import type { PageServerLoad } from '../../../items/$types';
 import { search_by_payload } from '$lib/db';
 
 export const load: PageServerLoad = async ({

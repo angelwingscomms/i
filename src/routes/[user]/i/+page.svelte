@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ItemSearch } from '$lib/components/item';
+	import { ItemSearch } from '$lib/components/items';
 	import Button from '$lib/components/Button.svelte';
 
 	let { data } = $props();
@@ -37,7 +37,7 @@
 			{#if data.user}
 				<div class="mt-8">
 					<Button
-						href="/i/create"
+						href="/items/create"
 						text="create item"
 						icon="fa-plus"
 					/>

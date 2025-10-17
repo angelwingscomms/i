@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ItemResultsList } from '$lib/components/i';
+	import { ItemResultsList } from '$lib/components/items';
 	import Button from '$lib/components/Button.svelte';
 	import type { Item } from '$lib/types/item';
 	import type { PageProps } from './$types';

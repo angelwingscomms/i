@@ -135,7 +135,7 @@
 			themeColor="var(--color-theme-5)"
 			title="connect with like minds"
 			description="highlight interests; search nearby for matches. connect anonymously."
-			href="/i/create"
+			href="/items/create"
 			buttonText="build profile"
 			image={BuildProfile}
 			alt="cute 3d renders of three user avatars in different site theme colors, viewed at 3/4 angle on black background"

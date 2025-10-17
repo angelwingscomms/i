@@ -153,7 +153,7 @@ const payload = {
 		points: [{ id: i, vector }]
 	});
 
-	throw redirect(303, `/i/${i}`);
+	throw redirect(303, `/items/${i}`);
 };
 
 export const DELETE: RequestHandler = async ({

@@ -126,21 +126,14 @@
 <nav class="nav">
     <div class="container-main">
         <div class="flex h-20 items-center justify-between rounded-3xl bg-[radial-gradient(circle_at_top_left,var(--accent-light)_0%,transparent_55%)]/70 px-6 shadow-[0_0_40px_rgba(207,6,124,0.24)]">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center">
                 <a
                     href="/"
-                    class="flex items-center no-underline"
+                    class="anta text-sm uppercase tracking-[0.4em] text-[var(--accent-light)] no-underline"
                     aria-label="home"
                 >
-                    <img
-                        src="/logo.svg"
-                        alt="home"
-                        class="h-9 w-auto"
-                    />
-                </a>
-                <span class="anta hidden text-sm uppercase tracking-[0.4em] text-[var(--accent-light)] sm:block">
                     apexlinks
-                </span>
+                </a>
             </div>
 
             <div class="flex items-center gap-3">

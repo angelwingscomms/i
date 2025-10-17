@@ -6,16 +6,16 @@ import {
 	search_by_vector,
 	find_user_by_tag
 } from '$lib/db';
-import type { Item, User } from '$lib/types';
+import type { User } from '$lib/types';
 import { compare_users } from '$lib/util/users/compare_users';
 import { embed } from '$lib/util/embed';
+import type { Item } from '$lib/types/item';
 
 export const load: PageServerLoad = async ({
 	locals,
 	params
 }) => {
 	const { user: tag } = params;
-	console.log('tag', tag);
 
 	// Get the user by tag
 	const user = await find_user_by_tag(tag);
@@ -83,6 +83,8 @@ export const load: PageServerLoad = async ({
 			direction: 'desc'
 		}
 	);
+
+	console.log('found items', items);
 
 	user_items = items.filter((item) => item.h !== '.');
 

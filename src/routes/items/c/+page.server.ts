@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({
 	locals
 }) => {
 	if (!locals.user)
-		redirect(302, '/google?next=/i/c');
+		redirect(302, '/google?next=/items/c');
 
 	// Fetch latest messages for this user's AI chat (use r = user id)
 	const raw = await search_by_payload<

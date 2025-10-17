@@ -7,8 +7,8 @@
 		create_item_search_controller,
 		persist_item_search_state,
 		restore_item_search_state
-	} from '$lib/util/i/item_search';
-	import { noop } from '$lib/util/i/noop';
+	} from '$lib/util/items/item_search';
+	import { noop } from '$lib/util/items/noop';
 
 	type ItemSort = 'relevance' | 'newest' | 'oldest';
 

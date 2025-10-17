@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Item } from '$lib/types/item';
-	import { match_percent } from '$lib/util/i/match_percent';
+	import { match_percent } from '$lib/util/items/match_percent';
 
 	type ItemWithScore = Item & { score?: number };
 
@@ -9,7 +9,7 @@
 	const p = match_percent(item.score);
 </script>
 
-<a class="group block no-underline" href={`/i/${item.i ?? ''}`}>
+<a class="group block no-underline" href={`/items/${item.i ?? ''}`}>
 	<div
 		class="flex h-64 w-64 flex-col items-center justify-center rounded-3xl border-l border-solid border-[var(--color-theme-6)] p-4 transition-all duration-500 hover:-translate-y-0.5 hover:border-[var(--color-theme-1)]"
 	>

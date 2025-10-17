@@ -22,7 +22,7 @@ The app is deployed as a Cloudflare Worker for serverless execution, with static
 ### Social Discovery and Search
 - **User Search**: Filter by location (`/u/search_nearby`), age range, gender. Uses Qdrant `search_by_payload` with geo filtering via `src/lib/util/geo.ts`.
 - **Results Display**: Card-based UI (`UserCard.svelte`) with sorting and filters (`SearchFilters.svelte`, `SortDropdown.svelte`).
-- **Item and Post Search**: Similar vector search for user-generated content (`/i/search`, `/posts/search`).
+- **Item and Post Search**: Similar vector search for user-generated content (`/items/search`, `/posts/search`).
 
 ### Chat and Real-Time Communication
 - **One-on-One Chats**: Initiate via user profiles (`/u/[i]/c`). Real-time messaging using WebSockets or polling (`src/lib/util/realtime.ts`).
@@ -32,7 +32,7 @@ The app is deployed as a Cloudflare Worker for serverless execution, with static
 
 ### Content Creation and Management
 - **Posts**: Create/edit posts (`/posts/[i]/edit`) with AI assistance (`/posts/[i]/edit/gemini`). Searchable via Qdrant.
-- **Items**: Upload and manage personal items (`/i/create`, `/i/[i]`), possibly media/files. Embeddings for semantic search.
+- **Items**: Upload and manage personal items (`/items/create`, `/items/[i]`), possibly media/files. Embeddings for semantic search.
 - **Resumes**: Build/edit resumes (`/resume/[i]`) with Gemini integration for content generation/editing (`/resume/[i]/edit/gemini`).
 
 ### AI-Powered Tools
@@ -52,7 +52,7 @@ The app is deployed as a Cloudflare Worker for serverless execution, with static
 - **Toasts**: User feedback via `src/lib/util/toast.ts`.
 
 ### Media and Utilities
-- **Uploads**: File handling (`/i/upload`, `FileWidget.svelte`) to Cloudflare R2 or IBM COS (`src/lib/integrations/r2_storage.ts`, `ibm_cos.ts`).
+- **Uploads**: File handling (`/items/upload`, `FileWidget.svelte`) to Cloudflare R2 or IBM COS (`src/lib/integrations/r2_storage.ts`, `ibm_cos.ts`).
 - **Audio/Video**: Player component (`AudioPlayer.svelte`), live modals (`LiveModal.svelte`).
 - **UI Components**: Reusable elements like `Modal.svelte`, `Navbar.svelte`, `ImageModal.svelte`. Themed with Tailwind CSS (dark/light mode via `src/lib/stores/theme.ts`).
 - **Presets**: Pink-themed preset generation/search (`/pink/preset/[i]`, `/pink/generate`).

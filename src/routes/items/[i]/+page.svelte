@@ -261,7 +261,7 @@
 							{#if user && user.i === item.u}
 								<div class="flex gap-3">
 									<Button
-										href={`/i/${item.i}/edit`}
+										href={`/items/${item.i}/edit`}
 										variant="secondary"
 										icon="fa-edit"
 										text="edit"
@@ -275,7 +275,7 @@
 							class="mt-6 justify-center gap-3 border-t border-white/10 pt-6"
 						>
 							<Button
-								href="/i/{item.i}/c"
+								href="/items/{item.i}/c"
 								variant="secondary"
 								icon="fa-robot"
 								text="Ask AI About This Item"
@@ -408,7 +408,7 @@
 					{#if user && user.i === item.u}
 						<div class="flex gap-3">
 							<Button
-								href={`/i/${item.i}/edit`}
+								href={`/items/${item.i}/edit`}
 								variant="secondary"
 								icon="fa-edit"
 								text="edit"
@@ -422,7 +422,7 @@
 					class="mt-8 flex justify-center gap-3 border-t border-white/10 pt-8"
 				>
 					<Button
-						href="/i/{item.i}/c"
+						href="/items/{item.i}/c"
 						variant="secondary"
 						icon="fa-robot"
 						text="Ask AI About This Item"
@@ -670,7 +670,7 @@
 						>
 							{#each relatedItems as relatedItem (relatedItem.i)}
 								<a
-									href="/i/{relatedItem.i}"
+									href="/items/{relatedItem.i}"
 									class="group block no-underline"
 								>
 									<div

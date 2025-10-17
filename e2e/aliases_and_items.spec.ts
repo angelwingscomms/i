@@ -58,7 +58,7 @@ test.describe('Nested aliases and item create', () => {
 		page
 	}) => {
 		// If auth guard redirects to google, we can just ensure route exists; otherwise skip login
-		await page.goto('/i/create');
+		await page.goto('/items/create');
 		// For non-auth environments, form may redirect — just verify page loads or redirects
 		// If it loads, try a minimal submit using fetch in the page context
 		// We don't rely on DOM controls here since page is minimal
