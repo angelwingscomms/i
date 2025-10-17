@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Anta&display=swap');
+
 @font-face {
 	font-family: 'WDXL';
 	src: url('/wdxl.ttf') format('truetype');
@@ -7,4 +9,8 @@
 
 @utility wdxl {
 	font-family: WDXL, sans-serif;
+}
+
+@utility anta {
+	font-family: 'Anta', sans-serif;
 }

@@ -4,11 +4,12 @@ import { realtime } from '$lib/util/realtime';
 
 export const create_user = async (
 	tag: string,
-	other: { p?: string; gid?: string }
+	other: { p?: string; gid?: string; e?: string }
 ) => {
 	return await create<User>({
 		s: 'u',
 		t: tag,
+		m: '',
 		r: (
 			await realtime.post('meetings', { title: tag })
 		).data.data.id,

@@ -3,18 +3,20 @@ import {
 	hashPassword,
 	verifyPassword
 } from 'worker-password-auth';
-import { find_user_by_tag } from '$lib/db';
+import {
+	find_user_by_tag,
+	find_user_by_email
+} from '$lib/db';
 import { create_user } from '$lib/auth';
 
 export async function PUT(event) {
-	const { username, password } =
+	const { identifier, password } =
 		await event.request.json();
 
-	if (!validateUsername(username)) {
+	if (typeof identifier !== 'string') {
 		return new Response(
 			JSON.stringify({
-				error:
-					'Invalid username (min 3, max 31 characters, alphanumeric only)'
+				error: 'Invalid username or email'
 			}),
 			{ status: 400 }
 		);
@@ -29,8 +31,23 @@ export async function PUT(event) {
 		);
 	}
 
-	const existingUser =
-		await find_user_by_tag(username);
+	const trimmed = identifier.trim();
+	const normalizedEmail = trimmed.toLowerCase();
+	let existingUser;
+	if (validateEmail(normalizedEmail)) {
+		existingUser = await find_user_by_email(
+			normalizedEmail
+		);
+	} else if (validateUsername(trimmed)) {
+		existingUser = await find_user_by_tag(trimmed);
+	} else {
+		return new Response(
+			JSON.stringify({
+				error: 'Invalid username or email'
+			}),
+			{ status: 400 }
+		);
+	}
 	if (!existingUser) {
 		return new Response(
 			JSON.stringify({
@@ -98,7 +115,7 @@ export async function PUT(event) {
 }
 
 export async function POST(event) {
-	const { username, password } =
+	const { username, password, email } =
 		await event.request.json();
 
 	if (!validateUsername(username)) {
@@ -120,6 +137,26 @@ export async function POST(event) {
 		);
 	}
 
+	if (!validateEmail(email)) {
+		return new Response(
+			JSON.stringify({
+				error: 'Invalid email'
+			}),
+			{ status: 400 }
+		);
+	}
+
+	const normalizedEmail = email
+		.trim()
+		.toLowerCase();
+
+	if (await find_user_by_email(normalizedEmail)) {
+		return new Response(
+			JSON.stringify({ error: 'email taken' }),
+			{ status: 400 }
+		);
+	}
+
 	if (await find_user_by_tag(username)) {
 		return new Response(
 			JSON.stringify({
@@ -133,7 +170,8 @@ export async function POST(event) {
 
 	try {
 		const userId = await create_user(username, {
-			p: passwordHash
+			p: passwordHash,
+			e: normalizedEmail
 		});
 
 		const session = await auth.createSession(
@@ -197,5 +235,14 @@ function validatePassword(
 		typeof password === 'string' &&
 		password.length >= 6 &&
 		password.length <= 255
+	);
+}
+
+function validateEmail(email: unknown): email is string {
+	return (
+		typeof email === 'string' &&
+		email.length > 3 &&
+		email.length <= 320 &&
+		/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 	);
 }

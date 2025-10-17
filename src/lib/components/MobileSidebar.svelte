@@ -229,7 +229,7 @@
 					onclick={close_sidebar}
 				>
 					<i
-						class="far fa-right-to-bracket"
+						class="fas fa-right-to-bracket"
 						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
 					></i>
 					login

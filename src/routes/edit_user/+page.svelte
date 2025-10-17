@@ -12,12 +12,14 @@
 	} | null = $state(null);
 
 	let tag = $state(data.u!.t || ''),
+		name_value = $state(data.u!.m || ''),
 		description = $state(data.u!.d || ''),
 		ageStr = $state<string>(String(data.u!.a || 18)),
 		gender = $state<0 | 1>((data.u!.g ?? 0) as 0 | 1),
 		latitude = $state(data.u!.l || 0),
 		longitude = $state(data.u!.n || 0),
 		socialLinks = $state<string[]>(data.u!.x || []),
+	email = $state(data.u!.e || ''),
 		usernameValid = $state(true),
 		isGettingLocation = $state(false),
 		isSubmitting = $state(false),
@@ -25,6 +27,12 @@
 			(data.u && (data.u as any).av) || ''
 		),
 		fileInput: HTMLInputElement | null = null;
+
+function validateEmail(value: string) {
+	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+		value.trim()
+	);
+}
 	function onAvatarChange(e: Event) {
 		const input = e.target as HTMLInputElement;
 		const file = input.files?.[0];
@@ -103,28 +111,42 @@
 	async function handleSubmit(event: Event) {
 		event.preventDefault(); // Prevent default form submission
 
-		if (!usernameValid) {
-			form = { error: 'Username is not valid' };
-			return;
-		}
+	if (!usernameValid) {
+		form = { error: 'Username is not valid' };
+		return;
+	}
+
+	const name_clean = name_value.trim();
+
+	if (name_clean.length === 0) {
+		form = { error: 'name is required' };
+		return;
+	}
+
+	if (!validateEmail(email)) {
+		form = { error: 'email is not valid' };
+		return;
+	}
 
 		isSubmitting = true;
 		form = null; // Clear previous messages
 
-		try {
-			const response = await axios.post(
-				'/edit_user',
-				{
-					tag,
-					description,
-					age: parseInt(ageStr) || 18,
-					gender: +gender,
-					latitude,
-					longitude,
-					socialLinks,
-					avatarDataUrl
-				}
-			);
+	try {
+		const response = await axios.post(
+			'/edit_user',
+			{
+				tag,
+				m: name_clean,
+				description,
+				age: parseInt(ageStr) || 18,
+				gender: +gender,
+				latitude,
+				longitude,
+				socialLinks,
+				avatarDataUrl,
+				email
+			}
+		);
 
 			if (response.data.success) {
 				form = {
@@ -172,6 +194,34 @@
 		</header>
 
 		<div class="card-normal">
+		<div class="form-group">
+			<label for="name" class="form-label"
+				>name</label
+			>
+			<DescriptionInput
+				bind:value={name_value}
+				type="text"
+				id="name"
+				name="name"
+				placeholder="enter name"
+				voice_typing={false}
+			/>
+		</div>
+			<div class="form-group">
+				<label for="email" class="form-label"
+					>email</label
+				>
+				<DescriptionInput
+					bind:value={email}
+					type="email"
+					id="email"
+					name="email"
+					placeholder="enter email"
+					voice_typing={false}
+				/>
+				<input type="hidden" name="email" value={email} />
+			</div>
+
 			<!-- avatar -->
 			<div class="form-group">
 				<label class="form-label" for="avatar_input"

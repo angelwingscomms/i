@@ -27,6 +27,7 @@ export const load: PageServerLoad = async ({
 	const userInfo = {
 		i: user.i,
 		tag: user.t,
+		m: user.m,
 		avatar: (user as any).av,
 		age: user.a,
 		gender: user.g,

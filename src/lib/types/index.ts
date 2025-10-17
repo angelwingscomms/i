@@ -15,6 +15,7 @@ export interface User {
 	t: string; // tag
 	av?: string; // avatar data url or external url
 	d?: string; // description
+	m?: string; // name
 	a?: number; // age
 	g?: number; // gender, 0 is male, 1 is female
 	l?: number; // latitude
@@ -33,6 +34,10 @@ export interface User {
 	rt?: string; // realtime room token
 	isAdmin?: boolean; // whether user is an admin
 	ps?: PushSubscription[]; // push subscription
+	e?: string; // email
+	pe?: number; // password reset expiry timestamp
+	pt?: string; // password reset token hash
+	pr?: number; // password reset request timestamp
 }
 
 export interface Group {

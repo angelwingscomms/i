@@ -124,73 +124,74 @@
 </script>
 
 <nav class="nav">
-	<div class="container-main">
-		<div class="flex h-16 items-center">
-			<div class="flex items-center">
-				<a
-					href="/"
-					class="flex items-center no-underline"
-					aria-label="Home"
-				>
-					<img
-						src="/logo.svg"
-						alt="Home"
-						class="h-[27px] w-auto"
-					/>
-				</a>
-			</div>
+    <div class="container-main">
+        <div class="flex h-20 items-center justify-between rounded-3xl bg-[radial-gradient(circle_at_top_left,var(--accent-light)_0%,transparent_55%)]/70 px-6 shadow-[0_0_40px_rgba(207,6,124,0.24)]">
+            <div class="flex items-center gap-3">
+                <a
+                    href="/"
+                    class="flex items-center no-underline"
+                    aria-label="home"
+                >
+                    <img
+                        src="/logo.svg"
+                        alt="home"
+                        class="h-9 w-auto"
+                    />
+                </a>
+                <span class="anta hidden text-sm uppercase tracking-[0.4em] text-[var(--accent-light)] sm:block">
+                    apexlinks
+                </span>
+            </div>
 
-			<Button
-				text="install webapp"
-				onclick={handle_install_click}
-				variant="primary"
-			/>
+            <div class="flex items-center gap-3">
+                <Button
+                    text="install webapp"
+                    onclick={handle_install_click}
+                    variant="primary"
+                    class="rounded-full bg-[var(--accent-primary)] px-6 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-[0_12px_30px_rgba(207,6,124,0.3)] transition-transform duration-200 hover:scale-[1.02]"
+                />
 
-			<div class="ml-auto flex items-center gap-2">
-				{#if navigating.to}
-					<i class="fas fa-spinner fa-spin text-sm"
-					></i>
-				{/if}
-				{#if user}
-					<div
-						class="flex items-center gap-3 pl-4"
-						style="border-left: 2px solid var(--color-theme-6);"
-					>
-						<a
-							href="/{user.t}"
-							class="flex items-center gap-2 text-sm font-bold transition-all hover:scale-105"
-							style="color: var(--color-theme-1);"
-						>
-							<i class="fas fa-user-circle"></i>
-							{user.t}
-						</a>
-					</div>
-				{:else}
-					<Button
-						href="/login"
-						text="login"
-						icon="far fa-user h-4 w-4"
-						variant="secondary"
-					/>
-				{/if}
-				<button
-					class="btn-icon border-none bg-transparent p-2"
-					onclick={onmenu}
-					aria-label="Toggle menu"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 24 24"
-						fill="currentColor"
-						width="24"
-						height="24"
-					>
-						<path
-							d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-						/>
-					</svg>
-				</button>
-			</div>
-		</div>
-	</div>
+                {#if navigating.to}
+                    <span class="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent-primary)] border-t-transparent"></span>
+                {/if}
+
+                {#if user}
+                    <a
+                        href="/{user.t}"
+                        class="flex items-center gap-2 rounded-full border border-[var(--border-primary)] bg-[var(--bg-glass)] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--accent-primary)] transition-all hover:border-[var(--accent-primary)] hover:text-white hover:shadow-[0_8px_24px_rgba(207,6,124,0.35)]"
+                    >
+                        <i class="fas fa-user-circle text-lg"></i>
+                        {user.t}
+                    </a>
+                {:else}
+                    <Button
+                        href="/login"
+                        text="login"
+                        icon="far fa-user h-4 w-4"
+                        variant="secondary"
+                        class="rounded-full border border-[var(--accent-primary)] px-5 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--accent-primary)] transition-all hover:bg-[var(--accent-primary)] hover:text-white"
+                    />
+                {/if}
+
+                <button
+                    class="btn-icon flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border-primary)] bg-[var(--bg-elevated)] text-[var(--text-primary)] transition-all hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]"
+                    onclick={onmenu}
+                    aria-label="toggle menu"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-6 w-6"
+                    >
+                        <path d="M4 7h16M4 12h10M4 17h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
 </nav>

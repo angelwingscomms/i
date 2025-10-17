@@ -385,6 +385,12 @@ export const find_user_by_tag = async (t: string) => {
 	)[0];
 };
 
+export const find_user_by_email = async (e: string) => {
+	return (
+		await search_by_payload<User>({ s: 'u', e })
+	)[0];
+};
+
 export const delete_ = async (
 	id: string
 ): Promise<void> => {

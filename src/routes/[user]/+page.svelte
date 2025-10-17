@@ -16,6 +16,7 @@
 			u: {
 				i: string;
 				tag: string;
+				m?: string;
 				avatar?: string;
 				age?: number;
 				gender?: number;
@@ -257,8 +258,11 @@
 						class="text-5xl font-bold sm:text-3xl"
 						style="color: var(--color-theme-4);"
 					>
-						{user.tag}
+						{user.m || user.tag}
 					</h1>
+					<p class="text-lg" style="color: var(--color-theme-3);">
+						{user.tag}
+					</p>
 
 					<div
 						class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center"

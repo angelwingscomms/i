@@ -3,6 +3,7 @@ import { edit_point } from '$lib/db';
 import type { RequestHandler } from './$types';
 import { get } from '$lib/db';
 import type { Item } from '$lib/types/item';
+import type { Zone } from '$lib/types/zone';
 import { embed } from '$lib/util/embed';
 import { collection } from '$lib/constants';
 import { upload_image } from '$lib/integrations/r2_storage';
@@ -74,12 +75,14 @@ export const POST: RequestHandler = async ({
 	}
 
 	const data = await request.formData();
-	const n = data.get('n') as string;
-	const a = data.get('a') as string;
-	const k = Number(data.get('k')) as 0 | 1;
-	const v = Number(data.get('v'));
-	const h = (data.get('h') as string) || '';
-	const m = data.get('m') as string;
+	const n = (data.get('n') as string) || item.n;
+	const a = data.get('a') as string | null;
+	const k_raw = data.get('k');
+	const p_raw = data.get('p');
+	const c = (data.get('c') as string) || item.c;
+	const h = (data.get('h') as string) || item.h || '';
+	const price = p_raw ? Number(p_raw) : item.p;
+	const kind = typeof k_raw === 'string' ? Number(k_raw) : item.k;
 	const files = data.getAll('f') as unknown as File[];
 	console.log(
 		'Edit server: Files received from formData:',
@@ -104,7 +107,7 @@ export const POST: RequestHandler = async ({
 	const keep_x_str = data.get('keep_x') as string;
 	const kept_x: string[] = keep_x_str
 		? JSON.parse(keep_x_str)
-		: [];
+		: item.x || [];
 
 	console.log(
 		'Edit server: Calling upload_files with',
@@ -121,21 +124,25 @@ export const POST: RequestHandler = async ({
 	const new_x =
 		x.length > 0 ? [...kept_x, ...x] : kept_x;
 
-	const payload = {
-		...item,
-		n: n || item.n,
-		a,
-		k,
-		v,
-		p: h,
-		m,
-		x: new_x,
-		z: data.get('z')
-			? JSON.parse(data.get('z') as string)
-			: item.z || []
-	};
+	const zones = data.get('z')
+		? JSON.parse(data.get('z') as string)
+		: item.z || [];
 
-	const embed_text = `${n || item.n} ${a || ''}`;
+const payload = {
+	...item,
+		n,
+		a: a ?? item.a,
+		k: Number.isNaN(kind) ? item.k : (kind as 0 | 1),
+		p: price,
+		c,
+		h,
+		x: new_x,
+		z: zones
+};
+
+	const embed_text = `${payload.n} ${payload.a || ''} ${
+		price ? `price ${price}` : ''
+	} ${zones.map((z: Zone) => z.n).join(' ')}`.trim();
 	const vector = await embed(embed_text);
 
 	await edit_point(i, payload);

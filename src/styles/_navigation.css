@@ -1,8 +1,12 @@
 /* Navigation */
 @utility nav {
-	@apply sticky top-0 z-50 backdrop-blur-lg transition-all duration-300;
-	background: transparent;
-	border-bottom: 1px solid var(--border-primary);
+	@apply sticky top-0 z-50 bg-transparent backdrop-blur-3xl transition-all duration-500;
+	background-image: linear-gradient(
+		to right,
+		rgba(0, 0, 0, 0.92),
+		rgba(17, 6, 24, 0.8)
+	);
+	box-shadow: 0 12px 35px rgba(17, 6, 24, 0.35);
 }
 
 @utility nav-link {

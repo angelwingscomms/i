@@ -92,8 +92,8 @@ export async function GET(
 		user_id = existingUsers[0].i;
 	} else {
 		user_id = await create_user(
-			res.email.replace('@gmail.com', ''),
-			{ gid: res.sub }
+		res.email.replace('@gmail.com', ''),
+		{ gid: res.sub, e: res.email.toLowerCase() }
 		);
 	}
 

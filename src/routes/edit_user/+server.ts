@@ -1,6 +1,9 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { qdrant } from '$lib/db';
+import {
+	qdrant,
+	find_user_by_email
+} from '$lib/db';
 import type { User } from '$lib/types';
 import { collection } from '$lib/constants';
 import { embed } from '$lib/util/embed';
@@ -27,7 +30,9 @@ export const POST: RequestHandler = async ({
 			longitude,
 			whatsapp,
 			socialLinks,
-			avatarDataUrl
+			avatarDataUrl,
+			email,
+			m
 		} = await request.json();
 
 		const updatedUser: Partial<User> = {};
@@ -38,6 +43,14 @@ export const POST: RequestHandler = async ({
 			tag.trim().length > 0
 		) {
 			updatedUser.t = tag.trim();
+		}
+
+		if (
+			m !== undefined &&
+			typeof m === 'string' &&
+			m.trim().length > 0
+		) {
+			updatedUser.m = m.trim().slice(0, 96);
 		}
 
 		if (
@@ -116,6 +129,32 @@ export const POST: RequestHandler = async ({
 				}
 			} else if (/^https?:\/\//.test(val)) {
 				updatedUser.av = val;
+			}
+		}
+
+		if (
+			email !== undefined &&
+			typeof email === 'string'
+		) {
+			const normalized = email.trim().toLowerCase();
+			if (
+				normalized.length > 3 &&
+				normalized.length <= 320 &&
+				/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)
+			) {
+				const existing = await find_user_by_email(
+					normalized
+				);
+				if (
+					existing &&
+					existing.i !== locals.user.i
+				) {
+					return json(
+						{ error: 'email taken' },
+						{ status: 400 }
+					);
+				}
+				updatedUser.e = normalized;
 			}
 		}
 

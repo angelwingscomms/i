@@ -11,7 +11,18 @@ export const load: PageServerLoad = async ({
 	}
 	return {
 		u: {
-			...(await get<User>(locals.user.i)),
+			...(await get<User>(locals.user.i, [
+				'd',
+				't',
+				'a',
+				'g',
+				'l',
+				'n',
+				'x',
+				'av',
+				'e',
+				'm'
+			])),
 			i: locals.user.i
 		}
 	};

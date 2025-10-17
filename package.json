@@ -79,7 +79,6 @@
 		"@cloudflare/realtimekit": "^1.1.7",
 		"@cloudflare/realtimekit-recording-sdk": "^0.0.1",
 		"@cloudflare/realtimekit-ui": "^1.0.5",
-		"@cloudflare/workerd-linux-64": "^1.20250924.0",
 		"@fortawesome/free-regular-svg-icons": "^7.0.1",
 		"@google/genai": "^1.20.0",
 		"@google/generative-ai": "^0.24.1",

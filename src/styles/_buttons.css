@@ -1,6 +1,6 @@
 /* Buttons - Thin Outline Design System */
 @utility btn {
-	@apply inline-flex transform items-center justify-center gap-2 rounded-full px-3 py-2 text-base font-medium whitespace-nowrap transition-all duration-300 disabled:transform-none disabled:opacity-50;
+	@apply inline-flex transform items-center justify-center gap-2 rounded-full px-5 py-2 text-base font-medium whitespace-nowrap transition-all duration-300 disabled:transform-none disabled:opacity-50;
 	border-bottom: 1px solid var(--color-theme-1);
 	border-left: 1px solid var(--color-theme-1);
 	background: transparent;

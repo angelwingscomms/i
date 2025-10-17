@@ -3,61 +3,100 @@
 	import Button from '$lib/components/Button.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 
-	let username = $state('');
-	let password = $state('');
-	let error = $state('');
-	let logging_in = $state(false);
-	let registering = $state(false);
+let mode = $state<'login' | 'register'>('login');
+let login_identifier = $state('');
+let login_password = $state('');
+let register_username = $state('');
+let register_email = $state('');
+let register_password = $state('');
+let error = $state('');
+let logging_in = $state(false);
+let registering = $state(false);
 
-	async function handleLogin() {
-		if (!username || !password) return;
-		logging_in = true;
-		error = '';
-		try {
-			const response = await fetch('/login', {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ username, password })
-			});
-			const data = await response.json();
-			if (data.error) {
-				error = data.error;
-			} else if (data.success) {
-				goto(data.redirect);
-			}
-		} catch (e) {
-			error = 'An error occurred';
-		} finally {
-			logging_in = false;
-		}
-	}
+function validate_email(value: string) {
+	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
 
-	async function handleRegister() {
-		if (!username || !password) return;
-		registering = true;
-		error = '';
-		try {
-			const response = await fetch('/login', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ username, password })
-			});
-			const data = await response.json();
-			if (data.error) {
-				error = data.error;
-			} else if (data.success) {
-				goto(data.redirect);
-			}
-		} catch (e) {
-			error = 'An error occurred';
-		} finally {
-			registering = false;
+async function submitLogin() {
+	if (!login_identifier || !login_password) return;
+	logging_in = true;
+	error = '';
+	try {
+		const response = await fetch('/login', {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				identifier: login_identifier,
+				password: login_password
+			})
+		});
+		const data = await response.json();
+		if (data.error) {
+			error = data.error;
+		} else if (data.success) {
+			goto(data.redirect);
 		}
+	} catch (e) {
+		error = 'An error occurred';
+	} finally {
+		logging_in = false;
 	}
+}
+
+async function submitRegister() {
+	if (!register_username || !register_password) return;
+	if (!register_email || !validate_email(register_email)) {
+		error = 'enter a valid email';
+		return;
+	}
+	registering = true;
+	error = '';
+	try {
+		const response = await fetch('/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				username: register_username,
+				password: register_password,
+				email: register_email
+			})
+		});
+		const data = await response.json();
+		if (data.error) {
+			error = data.error;
+		} else if (data.success) {
+			goto(data.redirect);
+		}
+	} catch (e) {
+		error = 'An error occurred';
+	} finally {
+		registering = false;
+	}
+}
+
+function handleLogin() {
+	if (mode === 'register') {
+		mode = 'login';
+		error = '';
+		registering = false;
+		return;
+	}
+	submitLogin();
+}
+
+function handleRegister() {
+	if (mode === 'login') {
+		mode = 'register';
+		error = '';
+		logging_in = false;
+		return;
+	}
+	submitRegister();
+}
 </script>
 
 <main
@@ -93,43 +132,83 @@
 				autocomplete="on"
 				novalidate
 			>
-				<DescriptionInput
-					bind:value={username}
-					label="username"
-					id="username"
-					name="username"
-					placeholder="enter username"
-					voice_typing={false}
-					autocomplete="username"
-					disabled={logging_in || registering}
-				/>
+				{#if mode === 'login'}
+					<DescriptionInput
+						bind:value={login_identifier}
+						label="username or email"
+						id="login-identifier"
+						name="identifier"
+						placeholder="enter username or email"
+						voice_typing={false}
+						autocomplete="username"
+						disabled={logging_in}
+					/>
 
-				<DescriptionInput
-					bind:value={password}
-					label="password"
-					id="password"
-					name="password"
-					type="password"
-					placeholder="enter password"
-					voice_typing={false}
-					autocomplete="current-password"
-					disabled={logging_in || registering}
-				/>
+					<DescriptionInput
+						bind:value={login_password}
+						label="password"
+						id="login-password"
+						name="password"
+						type="password"
+						placeholder="enter password"
+						voice_typing={false}
+						autocomplete="current-password"
+						disabled={logging_in}
+					/>
+				{:else}
+					<DescriptionInput
+						bind:value={register_username}
+						label="username"
+						id="register-username"
+						name="username"
+						placeholder="enter username"
+						voice_typing={false}
+						autocomplete="username"
+						disabled={registering}
+					/>
 
-				<div class="grid grid-cols-2 gap-3">
+					<DescriptionInput
+						bind:value={register_email}
+						label="email"
+						id="register-email"
+						name="email"
+						type="email"
+						placeholder="enter email"
+						voice_typing={false}
+						autocomplete="email"
+						disabled={registering}
+					/>
+
+					<DescriptionInput
+						bind:value={register_password}
+						label="password"
+						id="register-password"
+						name="password"
+						type="password"
+						placeholder="enter password"
+						voice_typing={false}
+						autocomplete="new-password"
+						disabled={registering}
+					/>
+				{/if}
+
+				<div class="grid grid-cols-3 gap-3">
 					<Button
 						text="login"
 						variant="primary"
-						wide
-						loading={logging_in}
+						loading={mode === 'login' ? logging_in : false}
 						onclick={handleLogin}
 					/>
 					<Button
 						text="register"
 						variant="secondary"
-						wide
-						loading={registering}
+						loading={mode === 'register' ? registering : false}
 						onclick={handleRegister}
+					/>
+					<Button
+						href="/reset"
+						text="forgot password"
+						variant="secondary"
 					/>
 				</div>
 			</form>

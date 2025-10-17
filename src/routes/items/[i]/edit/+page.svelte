@@ -1,33 +1,35 @@
 <script lang="ts">
-	import { toast } from '$lib/util/toast.svelte';
-	import { onMount, onDestroy } from 'svelte';
-	import {
-		animate,
-		createTimeline,
-		stagger
-	} from 'animejs';
-	import Button from '$lib/components/Button.svelte';
-	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
-	import Combo from '$lib/components/Combo.svelte';
-	import axios from 'axios';
-	import {ZoneSearch} from '$lib/components/zone';
-	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
-	import type { Item } from '$lib/types/item';
-	import type { Zone } from '$lib/types/zone';
+import { toast } from '$lib/util/toast.svelte';
+import { onMount, onDestroy } from 'svelte';
+import { animate, createTimeline, stagger } from 'animejs';
+import Button from '$lib/components/Button.svelte';
+import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
+import Combo from '$lib/components/Combo.svelte';
+import axios from 'axios';
+import { ZoneSearch } from '$lib/components/zone';
+import { goto } from '$app/navigation';
+import { page } from '$app/state';
+import type { Item } from '$lib/types/item';
+import type { Zone } from '$lib/types/zone';
 
-	let init: Item = page.data.i, // should not change
-		item: Item = $state(page.data.i),
-		selectedFiles = $state<File[]>([]),
-		previewUrls = $state<string[]>([]),
-		saving = $state(false),
-		hidden: boolean = $state(!!item.h),
-		images_to_remove: string[] = $state([]),
-		currentZones: Zone[] = $state(item.z || []),
-		newZones: Zone[] = $state([]),
-		zonesToRemove: string[] = $state([]);
+let init: Item = page.data.i, // should not change
+	item: Item = $state(page.data.i),
+	selectedFiles = $state<File[]>([]),
+	previewUrls = $state<string[]>([]),
+	saving = $state(false),
+	hidden: boolean = $state(!!item.h),
+	images_to_remove: string[] = $state([]),
+	currentZones: Zone[] = $state(item.z || []),
+	newZones: Zone[] = $state([]),
+	zonesToRemove: string[] = $state([]),
+	voice_recording = $state(false),
+	voice_loading = $state(false),
+	vision_loading = $state(false),
+	voice_supported = $state(false);
 
-	console.log(item, 'item');
+let media_recorder: MediaRecorder | null = null;
+let recorded_chunks: BlobPart[] = [];
+const suggestion = $state<Item | null>(null);
 
 	let currencies = $state([
 		{ value: '₦', label: 'Naira (₦)' },
@@ -54,7 +56,33 @@
 		);
 	}
 
-	onMount(() => {
+const buildContext = () =>
+	JSON.stringify({
+		n: item.n,
+		a: item.a,
+		p: item.p,
+		c: item.c,
+		k: item.k,
+		z: currentZones.map((z) => ({
+			i: z.i,
+			n: z.n
+		}))
+	});
+
+const handleImageSelection = (files: FileList) => {
+	const list = Array.from(files);
+	selectedFiles = list;
+	previewUrls.forEach((url) => URL.revokeObjectURL(url));
+	previewUrls = list.map((file) => URL.createObjectURL(file));
+	const first = list[0];
+	if (first) extractFromImage(first);
+};
+
+onMount(() => {
+	voice_supported =
+		typeof window !== 'undefined' &&
+		'MediaRecorder' in window;
+
 		// Page entrance animations
 		const timeline = createTimeline()
 			.add('.page-header', {
@@ -112,11 +140,130 @@
 		);
 	});
 
+const mergeSuggestion = () => {
+	if (!suggestion) return;
+	item = {
+		...item,
+		...suggestion,
+		z: suggestion.z?.length
+			? suggestion.z
+			: item.z,
+		x: suggestion.x?.length
+			? suggestion.x
+			: item.x
+	};
+	suggestion = null;
+	toast.success('item updated from ai');
+};
+
+const startRecording = async () => {
+	if (!voice_supported) {
+		toast.error('voice capture unavailable');
+		return;
+	}
+	if (voice_recording) return;
+	try {
+		const stream = await navigator.mediaDevices.getUserMedia({
+			audio: true
+		});
+		recorded_chunks = [];
+		const recorder = new MediaRecorder(stream, {
+			mimeType: 'audio/webm'
+		});
+		recorder.ondataavailable = (evt) => {
+			if (evt.data.size > 0) recorded_chunks.push(evt.data);
+		};
+		recorder.onstop = async () => {
+			const blob = new Blob(recorded_chunks, {
+				type: 'audio/webm'
+			});
+			stream
+				.getTracks()
+				.forEach((track) => track.stop());
+			await sendVoice(blob);
+		};
+		media_recorder = recorder;
+		recorder.start();
+		voice_recording = true;
+		toast.info('recording started');
+	} catch (err) {
+		console.error(err);
+		toast.error('cannot start recording');
+	}
+};
+
+const stopRecording = () => {
+	if (!media_recorder) return;
+	media_recorder.stop();
+	voice_recording = false;
+};
+
+
+const sendVoice = async (blob: Blob) => {
+	if (!blob.size) return;
+	try {
+		voice_loading = true;
+		const form = new FormData();
+		form.append('audio', new File([blob], 'voice.webm'));
+		form.append('context', buildContext());
+		const { data } = await axios.post(
+			`/items/${item.i}/edit/voice`,
+			form
+		);
+		if (data?.data) {
+			suggestion = {
+				...item,
+				...data.data,
+				z: data.data.z,
+				x: data.data.x
+			};
+			toast.success('voice suggestion ready');
+		} else {
+			toast.error('no suggestion produced');
+		}
+	} catch (err) {
+		console.error(err);
+		toast.error('voice extraction failed');
+	} finally {
+		voice_loading = false;
+		voice_recording = false;
+	}
+};
+
+const extractFromImage = async (file: File) => {
+	try {
+		vision_loading = true;
+		const form = new FormData();
+		form.append('image', file);
+		form.append('context', buildContext());
+		const { data } = await axios.post(
+			`/items/${item.i}/edit/vision`,
+			form
+		);
+	if (data?.data) {
+		suggestion = {
+			...item,
+			...data.data,
+			z: data.data.z,
+			x: data.data.x
+		};
+		toast.success('image suggestion ready');
+	} else {
+		toast.error('no suggestion produced');
+	}
+} catch (err) {
+	console.error(err);
+	toast.error('image extraction failed');
+} finally {
+	vision_loading = false;
+}
+};
+
 	const save = async () => {
 		try {
 			saving = true;
-			const formData = new FormData();
-			formData.append('n', item.n);
+	const formData = new FormData();
+	formData.append('n', item.n);
 			if (item.a) formData.append('a', item.a);
 			formData.append(
 				'k',
@@ -124,8 +271,7 @@
 			);
 			if (item.p)
 				formData.append('p', item.p.toString());
-			formData.append('p', item.p ? '.' : '');
-			formData.append('m', item.c);
+		formData.append('c', item.c);
 			formData.append(
 				'rx',
 				JSON.stringify(images_to_remove)
@@ -133,19 +279,9 @@
 			if (selectedFiles.length > 0) {
 				selectedFiles.forEach((f) => {
 					formData.append('f', f);
-					console.log(
-						'Frontend: Appending file:',
-						f.name,
-						f.size,
-						f.type
-					);
 				});
-				console.log(
-					'Frontend: Files selected for upload:',
-					selectedFiles.length
-				);
 			} else {
-				console.log('Frontend: No files selected');
+				/* no files */
 			}
 
 			if (zonesToRemove.length > 0) {
@@ -160,18 +296,6 @@
 					JSON.stringify(newZones.map((z) => z.i))
 				);
 			}
-			console.log(
-				'Frontend: Sending POST to /i/${item.i}/edit with FormData entries:',
-				Array.from(formData.entries()).map(
-					([k, v]) => ({
-						k,
-						v:
-							v instanceof File
-								? `${v.name} (${v.size}B)`
-								: v
-					})
-				)
-			);
 			const res = await axios.post(
 				`/i/${item.i}/edit`,
 				formData,
@@ -357,35 +481,20 @@
 						Add new images (optional)
 					</label>
 					<div class="relative">
-						<input
-							id="file-upload"
-							type="file"
-							multiple
-							accept="image/*"
-							class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-							onchange={(e) => {
-								const input =
-									e.target as HTMLInputElement;
-								const inputFiles = input.files;
-								if (inputFiles) {
-									// Clear previous previews
-									previewUrls.forEach(
-										URL.revokeObjectURL
-									);
-									previewUrls = [];
-									selectedFiles =
-										Array.from(inputFiles);
-									// Generate new previews
-									selectedFiles.forEach((file) => {
-										const url =
-											URL.createObjectURL(file);
-										previewUrls.push(url);
-									});
-									// Reset input to allow re-selecting same files
-									input.value = '';
-								}
-							}}
-						/>
+		<input
+			id="file-upload"
+			type="file"
+			multiple
+			accept="image/*"
+			class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+			onchange={(e) => {
+				const input = e.target as HTMLInputElement;
+				if (input.files) {
+					handleImageSelection(input.files);
+					input.value = '';
+				}
+			}}
+		/>
 						<div
 							class="rounded-2xl border border-[var(--color-theme-3)] bg-transparent p-8 text-center transition-all"
 						>
@@ -397,9 +506,9 @@
 							<p
 								class="text-lg font-medium text-[var(--color-theme-4)]"
 							>
-								{selectedFiles.length > 0
-									? `${selectedFiles.length} file(s) selected`
-									: 'Click to upload new images'}
+				{selectedFiles.length > 0
+					? `${selectedFiles.length} file(s) selected`
+					: 'add images or notes'}
 							</p>
 							<p
 								class="mt-2 text-sm text-[var(--color-theme-3)]"
@@ -586,10 +695,10 @@
 				<div class="space-y-0 pt-4">
 					<!-- Submit Button -->
 					<div class="form-field opacity-0">
-						<Button
-							text={saving
-								? 'Updating...'
-								: 'Update Item'}
+		<Button
+			text={saving
+				? 'updating'
+				: 'update item'}
 							icon={saving
 								? 'fa-spinner fa-spin'
 								: 'fa-save'}
