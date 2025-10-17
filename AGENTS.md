@@ -1,7 +1,7 @@
 # General
 - always search the net when it might help
 - always follow the patterns in the example files perfectly
-- whenever a new pattern is decided, update the example files
+- when a new pattern is decided, update the example files
 
 # Example Files
 - src/lib/components/resource/ResourceCard.svelte
