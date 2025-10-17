@@ -27,22 +27,23 @@
 		onSearch?: (zones: Zone[]) => void;
 	};
 
-	let {
-		q = $bindable(''),
-		zones = $bindable([] as Zone[]),
-		loading = $bindable(false),
-		initial_zones = [],
-		onSelect = undefined,
-		filter = undefined,
-		hide_input = false,
-		exclude_i = undefined,
-		onSearch = (_zones: Zone[]) => {}
-	}: Props = $props();
+let {
+	q = $bindable(''),
+	zones = $bindable([] as Zone[]),
+	loading = $bindable(false),
+	initial_zones = [],
+	onSelect = undefined,
+	filter = undefined,
+	hide_input = false,
+	exclude_i = undefined,
+	onSearch = (_zones: Zone[]) => {}
+}: Props = $props();
 
 	let searchTimeout: NodeJS.Timeout | null =
 		$state(null);
 	const storageKey = 'zone_search_query';
 	let savedInitial = $state(initial_zones);
+	let show_results = $state(initial_zones.length > 0);
 
 	$effect(() => {
 		savedInitial = initial_zones;
@@ -52,6 +53,7 @@
 			!zones.length
 		) {
 			zones = initial_zones;
+			show_results = true;
 		}
 	});
 
@@ -74,6 +76,7 @@
 			search();
 		} else if (savedInitial.length) {
 			zones = savedInitial;
+			show_results = true;
 		}
 	});
 
@@ -82,6 +85,7 @@
 			clearTimeout(searchTimeout);
 		}
 		loading = true;
+		show_results = true;
 
 		searchTimeout = setTimeout(async () => {
 			try {
@@ -126,6 +130,7 @@
 		zones = savedInitial;
 		onSearch(zones);
 		loading = false;
+		show_results = savedInitial.length > 0;
 		if (searchTimeout) {
 			clearTimeout(searchTimeout);
 			searchTimeout = null;
@@ -179,14 +184,17 @@
 		>
 			searching...
 		</div>
-	{:else if zones?.length}
+	{:else if show_results && zones?.length}
 		<div class="space-y-3">
 			{#each zones as zone (zone.i)}
 				{#if onSelect}
 					<button
-						type="button"
-						onclick={() => onSelect?.(zone)}
-						class="block w-full text-left"
+					type="button"
+					onclick={() => {
+						show_results = false;
+						onSelect?.(zone);
+					}}
+					class="block w-full text-left"
 					>
 						<div
 							class="rounded-3xl border-l border-[var(--color-theme-6)] bg-transparent p-4 transition-all duration-500 hover:-translate-y-0.5 hover:border-[var(--color-theme-1)]"
@@ -238,7 +246,7 @@
 				{/if}
 			{/each}
 		</div>
-	{:else}
+{:else if show_results}
 		<div
 			class="rounded-lg border border-dashed border-[var(--color-theme-6)] py-10 text-center text-sm text-[var(--color-theme-3)]"
 		>

@@ -64,5 +64,6 @@ describe('ZoneSearch', () => {
 		const option = await screen.findByText('alpha');
 		await fireEvent.click(option);
 		expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ i: 'z-1' }));
+		expect(screen.queryByText('alpha')).not.toBeInTheDocument();
 	});
 });
