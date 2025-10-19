@@ -1,0 +1,1 @@
+`npm run build`. if pass, `git add .; git commit -m "All Glory Be To God"; git push` else fix errors then build. repeat till pass. then push

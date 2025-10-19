@@ -52,7 +52,7 @@
 			</a>
 			{#if page.data.user}
 				<a
-					href="/i"
+					href="/items"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-5);"
 					onclick={close_sidebar}
