@@ -152,7 +152,7 @@ window.addEventListener('request-install-app', handle_install_click as any);
                 </a>
             </div>
 
-            <div class="flex items-center gap-3 overflow-x-auto">
+            <div class="flex items-center gap-3">
                 {#if !is_mobile}
                     <Button
                         text="install webapp"
