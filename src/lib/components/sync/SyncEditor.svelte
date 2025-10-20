@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMount, onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import Button from '$lib/components/Button.svelte';
 	import type { SyncProject } from '$lib/types';
 	import { toast } from '$lib/util/toast.svelte';
@@ -16,9 +16,13 @@ import { onMount, onDestroy } from 'svelte';
 	let autosaving = $state(false);
 	let last_saved = $state(project.l ?? project.d);
 	let audio_meta = $state(project.m);
+	let audio_duration = $state<number | null>(project.m?.d ?? null);
 	let current_time = $state(0);
-let play_raf: number | null = null;
-let play_start = 0;
+	let play_raf: number | null = null;
+	let play_start = 0;
+	let timeline_el: HTMLDivElement | null = null;
+	let scrubbing = $state(false);
+	let scrubbing_was_playing = false;
 
 	let save_controller: AbortController | null = null;
 	let schedule_id: ReturnType<typeof setTimeout> | null = null;
@@ -26,10 +30,22 @@ let play_start = 0;
 	const AUTOSAVE_DELAY = 2160;
 	const MAX_DURATION = 30 * 60 * 1000;
 
-const has_audio = $derived(Boolean(audio_meta?.u));
-const manual_limit = $derived(() =>
-	markers.length ? markers[markers.length - 1] + 2000 : MAX_DURATION
-);
+	const has_audio = $derived(Boolean(audio_meta?.u));
+	const markers_limit = $derived(() =>
+		markers.length ? markers[markers.length - 1] + 2000 : 0
+	);
+	const total_duration = $derived(() => {
+		const audio_ms =
+			typeof audio_duration === 'number' && audio_duration > 0
+				? audio_duration
+				: 0;
+		const fallback = audio_ms === 0 && markers_limit === 0 ? 10_000 : 0;
+		return Math.max(audio_ms, markers_limit, fallback);
+	});
+	const playhead_position = $derived(() => {
+		if (total_duration <= 0) return 0;
+		return Math.max(0, Math.min(1, current_time / total_duration));
+	});
 
 	$effect(() => {
 	const sanitized = sanitize_markers(markers, {
@@ -114,6 +130,9 @@ function toggle_playback() {
 	function handle_time_update() {
 		if (!audio_el) return;
 		current_time = Math.floor(audio_el.currentTime * 1000);
+	if (audio_el.duration && Number.isFinite(audio_el.duration)) {
+		audio_duration = Math.floor(audio_el.duration * 1000);
+	}
 	}
 
 	function handle_audio_end() {
@@ -122,6 +141,11 @@ function toggle_playback() {
 		current_time = Math.floor(audio_el.duration * 1000);
 	}
 	}
+
+function handle_loaded_metadata() {
+	if (!audio_el || !Number.isFinite(audio_el.duration)) return;
+	audio_duration = Math.floor(audio_el.duration * 1000);
+}
 
 	function add_marker() {
 		const time_ms = audio_el
@@ -167,9 +191,13 @@ async function handle_export() {
 async function start_playback() {
 	if (has_audio && audio_el) {
 		try {
-			audio_el.currentTime = current_time / 1000;
+			const seek_seconds = current_time / 1000;
+			if (Number.isFinite(seek_seconds)) {
+				audio_el.currentTime = Math.max(0, seek_seconds);
+			}
 			await audio_el.play();
 			is_playing = true;
+			play_raf = requestAnimationFrame(step_manual_playback);
 			return;
 		} catch (err) {
 			console.error('audio play error', err);
@@ -177,7 +205,7 @@ async function start_playback() {
 		}
 	}
 
-	play_start = performance.now() - current_time;
+	play_start = performance.now() - Math.max(0, current_time);
 	is_playing = true;
 	step_manual_playback();
 }
@@ -186,8 +214,8 @@ function step_manual_playback() {
 	if (!is_playing) return;
 	const now = performance.now();
 	const elapsed = now - play_start;
-	const limit = manual_limit;
-	const clamped = Math.min(elapsed, limit);
+	const limit = total_duration;
+	const clamped = Math.max(0, Math.min(elapsed, limit));
 	current_time = Math.floor(clamped);
 	if (clamped >= limit) {
 		stop_playback();
@@ -251,6 +279,65 @@ function format_time(ms: number) {
 		return true;
 	}
 
+function handle_timeline_pointer_down(event: PointerEvent) {
+	if (event.button !== 0 || !timeline_el) return;
+	scrubbing = true;
+	scrubbing_was_playing = is_playing;
+	if (is_playing) {
+		stop_playback();
+	}
+	timeline_el.setPointerCapture?.(event.pointerId);
+	update_time_from_pointer(event);
+}
+
+function handle_timeline_pointer_move(event: PointerEvent) {
+	if (!scrubbing) return;
+	update_time_from_pointer(event);
+}
+
+function handle_timeline_pointer_up(event: PointerEvent) {
+	if (!scrubbing) return;
+	update_time_from_pointer(event);
+	scrubbing = false;
+	timeline_el?.releasePointerCapture?.(event.pointerId);
+	if (scrubbing_was_playing) {
+		void start_playback();
+	}
+	scrubbing_was_playing = false;
+}
+
+function update_time_from_pointer(event: PointerEvent) {
+	if (!timeline_el || total_duration <= 0) return;
+	event.preventDefault();
+	const rect = timeline_el.getBoundingClientRect();
+	const width = rect.width;
+	if (!Number.isFinite(width) || width <= 0) return;
+	const raw = (event.clientX - rect.left) / width;
+	if (!Number.isFinite(raw)) return;
+	const ratio = Math.max(0, Math.min(1, raw));
+	const new_time = Math.max(
+		0,
+		Math.min(total_duration, Math.floor(ratio * total_duration))
+	);
+	current_time = new_time;
+	if (has_audio && audio_el) {
+		const seconds = new_time / 1000;
+		if (!Number.isFinite(seconds)) {
+			return;
+		}
+		try {
+			audio_el.currentTime = seconds;
+		} catch (err) {
+			console.warn('failed to seek audio', err);
+		}
+	} else {
+		play_start = performance.now() - new_time;
+	}
+	if (is_playing && !has_audio) {
+		play_start = performance.now() - new_time;
+	}
+}
+
 async function upload_audio(file: File) {
 	try {
 		const url = URL.createObjectURL(file);
@@ -266,11 +353,11 @@ async function upload_audio(file: File) {
 		}
 		const data = await res.json();
 		audio_meta = data.m;
+		audio_duration = data.m?.d ?? audio_duration;
 		if (audio_el && audio_meta?.u) {
 			audio_el.src = audio_meta.u;
 			await audio_el.load();
 		}
-		audio_meta = data.m;
 		toast.success('audio saved', 3000);
 	} catch (err) {
 		console.error('audio upload error', err);
@@ -359,14 +446,28 @@ function get_duration(url: string): Promise<string> {
 				<span class="text-sm font-semibold uppercase text-[var(--text-muted)]">
 					timeline
 				</span>
-				<div
-					class="relative h-32 rounded-xl bg-black text-white"
-					onclick={add_marker}
-				>
+		<div
+			class="relative h-32 select-none rounded-xl bg-black text-white"
+			bind:this={timeline_el}
+			onpointerdown={handle_timeline_pointer_down}
+			onpointermove={handle_timeline_pointer_move}
+			onpointerup={handle_timeline_pointer_up}
+			onpointercancel={handle_timeline_pointer_up}
+		>
 					<div
 						class="absolute inset-0 transition-all"
 						style={`background:${current_color(markers, current_time)}`}
 					></div>
+			<div
+				class="pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-[var(--color-theme-1)] shadow-[0_0_12px_rgba(0,0,0,0.45)] transition-[left] duration-75"
+				style={`left:${(playhead_position * 100).toFixed(3)}%`}
+			></div>
+			<div
+				class="pointer-events-none absolute -top-3 left-0 -translate-x-1/2 rounded bg-[var(--color-theme-1)] px-2 py-1 text-xs font-semibold text-white shadow-md transition-[left] duration-75"
+				style={`left:${(playhead_position * 100).toFixed(3)}%`}
+			>
+				{format_time(current_time)}
+			</div>
 					<div class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-white/20 px-3 py-1 text-xs">
 						{format_time(current_time)}
 					</div>

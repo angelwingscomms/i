@@ -260,7 +260,7 @@
 							{#if user && user.i === item.u}
 								<div class="flex gap-3">
 									<Button
-										href={`/items/${item.i}/edit`}
+										href={`/~/items/${item.i}/edit`}
 										variant="secondary"
 										icon="fa-edit"
 										text="edit"
@@ -407,7 +407,7 @@
 					{#if user && user.i === item.u}
 						<div class="flex gap-3">
 							<Button
-								href={`/items/${item.i}/edit`}
+								href={`/~/items/${item.i}/edit`}
 								variant="secondary"
 								icon="fa-edit"
 								text="edit"
@@ -568,7 +568,8 @@
 						</span>
 						<span class="font-bold text-gray-900 dark:text-gray-100">
 							{#if item.p !== undefined}
-								{item.c ?? ''} {item.p.toLocaleString()}
+								₦{item.p.toLocaleString()}
+								<!-- {item.c ?? ''} {item.p.toLocaleString()} -->
 							{:else}
 								not provided
 							{/if}
