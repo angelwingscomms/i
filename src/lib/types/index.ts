@@ -195,3 +195,4 @@ export type {
 	SyncAudioMeta,
 	SyncGenerated
 } from './sync';
+export type { DiaryEntry } from './diary';

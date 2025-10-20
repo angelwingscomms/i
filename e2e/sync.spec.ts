@@ -6,7 +6,7 @@ test.describe('sync workflow', () => {
 
 		await page.getByRole('button', { name: 'create sync' }).click();
 
-		await expect(page).toHaveURL(/\/sync\/[a-z0-9]+$/i, { timeout: 15000 });
+	await expect(page).toHaveURL(/\/~\/sync\/[a-z0-9]+$/i, { timeout: 15000 });
 
 		await page.getByRole('button', { name: 'play' }).click();
 		await page.getByRole('button', { name: /add marker/i }).click();

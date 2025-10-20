@@ -35,7 +35,7 @@
 		{#each projects as project}
 			<li>
 				<a
-					href={`/,/sync/${project.i}`}
+					href={`/~/sync/${project.i}`}
 					class="group block rounded-3xl border border-[var(--color-theme-6)] px-6 py-5 no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--color-theme-1)]"
 				>
 					<div class="flex items-center justify-between gap-4">

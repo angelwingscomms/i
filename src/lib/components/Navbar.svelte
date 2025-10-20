@@ -168,7 +168,7 @@ window.addEventListener('request-install-app', handle_install_click as any);
 
                 {#if user}
                     <a
-                        href="/~/{user.t}"
+                        href="/{user.t}"
                         class="flex items-center gap-2 rounded-full border border-[var(--border-primary)] bg-[var(--bg-glass)] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--accent-primary)] transition-all hover:border-[var(--accent-primary)] hover:text-white hover:shadow-[0_8px_24px_rgba(207,6,124,0.35)]"
                     >
                         <i class="fas fa-user-circle text-lg"></i>

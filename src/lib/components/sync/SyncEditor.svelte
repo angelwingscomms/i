@@ -64,19 +64,19 @@ onDestroy(() => {
 });
 
 async function debounced_save() {
-		if (schedule_id) clearTimeout(schedule_id);
-		schedule_id = setTimeout(async () => {
-			schedule_id = null;
-			await autosave();
-		}, AUTOSAVE_DELAY);
-	}
+	if (schedule_id) clearTimeout(schedule_id);
+	schedule_id = setTimeout(async () => {
+		schedule_id = null;
+		await autosave();
+	}, AUTOSAVE_DELAY);
+}
 
 	async function autosave() {
 		try {
 			autosaving = true;
 			if (save_controller) save_controller.abort();
 			save_controller = new AbortController();
-			const res = await fetch(`/sync/${project.i}`, {
+		const res = await fetch(`/~/sync/${project.i}`, {
 				method: 'PATCH',
 				headers: { 'content-type': 'application/json' },
 				body: JSON.stringify({
@@ -127,6 +127,9 @@ function toggle_playback() {
 		const time_ms = audio_el
 			? Math.floor(audio_el.currentTime * 1000)
 			: current_time;
+	if (!Number.isFinite(time_ms) || time_ms < 0) {
+		return;
+	}
 		markers = [...markers, time_ms];
 	}
 
@@ -136,7 +139,7 @@ function toggle_playback() {
 
 async function handle_export() {
 		try {
-			const res = await fetch(`/sync/${project.i}/export`, {
+		const res = await fetch(`/~/sync/${project.i}/export`, {
 				method: 'POST'
 			});
 			if (!res.ok) throw new Error('export failed');
@@ -206,18 +209,23 @@ function stop_playback(from_audio = false) {
 }
 
 	
-	function format_time(ms: number) {
-		const minutes = Math.floor(ms / 60000)
-			.toString()
-			.padStart(2, '0');
-		const seconds = Math.floor((ms % 60000) / 1000)
-			.toString()
-			.padStart(2, '0');
-		const hundredths = Math.floor((ms % 1000) / 10)
-			.toString()
-			.padStart(2, '0');
-		return `${minutes}:${seconds}.${hundredths}`;
+function format_time(ms: number) {
+	if (!Number.isFinite(ms) || ms < 0) {
+		return '00:00.00';
 	}
+
+	const rounded = Math.floor(ms);
+	const minutes = Math.floor(rounded / 60000)
+		.toString()
+		.padStart(2, '0');
+	const seconds = Math.floor((rounded % 60000) / 1000)
+		.toString()
+		.padStart(2, '0');
+	const hundredths = Math.floor((rounded % 1000) / 10)
+		.toString()
+		.padStart(2, '0');
+	return `${minutes}:${seconds}.${hundredths}`;
+}
 
 	function current_color(values: number[], time: number) {
 		const sorted = [...values].sort((a, b) => a - b);
@@ -249,7 +257,7 @@ async function upload_audio(file: File) {
 		const form = new FormData();
 		form.set('file', file);
 		form.set('duration', await get_duration(url));
-		const res = await fetch(`/sync/${project.i}/audio`, {
+		const res = await fetch(`/~/sync/${project.i}/audio`, {
 			method: 'POST',
 			body: form
 		});
