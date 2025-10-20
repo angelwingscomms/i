@@ -11,12 +11,12 @@
 - src/lib/types/resource.ts
 - src/lib/util/resource/utility_name/index.ts
 - src/lib/util/resource/utility_name/test.ts
-- src/routes/resource_name/[i]/edit/+page.server.ts
-- src/routes/resource_name/[i]/edit/+page.svelte
-- src/routes/resource_name/[i]/+page.server.ts
-- src/routes/resource_name/[i]/+server.ts
-- src/routes/resource_name/create/+page.server.ts
-- src/routes/resource_name/+page.server.ts
+- src/routes/~/resource/[i]/edit/+page.server.ts
+- src/routes/~/resource/[i]/edit/+page.svelte
+- src/routes/~/resource/[i]/+page.server.ts
+- src/routes/~/resource/[i]/+server.ts
+- src/routes/~/resource/create/+page.server.ts
+- src/routes/~/resource/+page.server.ts
 
 # Code Style
 - Naming: always snake_case for vars/functions; db payload, type defs, request JSON and page load return value keys always single letters.

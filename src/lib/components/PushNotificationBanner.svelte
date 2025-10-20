@@ -41,7 +41,7 @@
 				`Checking existing sub for ${userId}`
 			);
 			const response = await fetch(
-				`/u/${userId}/push_notifications/check_subscription`
+				`/~/u/${userId}/push_notifications/check_subscription`
 			);
 			const data = await response.json();
 			if (data.subscribed) {
