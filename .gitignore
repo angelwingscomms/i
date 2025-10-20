@@ -33,3 +33,6 @@ vite.config.ts.timestamp-*
 *storybook.log
 storybook-static
 qdrant_storage
+
+#cuz something about picomatch missing from package-lock.json in cloudflare build
+package-lock.json
