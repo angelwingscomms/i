@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
-	import SyncProjectList from '$lib/components/sync/SyncProjectList.svelte';../../sync/$types.js
+	import SyncProjectList from '$lib/components/sync/SyncProjectList.svelte';
 
 	let { data } = $props();
 </script>
