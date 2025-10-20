@@ -86,7 +86,7 @@
 </script>
 
 <svelte:head>
-	<title>Search Resources - Apexlinks</title>
+	<title>search resources - apexlinks</title>
 	<meta name="description" content="Find resources" />
 </svelte:head>
 
@@ -112,7 +112,7 @@
 				</div>
 				{#if $page.data.user}
 					<Button
-						href="/resource_name/create"
+						href="/~/resource_name/create"
 						text="Create Resource"
 						icon="fa-plus"
 					/>

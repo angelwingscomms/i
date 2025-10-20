@@ -8,7 +8,7 @@ test.describe('PWA', () => {
 		const respPromise = page.waitForResponse((r) =>
 			r.url().endsWith('/manifest.webmanifest')
 		);
-		await page.goto('/');
+		await page.goto('/~/');
 		// Check manifest link tag present
 		const hasManifestLink = await page
 			.locator('head link[rel="manifest"]')
@@ -38,7 +38,7 @@ test.describe('PWA', () => {
 	test('registers a service worker', async ({
 		page
 	}) => {
-		await page.goto('/');
+		await page.goto('/~/');
 		// Wait for service worker to be ready
 		const swController = await page.evaluate(
 			async () => {
@@ -67,7 +67,7 @@ test.describe('PWA', () => {
 		page,
 		context
 	}) => {
-		await page.goto('/');
+		await page.goto('/~/');
 
 		// Give some time for PWA plugin to precache assets and install SW
 		await page.waitForTimeout(500);
@@ -99,7 +99,7 @@ test.describe('PWA', () => {
 		page,
 		context
 	}) => {
-		await page.goto('/');
+		await page.goto('/~/');
 
 		// Request one of the PWA icons and ensure it gets cached
 		const iconPath = '/icons/icon-192.png';

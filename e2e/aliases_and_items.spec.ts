@@ -39,7 +39,7 @@ test.describe('Nested aliases and item create', () => {
 	test('user alias /u/t/:t redirects to canonical /u/:i', async ({
 		page
 	}) => {
-		await page.goto(`/u/t/alias-user`);
+		await page.goto(`/~/u/t/alias-user`);
 		await expect(page).toHaveURL(
 			new RegExp(`/u/${userId}$`)
 		);
@@ -48,7 +48,7 @@ test.describe('Nested aliases and item create', () => {
 	test('room alias /r/t/:t redirects to canonical /r/:i', async ({
 		page
 	}) => {
-		await page.goto(`/r/t/alias-room`);
+		await page.goto(`/~/r/t/alias-room`);
 		await expect(page).toHaveURL(
 			new RegExp(`/r/${roomId}$`)
 		);
@@ -58,7 +58,7 @@ test.describe('Nested aliases and item create', () => {
 		page
 	}) => {
 		// If auth guard redirects to google, we can just ensure route exists; otherwise skip login
-		await page.goto('/items/create');
+		await page.goto('/~/items/create');
 		// For non-auth environments, form may redirect — just verify page loads or redirects
 		// If it loads, try a minimal submit using fetch in the page context
 		// We don't rely on DOM controls here since page is minimal

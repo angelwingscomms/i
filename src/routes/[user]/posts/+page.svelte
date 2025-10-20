@@ -7,7 +7,7 @@
 </script>
 
 <svelte:head>
-	<title>Posts by {targetUser.t} - Apexlinks</title>
+	<title>posts by {targetUser.t} - apexlinks</title>
 </svelte:head>
 
 <div class="container mx-auto max-w-4xl p-4">

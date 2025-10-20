@@ -19,6 +19,8 @@ export const create_user = async (
 		l: 0, // default latitude
 		n: 0, // default longitude
 		w: '', // empty whatsapp link initially
+		y: false,
+		o: false,
 		c: [], // empty color palette initially
 		dc: Date.now(), // date created
 		...other

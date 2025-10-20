@@ -36,7 +36,7 @@ test.describe('Room Search', () => {
 	test('should only display chatrooms in search results', async ({
 		page
 	}) => {
-		await page.goto('/r');
+		await page.goto('/~/r');
 
 		// Type search query
 		await page.fill(
@@ -63,12 +63,12 @@ test.describe('Room Search', () => {
 
 		// Assert that the specific test room is found
 		await expect(
-			page.locator(`.list a[href="/r/${roomId}"]`)
+			page.locator(`.list a[href="/~/r/${roomId}"]`)
 		).toBeVisible();
 
 		// Assert that the specific test user is NOT found
 		await expect(
-			page.locator(`.list a[href="/u/${userId}"]`)
+			page.locator(`.list a[href="/~/u/${userId}"]`)
 		).not.toBeVisible();
 	});
 });

@@ -7,7 +7,7 @@ test.describe('Room Creation', () => {
 		// Mock a logged-in user session if necessary, depending on actual auth flow
 		// For now, assuming direct access to /r/c for testing purposes or user is already logged in
 
-		await page.goto('/r/c');
+		await page.goto('/~/r/c');
 
 		await expect(page.locator('h1')).toHaveText(
 			'Create New Room'
@@ -50,7 +50,7 @@ test.describe('Room Creation', () => {
 	test('should display validation errors for empty fields', async ({
 		page
 	}) => {
-		await page.goto('/r/c');
+		await page.goto('/~/r/c');
 
 		// Click create button without filling any fields
 		await page.click('button[type="submit"]');
@@ -89,7 +89,7 @@ test.describe('Room Creation', () => {
 	test('should display validation errors for exceeding max length', async ({
 		page
 	}) => {
-		await page.goto('/r/c');
+		await page.goto('/~/r/c');
 
 		// Fill with long text
 		await page.fill(

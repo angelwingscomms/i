@@ -37,7 +37,7 @@
 			{#if data.user}
 				<div class="mt-8">
 					<Button
-						href="/items/create"
+						href="/~/items/create"
 						text="create item"
 						icon="fa-plus"
 					/>

@@ -24,7 +24,7 @@
 	<div class="mb-6">
 		<Button
 			text="explore all resumes"
-			href="/resume"
+			href="/~/resume"
 			icon="fa-arrow-left"
 			variant="secondary"
 		/>

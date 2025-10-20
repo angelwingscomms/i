@@ -6,7 +6,7 @@ test.describe('alias redirects', () => {
 	test('user alias /u/t/:t redirects to /u/:i (if exists)', async ({
 		page
 	}) => {
-		await page.goto(`/u/t/alias-user`);
+		await page.goto(`/~/u/t/alias-user`);
 		const url = page.url();
 		if (
 			url.endsWith('/u/t/alias-user') ||
@@ -23,7 +23,7 @@ test.describe('alias redirects', () => {
 	test('user chat alias /u/t/:t/c redirects to /u/:i/c (if exists)', async ({
 		page
 	}) => {
-		await page.goto(`/u/t/alias-user/c`);
+		await page.goto(`/~/u/t/alias-user/c`);
 		const url = page.url();
 		if (
 			url.endsWith('/u/t/alias-user/c') ||
@@ -40,7 +40,7 @@ test.describe('alias redirects', () => {
 	test('room alias /r/t/:t redirects to /r/:i (if exists)', async ({
 		page
 	}) => {
-		await page.goto(`/r/t/alias-room`);
+		await page.goto(`/~/r/t/alias-room`);
 		const url = page.url();
 		if (
 			url.endsWith('/r/t/alias-room') ||

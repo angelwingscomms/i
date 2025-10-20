@@ -5,7 +5,7 @@ import { test, expect } from '@playwright/test';
 test('item create smoke (loads or redirects to login)', async ({
 	page
 }) => {
-	await page.goto('/items/create');
+	await page.goto('/~/items/create');
 	await expect(page).toHaveURL(
 		/\/i\/create|\/google/
 	);

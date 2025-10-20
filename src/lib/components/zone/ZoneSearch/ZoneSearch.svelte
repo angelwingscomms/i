@@ -10,12 +10,13 @@
 		n?: string;
 		l?: number;
 		g?: number;
+	p?: string;
 		u?: string;
 		d?: number;
 		c?: string[];
 	};
 
-	type Props = {
+type Props = {
 		q?: string;
 		zones?: Zone[];
 		loading?: boolean;
@@ -25,6 +26,9 @@
 		hide_input?: boolean;
 		exclude_i?: string;
 		onSearch?: (zones: Zone[]) => void;
+		source?: 'db' | 'osm';
+		hide_coords?: boolean;
+	debounce?: number;
 	};
 
 let {
@@ -36,12 +40,17 @@ let {
 	filter = undefined,
 	hide_input = false,
 	exclude_i = undefined,
-	onSearch = (_zones: Zone[]) => {}
+	onSearch = (_zones: Zone[]) => {},
+	source = 'db',
+	hide_coords = false,
+	debounce = 300
 }: Props = $props();
 
 	let searchTimeout: NodeJS.Timeout | null =
 		$state(null);
-	const storageKey = 'zone_search_query';
+	const storageKey = source === 'osm'
+		? 'zone_search_query_osm'
+		: 'zone_search_query';
 	let savedInitial = $state(initial_zones);
 	let show_results = $state(initial_zones.length > 0);
 
@@ -90,7 +99,8 @@ let {
 		searchTimeout = setTimeout(async () => {
 			try {
 				const payload: Record<string, unknown> = {
-					q: q.trim() || undefined
+					q: q.trim() || undefined,
+					source
 				};
 				if (filter) {
 					for (const [key, value] of Object.entries(
@@ -122,7 +132,7 @@ let {
 				loading = false;
 				searchTimeout = null;
 			}
-		}, 300);
+		}, debounce);
 	}
 
 	function clearSearch() {
@@ -209,25 +219,27 @@ let {
 										{zone.n?.trim() ||
 											'untitled zone'}
 									</h3>
-									<div
-										class="mt-2 grid gap-1 text-sm text-[var(--color-theme-3)]"
+							{#if !hide_coords}
+								<div
+									class="mt-2 grid gap-1 text-sm text-[var(--color-theme-3)]"
+								>
+									<span
+										>lat: {formatCoord(
+											zone.l
+										)}</span
 									>
-										<span
-											>lat: {formatCoord(
-												zone.l
-											)}</span
-										>
-										<span
-											>lon: {formatCoord(
-												zone.g
-											)}</span
-										>
-									</div>
+									<span
+										>lon: {formatCoord(
+											zone.g
+										)}</span
+									>
+								</div>
+							{/if}
 								</div>
 								<div
 									class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-theme-6)]/10 text-sm font-semibold text-[var(--color-theme-1)]"
 								>
-									{zone.c?.length ?? 0}
+							{zone.c?.length ?? 0}
 								</div>
 							</div>
 							{#if zone.d}

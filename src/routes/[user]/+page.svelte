@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { ItemResultsList } from '$lib/components/items';
-	import Button from '$lib/components/Button.svelte';
+import { ItemResultsList, ItemSearch } from '$lib/components/items';
+import Button from '$lib/components/Button.svelte';
 	import type { Item } from '$lib/types/item';
 	import type { PageProps } from './$types';
 	import { md } from '$lib/util/marked';
@@ -10,10 +10,17 @@
 		createTimeline,
 		stagger
 	} from 'animejs';
+	import { toast } from '$lib/util/toast.svelte';
 
 	let { data }: PageProps = $props();
 	console.log('d', data);
-	let { u: user, c: comparison, it: items } =
+let {
+	u: user,
+	c: comparison,
+	it: items,
+	p: posts_count,
+	m: itemSearchData
+} =
 		data as unknown as {
 			u: {
 				i: string;
@@ -26,10 +33,12 @@
 				socialLinks: string[];
 			};
 			c: string;
-			it: Array<Item & { i: string }>;
+		it: Array<Item & { i: string }>;
+		p?: number;
+		m: Record<string, unknown>;
 		};
 
-	let copied = $state(false);
+const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 
 	onMount(() => {
 		// Entrance animations
@@ -100,18 +109,9 @@
 			await navigator.clipboard.writeText(
 				`${window.location.origin}/${user?.tag ?? ''}`
 			);
-			copied = true;
-
-			// Copy success animation
-			animate('.copy-button', {
-				scale: [1, 1.2, 1],
-				duration: 400,
-				ease: 'outElastic(1, .8)'
-			});
-
-			setTimeout(() => (copied = false), 1200);
+			toast.info('Link copied to clipboard!', 'info', 2000);
 		} catch {
-			// Do nothing on error
+			toast.error('Failed to copy link', 'error', 3000);
 		}
 	}
 	function getSocialMediaInfo(url: string): {
@@ -256,26 +256,44 @@
 				</div>
 
 				<!-- User Info -->
-				<div class="profile-info space-y-4">
-					<h1
-						class="text-5xl font-bold sm:text-3xl"
-						style="color: var(--color-theme-4);"
-					>
-						{user.m || user.tag}
-					</h1>
-					<p class="text-lg" style="color: var(--color-theme-3);">
-						{user.tag}
-					</p>
+		<div class="profile-info space-y-4">
+			<h1
+				class="text-4xl font-semibold sm:text-2xl"
+				style="color: var(--color-theme-4);"
+			>
+				{user.m || user.tag}
+			</h1>
+			<div class="flex items-center justify-center gap-2 text-sm lowercase text-white">
+				https://apexlinks.org/{user.tag}
+				<button
+					onclick={async () => {
+						try {
+							await navigator.clipboard.writeText(
+								`https://apexlinks.org/${user.tag}`
+							);
+							toast.info('Link copied to clipboard!', 'info', 2000);
+						} catch {
+							toast.error('Failed to copy link', 'error', 3000);
+						}
+					}}
+					class="text-white"
+					aria-label="copy profile link"
+				>
+					<i class="fas fa-copy"></i>
+				</button>
+			</div>
 
-					<div
-						class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center"
-					>
+				<div
+					class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center"
+				>
+					{#if user.show_age}
 						<span
 							class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
 							style="background: var(--color-theme-1);"
 						>
-							Age: {user.age}
+							Age: {user.age ?? 'hidden'}
 						</span>
+					{/if}
 						<!-- <span
 							class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
 							style="background: var(--color-theme-2);"
@@ -294,67 +312,44 @@
 								>
 							</div>
 						</span> -->
+					{#if user.show_gender}
 						<span
 							class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
 							style="background: var(--color-theme-3);"
 						>
 							{user.gender === 0 ? 'Male' : 'Female'}
 						</span>
+					{/if}
 					</div>
 
-					<!-- Share Profile -->
-					<div class="mt-8 space-y-3">
-						<p
-							class="text-lg font-medium"
-							style="color: var(--color-theme-4);"
-						>
-							Share Profile
-						</p>
-						<div
-							class="flex items-center justify-center gap-3 sm:flex-col"
-						>
-							<div
-								class="rounded-full px-6 py-3 text-sm font-medium shadow-inner"
-								style="background: var(--accent-lilac-light); color: var(--color-theme-4);"
-							>
-								{#if typeof window !== 'undefined'}{window
-										.location.origin}/{user.tag}{/if}
-							</div>
-							<Button
-								onclick={copyLink}
-								text={copied
-									? '✓ Copied!'
-									: 'Copy Link'}
-								variant="secondary"
-							/>
-						</div>
-					</div>
 					{#if data.user?.i === user.i}
 						<!-- Edit Profile Action -->
 						<div class="mt-6 flex justify-center">
 							<Button
-								href="/edit_user"
+								href="/~/edit_user"
 								text="Edit Your Profile"
 								icon="fa-edit"
 								variant="primary"
 							/>
 						</div>
-						<div class="mt-4 flex justify-center">
-							<Button
-								href={`/${user.tag}/posts`}
-								text="view posts"
-								icon="fa-newspaper"
-								variant="primary"
-							/>
-						</div>
-						<div class="mt-4 flex justify-center">
-							<Button
-								href={`/${user.tag}/i`}
-								text="view items"
-								icon="fa-bag-shopping"
-								variant="primary"
-							/>
-						</div>
+				<div class="mt-4 flex flex-wrap items-center justify-center gap-3">
+					{#if itemSearchData.total > 0}
+						<Button
+							href={`/${user.tag}/i`}
+							text="view items"
+							icon="fa-bag-shopping"
+							variant="primary"
+						/>
+					{/if}
+					{#if other_posts}
+						<Button
+							href={`/${user.tag}/posts`}
+							text="view posts"
+							icon="fa-newspaper"
+							variant="primary"
+						/>
+					{/if}
+				</div>
 
 						{#if !user.description}
 							<div
@@ -380,7 +375,7 @@
 									features!
 								</p>
 								<Button
-									href="/edit_user"
+									href="/~/edit_user"
 									text="Add Description"
 									icon="fa-arrow-right"
 									variant="secondary"
@@ -408,7 +403,7 @@
 							</div>
 							<div class="flex justify-center">
 								<Button
-									href="/{user.tag}/c?call=video"
+									href="/~/{user.tag}/c?call=video"
 									text="Video call"
 									icon="fa-video"
 									variant="primary"
@@ -436,17 +431,27 @@
 			</div>
 		</section>
 
-		{#if items.length > 0}
-			<section class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8">
-				<h2
-					class="mb-8 text-3xl font-bold"
-					style="color: var(--color-theme-4);"
-				>
-					{user.tag}'s items
-				</h2>
-				<ItemResultsList results={items} />
-			</section>
-		{/if}
+		<section class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8">
+			<h2
+				class="mb-8 text-3xl font-bold"
+				style="color: var(--color-theme-4);"
+			>
+				search {user.tag}'s items
+			</h2>
+			<ItemSearch
+				data={{ ...itemSearchData, userTag: user.tag }}
+				showSort={true}
+			/>
+			{#if items.length > 0}
+				<div class="mt-8">
+					<ItemResultsList results={items} />
+				</div>
+			{:else}
+				<p class="text-center text-sm lowercase text-[var(--text-secondary)]">
+					no items yet
+				</p>
+			{/if}
+		</section>
 
 		<!-- Compatibility & Actions Section -->
 		<section
@@ -516,7 +521,7 @@
 						and start conversations!
 					</p>
 					<Button
-						href="/google"
+						href="/~/google"
 						text="Sign In to Connect"
 						icon="fa-sign-in-alt"
 						variant="primary"
@@ -609,7 +614,7 @@
 					found.
 				</p>
 				<Button
-					href="/u"
+					href="/~/u"
 					text="Back to Search"
 					icon="fa-arrow-left"
 					variant="primary"

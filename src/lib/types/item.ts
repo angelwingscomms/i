@@ -16,5 +16,5 @@ export interface Item {
 	x?: string[]; // images urls
 	c: string; // currency
 	d?: number; // date created
-	z?: Zone[]; // zones
+	z?: Zone[]; // zones (place_id based)
 }

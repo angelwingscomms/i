@@ -1,12 +1,12 @@
-import { get, qdrant } from './index';
-import { create } from './index';
+import { create, get, getfirst, qdrant } from './index';
 import { collection } from '$lib/constants';
 import { embed } from '$lib/util/embed';
 import type { Zone } from '$lib/types/zone';
 
 export const create_zone = async (
 	user_id: string,
-	data?: Partial<Zone>
+	data?: Partial<Zone>,
+	place_id?: string
 ): Promise<string> => {
 	const payload: Zone = {
 		s: 'z',
@@ -15,12 +15,20 @@ export const create_zone = async (
 		n: data?.n ?? '',
 		l: data?.l ?? 0,
 		g: data?.g ?? 0,
-		c: data?.c ?? []
+		c: data?.c ?? [],
+		p: data?.p ?? place_id
 	};
 	const embed_source = payload.n?.trim()
 		? payload.n
 		: undefined;
-	return create(payload, embed_source);
+	return create(payload, embed_source, place_id);
+};
+
+export const find_zone_by_place = async (
+	place_id: string
+): Promise<Zone | null> => {
+	if (!place_id) return null;
+	return await getfirst<Zone>({ s: 'z', p: place_id });
 };
 
 export const update_zone = async (

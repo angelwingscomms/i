@@ -6,7 +6,7 @@ import {
 	search_by_vector,
 	find_user_by_tag
 } from '$lib/db';
-import type { User } from '$lib/types';
+import type { User, Post } from '$lib/types';
 import { compare_users } from '$lib/util/users/compare_users';
 import { embed } from '$lib/util/embed';
 import type { Item } from '$lib/types/item';
@@ -32,6 +32,8 @@ export const load: PageServerLoad = async ({
 		avatar: (user as any).av,
 		age: user.a,
 		gender: user.g,
+		show_age: Boolean((user as any).y),
+		show_gender: Boolean((user as any).o),
 		description: user.d,
 		socialLinks: user.x || [],
 		on: (user as any).on,
@@ -67,16 +69,7 @@ export const load: PageServerLoad = async ({
 			s: 'i',
 			u: user.i
 		},
-		[
-			'n',
-			'd',
-			'k',
-			'x',
-			'u',
-			'a',
-			'h',
-			'c'
-		],
+		['n', 'd', 'k', 'x', 'u', 'a', 'h', 'c'],
 		32,
 		{
 			key: 'd',
@@ -86,7 +79,23 @@ export const load: PageServerLoad = async ({
 
 	console.log('found items', items);
 
+	const user_posts = await search_by_payload<Post>(
+		{
+			s: 'p',
+			u: user.i
+		},
+		['i'],
+		32,
+		{
+			key: 'd',
+			direction: 'desc'
+		}
+	);
+
 	user_items = items.filter((item) => item.h !== '.');
+	const user_posts_visible = user_posts.filter(
+		(post: any) => post.v !== '.'
+	);
 
 	// Vector search similar users by this user's description
 	let results: Array<
@@ -118,6 +127,12 @@ export const load: PageServerLoad = async ({
 			: null,
 		ld: local_description, // Pass local user's description
 		it: user_items,
+		p: user_posts_visible.length,
+		m: {
+			userTag: user.t,
+			s: 'i',
+			total: user_items.length
+		},
 		r: results.map((u) => ({
 			i: (u as any).i,
 			t: u.t,

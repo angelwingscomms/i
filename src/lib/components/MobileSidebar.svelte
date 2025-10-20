@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import type { User } from '$lib/types';
-	import { logout } from '$lib/util/logout';
+import { page } from '$app/state';
+import type { User } from '$lib/types';
+import { logout } from '$lib/util/logout';
+import { addToast } from '$lib/util/toast.svelte';
 	let {
 		is_open,
 		onClose
@@ -14,6 +15,14 @@
 		is_open = false;
 		onClose?.();
 	}
+
+function handle_install() {
+	if (window.matchMedia('(display-mode: standalone)').matches) {
+		addToast('app is already installed', 'info');
+		return;
+	}
+	window.dispatchEvent(new CustomEvent('request-install-app'));
+}
 </script>
 
 <aside class="mobile-sidebar" class:is-open={is_open}>
@@ -39,7 +48,7 @@
 		</button>
 		<nav class="sidebar-nav">
 			<a
-				href="/"
+				href="/~/"
 				class="sidebar-nav-link"
 				style="color: var(--color-theme-1);"
 				onclick={close_sidebar}
@@ -51,8 +60,22 @@
 				Home
 			</a>
 			{#if page.data.user}
+			<a
+				onclick={() => {
+					handle_install();
+					close_sidebar();
+				}}
+				class="sidebar-nav-link"
+				style="color: var(--color-theme-2); cursor: pointer;"
+			>
+				<i
+					class="fa-solid fa-download"
+					style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+				></i>
+				install app
+			</a>
 				<a
-					href="/items"
+					href="/~/items"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-5);"
 					onclick={close_sidebar}
@@ -64,7 +87,7 @@
 					items
 				</a>
 				<a
-					href="/r"
+					href="/~/r"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-3);"
 					onclick={close_sidebar}
@@ -76,7 +99,7 @@
 					chatrooms
 				</a>
 				<a
-					href="/posts"
+					href="/~/posts"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-2);"
 					onclick={close_sidebar}
@@ -88,7 +111,7 @@
 					posts
 				</a>
 				<a
-					href="/chats"
+					href="/~/chats"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-4);"
 					onclick={close_sidebar}
@@ -100,7 +123,7 @@
 					chats
 				</a>
 				<a
-					href="/u"
+					href="/~/u"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-6);"
 					onclick={close_sidebar}
@@ -112,7 +135,7 @@
 					users
 				</a>
 				<a
-					href="/zones"
+					href="/~/zones"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-1);"
 					onclick={close_sidebar}
@@ -124,7 +147,7 @@
 					zones
 				</a>
 				<a
-					href="/tools/youtube-video-summarize-tool"
+					href="/~/tools/youtube-video-summarize-tool"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-1);"
 					onclick={close_sidebar}
@@ -136,7 +159,7 @@
 					youtube summarizer
 				</a>
 				<a
-					href="/settings"
+					href="/~/settings"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-4);"
 					onclick={close_sidebar}
@@ -148,7 +171,7 @@
 					settings
 				</a>
 				<a
-					href="/resume"
+					href="/~/resume"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-2);"
 					onclick={close_sidebar}
@@ -160,7 +183,7 @@
 					resume
 				</a>
 				<a
-					href="/{page.data.user.t}"
+					href="/~/{page.data.user.t}"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-4);"
 					onclick={close_sidebar}
@@ -187,7 +210,7 @@
 				</a>
 			{:else}
 				<a
-					href="/tools/youtube-video-summarize-tool"
+					href="/~/tools/youtube-video-summarize-tool"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-1);"
 					onclick={close_sidebar}
@@ -199,7 +222,7 @@
 					youtube summarizer
 				</a>
 				<a
-					href="/i"
+					href="/~/i"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-5);"
 					onclick={close_sidebar}
@@ -211,7 +234,7 @@
 					items
 				</a>
 				<a
-					href="/zones"
+					href="/~/zones"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-1);"
 					onclick={close_sidebar}
@@ -223,7 +246,7 @@
 					zones
 				</a>
 				<a
-					href="/login"
+					href="/~/login"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-1);"
 					onclick={close_sidebar}

@@ -21,6 +21,8 @@ export interface User {
 	l?: number; // latitude
 	n?: number; // longitude
 	w?: string; // whatsapp link
+	y?: boolean; // show age on profile
+	o?: boolean; // show gender on profile
 	gid?: string; // google id
 	p?: string; // password hash
 	i?: string; // user id
@@ -188,3 +190,8 @@ export interface Environment {
 
 export type { Resume } from './resume';
 export type { Zone } from './zone';
+export type {
+	SyncProject,
+	SyncAudioMeta,
+	SyncGenerated
+} from './sync';
