@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({
 	params
 }) => {
 	if (!locals.user) {
-		throw redirect(303, '/google');
+		throw redirect(302, '/~/google');
 	}
 	const r = await get<
 		Pick<Resume, 'u' | 'h' | 'd' | 'l' | 's'>

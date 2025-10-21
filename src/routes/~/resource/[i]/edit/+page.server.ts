@@ -6,7 +6,7 @@ export const load: PageServerLoad = async ({
 	params,
 	locals
 }) => {
-	if (!locals.user) redirect(302, '/login');
+	if (!locals.user) redirect(302, '/~/login');
 	const r = await get<{ s: string; u?: string }>(
 		params.i
 	);

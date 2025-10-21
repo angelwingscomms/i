@@ -17,7 +17,7 @@ export async function requireAuth(
 			i: '',
 			id: ''
 		};
-		// redirect(303, '/auth');
+		// redirect(302, '/~/auth');
 	} else {
 		return locals.user;
 	}

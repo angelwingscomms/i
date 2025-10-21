@@ -15,7 +15,7 @@ import type { PageServerLoad, Actions } from './$types';
 
 const ensure_owner = (world: World, user_id?: string) => {
 	if (!user_id) {
-		throw redirect(302, '/login');
+		throw redirect(302, '/~/login');
 	}
 	if (world.u !== user_id) {
 		throw error(403, 'not authorized');

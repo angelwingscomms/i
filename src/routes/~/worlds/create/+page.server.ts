@@ -29,7 +29,7 @@ export const actions: Actions = {
 				about,
 				meta
 			);
-			throw redirect(302, `/worlds/${world_id}`);
+			throw redirect(302, `/~/worlds/${world_id}`);
 		} catch (error) {
 			console.error('world create failed', error);
 			return fail(500, { e: 'failed to create world' });

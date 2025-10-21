@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({
 	if (!user) error(404, 'user not found');
 	if (user.s !== 'u') error(400, 'resource not user');
 	if (!locals.user) {
-		redirect(302, `/login?next=/${params.user}/a`);
+		redirect(302, `/~/login?next=/${params.user}/a`);
 	}
 
 	const existing_room = await qdrant.scroll(
@@ -41,7 +41,7 @@ export const load: PageServerLoad = async ({
 	// If room exists, redirect to room page
 	if (existing_room.points.length > 0) {
 		const room_id = existing_room.points[0].id;
-		redirect(302, `/r/${room_id}`);
+		redirect(302, `/~/r/${room_id}`);
 	}
 
 	const roomId = await createRoom({
@@ -50,5 +50,5 @@ export const load: PageServerLoad = async ({
 		extra: { r: user.i }
 	});
 	// Redirect to the newly created room
-	redirect(302, `/r/${roomId}`);
+	redirect(302, `/~/r/${roomId}`);
 };

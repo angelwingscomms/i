@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({
 	const { i } = params;
 	const user = await get<{ t: string }>(i);
 	if (!user) {
-		throw redirect(302, '/u');
+		throw redirect(302, '/~/u');
 	}
-	throw redirect(302, `/${user.t}`);
+	throw redirect(302, `/~/${user.t}`);
 };

@@ -7,7 +7,7 @@ import { get_zone } from '$lib/db/zone';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user)
-		redirect(302, '/google?next=/items/create');
+		redirect(302, '/~/google?next=/items/create');
 
 	let i;
 	try {
@@ -37,5 +37,5 @@ export const load: PageServerLoad = async ({ locals }) => {
 		console.error('create item error:', e);
 		throw error(500, 'Failed to create item');
 	}
-	redirect(302, `/items/${i}/edit`);
+	redirect(302, `/~/items/${i}/edit`);
 };

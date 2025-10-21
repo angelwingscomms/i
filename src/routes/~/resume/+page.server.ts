@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({
 	locals
 }: Parameters<PageServerLoad>[0]) => {
 	if (!locals.user) {
-		redirect(302, '/google?next=/resume/mine');
+		redirect(302, '/~/google?next=/resume/mine');
 	}
 	const resumes = await qdrant.search(collection, {
 		vector: new Array(3072).fill(0),

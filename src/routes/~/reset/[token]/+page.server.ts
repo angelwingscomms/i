@@ -6,7 +6,7 @@ import type { User } from '$lib/types';
 export const load: PageServerLoad = async ({ params }) => {
 	const token = params.token;
 	if (!token) {
-		redirect(302, '/reset');
+		redirect(302, '/~/reset');
 	}
 	const now = Date.now();
 	const users = await search_by_payload<User>({
@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	});
 	const user = users.find((u) => u.pt && u.pe && u.pe > now);
 	if (!user?.i || !user.e) {
-		redirect(302, '/reset/expired');
+		redirect(302, '/~/reset/expired');
 	}
 	return {
 		email: user.e,

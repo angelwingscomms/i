@@ -53,5 +53,5 @@ export const load: PageServerLoad = async ({
 		throw error(500, 'Failed to create post');
 	}
 
-	redirect(302, `/posts/${id}/edit`);
+	redirect(302, `/~/posts/${id}/edit`);
 };

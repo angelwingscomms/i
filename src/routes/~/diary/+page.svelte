@@ -37,7 +37,7 @@
 	const create_entry = async () => {
 		creating = true;
 		try {
-			const response = await axios.post('/~/~/diary', {
+			const response = await axios.post('/~/diary', {
 				d: selected_date
 			});
 			const { i } = response.data as { i: string };

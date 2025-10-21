@@ -15,5 +15,5 @@ export const GET: RequestHandler = async ({
 	});
 	if (!u?.i) throw error(404, 'user not found');
 
-	throw redirect(302, `/u/${u.i}/c`);
+	throw redirect(302, `/~/u/${u.i}/c`);
 };

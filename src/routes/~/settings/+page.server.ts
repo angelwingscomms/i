@@ -5,7 +5,7 @@ export const load: PageServerLoad = async ({
 	locals
 }) => {
 	if (!locals.user?.i) {
-		redirect(302, '/google');
+		redirect(302, '/~/google');
 	}
 	return { userId: locals.user.i };
 };

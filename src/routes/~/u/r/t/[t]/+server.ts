@@ -14,5 +14,5 @@ export const GET: RequestHandler = async ({
 	});
 	if (!r?.i) throw error(404, 'room not found');
 
-	throw redirect(302, `/r/${r.i}`);
+	throw redirect(302, `/~/r/${r.i}`);
 };

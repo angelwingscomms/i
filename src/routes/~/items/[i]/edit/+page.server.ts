@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({
 	locals
 }) => {
 	if (!locals.user) {
-		redirect(302, '/login');
+		redirect(302, '/~/login');
 	}
 	if (!params.i) error(400, 'missing item id');
 	const item = await get<Item>(params.i);

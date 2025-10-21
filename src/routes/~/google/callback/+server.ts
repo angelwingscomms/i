@@ -68,7 +68,7 @@ export async function GET(
 			code,
 			codeVerifier
 		);
-		redirect(302, '/google');
+		redirect(302, '/~/google');
 	}
 	const res = decodeIdToken(tokens.idToken()) as {
 		sub: string;
@@ -98,7 +98,7 @@ export async function GET(
 	}
 
 	if (!user_id) {
-		redirect(302, '/google');
+		redirect(302, '/~/google');
 	}
 
 	const sessionToken = await createSession(user_id);
@@ -124,5 +124,5 @@ export async function GET(
 			headers: { Location: next }
 		});
 	}
-	redirect(302, '/');
+	redirect(302, '/~/');
 }

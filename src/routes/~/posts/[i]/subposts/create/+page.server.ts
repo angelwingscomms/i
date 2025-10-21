@@ -14,5 +14,5 @@ export const load = async ({ params, locals }) => {
 		},
 		''
 	);
-	throw redirect(302, `/posts/${subpost_id}/edit`);
+	throw redirect(302, `/~/posts/${subpost_id}/edit`);
 };

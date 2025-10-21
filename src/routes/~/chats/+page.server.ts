@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({
 	}>;
 }> => {
 	if (!locals.user || !locals.user.i) {
-		redirect(302, '/login');
+		redirect(302, '/~/login');
 	}
 
 	const userRooms = (await get<string[]>(
