@@ -11,6 +11,7 @@ import Button from '$lib/components/Button.svelte';
 		stagger
 	} from 'animejs';
 	import { toast } from '$lib/util/toast.svelte';
+	import { page } from '$app/state';
 
 	let { data }: PageProps = $props();
 	console.log('d', data);
@@ -272,12 +273,12 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 				{user.m || user.tag}
 			</h1>
 			<div class="flex items-center justify-center gap-2 text-sm lowercase text-white">
-				https://apexlinks.org/{user.tag}
+				{page.url.origin}/{user.tag}
 				<button
 					onclick={async () => {
 						try {
 							await navigator.clipboard.writeText(
-								`https://apexlinks.org/${user.tag}`
+								`${page.url.origin}/${user.tag}`
 							);
 							toast.info('Link copied to clipboard!', 'info', 2000);
 						} catch {
