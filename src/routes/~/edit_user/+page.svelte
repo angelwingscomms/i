@@ -16,25 +16,27 @@
 		description = $state(data.u!.d || ''),
 		ageStr = $state<string>(String(data.u!.a || 18)),
 		gender = $state<0 | 1>((data.u!.g ?? 0) as 0 | 1),
-		latitude = $state(data.u!.l || 0),
-		longitude = $state(data.u!.n || 0),
-		socialLinks = $state<string[]>(data.u!.x || []),
+	latitude = $state(data.u!.l || 0),
+	longitude = $state(data.u!.n || 0),
+	zones = $state<string[]>(data.u!.z || []),
+	socialLinks = $state<string[]>(data.u!.x || []),
 	email = $state(data.u!.e || ''),
-		usernameValid = $state(true),
-		isGettingLocation = $state(false),
-		isSubmitting = $state(false),
-		avatarDataUrl = $state(
-			(data.u && (data.u as any).av) || ''
-		),
-		show_age = $state(Boolean((data.u as any).y)),
-		show_gender = $state(Boolean((data.u as any).o)),
-		fileInput: HTMLInputElement | null = null;
+	usernameValid = $state(true),
+	isGettingLocation = $state(false),
+	isSubmitting = $state(false),
+	avatarDataUrl = $state(
+		(data.u && (data.u as any).av) || ''
+	),
+	show_age = $state(Boolean((data.u as any).y)),
+	show_gender = $state(Boolean((data.u as any).o)),
+	fileInput: HTMLInputElement | null = null,
+	zone_query = $state('');
 
-function validateEmail(value: string) {
-	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-		value.trim()
-	);
-}
+	function validateEmail(value: string) {
+		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+			value.trim()
+		);
+	}
 	function onAvatarChange(e: Event) {
 		const input = e.target as HTMLInputElement;
 		const file = input.files?.[0];
@@ -113,29 +115,29 @@ function validateEmail(value: string) {
 	async function handleSubmit(event: Event) {
 		event.preventDefault(); // Prevent default form submission
 
-	if (!usernameValid) {
-		form = { error: 'Username is not valid' };
-		return;
-	}
+		if (!usernameValid) {
+			form = { error: 'Username is not valid' };
+			return;
+		}
 
-const name_clean = name_value.trim();
+		const name_clean = name_value.trim();
 
-if (name_clean.length === 0) {
-		form = { error: 'name is required' };
-		return;
-	}
+		if (name_clean.length === 0) {
+			form = { error: 'name is required' };
+			return;
+		}
 
-	if (!validateEmail(email)) {
-		form = { error: 'email is not valid' };
-		return;
-	}
+		if (!validateEmail(email)) {
+			form = { error: 'email is not valid' };
+			return;
+		}
 
 		isSubmitting = true;
 		form = null; // Clear previous messages
 
-	try {
+		try {
 		const response = await axios.post(
-			'/edit_user',
+			'/~/edit_user',
 			{
 				tag,
 				m: name_clean,
@@ -148,7 +150,8 @@ if (name_clean.length === 0) {
 				avatarDataUrl,
 				email,
 				y: show_age,
-				o: show_gender
+				o: show_gender,
+				z: zones
 			}
 		);
 
@@ -197,20 +200,70 @@ if (name_clean.length === 0) {
 			</p>
 		</header>
 
-		<div class="card-normal">
+	<div class="card-normal">
 		<div class="form-group">
-			<label for="name" class="form-label"
-				>name</label
-			>
-			<DescriptionInput
-				bind:value={name_value}
-				type="text"
-				id="name"
-				name="name"
-				placeholder="enter name"
-				voice_typing={false}
-			/>
+			<span class="form-label" id="zones-label">zones</span>
+			{#if zones.length}
+				<ul class="space-y-2" aria-labelledby="zones-label">
+					{#each zones as zone_id (zone_id)}
+						<li class="flex items-center justify-between rounded border border-[var(--border)] px-3 py-2 text-sm">
+							<span class="truncate">{zone_id}</span>
+							<Button
+								text="remove"
+								variant="secondary"
+								onclick={() => {
+									zones = zones.filter((id) => id !== zone_id);
+								}}
+							/>
+						</li>
+					{/each}
+				</ul>
+			{:else}
+				<p class="text-sm text-[var(--text-secondary)]" aria-live="polite">no zones yet</p>
+			{/if}
+			<div class="mt-3 grid gap-3">
+				<input
+					bind:value={zone_query}
+					placeholder="place id"
+					class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm text-[var(--text)]"
+					aria-describedby="zones-label"
+				/>
+				<div class="flex gap-2">
+					<Button
+						text="add"
+						variant="secondary"
+						onclick={() => {
+							const value = zone_query.trim();
+							if (!value || zones.includes(value)) return;
+							zones = [...zones, value];
+							zone_query = '';
+						}}
+					/>
+					<Button
+						text="clear"
+						variant="secondary"
+						onclick={() => {
+							zones = [];
+							zone_query = '';
+						}}
+					/>
+				</div>
+			</div>
 		</div>
+
+		<div class="form-group">
+				<label for="name" class="form-label"
+					>name</label
+				>
+                <DescriptionInput
+                    bind:value={name_value}
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="enter name"
+                    voice_typing={false}
+                />
+			</div>
 			<div class="form-group">
 				<label for="email" class="form-label"
 					>email</label
@@ -223,7 +276,11 @@ if (name_clean.length === 0) {
 					placeholder="enter email"
 					voice_typing={false}
 				/>
-				<input type="hidden" name="email" value={email} />
+				<input
+					type="hidden"
+					name="email"
+					value={email}
+				/>
 			</div>
 
 			<!-- avatar -->
@@ -269,10 +326,10 @@ if (name_clean.length === 0) {
 					128px copy.</small
 				>
 			</div>
-			<form
-				onsubmit={handleSubmit}
-				class="section-spacing"
-			>
+		<form
+			onsubmit={handleSubmit}
+			class="section-spacing"
+		>
 				<div class="form-group">
 					<label for="tag" class="form-label"
 						>user tag</label
@@ -326,29 +383,39 @@ if (name_clean.length === 0) {
 					/>
 				</div>
 
-		<div class="form-group">
-			<span class="form-label">profile visibility</span>
-			<div class="flex flex-wrap gap-2">
-				<Button
-					text={`show age: ${show_age ? 'on' : 'off'}`}
-					variant="secondary"
-					onclick={(e) => {
-						e.preventDefault();
-						show_age = !show_age;
-					}}
-				/>
-				<Button
-					text={`show gender: ${show_gender ? 'on' : 'off'}`}
-					variant="secondary"
-					onclick={(e) => {
-						e.preventDefault();
-						show_gender = !show_gender;
-					}}
-				/>
-			</div>
-			<input type="hidden" name="y" value={show_age ? '1' : ''} />
-			<input type="hidden" name="o" value={show_gender ? '1' : ''} />
-		</div>
+				<div class="form-group">
+					<span class="form-label"
+						>profile visibility</span
+					>
+					<div class="flex flex-wrap gap-2">
+						<Button
+							text={`show age: ${show_age ? 'on' : 'off'}`}
+							variant="secondary"
+							onclick={(e) => {
+								e.preventDefault();
+								show_age = !show_age;
+							}}
+						/>
+						<Button
+							text={`show gender: ${show_gender ? 'on' : 'off'}`}
+							variant="secondary"
+							onclick={(e) => {
+								e.preventDefault();
+								show_gender = !show_gender;
+							}}
+						/>
+					</div>
+					<input
+						type="hidden"
+						name="y"
+						value={show_age ? '1' : ''}
+					/>
+					<input
+						type="hidden"
+						name="o"
+						value={show_gender ? '1' : ''}
+					/>
+				</div>
 
 				<div class="form-group">
 					<span class="form-label" id="gender_label"
@@ -487,7 +554,7 @@ if (name_clean.length === 0) {
 						wide={true}
 					/>
 				</div>
-			</form>
-		</div>
+		</form>
+	</div>
 	</div>
 </main>

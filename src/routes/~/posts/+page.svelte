@@ -37,7 +37,7 @@
 	async function create() {
 		creating = true; // Set creating to true
 		try {
-			const res = await axios.post('/posts');
+			const res = await axios.post('/~/posts');
 			console.log('create res', res);
 			if (res.status === 401) {
 				toast.error(

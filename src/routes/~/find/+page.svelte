@@ -82,7 +82,7 @@
 	const stop_search = async () => {
 		searching = false; // Set searching to false
 		try {
-			await axios.post('/edit_user', { f: 0 }); // Make POST request to set f to 0
+			await axios.post('/~/edit_user', { f: 0 }); // Make POST request to set f to 0
 		} catch (error) {
 			console.error(
 				'Error updating user status or leaving meeting:',

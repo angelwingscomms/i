@@ -195,6 +195,14 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 					name: 'Telegram',
 					faIcon: 'fa-telegram'
 				};
+			if (
+				hostname.includes('whatsapp.com') ||
+				hostname.includes('wa.me')
+			)
+				return {
+					name: 'WhatsApp',
+					faIcon: 'fa-brands fa-whatsapp'
+				};
 			return {
 				name: new URL(url).hostname
 					.replace('www.', '')
@@ -282,6 +290,26 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 					<i class="fas fa-copy"></i>
 				</button>
 			</div>
+			{#if user.socialLinks && user.socialLinks.length > 0}
+				<div class="flex flex-wrap items-center justify-center gap-3 text-sm lowercase text-white">
+					{#each user.socialLinks as link (link)}
+						{@const { name, faIcon } = getSocialMediaInfo(link)}
+						<a
+							href={link}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="flex items-center gap-1 transition hover:text-[var(--color-theme-4)]"
+						>
+							{#if faIcon}
+								<i class="fas {faIcon} text-xs"></i>
+							{:else}
+								<i class="fas fa-external-link-alt text-xs"></i>
+							{/if}
+							{name.toLowerCase()}
+						</a>
+					{/each}
+				</div>
+			{/if}
 
 				<div
 					class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center"
@@ -530,57 +558,7 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 			{/if}
 		</section>
 
-		<!-- Social Links Section -->
-		{#if user.socialLinks && user.socialLinks.length > 0}
-			<section
-				class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8"
-			>
-				<div class="text-center">
-					<h3
-						class="mb-8 text-3xl font-bold"
-						style="color: var(--color-theme-4);"
-					>
-						Connect with {user.tag}
-					</h3>
-					<div
-						class="flex flex-wrap justify-center gap-6 sm:flex-col sm:items-center"
-					>
-						{#each user.socialLinks as link (link)}
-							{@const { name, faIcon } =
-								getSocialMediaInfo(link)}
-							<a
-								href={link}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="interactive-card group relative overflow-hidden rounded-full px-8 py-4 font-bold text-white shadow-xl transition-all sm:w-full sm:max-w-xs"
-								style="background: var(--color-theme-6);"
-							>
-								<div
-									class="absolute inset-0 bg-white opacity-0 transition-opacity group-hover:opacity-20"
-								></div>
-								<div
-									class="relative flex items-center gap-3"
-								>
-									<div
-										class="rounded-full p-2"
-										style="background: rgba(255,255,255,0.2);"
-									>
-										{#if faIcon}
-											<i class="fas {faIcon}"></i>
-										{:else}
-											<i
-												class="fas fa-external-link-alt"
-											></i>
-										{/if}
-									</div>
-									{name}
-								</div>
-							</a>
-						{/each}
-					</div>
-				</div>
-			</section>
-		{/if}
+		<!-- Social Links Section removed per updated design -->
 	{:else}
 		<!-- User Not Found Section -->
 		<div

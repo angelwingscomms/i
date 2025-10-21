@@ -12,6 +12,6 @@ export type ItemFetchPayload = {
 export async function fetch_items(
 	payload: ItemFetchPayload
 ): Promise<Item[]> {
-	const response = await axios.post('/i', payload);
+	const response = await axios.post('/~/i', payload);
 	return response.data as Item[];
 }

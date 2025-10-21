@@ -15,7 +15,7 @@
 		if (!r.t.trim()) return;
 		loading = true;
 		try {
-			await axios.put(`/resource_name/${r.i}`, {
+			await axios.put(`/~/resource_name/${r.i}`, {
 				t: r.t,
 				d: r.d
 			});

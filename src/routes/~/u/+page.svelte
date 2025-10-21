@@ -157,7 +157,7 @@
 				if (description?.trim())
 					payload.d = description.trim();
 			}
-			const arr = (await axios.post('/u', payload))
+			const arr = (await axios.post('/~/u', payload))
 				.data as Result[];
 			results = arr.sort((a, b) =>
 				sort === 'match'

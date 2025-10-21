@@ -29,7 +29,7 @@
 				creating = true;
 				try {
 					const { data } =
-						await axios.post('/resume');
+						await axios.post('/~/resume');
 					goto(`/resume/${data}/edit`);
 				} catch (e) {
 					toast.error('Failed to create resume');

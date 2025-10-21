@@ -94,7 +94,7 @@
 			{#if showAdvanced}
 				<GenderSelection
 					onchange={(gender) => {
-						axios.post('/edit_user', { gender });
+						axios.post('/~/edit_user', { gender });
 					}}
 					head="Your Gender"
 				/>

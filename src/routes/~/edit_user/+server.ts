@@ -7,6 +7,7 @@ import {
 import type { User } from '$lib/types';
 import { collection } from '$lib/constants';
 import { embed } from '$lib/util/embed';
+import { create_zone_by_place_id } from '$lib/util/zones';
 
 export const POST: RequestHandler = async ({
 	request,
@@ -21,7 +22,7 @@ export const POST: RequestHandler = async ({
 	}
 
 	try {
-		const {
+	const {
 			tag,
 			description,
 			age,
@@ -32,9 +33,10 @@ export const POST: RequestHandler = async ({
 			socialLinks,
 			avatarDataUrl,
 			email,
-			m,
-			y,
-			o
+		m,
+		y,
+		o,
+		z
 		} = await request.json();
 
 		const updatedUser: Partial<User> = {};
@@ -112,6 +114,21 @@ export const POST: RequestHandler = async ({
 		if (typeof o === 'boolean') {
 			updatedUser.o = o;
 		}
+
+	if (
+		z !== undefined &&
+		Array.isArray(z) &&
+		z.every((value) => typeof value === 'string')
+	) {
+		const filtered_z = z
+			.map((value: string) => value.trim())
+			.filter((value: string) => value.length > 0);
+		const unique_z = Array.from(new Set(filtered_z));
+		for (const place_id of unique_z) {
+			await create_zone_by_place_id(place_id, locals.user.i);
+		}
+		updatedUser.z = unique_z;
+	}
 
 		if (
 			socialLinks !== undefined &&

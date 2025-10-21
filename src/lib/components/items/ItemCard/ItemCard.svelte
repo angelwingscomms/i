@@ -10,9 +10,9 @@
 </script>
 
 <a class="group block no-underline" href={`/~/items/${item.i ?? ''}`}>
-	<div
-		class="flex h-64 w-64 flex-col items-center justify-center rounded-3xl border-l border-solid border-[var(--color-theme-6)] p-4 transition-all duration-500 hover:-translate-y-0.5 hover:border-[var(--color-theme-1)]"
-	>
+    <div
+        class="flex h-64 w-64 flex-col items-center justify-center rounded-3xl p-4 transition-all duration-500 hover:-translate-y-0.5"
+    >
 		<div class="relative flex-shrink-0">
 			<div class="h-40 w-40 overflow-hidden rounded">
 				{#if item.x && item.x.length > 0}
@@ -68,16 +68,5 @@
 			{/if}
 		</div>
 
-		<div class="flex-shrink-0">
-			<svg
-				width="16"
-				height="16"
-				viewBox="0 0 24 24"
-				fill="currentColor"
-				class="text-[var(--color-theme-6)] transition-transform group-hover:translate-x-1"
-			>
-				<path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" />
-			</svg>
-		</div>
 	</div>
 </a>

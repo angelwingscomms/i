@@ -17,7 +17,7 @@
 
 	$effect(() => {
 		if (colors.length > 0 && colors.length <= 20) {
-			axios.put('/color', { c: colors });
+			axios.put('/~/color', { c: colors });
 		}
 	});
 
@@ -48,7 +48,7 @@
 		loading = true;
 		try {
 			const prompt = `${aiDesc.trim()}\n\nCurrent colors: ${colors.map((c) => '#' + c).join(', ')}`;
-			const res = await axios.post('/color', {
+			const res = await axios.post('/~/color', {
 				d: prompt
 			});
 			colors = res.data.c;

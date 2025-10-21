@@ -140,7 +140,7 @@
 		};
 
 		if (messageText || files.length > 0) {
-			axios.post(`/r/${i}`, m);
+			axios.post(`/~/r/${i}`, m);
 		}
 	}
 </script>

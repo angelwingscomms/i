@@ -13,7 +13,7 @@
 			return;
 		}
 		try {
-			const res = await axios.post('/resume', txt);
+			const res = await axios.post('/~/resume', txt);
 			if (res.statusText === 'OK') {
 				toast.success('Resume created successfully');
 				goto(`/~/resume/${res.data}`);

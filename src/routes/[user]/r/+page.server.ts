@@ -13,6 +13,10 @@ export const load: PageServerLoad = async ({
 			1
 		)
 	)[0] as Pick<User, 't'> & { i: string };
+
+	if (!u) {
+		error(404, 'User not found');
+	}
 	const r = (
 		await search_by_payload<Resume>(
 			{ s: 'e', u: u.i },
@@ -20,10 +24,6 @@ export const load: PageServerLoad = async ({
 			1
 		)
 	)[0];
-
-	if (!u) {
-		throw error(404, 'User not found');
-	}
 
 	if (!r) {
 		throw error(404, 'Resume not found');

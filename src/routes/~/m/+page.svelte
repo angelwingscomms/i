@@ -19,7 +19,7 @@
 		loading = true;
 		searched = true;
 		try {
-			const { data } = await axios.post('/m/search', {
+			const { data } = await axios.post('/~/m/search', {
 				q
 			});
 			results = data || [];

@@ -112,6 +112,8 @@ $effect(() => {
 });
 
 async function save() {
+	if (saving) return;
+	saving = true;
 	const n = zone.n.trim();
 	if (!n) {
 		toast.error('name required');
@@ -121,10 +123,8 @@ async function save() {
 		toast.error('choose a location');
 		return;
 	}
-	if (saving) return;
-	saving = true;
 	try {
-		const response = await axios.post('/zones', {
+		const response = await axios.post('/~/zones', {
 			n,
 			l: zone.l,
 			g: zone.g

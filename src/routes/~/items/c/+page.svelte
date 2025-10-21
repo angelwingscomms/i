@@ -16,7 +16,7 @@
 			{ m: text, i: tempId } as ChatMessage
 		];
 		try {
-			await axios.post('/i', {
+			await axios.post('/~/i', {
 				m: text,
 				d,
 				i: tempId

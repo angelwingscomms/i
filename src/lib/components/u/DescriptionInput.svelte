@@ -23,7 +23,7 @@
 			clearTimeout(updateTimeout);
 			updateTimeout = setTimeout(() => {
 				axios
-					.post('/edit_user', {
+					.post('/~/edit_user', {
 						description: user_description
 					})
 					.then(() => {
