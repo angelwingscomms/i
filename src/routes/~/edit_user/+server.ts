@@ -1,13 +1,14 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import {
-	qdrant,
-	find_user_by_email
-} from '$lib/db';
+import { qdrant, find_user_by_email } from '$lib/db';
 import type { User } from '$lib/types';
 import { collection } from '$lib/constants';
 import { embed } from '$lib/util/embed';
 import { create_zone_by_place_id } from '$lib/util/zones';
+import {
+	sanitize_email_list,
+	sanitize_phone_list
+} from '$lib/util/users/contact';
 
 export const POST: RequestHandler = async ({
 	request,
@@ -33,6 +34,8 @@ export const POST: RequestHandler = async ({
 			socialLinks,
 			avatarDataUrl,
 			email,
+			b,
+			k,
 		m,
 		y,
 		o,
@@ -140,6 +143,22 @@ export const POST: RequestHandler = async ({
 			updatedUser.x = socialLinks
 				.filter((link: string) => link.trim() !== '')
 				.map((link: string) => link.trim());
+		}
+
+		if (
+			Array.isArray(b) &&
+			b.every((value) => typeof value === 'string')
+		) {
+			const phones = sanitize_phone_list(b);
+			updatedUser.b = phones.length ? phones : [];
+		}
+
+		if (
+			Array.isArray(k) &&
+			k.every((value) => typeof value === 'string')
+		) {
+			const emails = sanitize_email_list(k);
+			updatedUser.k = emails.length ? emails : [];
 		}
 
 		if (

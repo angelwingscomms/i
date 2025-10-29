@@ -33,6 +33,8 @@ export interface User {
 	c?: string[]; // color palette hex without #
 	// c: Record<string, string>;
 	x?: string[]; // contact links,
+	b?: string[]; // phone numbers
+	k?: string[]; // emails
 	rt?: string; // realtime room token
 	isAdmin?: boolean; // whether user is an admin
 	ps?: PushSubscription[]; // push subscription

@@ -22,22 +22,27 @@ let {
 	p: posts_count,
 	m: itemSearchData
 } =
-		data as unknown as {
-			u: {
-				i: string;
-				tag: string;
-				m?: string;
-				avatar?: string;
-				age?: number;
-				gender?: number;
-				description?: string;
-				socialLinks: string[];
-			};
-			c: string;
+	data as unknown as {
+		u: {
+			i: string;
+			tag: string;
+			m?: string;
+			avatar?: string;
+			age?: number;
+			gender?: number;
+			description?: string;
+			socialLinks: string[];
+			phones?: string[];
+			emails?: string[];
+		};
+		c: string;
 		it: Array<Item & { i: string }>;
 		p?: number;
 		m: Record<string, unknown>;
-		};
+	};
+
+const phone_numbers = $derived(user?.phones ?? []);
+const email_addresses = $derived(user?.emails ?? []);
 
 const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 
@@ -291,7 +296,7 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 					<i class="fas fa-copy"></i>
 				</button>
 			</div>
-			{#if user.socialLinks && user.socialLinks.length > 0}
+	{#if user.socialLinks && user.socialLinks.length > 0}
 				<div class="flex flex-wrap items-center justify-center gap-3 text-sm lowercase text-white">
 					{#each user.socialLinks as link (link)}
 						{@const { name, faIcon } = getSocialMediaInfo(link)}
@@ -599,6 +604,28 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 					variant="primary"
 				/>
 			</div>
+		</div>
+	{/if}
+
+	{#if phone_numbers.length}
+		<div class="flex flex-wrap items-center justify-center gap-3 text-sm lowercase text-white">
+			{#each phone_numbers as phone (phone)}
+				<span class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2">
+					<i class="fas fa-phone text-xs"></i>
+					{phone}
+				</span>
+			{/each}
+		</div>
+	{/if}
+
+	{#if email_addresses.length}
+		<div class="flex flex-wrap items-center justify-center gap-3 text-sm lowercase text-white">
+			{#each email_addresses as address (address)}
+				<span class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2">
+					<i class="fas fa-envelope text-xs"></i>
+					{address}
+				</span>
+			{/each}
 		</div>
 	{/if}
 </div>

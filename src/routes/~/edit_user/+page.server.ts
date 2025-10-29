@@ -19,6 +19,8 @@ export const load: PageServerLoad = async ({
 				'l',
 				'n',
 				'x',
+			'b',
+			'k',
 				'av',
 				'e',
 				'm',

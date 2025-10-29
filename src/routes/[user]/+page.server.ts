@@ -36,6 +36,8 @@ export const load: PageServerLoad = async ({
 		show_gender: Boolean((user as any).o),
 		description: user.d,
 		socialLinks: user.x || [],
+	phones: user.b || [],
+	emails: user.k || [],
 		on: (user as any).on,
 		ic: (user as any).ic
 	};

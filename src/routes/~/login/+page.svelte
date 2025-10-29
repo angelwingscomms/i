@@ -22,7 +22,7 @@ async function submitLogin() {
 	logging_in = true;
 	error = '';
 	try {
-		const response = await fetch('/login', {
+		const response = await fetch('/~/login', {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ async function submitRegister() {
 	registering = true;
 	error = '';
 	try {
-		const response = await fetch('/login', {
+		const response = await fetch('/~/login', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

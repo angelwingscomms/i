@@ -1,8 +1,14 @@
 <script lang="ts">
-	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
-	import Button from '$lib/components/Button.svelte';
-	// import UsernameInput from '$lib/components/ui/UsernameInput.svelte';
-	import axios from 'axios';
+import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
+import Button from '$lib/components/Button.svelte';
+// import UsernameInput from '$lib/components/ui/UsernameInput.svelte';
+import axios from 'axios';
+import {
+	sanitize_email_list,
+	sanitize_phone_list,
+	validate_email,
+	normalize_phone
+} from '$lib/util/users/contact';
 
 	let { data } = $props();
 	let form: {
@@ -18,9 +24,13 @@
 		gender = $state<0 | 1>((data.u!.g ?? 0) as 0 | 1),
 	latitude = $state(data.u!.l || 0),
 	longitude = $state(data.u!.n || 0),
-	zones = $state<string[]>(data.u!.z || []),
-	socialLinks = $state<string[]>(data.u!.x || []),
-	email = $state(data.u!.e || ''),
+zones = $state<string[]>(data.u!.z || []),
+socialLinks = $state<string[]>(data.u!.x || []),
+phones = $state<string[]>(Array.isArray((data.u as any).b) ? (data.u as any).b : []),
+emails = $state<string[]>(
+	Array.isArray((data.u as any).k) ? (data.u as any).k : []
+),
+primaryEmail = $state(data.u!.e || ''),
 	usernameValid = $state(true),
 	isGettingLocation = $state(false),
 	isSubmitting = $state(false),
@@ -30,13 +40,10 @@
 	show_age = $state(Boolean((data.u as any).y)),
 	show_gender = $state(Boolean((data.u as any).o)),
 	fileInput: HTMLInputElement | null = null,
-	zone_query = $state('');
+	zone_query = $state(''),
+	phone_entry = $state(''),
+	email_entry = $state('');
 
-	function validateEmail(value: string) {
-		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-			value.trim()
-		);
-	}
 	function onAvatarChange(e: Event) {
 		const input = e.target as HTMLInputElement;
 		const file = input.files?.[0];
@@ -127,16 +134,28 @@
 			return;
 		}
 
-		if (!validateEmail(email)) {
+	if (!validate_email(primaryEmail)) {
 			form = { error: 'email is not valid' };
 			return;
 		}
+
+	const uniquePhones = sanitize_phone_list(phones);
+	if (phones.length && uniquePhones.length !== phones.length) {
+		form = { error: 'phone number is not valid' };
+		return;
+	}
+
+	const uniqueEmails = sanitize_email_list(emails);
+	if (emails.length && uniqueEmails.length !== emails.length) {
+		form = { error: 'email is not valid' };
+		return;
+	}
 
 		isSubmitting = true;
 		form = null; // Clear previous messages
 
 		try {
-		const response = await axios.post(
+	const response = await axios.post(
 			'/~/edit_user',
 			{
 				tag,
@@ -148,7 +167,9 @@
 				longitude,
 				socialLinks,
 				avatarDataUrl,
-				email,
+			email: primaryEmail,
+			b: uniquePhones,
+			k: uniqueEmails,
 				y: show_age,
 				o: show_gender,
 				z: zones
@@ -264,24 +285,147 @@
                     voice_typing={false}
                 />
 			</div>
-			<div class="form-group">
-				<label for="email" class="form-label"
-					>email</label
-				>
-				<DescriptionInput
-					bind:value={email}
-					type="email"
-					id="email"
-					name="email"
-					placeholder="enter email"
-					voice_typing={false}
+	<div class="form-group">
+		<label for="email" class="form-label"
+			>email</label
+		>
+		<DescriptionInput
+			bind:value={primaryEmail}
+			type="email"
+			id="email"
+			name="email"
+			placeholder="enter email"
+			voice_typing={false}
+		/>
+		<input
+			type="hidden"
+			name="email"
+			value={primaryEmail}
+		/>
+	</div>
+
+	<div class="form-group">
+		<span class="form-label" id="phones-label"
+			>phone numbers</span
+		>
+		{#if phones.length}
+			<ul
+				class="space-y-2"
+				aria-labelledby="phones-label"
+			>
+				{#each phones as phone (phone)}
+					<li class="flex items-center justify-between rounded border border-[var(--border)] px-3 py-2 text-sm">
+						<span class="truncate">{phone}</span>
+						<Button
+							text="remove"
+							variant="secondary"
+							onclick={() => {
+								phones = phones.filter((value) => value !== phone);
+							}}
+						/>
+					</li>
+				{/each}
+			</ul>
+		{:else}
+			<p
+				class="text-sm text-[var(--text-secondary)]"
+				aria-live="polite"
+			>
+				no phone numbers yet
+			</p>
+		{/if}
+		<div class="mt-3 grid gap-3">
+			<input
+				bind:value={phone_entry}
+				placeholder="enter phone number"
+				class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm text-[var(--text)]"
+				aria-describedby="phones-label"
+			/>
+			<div class="flex gap-2">
+				<Button
+					text="add"
+					variant="secondary"
+					onclick={() => {
+						const value = normalize_phone(phone_entry);
+						if (!value) return;
+						const next = sanitize_phone_list([value, ...phones]);
+						phones = next;
+						phone_entry = '';
+					}}
 				/>
-				<input
-					type="hidden"
-					name="email"
-					value={email}
+				<Button
+					text="clear"
+					variant="secondary"
+					onclick={() => {
+						phones = [];
+						phone_entry = '';
+					}}
 				/>
 			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<span class="form-label" id="emails-label"
+			>extra emails</span
+		>
+		{#if emails.length}
+			<ul
+				class="space-y-2"
+				aria-labelledby="emails-label"
+			>
+				{#each emails as address (address)}
+					<li class="flex items-center justify-between rounded border border-[var(--border)] px-3 py-2 text-sm">
+						<span class="truncate">{address}</span>
+						<Button
+							text="remove"
+							variant="secondary"
+							onclick={() => {
+								emails = emails.filter((value) => value !== address);
+							}}
+						/>
+					</li>
+				{/each}
+			</ul>
+		{:else}
+			<p
+				class="text-sm text-[var(--text-secondary)]"
+				aria-live="polite"
+			>
+				no extra emails yet
+			</p>
+		{/if}
+		<div class="mt-3 grid gap-3">
+			<input
+				bind:value={email_entry}
+				placeholder="enter email"
+				class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm text-[var(--text)]"
+				aria-describedby="emails-label"
+			/>
+			<div class="flex gap-2">
+				<Button
+				<Button
+					text="add"
+					variant="secondary"
+					onclick={() => {
+						const value = sanitize_email_list([email_entry])[0];
+						if (!value) return;
+						const next = sanitize_email_list([value, ...emails]);
+						emails = next;
+						email_entry = '';
+					}}
+				/>
+				<Button
+					text="clear"
+					variant="secondary"
+					onclick={() => {
+						emails = [];
+						email_entry = '';
+					}}
+				/>
+			</div>
+		</div>
+	</div>
 
 			<!-- avatar -->
 			<div class="form-group">
