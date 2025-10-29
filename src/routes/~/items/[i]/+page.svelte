@@ -221,6 +221,16 @@
 							{item.n}
 						</h1>
 
+					{#if item.p !== undefined}
+						<div
+							class="mb-6 text-3xl font-bold text-white lg:text-4xl"
+						>
+							{item.c
+								? `${item.c.toUpperCase()} ${item.p.toLocaleString()}`
+								: item.p.toLocaleString()}
+						</div>
+					{/if}
+
 						{#if item.q}
 							<div
 								class="mb-8 text-xl leading-relaxed font-semibold text-white/90 lg:text-2xl"
@@ -279,6 +289,27 @@
 								icon="fa-robot"
 								text="Ask AI About This Item"
 							/>
+						{#if item.ownerWhatsapp}
+							<a
+								href={`https://wa.me/${item.ownerWhatsapp.replace(/[^0-9]/g, '')}`}
+								class="btn-secondary"
+								aria-label="message on whatsapp"
+								target="_blank"
+								rel="noopener"
+							>
+								<i class="fab fa-whatsapp"></i> whatsapp
+							</a>
+						{/if}
+						{#if item.ownerDiscord}
+							<a
+								href={item.ownerDiscord}
+								class="btn-secondary"
+								target="_blank"
+								rel="noopener"
+							>
+								<i class="fab fa-discord"></i> discord
+							</a>
+						{/if}
 							<Button
 								onclick={() =>
 									navigator
@@ -295,7 +326,7 @@
 										})}
 								variant="secondary"
 								icon="fa-share"
-								text="Share Item"
+							text="share item"
 								wide={true}
 							/>
 						</div>
@@ -350,16 +381,16 @@
 					<span
 						class="text-sm font-medium text-white/70"
 					>
-						{item.a
+						{item.d
 							? new Date(item.d).toLocaleDateString(
-									'en-US',
-									{
-										year: 'numeric',
-										month: 'long',
-										day: 'numeric'
-									}
-								)
-							: 'Date not available'}
+								'en-US',
+								{
+									year: 'numeric',
+									month: 'long',
+									day: 'numeric'
+								}
+							)
+							: 'date not available'}
 					</span>
 				</div>
 
@@ -368,6 +399,16 @@
 				>
 					{item.n}
 				</h1>
+
+				{#if item.p !== undefined}
+					<div
+						class="mb-6 text-3xl font-bold text-white lg:text-4xl"
+					>
+						{item.c
+							? `${item.c.toUpperCase()} ${item.p.toLocaleString()}`
+							: item.p.toLocaleString()}
+					</div>
+				{/if}
 
 				{#if item.q}
 					<div
@@ -503,12 +544,6 @@
 							</div>
 						{:else}
 							<div class="py-16 text-center">
-								<div
-									class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-gray-100 to-gray-200 shadow-inner"
-								>
-									<i class="fas fa-file-alt text-3xl"
-									></i>
-								</div>
 								<h3
 									class="mb-2 text-lg font-semibold text-gray-600 dark:text-gray-400"
 								>
@@ -547,15 +582,11 @@
 											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
 											>Type</span
 										>
-										<div
-											class="rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 text-xs font-bold text-white shadow-lg shadow-purple-500/30"
-										>
-											<i
-												class={`fas fa-${item.k === 0 ? 'shopping-bag' : 'bolt'} mr-1`}
-											></i>{item.k === 0
-												? 'Product'
-												: 'Service'}
-										</div>
+						<span
+							class="rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 text-xs font-bold text-white shadow-lg shadow-purple-500/30"
+						>
+							{item.k === 0 ? 'product' : 'service'}
+						</span>
 									</div>
 								</div>
 

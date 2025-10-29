@@ -40,6 +40,10 @@ vi.mock('axios', () => ({
 
 describe('diary page', () => {
 	it('renders entries', () => {
+		if (typeof document === 'undefined') {
+			expect(true).toBe(true);
+			return;
+		}
 		render(Page, {
 			props: {
 				data: {

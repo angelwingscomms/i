@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { afterUpdate, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import {
 		create_granite_client,
 		supports_webgpu,
@@ -26,7 +26,7 @@
 		chat_messages.filter((message) => message.role !== 'system')
 	);
 
-	let chat_container: HTMLDivElement | null = null;
+	let chat_container = $state<HTMLDivElement | null>(null);
 
 	const set_error = (value: unknown) => {
 		if (!value) {
@@ -68,9 +68,11 @@
 		}
 	});
 
-	afterUpdate(() => {
-		if (!chat_container) return;
-		chat_container.scrollTop = chat_container.scrollHeight;
+	$effect(() => {
+		chat_messages;
+		const node = chat_container;
+		if (!node) return;
+		node.scrollTop = node.scrollHeight;
 	});
 
 	const send_message = async () => {
@@ -150,7 +152,7 @@
 							<div
 								class="h-2 bg-[color:var(--accent-primary)] transition-all"
 								style={`width: ${load_progress}%`}
-							/>
+							></div>
 						</div>
 					{/if}
 					{#if load_error && supports_webgpu()}
@@ -192,7 +194,7 @@
 								say hi to granite
 							</p>
 						{:else}
-							{#each visible_messages as message, index}
+							{#each visible_messages as message, index (index)}
 								<div
 									class={
 										message.role === 'user'

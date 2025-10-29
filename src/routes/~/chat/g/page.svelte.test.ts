@@ -12,7 +12,7 @@ vi.mock('$lib/util/granite/client', () => ({
 	create_granite_client: () => ({ load, generate, reset })
 }));
 
-describe('/chat/g', () => {
+describe('/~/chat/g', () => {
 	it('shows webgpu requirement notice when unsupported', async () => {
 		render(Page);
 		const notice = page.getByText('webgpu support required');
