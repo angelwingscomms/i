@@ -18,7 +18,7 @@ export async function GET(
 	const google = new Google(
 		GOOGLE_ID,
 		GOOGLE_SECRET,
-		`${event.url.origin}/google/callback`
+		`${event.url.origin}/~/google/callback`
 	);
 	const url = google.createAuthorizationURL(
 		state,

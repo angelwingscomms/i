@@ -46,7 +46,7 @@ function handle_install() {
 				/>
 			</svg>
 		</button>
-		<nav class="sidebar-nav">
+	<nav class="sidebar-nav flex-1 overflow-y-auto pb-5 pr-2">
 			<a
 				href="/~/"
 				class="sidebar-nav-link"
@@ -285,6 +285,8 @@ function handle_install() {
 		box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
 		transition: right 0.3s ease-in-out;
 		z-index: 1000;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.mobile-sidebar.is-open {
@@ -292,7 +294,12 @@ function handle_install() {
 	}
 
 	.sidebar-content {
+		height: 100%;
 		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		position: relative;
 	}
 
 	.close-button {
@@ -310,6 +317,7 @@ function handle_install() {
 		flex-direction: column;
 		gap: 15px;
 		margin-top: 50px; /* Space for close button */
+		scrollbar-gutter: stable both-edges;
 	}
 
 	.sidebar-nav-link {

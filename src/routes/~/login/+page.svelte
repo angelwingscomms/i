@@ -110,8 +110,9 @@ function handleRegister() {
 				login / register
 			</h1>
 			<p class="mt-1 text-sm text-slate-600">
-				sign in with your username or continue with
-				google
+				sign in with your username 
+				<!-- or continue with
+				google -->
 			</p>
 		</div>
 
@@ -214,7 +215,7 @@ function handleRegister() {
 			</form>
 		</div>
 
-		<div class="mt-4 text-center">
+		<!-- <div class="mt-4 text-center">
 			<Button
 				href="/~/google"
 				text="continue with google"
@@ -222,6 +223,6 @@ function handleRegister() {
 				wide
 				icon="fab fa-google"
 			/>
-		</div>
+		</div> -->
 	</div>
 </main>
