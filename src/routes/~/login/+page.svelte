@@ -194,13 +194,13 @@ function handleRegister() {
 
 				<div class="grid grid-cols-3 gap-3">
 					<Button
-						text="login"
+						text={mode === 'register' ? 'login instead' : 'login'}
 						variant="primary"
 						loading={mode === 'login' ? logging_in : false}
 						onclick={handleLogin}
 					/>
 					<Button
-						text="register"
+						text={mode === 'login' ? 'register instead' : 'register'}
 						variant="secondary"
 						loading={mode === 'register' ? registering : false}
 						onclick={handleRegister}
