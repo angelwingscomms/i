@@ -21,6 +21,16 @@ export default defineConfig({
 				maximumFileSizeToCacheInBytes:
 					50 * 1024 * 1024 // 50 MiB to cover large WASM file
 			},
+			workbox: {
+				globPatterns: [
+					'**/*.{js,css,html,ico,png,svg,webmanifest,json,woff2}'
+				],
+				globIgnores: [
+					'**/ort-wasm-*.wasm',
+					'**/ort-wasm-*.jsep.*',
+					'**/onnxruntime-web*/**'
+				]
+			},
 			includeAssets: [
 				'logo.svg',
 				'robots.txt',
