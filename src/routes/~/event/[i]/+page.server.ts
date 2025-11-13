@@ -3,7 +3,8 @@ import {
 	search_by_payload,
 	get,
 	new_id,
-	search_by_vector
+	search_by_vector,
+	count
 } from '$lib/db';
 import { realtime } from '$lib/util/realtime';
 import type {
@@ -212,14 +213,21 @@ export const load = async ({ params, locals }) => {
 		// Get total user count in this event
 		let total_user_count = 0;
 		try {
-			total_user_count = await count({ s: 'u', ev: params.i });
+			total_user_count = await count({
+				s: 'u',
+				ev: params.i
+			});
 		} catch (e) {
-			console.error('Error counting users in event:', e);
+			console.error(
+				'Error counting users in event:',
+				e
+			);
 		}
 
 		// Get user description state and similar users
 		let user_has_description = false;
-		let users: (User & { similarity?: number })[] = [];
+		let users: (User & { similarity?: number })[] =
+			[];
 		if (locals.user) {
 			try {
 				const user_desc = await get<string>(
@@ -232,29 +240,25 @@ export const load = async ({ params, locals }) => {
 					// Get user profile for embedding
 
 					// Find users who joined this event
-					const searchResults = await search_by_vector({
-						filter: {
-							must: { s: 'u', ev: params.i },
-							must_not: { i: locals.user.i }
-						},
-						vector: await embed(user_desc || ''),
-						limit: 9,
-						with_payload: ['t', 'av', 'a', 'g', 'd']
-					});
+					const searchResults =
+						await search_by_vector({
+							filter: {
+								must: { s: 'u', ev: params.i },
+								must_not: { i: locals.user.i }
+							},
+							vector: await embed(user_desc || ''),
+							limit: 9,
+							with_payload: ['t', 'av', 'a', 'g', 'd']
+						});
 
 					// Convert similarity scores to percentages
-					users = searchResults.map(result => ({
+					users = searchResults.map((result) => ({
 						...result,
-						similarity: Math.round((result.score || 0) * 100)
+						similarity: Math.round(
+							(result.score || 0) * 100
+						)
 					}));
 				}
-			} catch (e) {
-				console.error(
-					'Error finding similar users in event:',
-					e
-				);
-			}
-		}
 			} catch (e) {
 				console.error(
 					'Error finding similar users in event:',

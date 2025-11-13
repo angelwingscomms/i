@@ -135,7 +135,7 @@
 						to you
 					</p>
 					<a
-						href="/~/user/{user.i}/edit"
+						href="/~/edit_user"
 						class="prompt-button"
 					>
 						edit profile
@@ -153,7 +153,7 @@
 				<div class="users-grid">
 					{#each users as similarUser (similarUser.i)}
 						<a
-							href="/~/user/{similarUser.i}"
+							href="/~/u/{similarUser.i}"
 							class="user-card-link"
 						>
 							<div class="user-card">
@@ -298,31 +298,70 @@
 		);
 		border-radius: 2px;
 	}
-	.section-header {
-		position: relative;
-		margin-bottom: 24px;
+	.prompt-card {
+		display: flex;
+		align-items: flex-start;
+		gap: 16px;
+		padding: 24px;
+		border-radius: 16px;
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-primary);
+		margin-top: 16px;
 	}
-	.section-title {
-		font-size: 18px;
-		font-weight: 700;
+	.prompt-icon {
+		font-size: 24px;
+		flex-shrink: 0;
+		width: 48px;
+		height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(182, 55, 250, 0.1);
+		border-radius: 12px;
+	}
+	.prompt-content {
+		flex: 1;
+		min-width: 0;
+	}
+	.prompt-title {
+		font-size: 16px;
+		font-weight: 600;
+		color: var(--text-primary);
+		margin: 0 0 8px 0;
+	}
+	.prompt-text {
+		font-size: 14px;
+		color: var(--text-secondary);
+		line-height: 1.5;
+		margin: 0 0 16px 0;
+	}
+	.prompt-button {
+		display: inline-flex;
+		align-items: center;
+		padding: 8px 16px;
+		background: var(--accent-primary);
+		color: white;
+		text-decoration: none;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 600;
+		transition: all 0.2s ease;
+	}
+	.prompt-button:hover {
+		background: var(--accent-secondary);
+		transform: translateY(-1px);
+	}
+	.similar-users {
+		margin-top: 16px;
+	}
+	.similar-users-header {
+		margin-bottom: 16px;
+	}
+	.similar-users-title {
+		font-size: 16px;
+		font-weight: 600;
 		color: var(--text-primary);
 		margin: 0;
-		position: relative;
-		z-index: 1;
-		display: inline-block;
-	}
-	.section-accent {
-		position: absolute;
-		bottom: -2px;
-		left: 0;
-		width: 60px;
-		height: 3px;
-		background: linear-gradient(
-			90deg,
-			var(--accent-primary),
-			var(--accent-secondary)
-		);
-		border-radius: 2px;
 	}
 	.users-grid {
 		display: grid;
@@ -331,7 +370,6 @@
 			minmax(240px, 1fr)
 		);
 		gap: 16px;
-		margin-top: 16px;
 	}
 	.user-card-link {
 		text-decoration: none;
