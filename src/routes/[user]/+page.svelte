@@ -116,24 +116,6 @@
 		});
 	});
 
-	async function copyLink() {
-		try {
-			await navigator.clipboard.writeText(
-				`${window.location.origin}/${user?.tag ?? ''}`
-			);
-			toast.info(
-				'Link copied to clipboard!',
-				'info',
-				2000
-			);
-		} catch {
-			toast.error(
-				'Failed to copy link',
-				'error',
-				3000
-			);
-		}
-	}
 	function getSocialMediaInfo(url: string): {
 		name: string;
 		faIcon: string | null;
@@ -499,34 +481,34 @@
 			</div>
 		</section>
 
-		<section
-			class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8"
-		>
-			<h2
-				class="mb-8 text-3xl font-bold"
-				style="color: var(--color-theme-4);"
+		{#if itemSearchData.total > 0}
+			<section
+				class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8"
 			>
-				search {user.tag}'s items
-			</h2>
-			<ItemSearch
-				data={{
-					...itemSearchData,
-					userTag: user.tag
-				}}
-				showSort={true}
-			/>
-			{#if items.length > 0}
-				<div class="mt-8">
-					<ItemResultsList results={items} />
-				</div>
-			{:else}
-				<p
-					class="text-center text-sm text-[var(--text-secondary)] lowercase"
+				<h2
+					class="mb-8 text-3xl font-bold"
+					style="color: var(--color-theme-4);"
 				>
-					no items yet
-				</p>
-			{/if}
-		</section>
+					{itemSearchData.total > 1
+						? `search ${user.tag}'s items`
+						: `${user.tag}'s items`}
+				</h2>
+				{#if itemSearchData.total > 1}
+					<ItemSearch
+						data={{
+							...itemSearchData,
+							userTag: user.tag
+						}}
+						showSort={true}
+					/>
+				{/if}
+				{#if items.length > 0}
+					<div class="mt-8">
+						<ItemResultsList results={items} />
+					</div>
+				{/if}
+			</section>
+		{/if}
 
 		<!-- Compatibility & Actions Section -->
 		<section
@@ -539,18 +521,9 @@
 						style=" border: 2px solid var(--color-theme-6);"
 					>
 						<h2
-							class="mb-6 flex items-center gap-3 text-3xl font-bold"
+							class="mb-6 text-3xl font-bold"
 							style="color: var(--color-theme-4);"
 						>
-							<div
-								class="rounded-full p-3"
-								style="background: var(--color-theme-6);"
-							>
-								<i
-									class="fas fa-heart"
-									style="color: white; font-size: 1.2em;"
-								></i>
-							</div>
 							What You Have in Common
 						</h2>
 						<div
@@ -563,8 +536,8 @@
 				{:else if !user.description}
 					<div class="mb-12 p-8 text-center">
 						<p class="text-lg font-medium">
-							This user doesn't have a description
-							yet. You'll be able to see similarities
+							this user doesn't have a description
+							yet. you'll be able to see similarities
 							with them when they add a description.
 						</p>
 					</div>
@@ -592,12 +565,12 @@
 						class="mb-6 text-lg font-medium"
 						style="color: var(--color-theme-4);"
 					>
-						Join our community to see compatibility
+						join our community to see compatibility
 						and start conversations!
 					</p>
 					<Button
 						href="/~/google"
-						text="Sign In to Connect"
+						text="sign in to connect"
 						icon="fa-sign-in-alt"
 						variant="primary"
 					/>

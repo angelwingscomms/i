@@ -87,7 +87,10 @@
 
 	{#if author}
 		<div class="author">
-			by {author.t}
+			<span class="author-prefix">by</span>
+			<a href="/~/u/{author.i}" class="author-link">
+				{author.t}
+			</a>
 		</div>
 	{/if}
 
@@ -251,9 +254,28 @@
 		line-height: 1.6;
 	}
 	.author {
-		font-size: 14px;
-		color: var(--muted);
+		font-size: 16px;
 		margin-bottom: 16px;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+	.author-prefix {
+		color: var(--text-secondary);
+		font-weight: 500;
+	}
+	.author-link {
+		color: var(--accent-primary);
+		font-weight: 600;
+		text-decoration: none;
+		transition: all 0.2s ease;
+		padding: 4px 8px;
+		border-radius: 6px;
+		background: rgba(182, 55, 250, 0.1);
+	}
+	.author-link:hover {
+		background: rgba(182, 55, 250, 0.2);
+		transform: translateY(-1px);
 	}
 	.children {
 		margin-top: 32px;

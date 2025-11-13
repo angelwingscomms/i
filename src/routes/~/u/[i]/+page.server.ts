@@ -10,5 +10,5 @@ export const load: PageServerLoad = async ({
 	if (!user) {
 		throw redirect(302, '/~/u');
 	}
-	throw redirect(302, `/~/${user.t}`);
+	throw redirect(302, `/${user.t}`);
 };

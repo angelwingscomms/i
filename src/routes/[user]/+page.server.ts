@@ -29,17 +29,17 @@ export const load: PageServerLoad = async ({
 		i: user.i,
 		tag: user.t,
 		m: user.m,
-		avatar: (user as any).av,
+		avatar: user.av,
 		age: user.a,
 		gender: user.g,
-		show_age: Boolean((user as any).y),
-		show_gender: Boolean((user as any).o),
+		show_age: Boolean(user.y),
+		show_gender: Boolean(user.o),
 		description: user.d,
 		socialLinks: user.x || [],
 		phones: user.b || [],
 		emails: user.k || [],
-		on: (user as any).on,
-		ic: (user as any).ic
+		on: user.on,
+		ic: user.ic
 	};
 
 	// If current user is logged in, compare descriptions
@@ -56,7 +56,7 @@ export const load: PageServerLoad = async ({
 		])) as { d?: string; t: string };
 		if (self) {
 			local_description = self.d; // Store local user's description
-			if (locals.user.i !== (user as any).i) {
+			if (locals.user.i !== user.i) {
 				// Only compare if not viewing own profile
 				comparisonResult = await compare_users(
 					self,
@@ -94,7 +94,7 @@ export const load: PageServerLoad = async ({
 
 	user_items = items.filter((item) => item.h !== '.');
 	const user_posts_visible = user_posts.filter(
-		(post: any) => post.v !== '.'
+		(post: Post) => post.v !== '.'
 	);
 
 	// Vector search similar users by this user's description
@@ -131,11 +131,12 @@ export const load: PageServerLoad = async ({
 			total: user_items.length
 		},
 		r: results.map((u) => ({
-			i: (u as any).i,
+			i: u.i,
 			t: u.t,
 			a: u.a,
 			g: u.g,
-			av: (u as any).av
-		}))
+			av: u.av
+		})),
+		user: locals.user // Pass logged-in user data
 	};
 };

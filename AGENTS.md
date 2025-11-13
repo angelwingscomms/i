@@ -30,7 +30,7 @@
 - never start the dev server
 - always use all lowercase for all UI text
 - always run `npm run lint` before ending
-- write unit and e2e tests for every feature
+- always write failing unit and e2e tests before implementing a feature/fix and then run tests after implementing
 - fonts go in static/fonts
 
 # Svelte MCP

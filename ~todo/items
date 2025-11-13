@@ -1,0 +1,3 @@
+only show "search user's items" on user page if user has more than 1 item
+if user has only 1 item, show just 'user items', no search
+if user has no items, don't show UI for items at all
