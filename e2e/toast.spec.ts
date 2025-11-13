@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('toast notifications', () => {
-	test('shows toast when navbar install action triggered', async ({ page }) => {
+	test('shows toast when navbar install action triggered', async ({
+		page
+	}) => {
 		await page.goto('/~/');
 
 		await page.evaluate(() => {

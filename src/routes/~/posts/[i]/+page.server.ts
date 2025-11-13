@@ -193,7 +193,6 @@ export const load = async ({ params, locals }) => {
 			t: post.t,
 			pt: pt,
 			_: '.',
-			user: locals.user,
 			a,
 			author
 		};

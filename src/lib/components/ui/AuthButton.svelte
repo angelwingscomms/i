@@ -7,7 +7,10 @@
 
 <div class="mb-8 text-center">
 	{#if user}
-		<a href="/~/edit_user" class="btn-secondary btn-md">
+		<a
+			href="/~/edit_user"
+			class="btn-secondary btn-md"
+		>
 			edit your profile
 		</a>
 	{:else}

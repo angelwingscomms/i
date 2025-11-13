@@ -1,6 +1,8 @@
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz23456789';
 
-export function generate_reset_token(length = 48): string {
+export function generate_reset_token(
+	length = 48
+): string {
 	const chars = [] as string[];
 	const bytes = new Uint8Array(length);
 	crypto.getRandomValues(bytes);
@@ -10,9 +12,14 @@ export function generate_reset_token(length = 48): string {
 	return chars.join('');
 }
 
-export async function hash_reset_token(token: string) {
+export async function hash_reset_token(
+	token: string
+) {
 	const data = new TextEncoder().encode(token);
-	const digest = await crypto.subtle.digest('SHA-256', data);
+	const digest = await crypto.subtle.digest(
+		'SHA-256',
+		data
+	);
 	return buffer_to_base64(new Uint8Array(digest));
 }
 

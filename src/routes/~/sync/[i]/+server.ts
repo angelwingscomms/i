@@ -10,7 +10,11 @@ import { upload_file } from '$lib/integrations/upload';
 
 const MAX_DURATION = 30 * 60 * 1000;
 
-export const PATCH: RequestHandler = async ({ request, locals, params }) => {
+export const PATCH: RequestHandler = async ({
+	request,
+	locals,
+	params
+}) => {
 	const user = locals.user;
 	if (!user) throw error(401, 'login required');
 
@@ -42,9 +46,15 @@ export const PATCH: RequestHandler = async ({ request, locals, params }) => {
 		max_duration: MAX_DURATION
 	});
 
-	const name = typeof payload?.n === 'string' ? payload.n.slice(0, 120) : project.n;
+	const name =
+		typeof payload?.n === 'string'
+			? payload.n.slice(0, 120)
+			: project.n;
 	const audio = extract_audio(payload?.m);
-	const last = typeof payload?.l === 'number' ? payload.l : Date.now();
+	const last =
+		typeof payload?.l === 'number'
+			? payload.l
+			: Date.now();
 
 	const updated: SyncProject = {
 		s: 'sync',
@@ -59,10 +69,18 @@ export const PATCH: RequestHandler = async ({ request, locals, params }) => {
 
 	await edit_point(i, updated);
 
-	return json({ ok: true, l: updated.l, t: updated.t });
+	return json({
+		ok: true,
+		l: updated.l,
+		t: updated.t
+	});
 };
 
-export const POST: RequestHandler = async ({ locals, params, platform }) => {
+export const POST: RequestHandler = async ({
+	locals,
+	params,
+	platform
+}) => {
 	const user = locals.user;
 	if (!user) throw error(401, 'login required');
 	const { i } = params;
@@ -113,20 +131,28 @@ export const POST: RequestHandler = async ({ locals, params, platform }) => {
 	return json({ ok: true, url: video_url });
 };
 
-function extract_audio(input: unknown): SyncProject['m'] | undefined {
-	if (!input || typeof input !== 'object') return undefined;
+function extract_audio(
+	input: unknown
+): SyncProject['m'] | undefined {
+	if (!input || typeof input !== 'object')
+		return undefined;
 	const meta = input as Record<string, unknown>;
 	const url = meta.u;
 	if (typeof url !== 'string' || url.length === 0) {
 		return undefined;
 	}
-	const type = typeof meta.k === 'string' ? meta.k : undefined;
-	const duration = typeof meta.d === 'number' ? meta.d : undefined;
+	const type =
+		typeof meta.k === 'string' ? meta.k : undefined;
+	const duration =
+		typeof meta.d === 'number' ? meta.d : undefined;
 	return { u: url, k: type, d: duration };
 }
 
-function infer_duration(project: SyncProject): number | undefined {
-	if (project.m?.d && project.m.d > 0) return project.m.d;
+function infer_duration(
+	project: SyncProject
+): number | undefined {
+	if (project.m?.d && project.m.d > 0)
+		return project.m.d;
 	const last_marker = project.t[project.t.length - 1];
 	return last_marker ? last_marker + 2000 : undefined;
 }
@@ -145,15 +171,21 @@ async function generate_video({
 	const path = await import('node:path');
 	const os = await import('node:os');
 
-	const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'sync-'));
+	const tmpDir = await fs.mkdtemp(
+		path.join(os.tmpdir(), 'sync-')
+	);
 
 	const inputs = segments
-		.map((segment) => `color=${segment.color}:s=1920x1080:d=${(segment.end - segment.start) / 1000}`)
+		.map(
+			(segment) =>
+				`color=${segment.color}:s=1920x1080:d=${(segment.end - segment.start) / 1000}`
+		)
 		.join('|');
 
 	const filters = `concat=n=${segments.length}:v=1:a=0`;
 
-	const command = ffmpeg.default()
+	const command = ffmpeg
+		.default()
 		.input(`lavfi:${inputs}`)
 		.complexFilter(filters)
 		.videoCodec('libx264')
@@ -174,13 +206,20 @@ async function generate_video({
 	});
 
 	const fileBuffer = await fs.readFile(outputFile);
-	const file = new File([fileBuffer], `sync-${Date.now()}.mp4`, {
-		type: 'video/mp4'
-	});
+	const file = new File(
+		[fileBuffer],
+		`sync-${Date.now()}.mp4`,
+		{
+			type: 'video/mp4'
+		}
+	);
 
 	const url = await upload_file(file, { platform });
 
-	await fs.rm(tmpDir, { recursive: true, force: true });
+	await fs.rm(tmpDir, {
+		recursive: true,
+		force: true
+	});
 
 	return url;
 }

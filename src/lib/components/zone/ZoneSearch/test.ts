@@ -1,6 +1,17 @@
-import { fireEvent, render, screen } from '@testing-library/svelte';
+import {
+	fireEvent,
+	render,
+	screen
+} from '@testing-library/svelte';
 import axios from 'axios';
-import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
+import {
+	beforeEach,
+	describe,
+	expect,
+	it,
+	type Mock,
+	vi
+} from 'vitest';
 import ZoneSearch from './ZoneSearch.svelte';
 
 vi.mock('axios', () => ({
@@ -21,9 +32,13 @@ describe('ZoneSearch', () => {
 
 	it('triggers search when send button clicked', async () => {
 		vi.useFakeTimers();
-		mockedAxios.post.mockResolvedValueOnce({ data: [] });
+		mockedAxios.post.mockResolvedValueOnce({
+			data: []
+		});
 		render(ZoneSearch);
-		const input = screen.getByPlaceholderText('search for zones...');
+		const input = screen.getByPlaceholderText(
+			'search for zones...'
+		);
 		await fireEvent.input(input, {
 			target: { value: 'central' }
 		});
@@ -31,22 +46,31 @@ describe('ZoneSearch', () => {
 		const sendButton = buttons.find((button) =>
 			button.querySelector('.fa-paper-plane')
 		);
-		if (!sendButton) throw new Error('send button not found');
+		if (!sendButton)
+			throw new Error('send button not found');
 		await fireEvent.click(sendButton);
 		vi.runAllTimers();
-		expect(mockedAxios.post).toHaveBeenCalledWith('/zones/search', {
-			q: 'central'
-		});
+		expect(mockedAxios.post).toHaveBeenCalledWith(
+			'/zones/search',
+			{
+				q: 'central'
+			}
+		);
 		vi.useRealTimers();
 	});
 
 	it('restores saved query from storage', async () => {
 		vi.useFakeTimers();
-		localStorage.setItem('zone_search_query', 'saved');
+		localStorage.setItem(
+			'zone_search_query',
+			'saved'
+		);
 		mockedAxios.post.mockResolvedValue({ data: [] });
 		render(ZoneSearch);
 		vi.runAllTimers();
-		expect(screen.getByDisplayValue('saved')).toBeInTheDocument();
+		expect(
+			screen.getByDisplayValue('saved')
+		).toBeInTheDocument();
 		expect(mockedAxios.post).toHaveBeenCalled();
 		vi.useRealTimers();
 	});
@@ -63,7 +87,11 @@ describe('ZoneSearch', () => {
 		});
 		const option = await screen.findByText('alpha');
 		await fireEvent.click(option);
-		expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ i: 'z-1' }));
-		expect(screen.queryByText('alpha')).not.toBeInTheDocument();
+		expect(onSelect).toHaveBeenCalledWith(
+			expect.objectContaining({ i: 'z-1' })
+		);
+		expect(
+			screen.queryByText('alpha')
+		).not.toBeInTheDocument();
 	});
 });

@@ -7,7 +7,9 @@
 	let message = $state('');
 
 	function validate_email(value: string) {
-		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+			value.trim()
+		);
 	}
 
 	async function submit_request() {
@@ -36,18 +38,25 @@
 	}
 </script>
 
-<main class="flex min-h-screen items-center justify-center px-4 py-12">
+<main
+	class="flex min-h-screen items-center justify-center px-4 py-12"
+>
 	<div class="w-full max-w-md">
 		<header class="mb-8 text-center">
-			<h1 class="text-2xl font-bold tracking-tight text-purple-500">
+			<h1
+				class="text-2xl font-bold tracking-tight text-purple-500"
+			>
 				reset password
 			</h1>
 			<p class="mt-1 text-sm text-slate-600">
-				enter the email on your account to get a reset link
+				enter the email on your account to get a reset
+				link
 			</p>
 		</header>
 
-		<div class="rounded-xl p-6 shadow-lg backdrop-blur">
+		<div
+			class="rounded-xl p-6 shadow-lg backdrop-blur"
+		>
 			<form
 				onsubmit={(e) => {
 					e.preventDefault();
@@ -76,7 +85,9 @@
 		</div>
 
 		{#if message}
-			<p class="mt-4 text-center text-sm text-slate-500">
+			<p
+				class="mt-4 text-center text-sm text-slate-500"
+			>
 				{message}
 			</p>
 		{/if}

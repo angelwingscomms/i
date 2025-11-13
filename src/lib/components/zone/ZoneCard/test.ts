@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import {
+	render,
+	screen
+} from '@testing-library/svelte';
 import ZoneCard from './ZoneCard.svelte';
 
 describe('ZoneCard', () => {
@@ -15,28 +18,35 @@ describe('ZoneCard', () => {
 
 	it('renders zone name', () => {
 		render(ZoneCard, { props: { zone } });
-		expect(screen.getByText('central park')).toBeInTheDocument();
+		expect(
+			screen.getByText('central park')
+		).toBeInTheDocument();
 	});
 
 	it('formats coordinates', () => {
 		render(ZoneCard, { props: { zone } });
-		expect(screen.getByText(/lat:/)).toHaveTextContent(
-			'lat: 40.78509'
-		);
-		expect(screen.getByText(/lon:/)).toHaveTextContent(
-			'lon: -73.96829'
-		);
+		expect(
+			screen.getByText(/lat:/)
+		).toHaveTextContent('lat: 40.78509');
+		expect(
+			screen.getByText(/lon:/)
+		).toHaveTextContent('lon: -73.96829');
 	});
 
 	it('links to zone detail page', () => {
 		render(ZoneCard, { props: { zone } });
 		const link = screen.getByRole('link');
-		expect(link).toHaveAttribute('href', '/zones/z-1');
+		expect(link).toHaveAttribute(
+			'href',
+			'/zones/z-1'
+		);
 	});
 
 	it('shows child count', () => {
 		render(ZoneCard, { props: { zone } });
-		expect(screen.getByText(zone.c!.length.toString())).toBeInTheDocument();
+		expect(
+			screen.getByText(zone.c!.length.toString())
+		).toBeInTheDocument();
 	});
 
 	it('falls back to untitled when name missing', () => {
@@ -45,6 +55,8 @@ describe('ZoneCard', () => {
 				zone: { ...zone, n: undefined }
 			}
 		});
-		expect(screen.getByText('untitled zone')).toBeInTheDocument();
+		expect(
+			screen.getByText('untitled zone')
+		).toBeInTheDocument();
 	});
 });

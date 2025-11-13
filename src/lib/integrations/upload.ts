@@ -3,7 +3,10 @@ import {
 	CLOUDFLARE_KEY,
 	CLOUDFLARE_KEY_ID
 } from '$env/static/private';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+	S3Client,
+	PutObjectCommand
+} from '@aws-sdk/client-s3';
 
 type Platform = App.Platform | undefined;
 
@@ -38,10 +41,14 @@ export async function upload_file(
 		key ??
 		`uploads/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-	const uint8 = new Uint8Array(await file.arrayBuffer());
+	const uint8 = new Uint8Array(
+		await file.arrayBuffer()
+	);
 
 	if (dev) {
-		const { env } = await import('$env/dynamic/private');
+		const { env } = await import(
+			'$env/dynamic/private'
+		);
 		const client = new S3Client({
 			region: 'auto',
 			endpoint: `https://${env.R2_S3}.r2.cloudflarestorage.com`,
@@ -55,17 +62,20 @@ export async function upload_file(
 				Bucket: 'iri',
 				Key: objectKey,
 				Body: uint8,
-				ContentType: file.type || 'application/octet-stream'
+				ContentType:
+					file.type || 'application/octet-stream'
 			})
 		);
 		return `https://pub-094030d6a86b4bf2b41abb6daf297c6d.r2.dev/${objectKey}`;
 	}
 
 	const bucket = platform?.env?.R2;
-	if (!bucket) throw new Error('R2 bucket not available');
+	if (!bucket)
+		throw new Error('R2 bucket not available');
 	await bucket.put(objectKey, uint8, {
 		httpMetadata: {
-			contentType: file.type || 'application/octet-stream'
+			contentType:
+				file.type || 'application/octet-stream'
 		}
 	});
 	return `https://files.apexlinks.org/${objectKey}`;

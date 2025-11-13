@@ -13,7 +13,6 @@ export const load: PageServerLoad = async ({
 	const page_image = `${url.origin}/landing-og-image.jpg`; // Specific image for landing page
 
 	return {
-		user: locals.user,
 		seo: {
 			...parent_seo, // Spread parent SEO to inherit defaults
 			title: page_title,

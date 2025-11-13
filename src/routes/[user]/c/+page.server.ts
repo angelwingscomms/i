@@ -44,7 +44,10 @@ export const load: PageServerLoad = async ({
 			'existing room',
 			existing_room.points[0]
 		);
-		redirect(302, `/~/r/${existing_room.points[0].id}`);
+		redirect(
+			302,
+			`/~/r/${existing_room.points[0].id}`
+		);
 	}
 
 	const roomId = await createRoom({

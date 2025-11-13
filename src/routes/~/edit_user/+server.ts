@@ -23,7 +23,7 @@ export const POST: RequestHandler = async ({
 	}
 
 	try {
-	const {
+		const {
 			tag,
 			description,
 			age,
@@ -36,10 +36,10 @@ export const POST: RequestHandler = async ({
 			email,
 			b,
 			k,
-		m,
-		y,
-		o,
-		z
+			m,
+			y,
+			o,
+			z
 		} = await request.json();
 
 		const updatedUser: Partial<User> = {};
@@ -118,20 +118,25 @@ export const POST: RequestHandler = async ({
 			updatedUser.o = o;
 		}
 
-	if (
-		z !== undefined &&
-		Array.isArray(z) &&
-		z.every((value) => typeof value === 'string')
-	) {
-		const filtered_z = z
-			.map((value: string) => value.trim())
-			.filter((value: string) => value.length > 0);
-		const unique_z = Array.from(new Set(filtered_z));
-		for (const place_id of unique_z) {
-			await create_zone_by_place_id(place_id, locals.user.i);
+		if (
+			z !== undefined &&
+			Array.isArray(z) &&
+			z.every((value) => typeof value === 'string')
+		) {
+			const filtered_z = z
+				.map((value: string) => value.trim())
+				.filter((value: string) => value.length > 0);
+			const unique_z = Array.from(
+				new Set(filtered_z)
+			);
+			for (const place_id of unique_z) {
+				await create_zone_by_place_id(
+					place_id,
+					locals.user.i
+				);
+			}
+			updatedUser.z = unique_z;
 		}
-		updatedUser.z = unique_z;
-	}
 
 		if (
 			socialLinks !== undefined &&
@@ -188,9 +193,8 @@ export const POST: RequestHandler = async ({
 				normalized.length <= 320 &&
 				/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)
 			) {
-				const existing = await find_user_by_email(
-					normalized
-				);
+				const existing =
+					await find_user_by_email(normalized);
 				if (
 					existing &&
 					existing.i !== locals.user.i
@@ -204,7 +208,7 @@ export const POST: RequestHandler = async ({
 			}
 		}
 
-	if (Object.keys(updatedUser).length === 0) {
+		if (Object.keys(updatedUser).length === 0) {
 			return json(
 				{
 					error: 'No valid fields provided for update'

@@ -9,7 +9,9 @@ import {
 
 describe('diary helpers', () => {
 	it('generates day key', () => {
-		const ts = new Date('2024-07-01T10:15:00Z').getTime();
+		const ts = new Date(
+			'2024-07-01T10:15:00Z'
+		).getTime();
 		expect(diary_day_key(ts)).toBe('2024-07-01');
 	});
 
@@ -28,12 +30,16 @@ describe('diary helpers', () => {
 			diary_payload({
 				text: 'entry a',
 				user: 'u1',
-				date: new Date('2024-07-02T12:00:00Z').getTime()
+				date: new Date(
+					'2024-07-02T12:00:00Z'
+				).getTime()
 			}),
 			diary_payload({
 				text: 'entry b',
 				user: 'u1',
-				date: new Date('2024-07-01T12:00:00Z').getTime()
+				date: new Date(
+					'2024-07-01T12:00:00Z'
+				).getTime()
 			})
 		]);
 		const grouped = group_diary_by_day(entries);
@@ -41,6 +47,8 @@ describe('diary helpers', () => {
 			'2024-07-02',
 			'2024-07-01'
 		]);
-		expect(grouped['2024-07-02'][0].a).toBe('entry a');
+		expect(grouped['2024-07-02'][0].a).toBe(
+			'entry a'
+		);
 	});
 });

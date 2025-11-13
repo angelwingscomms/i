@@ -1,13 +1,13 @@
 <script lang="ts">
- import type { Zone } from '$lib/types';
- import Button from '$lib/components/Button.svelte';
- import { page } from '$app/state';
- import { ZoneMap } from '$lib/components/zone';
+	import type { Zone } from '$lib/types';
+	import Button from '$lib/components/Button.svelte';
+	import { page } from '$app/state';
+	import { ZoneMap } from '$lib/components/zone';
 
- let { data } = $props(),
-  zone: Zone = data.z;
+	let { data } = $props(),
+		zone: Zone = data.z;
 
- const currentUser = page.data.user;
+	const currentUser = page.data.user;
 </script>
 
 <svelte:head>
@@ -18,17 +18,21 @@
 	<div class="mb-6">
 		<a
 			href="/~/zones"
-			class="inline-flex items-center font-medium lowercase text-[var(--text-accent)] transition-colors hover:text-[var(--accent-primary)]"
+			class="inline-flex items-center font-medium text-[var(--text-accent)] lowercase transition-colors hover:text-[var(--accent-primary)]"
 			>&larr; back to zones</a
 		>
 	</div>
 
 	<div class="mb-8 flex items-start justify-between">
 		<div>
-			<h1 class="text-3xl font-bold text-[var(--accent-primary)]">
+			<h1
+				class="text-3xl font-bold text-[var(--accent-primary)]"
+			>
 				{zone.n}
 			</h1>
-			<p class="text-sm lowercase text-[var(--text-secondary)]">
+			<p
+				class="text-sm text-[var(--text-secondary)] lowercase"
+			>
 				created {new Date(
 					zone.d
 				).toLocaleDateString()}
@@ -51,8 +55,12 @@
 		>
 			<div class="space-y-6">
 				{#if zone.l !== undefined && zone.g !== undefined}
-					<div class="rounded-3xl border border-[var(--border-primary)] p-4">
-						<h3 class="mb-2 text-sm font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+					<div
+						class="rounded-3xl border border-[var(--border-primary)] p-4"
+					>
+						<h3
+							class="mb-2 text-sm font-semibold tracking-wide text-[var(--text-secondary)] uppercase"
+						>
 							location
 						</h3>
 						<ZoneMap
@@ -61,14 +69,18 @@
 							readonly={true}
 							class="h-64 w-full rounded-2xl"
 						/>
-						<p class="mt-3 text-sm text-[var(--text-secondary)]">
+						<p
+							class="mt-3 text-sm text-[var(--text-secondary)]"
+						>
 							latitude {zone.l}, longitude {zone.g}
 						</p>
 					</div>
 				{/if}
 				{#if zone.c && zone.c.length > 0}
 					<div>
-						<h3 class="text-lg font-semibold text-[var(--accent-primary)]">
+						<h3
+							class="text-lg font-semibold text-[var(--accent-primary)]"
+						>
 							linked posts
 						</h3>
 						<ul class="list-disc pl-6 text-sm">

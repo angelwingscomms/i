@@ -1,7 +1,11 @@
 import { GEMINI, GROQ } from '$env/static/private';
 import { google } from '@ai-sdk/google';
 import { createGroq } from '@ai-sdk/groq';
-import { generateObject, streamText, type JsonSchema } from 'ai';
+import {
+	generateObject,
+	streamText,
+	type JsonSchema
+} from 'ai';
 import { item_schema_prompt } from './schema';
 
 const google_provider = GEMINI
@@ -62,12 +66,14 @@ export type ItemExtraction = {
 };
 
 const ensure_google = () => {
-	if (!google_provider) throw new Error('missing gemini api key');
+	if (!google_provider)
+		throw new Error('missing gemini api key');
 	return google_provider;
 };
 
 const ensure_groq = () => {
-	if (!groq_provider) throw new Error('missing groq api key');
+	if (!groq_provider)
+		throw new Error('missing groq api key');
 	return groq_provider;
 };
 
@@ -120,7 +126,9 @@ export const transcribe_audio = async (
 ): Promise<string> => {
 	const provider = ensure_groq();
 	const { text } = await streamText({
-		model: provider.audioTranscription('whisper-large-v3-turbo'),
+		model: provider.audioTranscription(
+			'whisper-large-v3-turbo'
+		),
 		audio
 	});
 	return text.trim();

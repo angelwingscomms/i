@@ -27,7 +27,10 @@ export const item_fields = [
 	't'
 ] as const satisfies readonly (keyof Item | 't')[];
 
-export const default_item: Pick<Item, 'n' | 'c' | 'k'> = {
+export const default_item: Pick<
+	Item,
+	'n' | 'c' | 'k'
+> = {
 	n: '',
 	c: '₦',
 	k: 0

@@ -10,7 +10,7 @@ export const token_count = async (
 		if (GEMINI) {
 			const ai = new GoogleGenerativeAI(GEMINI);
 			const model = ai.getGenerativeModel({
-				model: 'gemini-1.5-flash'
+				model: 'gemini-2.5-flash'
 			});
 			const res = await model.countTokens({
 				contents: [

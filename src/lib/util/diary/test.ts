@@ -10,7 +10,9 @@ import {
 
 describe('diary utils', () => {
 	it('builds day key', () => {
-		const date = new Date('2024-05-10T12:34:56Z').getTime();
+		const date = new Date(
+			'2024-05-10T12:34:56Z'
+		).getTime();
 		expect(diary_day_key(date)).toBe('2024-05-10');
 	});
 

@@ -19,9 +19,12 @@
 		loading = true;
 		searched = true;
 		try {
-			const { data } = await axios.post('/~/m/search', {
-				q
-			});
+			const { data } = await axios.post(
+				'/~/m/search',
+				{
+					q
+				}
+			);
 			results = data || [];
 		} catch (e) {
 			console.error('search failed', e);

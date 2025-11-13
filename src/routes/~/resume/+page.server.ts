@@ -12,7 +12,9 @@ export const load: PageServerLoad = async ({
 	}
 	const resumes = await qdrant.search(collection, {
 		vector: new Array(3072).fill(0),
-		filter: { must: [{ key: 's', match: { value: 'e' } }] },
+		filter: {
+			must: [{ key: 's', match: { value: 'e' } }]
+		},
 		with_payload: ['d', 'l', 'h', 'u'],
 		limit: 100,
 		with_vector: false
@@ -21,18 +23,27 @@ export const load: PageServerLoad = async ({
 	const ownerIds = new Set<string>();
 	for (const point of resumes) {
 		const owner = (point.payload as any)?.u;
-		if (typeof owner === 'string') ownerIds.add(owner);
+		if (typeof owner === 'string')
+			ownerIds.add(owner);
 	}
 
 	const owners: Record<string, string> = {};
 	if (ownerIds.size) {
-		const ownerResults = await qdrant.retrieve(collection, {
-			ids: Array.from(ownerIds),
-			with_payload: ['t']
-		});
+		const ownerResults = await qdrant.retrieve(
+			collection,
+			{
+				ids: Array.from(ownerIds),
+				with_payload: ['t']
+			}
+		);
 		for (const owner of ownerResults) {
-			const payload = owner.payload as { t?: string } | undefined;
-			if (payload?.t && typeof owner.id === 'string') {
+			const payload = owner.payload as
+				| { t?: string }
+				| undefined;
+			if (
+				payload?.t &&
+				typeof owner.id === 'string'
+			) {
 				owners[owner.id] = payload.t;
 			}
 		}
@@ -40,7 +51,8 @@ export const load: PageServerLoad = async ({
 
 	return {
 		e: resumes.map((point) => {
-			const payload = point.payload as Partial<Resume>;
+			const payload =
+				point.payload as Partial<Resume>;
 			const id = String(point.id);
 			const ownerTag = owners[payload.u ?? ''];
 			return {
@@ -51,7 +63,6 @@ export const load: PageServerLoad = async ({
 				h: payload.h,
 				t: ownerTag
 			};
-		}),
-		user: locals.user
+		})
 	};
 };

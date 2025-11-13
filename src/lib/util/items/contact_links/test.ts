@@ -14,7 +14,9 @@ describe('get_contact_links', () => {
 		const result = get_contact_links({
 			x: ['https://discord.gg/example']
 		});
-		expect(result.discord).toEqual('https://discord.gg/example');
+		expect(result.discord).toEqual(
+			'https://discord.gg/example'
+		);
 	});
 
 	it('prefers primary discord link when multiple present', () => {
@@ -24,7 +26,9 @@ describe('get_contact_links', () => {
 				'https://discord.com/invite/hello'
 			]
 		});
-		expect(result.discord).toEqual('https://discord.com/invite/hello');
+		expect(result.discord).toEqual(
+			'https://discord.com/invite/hello'
+		);
 	});
 
 	it('returns undefined when no contact info available', () => {

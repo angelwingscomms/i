@@ -7,8 +7,12 @@ import {
 
 describe('diary page helpers', () => {
 	it('generates day key', () => {
-		const timestamp = new Date('2024-03-04T10:00:00Z').getTime();
-		expect(diary_day_key(timestamp)).toBe('2024-03-04');
+		const timestamp = new Date(
+			'2024-03-04T10:00:00Z'
+		).getTime();
+		expect(diary_day_key(timestamp)).toBe(
+			'2024-03-04'
+		);
 	});
 
 	it('creates day range filter', () => {
@@ -24,11 +28,17 @@ describe('diary page helpers', () => {
 	it('builds base filter with optional day', () => {
 		const base = diary_filter({ user: 'u1' });
 		expect(base.must).toHaveLength(2);
-		const withDay = diary_filter({ user: 'u1', day: '2024-03-04' });
+		const withDay = diary_filter({
+			user: 'u1',
+			day: '2024-03-04'
+		});
 		expect(withDay.must).toHaveLength(3);
 	});
 });
-import { render, screen } from '@testing-library/svelte';
+import {
+	render,
+	screen
+} from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vitest';
 import Page from './+page.svelte';
 

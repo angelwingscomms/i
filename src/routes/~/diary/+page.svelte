@@ -8,10 +8,14 @@
 
 	let { data } = $props();
 
-	let entries = $state((data.e || []) as DiaryEntry[]);
+	let entries = $state(
+		(data.e || []) as DiaryEntry[]
+	);
 	let grouped = $derived(data.g);
 	let available_dates = $state(data.d || []);
-	let selected_date = $state<string | null>(data.s || null);
+	let selected_date = $state<string | null>(
+		data.s || null
+	);
 	let query = $state('');
 	let searching = $state(false);
 	let creating = $state(false);
@@ -69,7 +73,9 @@
 <div class="mx-auto max-w-3xl space-y-8 px-4 py-6">
 	<header class="flex items-center justify-between">
 		<div>
-			<h1 class="text-3xl font-semibold [color:var(--color-theme-4)]">
+			<h1
+				class="text-3xl font-semibold [color:var(--color-theme-4)]"
+			>
 				diary
 			</h1>
 			<p class="text-sm text-gray-500">
@@ -80,7 +86,9 @@
 			type="button"
 			text={create_label}
 			onclick={create_entry}
-			icon={creating ? 'fa-spinner fa-spin' : 'fa-plus'}
+			icon={creating
+				? 'fa-spinner fa-spin'
+				: 'fa-plus'}
 		/>
 	</header>
 
@@ -92,7 +100,9 @@
 	/>
 
 	<section>
-		<h2 class="mb-3 text-lg font-semibold [color:var(--color-theme-4)]">
+		<h2
+			class="mb-3 text-lg font-semibold [color:var(--color-theme-4)]"
+		>
 			recent entries
 		</h2>
 		<DiaryList {entries} />
@@ -100,7 +110,9 @@
 
 	{#if available_dates.length > 0}
 		<section class="space-y-3">
-			<h3 class="text-sm font-semibold [color:var(--color-theme-4)]">
+			<h3
+				class="text-sm font-semibold [color:var(--color-theme-4)]"
+			>
 				quick dates
 			</h3>
 			<div class="flex flex-wrap gap-2">

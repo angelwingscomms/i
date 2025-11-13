@@ -2,9 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { search_by_payload, set } from '$lib/db';
 import type { User } from '$lib/types';
-import {
-	hash_reset_token
-} from '$lib/util/auth/reset';
+import { hash_reset_token } from '$lib/util/auth/reset';
 import { hashPassword } from 'worker-password-auth';
 
 export const POST: RequestHandler = async ({
@@ -13,12 +11,21 @@ export const POST: RequestHandler = async ({
 }) => {
 	const token = params.token;
 	if (!token) {
-		return json({ error: 'invalid token' }, { status: 400 });
+		return json(
+			{ error: 'invalid token' },
+			{ status: 400 }
+		);
 	}
 	const { password } = await request.json();
-	if (typeof password !== 'string' || password.length < 6) {
+	if (
+		typeof password !== 'string' ||
+		password.length < 6
+	) {
 		return json(
-			{ error: 'password must be at least 6 characters' },
+			{
+				error:
+					'password must be at least 6 characters'
+			},
 			{ status: 400 }
 		);
 	}
@@ -29,7 +36,9 @@ export const POST: RequestHandler = async ({
 		pt: hashed
 	});
 	const now = Date.now();
-	const user = users.find((u) => u.pe && u.pe > now && u.i);
+	const user = users.find(
+		(u) => u.pe && u.pe > now && u.i
+	);
 	if (!user?.i) {
 		return json(
 			{ error: 'reset link expired' },

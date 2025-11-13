@@ -10,13 +10,13 @@
 		n?: string;
 		l?: number;
 		g?: number;
-	p?: string;
+		p?: string;
 		u?: string;
 		d?: number;
 		c?: string[];
 	};
 
-type Props = {
+	type Props = {
 		q?: string;
 		zones?: Zone[];
 		loading?: boolean;
@@ -28,29 +28,30 @@ type Props = {
 		onSearch?: (zones: Zone[]) => void;
 		source?: 'db' | 'osm';
 		hide_coords?: boolean;
-	debounce?: number;
+		debounce?: number;
 	};
 
-let {
-	q = $bindable(''),
-	zones = $bindable([] as Zone[]),
-	loading = $bindable(false),
-	initial_zones = [],
-	onSelect = undefined,
-	filter = undefined,
-	hide_input = false,
-	exclude_i = undefined,
-	onSearch = (_zones: Zone[]) => {},
-	source = 'db',
-	hide_coords = false,
-	debounce = 300
-}: Props = $props();
+	let {
+		q = $bindable(''),
+		zones = $bindable([] as Zone[]),
+		loading = $bindable(false),
+		initial_zones = [],
+		onSelect = undefined,
+		filter = undefined,
+		hide_input = false,
+		exclude_i = undefined,
+		onSearch = (_zones: Zone[]) => {},
+		source = 'db',
+		hide_coords = false,
+		debounce = 300
+	}: Props = $props();
 
 	let searchTimeout: NodeJS.Timeout | null =
 		$state(null);
-	const storageKey = source === 'osm'
-		? 'zone_search_query_osm'
-		: 'zone_search_query';
+	const storageKey =
+		source === 'osm'
+			? 'zone_search_query_osm'
+			: 'zone_search_query';
 	let savedInitial = $state(initial_zones);
 	let show_results = $state(initial_zones.length > 0);
 
@@ -199,12 +200,12 @@ let {
 			{#each zones as zone (zone.i)}
 				{#if onSelect}
 					<button
-					type="button"
-					onclick={() => {
-						show_results = false;
-						onSelect?.(zone);
-					}}
-					class="block w-full text-left"
+						type="button"
+						onclick={() => {
+							show_results = false;
+							onSelect?.(zone);
+						}}
+						class="block w-full text-left"
 					>
 						<div
 							class="rounded-3xl border-l border-[var(--color-theme-6)] bg-transparent p-4 transition-all duration-500 hover:-translate-y-0.5 hover:border-[var(--color-theme-1)]"
@@ -219,27 +220,27 @@ let {
 										{zone.n?.trim() ||
 											'untitled zone'}
 									</h3>
-							{#if !hide_coords}
-								<div
-									class="mt-2 grid gap-1 text-sm text-[var(--color-theme-3)]"
-								>
-									<span
-										>lat: {formatCoord(
-											zone.l
-										)}</span
-									>
-									<span
-										>lon: {formatCoord(
-											zone.g
-										)}</span
-									>
-								</div>
-							{/if}
+									{#if !hide_coords}
+										<div
+											class="mt-2 grid gap-1 text-sm text-[var(--color-theme-3)]"
+										>
+											<span
+												>lat: {formatCoord(
+													zone.l
+												)}</span
+											>
+											<span
+												>lon: {formatCoord(
+													zone.g
+												)}</span
+											>
+										</div>
+									{/if}
 								</div>
 								<div
 									class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-theme-6)]/10 text-sm font-semibold text-[var(--color-theme-1)]"
 								>
-							{zone.c?.length ?? 0}
+									{zone.c?.length ?? 0}
 								</div>
 							</div>
 							{#if zone.d}
@@ -258,7 +259,7 @@ let {
 				{/if}
 			{/each}
 		</div>
-{:else if show_results}
+	{:else if show_results}
 		<div
 			class="rounded-lg border border-dashed border-[var(--color-theme-6)] py-10 text-center text-sm text-[var(--color-theme-3)]"
 		>

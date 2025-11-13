@@ -8,9 +8,12 @@ export const actions: Actions = {
 			return fail(401, { e: 'not authenticated' });
 		}
 		const form = await request.formData();
-		const name = (form.get('n') as string | null)?.trim() || '';
-		const about = (form.get('a') as string | null)?.trim() || '';
-		const meta_raw = (form.get('j') as string | null) || '';
+		const name =
+			(form.get('n') as string | null)?.trim() || '';
+		const about =
+			(form.get('a') as string | null)?.trim() || '';
+		const meta_raw =
+			(form.get('j') as string | null) || '';
 		if (!name) {
 			return fail(400, { e: 'name required' });
 		}
@@ -32,7 +35,9 @@ export const actions: Actions = {
 			throw redirect(302, `/~/worlds/${world_id}`);
 		} catch (error) {
 			console.error('world create failed', error);
-			return fail(500, { e: 'failed to create world' });
+			return fail(500, {
+				e: 'failed to create world'
+			});
 		}
 	}
 };

@@ -30,7 +30,6 @@ export const load: PageServerLoad = async ({
 
 	return {
 		r: { ...resume, i: params.i },
-		u: { t: owner.t, i: resume.u },
-		user: locals.user
+		u: { t: owner.t, i: resume.u }
 	};
 };

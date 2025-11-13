@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({
 	try {
 		const ai = new GoogleGenerativeAI(GEMINI);
 		const model = ai.getGenerativeModel({
-			model: 'gemini-1.5-flash'
+			model: 'gemini-2.5-flash'
 		});
 
 		const prompt = `You are an expert video summarizer.

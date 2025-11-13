@@ -84,7 +84,8 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
-	<title>{item.n || 'item details'} - apexlinks</title>
+	<title>{item.n || 'item details'} - apexlinks</title
+	>
 	{#if item.a}
 		<meta name="about this item" content={item.a} />
 	{/if}
@@ -188,9 +189,9 @@
 					<div
 						class="order-1 text-center lg:order-2 lg:text-left"
 					>
-			<div
-				class="mb-6 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
-			>
+						<div
+							class="mb-6 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+						>
 							<span
 								class="rounded-2xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 backdrop-blur-md"
 							>
@@ -200,19 +201,19 @@
 									? 'PRODUCT'
 									: 'SERVICE'}
 							</span>
-				<span
-					class="text-sm font-medium text-white/70"
-				>
-					{item.d
-						? new Date(
-							item.d
-						).toLocaleDateString('en-US', {
-							year: 'numeric',
-							month: 'long',
-							day: 'numeric'
-						})
-						: 'date not available'}
-				</span>
+							<span
+								class="text-sm font-medium text-white/70"
+							>
+								{item.d
+									? new Date(
+											item.d
+										).toLocaleDateString('en-US', {
+											year: 'numeric',
+											month: 'long',
+											day: 'numeric'
+										})
+									: 'date not available'}
+							</span>
 						</div>
 
 						<h1
@@ -221,15 +222,13 @@
 							{item.n}
 						</h1>
 
-					{#if item.p !== undefined}
-						<div
-							class="mb-6 text-3xl font-bold text-white lg:text-4xl"
-						>
-							{item.c
-								? `${item.c.toUpperCase()} ${item.p.toLocaleString()}`
-								: item.p.toLocaleString()}
-						</div>
-					{/if}
+						{#if item.p !== undefined}
+							<div
+								class="mb-6 text-3xl font-bold text-white lg:text-4xl"
+							>
+								₦{item.p.toLocaleString()}
+							</div>
+						{/if}
 
 						{#if item.q}
 							<div
@@ -289,27 +288,27 @@
 								icon="fa-robot"
 								text="Ask AI About This Item"
 							/>
-						{#if item.ownerWhatsapp}
-							<a
-								href={`https://wa.me/${item.ownerWhatsapp.replace(/[^0-9]/g, '')}`}
-								class="btn-secondary"
-								aria-label="message on whatsapp"
-								target="_blank"
-								rel="noopener"
-							>
-								<i class="fab fa-whatsapp"></i> whatsapp
-							</a>
-						{/if}
-						{#if item.ownerDiscord}
-							<a
-								href={item.ownerDiscord}
-								class="btn-secondary"
-								target="_blank"
-								rel="noopener"
-							>
-								<i class="fab fa-discord"></i> discord
-							</a>
-						{/if}
+							{#if item.ownerWhatsapp}
+								<a
+									href={`https://wa.me/${item.ownerWhatsapp.replace(/[^0-9]/g, '')}`}
+									class="btn-secondary"
+									aria-label="message on whatsapp"
+									target="_blank"
+									rel="noopener"
+								>
+									<i class="fab fa-whatsapp"></i> whatsapp
+								</a>
+							{/if}
+							{#if item.ownerDiscord}
+								<a
+									href={item.ownerDiscord}
+									class="btn-secondary"
+									target="_blank"
+									rel="noopener"
+								>
+									<i class="fab fa-discord"></i> discord
+								</a>
+							{/if}
 							<Button
 								onclick={() =>
 									navigator
@@ -326,7 +325,7 @@
 										})}
 								variant="secondary"
 								icon="fa-share"
-							text="share item"
+								text="share item"
 								wide={true}
 							/>
 						</div>
@@ -383,13 +382,13 @@
 					>
 						{item.d
 							? new Date(item.d).toLocaleDateString(
-								'en-US',
-								{
-									year: 'numeric',
-									month: 'long',
-									day: 'numeric'
-								}
-							)
+									'en-US',
+									{
+										year: 'numeric',
+										month: 'long',
+										day: 'numeric'
+									}
+								)
 							: 'date not available'}
 					</span>
 				</div>
@@ -458,56 +457,56 @@
 				</div>
 
 				<!-- Additional Action -->
-			<div
-				class="mt-8 flex flex-wrap justify-center gap-3 border-t border-white/10 pt-8"
-			>
-				<Button
-					href="/~/items/{item.i}/c"
-					variant="secondary"
-					icon="fa-robot"
-					text="Ask AI About This Item"
-				/>
-				{#if item.ownerWhatsapp}
-					<a
-						href={`https://wa.me/${item.ownerWhatsapp.replace(/[^0-9]/g, '')}`}
-						class="btn-secondary"
-						aria-label="message on whatsapp"
-						target="_blank"
-						rel="noopener"
-					>
-						<i class="fab fa-whatsapp"></i> whatsapp
-					</a>
-				{/if}
-				{#if item.ownerDiscord}
-					<a
-						href={item.ownerDiscord}
-						class="btn-secondary"
-						target="_blank"
-						rel="noopener"
-					>
-						<i class="fab fa-discord"></i> discord
-					</a>
-				{/if}
-				<Button
-					onclick={() =>
-						navigator
-							.share?.({
-								title: item.n,
-								text: item.a || '',
-								url: window.location.href
-							})
-							.catch(() => {
-								// Fallback to clipboard
-								navigator.clipboard.writeText(
-									window.location.href
-								);
-							})}
-					variant="secondary"
-					icon="fa-share"
-					text="share item"
-					wide={true}
-				/>
-			</div>
+				<div
+					class="mt-8 flex flex-wrap justify-center gap-3 border-t border-white/10 pt-8"
+				>
+					<Button
+						href="/~/items/{item.i}/c"
+						variant="secondary"
+						icon="fa-robot"
+						text="Ask AI About This Item"
+					/>
+					{#if item.ownerWhatsapp}
+						<a
+							href={`https://wa.me/${item.ownerWhatsapp.replace(/[^0-9]/g, '')}`}
+							class="btn-secondary"
+							aria-label="message on whatsapp"
+							target="_blank"
+							rel="noopener"
+						>
+							<i class="fab fa-whatsapp"></i> whatsapp
+						</a>
+					{/if}
+					{#if item.ownerDiscord}
+						<a
+							href={item.ownerDiscord}
+							class="btn-secondary"
+							target="_blank"
+							rel="noopener"
+						>
+							<i class="fab fa-discord"></i> discord
+						</a>
+					{/if}
+					<Button
+						onclick={() =>
+							navigator
+								.share?.({
+									title: item.n,
+									text: item.a || '',
+									url: window.location.href
+								})
+								.catch(() => {
+									// Fallback to clipboard
+									navigator.clipboard.writeText(
+										window.location.href
+									);
+								})}
+						variant="secondary"
+						icon="fa-share"
+						text="share item"
+						wide={true}
+					/>
+				</div>
 			</div>
 		</div>
 	{/if}
@@ -527,14 +526,16 @@
 				<!-- Left Column - Description -->
 				<div class="space-y-8 lg:col-span-2">
 					<div class="card-normal group">
-			<div class="mb-8 flex items-center justify-between">
-				<h2
-					class="text-2xl font-bold lg:text-3xl"
-					style="color: var(--color-theme-4);"
-				>
-					description
-				</h2>
-			</div>
+						<div
+							class="mb-8 flex items-center justify-between"
+						>
+							<h2
+								class="text-2xl font-bold lg:text-3xl"
+								style="color: var(--color-theme-4);"
+							>
+								description
+							</h2>
+						</div>
 
 						{#if item.d}
 							<div
@@ -561,14 +562,16 @@
 
 					<!-- Additional Information -->
 					<div class="card-normal group">
-			<div class="mb-8 flex items-center justify-between">
-				<h2
-					class="text-2xl font-bold lg:text-3xl"
-					style="color: var(--color-theme-4);"
-				>
-					details
-				</h2>
-			</div>
+						<div
+							class="mb-8 flex items-center justify-between"
+						>
+							<h2
+								class="text-2xl font-bold lg:text-3xl"
+								style="color: var(--color-theme-4);"
+							>
+								details
+							</h2>
+						</div>
 
 						<div class="grid gap-8 md:grid-cols-2">
 							<div class="space-y-6">
@@ -582,59 +585,67 @@
 											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
 											>Type</span
 										>
-						<span
-							class="rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 text-xs font-bold text-white shadow-lg shadow-purple-500/30"
-						>
-							{item.k === 0 ? 'product' : 'service'}
-						</span>
+										<span
+											class="rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 text-xs font-bold text-white shadow-lg shadow-purple-500/30"
+										>
+											{item.k === 0
+												? 'product'
+												: 'service'}
+										</span>
 									</div>
 								</div>
-
-				<div
-					class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
-				>
-					<div class="flex items-center justify-between">
-						<span class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400">
-							price
-						</span>
-						<span class="font-bold text-gray-900 dark:text-gray-100">
-							{#if item.p !== undefined}
-								₦{item.p.toLocaleString()}
-								<!-- {item.c ?? ''} {item.p.toLocaleString()} -->
-							{:else}
-								not provided
-							{/if}
-						</span>
-					</div>
-				</div>
 
 								<div
 									class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
 								>
-					<div
-						class="flex items-center justify-between"
-					>
-						<span
-							class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
-							>posted</span
-						>
-						<span
-							class="font-bold text-gray-900 dark:text-gray-100"
-						>
-							{item.d
-								? new Date(
-									item.d
-								).toLocaleDateString(
-									'en-US',
-									{
-										year: 'numeric',
-										month: 'long',
-										day: 'numeric'
-									}
-								)
-								: 'date not available'}
-						</span>
-					</div>
+									<div
+										class="flex items-center justify-between"
+									>
+										<span
+											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
+										>
+											price
+										</span>
+										<span
+											class="font-bold text-gray-900 dark:text-gray-100"
+										>
+											{#if item.p !== undefined}
+												₦{item.p.toLocaleString()}
+												<!-- {item.c ?? ''} {item.p.toLocaleString()} -->
+											{:else}
+												not provided
+											{/if}
+										</span>
+									</div>
+								</div>
+
+								<div
+									class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
+								>
+									<div
+										class="flex items-center justify-between"
+									>
+										<span
+											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
+											>posted</span
+										>
+										<span
+											class="font-bold text-gray-900 dark:text-gray-100"
+										>
+											{item.d
+												? new Date(
+														item.d
+													).toLocaleDateString(
+														'en-US',
+														{
+															year: 'numeric',
+															month: 'long',
+															day: 'numeric'
+														}
+													)
+												: 'date not available'}
+										</span>
+									</div>
 								</div>
 							</div>
 

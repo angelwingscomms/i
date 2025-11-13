@@ -6,14 +6,26 @@ import { upload_file } from '$lib/integrations/upload';
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
-export const POST: RequestHandler = async ({ request, locals, params, platform }) => {
+export const POST: RequestHandler = async ({
+	request,
+	locals,
+	params,
+	platform
+}) => {
 	const user = locals.user;
 	if (!user) throw error(401, 'login required');
 
 	const { i } = params;
 	if (!i) throw error(400, 'missing sync id');
 
-	const project = await get<SyncProject>(i, ['s', 'u', 'd', 't', 'n', 'g']);
+	const project = await get<SyncProject>(i, [
+		's',
+		'u',
+		'd',
+		't',
+		'n',
+		'g'
+	]);
 	if (!project || project.s !== 'sync') {
 		throw error(404, 'sync project not found');
 	}
@@ -43,7 +55,10 @@ export const POST: RequestHandler = async ({ request, locals, params, platform }
 	const m = {
 		u: url,
 		k: file.type,
-		d: Number.isFinite(duration) && duration > 0 ? duration : undefined
+		d:
+			Number.isFinite(duration) && duration > 0
+				? duration
+				: undefined
 	};
 
 	await edit_point(i, {

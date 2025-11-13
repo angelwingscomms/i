@@ -28,7 +28,7 @@ export const POST = async ({ request, locals }) => {
 	}
 	const genAI = new GoogleGenerativeAI(GEMINI);
 	const model = genAI.getGenerativeModel({
-		model: 'gemini-1.5-flash'
+		model: 'gemini-2.5-flash'
 	});
 	const prompt = `Write a complete HTML/CSS resume page from: ${txt}. Make it professional, responsive, and visually appealing. Output only the HTML code with embedded CSS in the <style> tag.`;
 	const result = await model.generateContent(prompt);

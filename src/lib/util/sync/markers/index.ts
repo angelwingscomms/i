@@ -19,14 +19,18 @@ export function sanitize_markers(
 	const cleaned: number[] = [];
 
 	for (const value of markers) {
-		if (typeof value !== 'number' || !Number.isFinite(value)) {
+		if (
+			typeof value !== 'number' ||
+			!Number.isFinite(value)
+		) {
 			continue;
 		}
 		const clamped = Math.max(0, value);
 		if (typeof max_duration === 'number') {
 			if (clamped > max_duration) continue;
 		}
-		const rounded = Math.round(clamped * factor) / factor;
+		const rounded =
+			Math.round(clamped * factor) / factor;
 		if (seen.has(rounded)) continue;
 		seen.add(rounded);
 		cleaned.push(rounded);
@@ -38,10 +42,12 @@ export function sanitize_markers(
 
 export function markers_to_segments(
 	markers: number[],
-	{
-		end
-	}: { end?: number } = {}
-): Array<{ start: number; end: number; color: 'black' | 'white' }> {
+	{ end }: { end?: number } = {}
+): Array<{
+	start: number;
+	end: number;
+	color: 'black' | 'white';
+}> {
 	const sanitized = sanitize_markers(markers, {
 		max_duration: end
 	});

@@ -23,9 +23,9 @@
 		saving = $state(false),
 		hidden: boolean = $state(!!init.h),
 		images_to_remove: string[] = $state([]),
-	currentZones: Zone[] = $state(init.z || []),
-	newZones: Zone[] = $state([]),
-	selectedPlaces: Zone[] = $state([]),
+		currentZones: Zone[] = $state(init.z || []),
+		newZones: Zone[] = $state([]),
+		selectedPlaces: Zone[] = $state([]),
 		zonesToRemove: string[] = $state([]),
 		voice_recording = $state(false),
 		voice_loading = $state(false),
@@ -653,7 +653,7 @@
 						>
 							New Zones
 						</div>
-		{#if newZones.length > 0}
+						{#if newZones.length > 0}
 							<div
 								class="grid grid-cols-2 gap-4 md:grid-cols-3"
 							>
@@ -669,9 +669,10 @@
 												newZones = newZones.filter(
 													(zz) => zz.i !== z.i
 												);
-								selectedPlaces = selectedPlaces.filter(
-									(place) => place.i !== z.i
-								);
+												selectedPlaces =
+													selectedPlaces.filter(
+														(place) => place.i !== z.i
+													);
 											}}
 											class="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-all hover:bg-red-600"
 											title="Remove new zone"
@@ -693,24 +694,24 @@
 								Add New Zones
 							</h2>
 							<ZoneSearch
-						onSelect={(z) => {
-							if (
-								!newZones.some(
-									(zz) => zz.i === z.i
-								)
-							) {
-								newZones.push(z);
-							}
-							if (
-								!selectedPlaces.some(
-									(place) => place.i === z.i
-								)
-							) {
-								selectedPlaces.push(z);
-							}
-						}}
-						source="osm"
-						hide_coords={true}
+								onSelect={(z) => {
+									if (
+										!newZones.some(
+											(zz) => zz.i === z.i
+										)
+									) {
+										newZones.push(z);
+									}
+									if (
+										!selectedPlaces.some(
+											(place) => place.i === z.i
+										)
+									) {
+										selectedPlaces.push(z);
+									}
+								}}
+								source="osm"
+								hide_coords={true}
 							/>
 						</div>
 					</div>
@@ -737,7 +738,8 @@
 						<Button
 							text="view item"
 							icon="fa-eye"
-							onclick={() => goto(`/~/items/${item.i}`)}
+							onclick={() =>
+								goto(`/~/items/${item.i}`)}
 						/>
 					</div>
 

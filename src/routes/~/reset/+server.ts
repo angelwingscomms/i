@@ -1,9 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import {
-	find_user_by_email,
-	set
-} from '$lib/db';
+import { find_user_by_email, set } from '$lib/db';
 import {
 	normalize_email,
 	generate_reset_token,
@@ -21,25 +18,37 @@ export const POST: RequestHandler = async ({
 }) => {
 	const { email } = await request.json();
 	if (typeof email !== 'string') {
-		return json({ error: 'invalid email' }, { status: 400 });
+		return json(
+			{ error: 'invalid email' },
+			{ status: 400 }
+		);
 	}
 	const normalized = normalize_email(email);
-	if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
-		return json({ error: 'invalid email' }, { status: 400 });
+	if (
+		!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)
+	) {
+		return json(
+			{ error: 'invalid email' },
+			{ status: 400 }
+		);
 	}
 
 	const user = await find_user_by_email(normalized);
 	if (!user?.i) {
 		return json({
-			message: 'if the email exists, a reset link was sent'
+			message:
+				'if the email exists, a reset link was sent'
 		});
 	}
 
 	const now = Date.now();
 	if (user.pr && now - user.pr < RATE_LIMIT_MS) {
-		return json({
-			error: 'reset already requested recently'
-		}, { status: 429 });
+		return json(
+			{
+				error: 'reset already requested recently'
+			},
+			{ status: 429 }
+		);
 	}
 
 	const token = generate_reset_token();
@@ -63,10 +72,14 @@ export const POST: RequestHandler = async ({
 		);
 	} catch (err) {
 		console.error('send email error', err);
-		return json({ error: 'failed to send email' }, { status: 500 });
+		return json(
+			{ error: 'failed to send email' },
+			{ status: 500 }
+		);
 	}
 
 	return json({
-		message: 'if the email exists, a reset link was sent'
+		message:
+			'if the email exists, a reset link was sent'
 	});
 };

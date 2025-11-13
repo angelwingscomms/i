@@ -6,9 +6,7 @@
 		query = $bindable(''),
 		selected_date = $bindable<string | null>(null),
 		searching = $bindable(false),
-		onsearch = $bindable(
-			(date: string | null) => {}
-		)
+		onsearch = $bindable((date: string | null) => {})
 	} = $props();
 
 	const clear_date = () => {
@@ -36,16 +34,16 @@
 		>
 			search
 		</label>
-	<DescriptionInput
-		id="diary-search-input"
-		bind:value={query}
-		placeholder="search diary entries..."
-		send={() => onsearch(selected_date)}
-		send_loading={searching}
-		label=""
-		voice_typing={true}
-		ontranscribe={() => {}}
-	/>
+		<DescriptionInput
+			id="diary-search-input"
+			bind:value={query}
+			placeholder="search diary entries..."
+			send={() => onsearch(selected_date)}
+			send_loading={searching}
+			label=""
+			voice_typing={true}
+			ontranscribe={() => {}}
+		/>
 	</div>
 
 	<div class="flex items-center gap-3">
@@ -74,5 +72,10 @@
 		{/if}
 	</div>
 
-	<Button text="search" type="submit" wide={true} icon={searching ? 'fa-spinner fa-spin' : ''} />
+	<Button
+		text="search"
+		type="submit"
+		wide={true}
+		icon={searching ? 'fa-spinner fa-spin' : ''}
+	/>
 </form>

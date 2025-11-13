@@ -1,8 +1,7 @@
 <script lang="ts">
-import { page } from '$app/state';
-import type { User } from '$lib/types';
-import { logout } from '$lib/util/logout';
-import { addToast } from '$lib/util/toast.svelte';
+	import { page } from '$app/state';
+	import { logout } from '$lib/util/logout';
+	import { addToast } from '$lib/util/toast.svelte';
 	let {
 		is_open,
 		onClose
@@ -16,13 +15,18 @@ import { addToast } from '$lib/util/toast.svelte';
 		onClose?.();
 	}
 
-function handle_install() {
-	if (window.matchMedia('(display-mode: standalone)').matches) {
-		addToast('app is already installed', 'info');
-		return;
+	function handle_install() {
+		if (
+			window.matchMedia('(display-mode: standalone)')
+				.matches
+		) {
+			addToast('app is already installed', 'info');
+			return;
+		}
+		window.dispatchEvent(
+			new CustomEvent('request-install-app')
+		);
 	}
-	window.dispatchEvent(new CustomEvent('request-install-app'));
-}
 </script>
 
 <aside class="mobile-sidebar" class:is-open={is_open}>
@@ -46,7 +50,9 @@ function handle_install() {
 				/>
 			</svg>
 		</button>
-	<nav class="sidebar-nav flex-1 overflow-y-auto pb-5 pr-2">
+		<nav
+			class="sidebar-nav flex-1 overflow-y-auto pr-2 pb-5"
+		>
 			<a
 				href="/~/"
 				class="sidebar-nav-link"
@@ -60,20 +66,21 @@ function handle_install() {
 				Home
 			</a>
 			{#if page.data.user}
-			<a
-				onclick={() => {
-					handle_install();
-					close_sidebar();
-				}}
-				class="sidebar-nav-link"
-				style="color: var(--color-theme-2); cursor: pointer;"
-			>
-				<i
-					class="fa-solid fa-download"
-					style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
-				></i>
-				install app
-			</a>
+				<button
+					type="button"
+					onclick={() => {
+						handle_install();
+						close_sidebar();
+					}}
+					class="sidebar-nav-link"
+					style="color: var(--color-theme-2); cursor: pointer;"
+				>
+					<i
+						class="fa-solid fa-download"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
+					install app
+				</button>
 				<a
 					href="/~/items"
 					class="sidebar-nav-link"
@@ -109,6 +116,18 @@ function handle_install() {
 						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
 					></i>
 					posts
+				</a>
+				<a
+					href="/~/event"
+					class="sidebar-nav-link"
+					style="color: var(--color-theme-3);"
+					onclick={close_sidebar}
+				>
+					<i
+						class="fa-solid fa-calendar-days"
+						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
+					></i>
+					events
 				</a>
 				<a
 					href="/~/chats"
@@ -183,7 +202,7 @@ function handle_install() {
 					resume
 				</a>
 				<a
-					href="/~/{page.data.user.t}"
+					href="/{page.data.user.t}"
 					class="sidebar-nav-link"
 					style="color: var(--color-theme-4);"
 					onclick={close_sidebar}
@@ -194,7 +213,8 @@ function handle_install() {
 					></i>
 					{page.data.user.t}
 				</a>
-				<a
+				<button
+					type="button"
 					class="sidebar-nav-link text-error"
 					style="color: var(--color-theme-5);"
 					onclick={async () => {
@@ -207,7 +227,7 @@ function handle_install() {
 						style="margin-right: 0.5rem; color: inherit; font-size: 1.1em;"
 					></i>
 					logout
-				</a>
+				</button>
 			{:else}
 				<a
 					href="/~/tools/youtube-video-summarize-tool"

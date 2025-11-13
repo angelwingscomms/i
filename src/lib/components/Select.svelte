@@ -23,21 +23,21 @@
 		onclick?: (v: string) => void;
 	}>();
 
-function handle_select(v: string) {
-    value = v;
-    queueMicrotask(() => (open = false));
-    onclick?.(v);
-}
+	function handle_select(v: string) {
+		value = v;
+		queueMicrotask(() => (open = false));
+		onclick?.(v);
+	}
 </script>
 
 <div
-    use:outside_click={() => (open = false)}
-    class="dropdown-container flex w-full"
+	use:outside_click={() => (open = false)}
+	class="dropdown-container flex w-full"
 	bind:this={sort_ref}
 >
 	<button
 		type="button"
-    class="dropdown-trigger w-full justify-between border-t-0 border-r-0 border-b-0"
+		class="dropdown-trigger w-full justify-between border-t-0 border-r-0 border-b-0"
 		onclick={(e) => {
 			e.stopPropagation();
 			open = !open;
@@ -49,7 +49,9 @@ function handle_select(v: string) {
 		{#if label}<span class="text-secondary"
 				>{label}</span
 			>{/if}
-    <span class="text-primary flex items-center whitespace-nowrap">
+		<span
+			class="text-primary flex items-center whitespace-nowrap"
+		>
 			{#if value}
 				{@const selected = options.find(
 					(o: typeof value) => o.value === value
@@ -91,11 +93,11 @@ function handle_select(v: string) {
 			class="dropdown-panel dropdown-sm animate-fade-in w-full"
 		>
 			{#each options as opt}
-                <button
-                    type="button"
-                    role="option"
-                    aria-selected={value === opt.value}
-                    class="dropdown-item flex items-center whitespace-nowrap"
+				<button
+					type="button"
+					role="option"
+					aria-selected={value === opt.value}
+					class="dropdown-item flex items-center whitespace-nowrap"
 					onclick={(e) => {
 						e.stopPropagation();
 						handle_select(opt.value);

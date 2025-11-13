@@ -82,7 +82,10 @@ export const POST: RequestHandler = async ({
 	const c = (data.get('c') as string) || item.c;
 	const h = (data.get('h') as string) || item.h || '';
 	const price = p_raw ? Number(p_raw) : item.p;
-	const kind = typeof k_raw === 'string' ? Number(k_raw) : item.k;
+	const kind =
+		typeof k_raw === 'string'
+			? Number(k_raw)
+			: item.k;
 	const files = data.getAll('f') as unknown as File[];
 	console.log(
 		'Edit server: Files received from formData:',
@@ -128,8 +131,8 @@ export const POST: RequestHandler = async ({
 		? JSON.parse(data.get('z') as string)
 		: item.z || [];
 
-const payload = {
-	...item,
+	const payload = {
+		...item,
 		n,
 		a: a ?? item.a,
 		k: Number.isNaN(kind) ? item.k : (kind as 0 | 1),
@@ -138,11 +141,12 @@ const payload = {
 		h,
 		x: new_x,
 		z: zones
-};
+	};
 
-	const embed_text = `${payload.n} ${payload.a || ''} ${
-		price ? `price ${price}` : ''
-	} ${zones.map((z: Zone) => z.n).join(' ')}`.trim();
+	const embed_text =
+		`${payload.n} ${payload.a || ''} ${
+			price ? `price ${price}` : ''
+		} ${zones.map((z: Zone) => z.n).join(' ')}`.trim();
 	const vector = await embed(embed_text);
 
 	await edit_point(i, payload);

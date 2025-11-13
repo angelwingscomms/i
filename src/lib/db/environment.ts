@@ -56,7 +56,10 @@ export const update_environment = async (
 		: [...empty_vector];
 	await qdrant.setPayload(collection, {
 		points: [id],
-		payload: updated as unknown as Record<string, unknown>,
+		payload: updated as unknown as Record<
+			string,
+			unknown
+		>,
 		wait: true
 	});
 	await qdrant.updateVectors(collection, {

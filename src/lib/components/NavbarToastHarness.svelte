@@ -1,16 +1,19 @@
 <script lang="ts">
-import { onMount } from 'svelte';
-import { addToast } from '$lib/util/toast.svelte';
+	import { onMount } from 'svelte';
+	import { addToast } from '$lib/util/toast.svelte';
 
-let { label = 'trigger toast', message = 'test toast' } = $props();
+	let {
+		label = 'trigger toast',
+		message = 'test toast'
+	} = $props();
 
-function trigger_toast() {
-	addToast(message, 'info', 1500);
-}
+	function trigger_toast() {
+		addToast(message, 'info', 1500);
+	}
 
-onMount(() => {
-	// noop to align with component pattern
-});
+	onMount(() => {
+		// noop to align with component pattern
+	});
 </script>
 
 <button

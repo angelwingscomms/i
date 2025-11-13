@@ -24,7 +24,8 @@
 		onclick={async () => {
 			creating = true;
 			try {
-				const { data } = await axios.post('/~/resume');
+				const { data } =
+					await axios.post('/~/resume');
 				goto(`/~/resume/${data}/edit`);
 			} catch (e) {
 				toast.error('Failed to create resume');
@@ -41,7 +42,9 @@
 				>
 					<a href={`/resume/${r.i}`} class="block">
 						<div class="font-semibold">
-							{r.t ?? 'unknown'} - {formatDate(r.l || r.d || 0)}
+							{r.t ?? 'unknown'} - {formatDate(
+								r.l || r.d || 0
+							)}
 						</div>
 						{#if r.h}
 							<div

@@ -9,13 +9,19 @@ const reset = vi.fn();
 
 vi.mock('$lib/util/granite/client', () => ({
 	supports_webgpu: vi.fn(() => false),
-	create_granite_client: () => ({ load, generate, reset })
+	create_granite_client: () => ({
+		load,
+		generate,
+		reset
+	})
 }));
 
 describe('/~/chat/g', () => {
 	it('shows webgpu requirement notice when unsupported', async () => {
 		render(Page);
-		const notice = page.getByText('webgpu support required');
+		const notice = page.getByText(
+			'webgpu support required'
+		);
 		await expect.element(notice).toBeInTheDocument();
 	});
 });

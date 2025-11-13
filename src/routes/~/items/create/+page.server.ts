@@ -5,15 +5,22 @@ import type { User } from '$lib/types';
 import type { Zone } from '$lib/types/zone';
 import { get_zone } from '$lib/db/zone';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({
+	locals
+}) => {
 	if (!locals.user)
 		redirect(302, '/~/google?next=/items/create');
 
 	let i;
 	try {
 		let user_zones: Zone[] = [];
-		const user_payload = await get<User>(locals.user.i, true);
-		const user_zone_ids = Array.isArray(user_payload?.z)
+		const user_payload = await get<User>(
+			locals.user.i,
+			true
+		);
+		const user_zone_ids = Array.isArray(
+			user_payload?.z
+		)
 			? user_payload?.z
 			: [];
 		if (user_zone_ids.length > 0) {

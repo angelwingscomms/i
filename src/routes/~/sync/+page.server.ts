@@ -4,12 +4,16 @@ import type { SyncProject } from '$lib/types';
 
 type SyncListItem = SyncProject & { i: string };
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({
+	locals
+}) => {
 	let syncs: SyncListItem[] = [];
 
 	try {
-		syncs = await search_by_payload<SyncProject & { i: string }>(
-		{ s: 'sync' },
+		syncs = await search_by_payload<
+			SyncProject & { i: string }
+		>(
+			{ s: 'sync' },
 			['u', 'n', 'd', 't', 'm', 'g'],
 			54,
 			{ key: 'd', direction: 'desc' } as any

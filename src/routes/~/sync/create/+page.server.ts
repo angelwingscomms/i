@@ -2,7 +2,9 @@ import type { PageServerLoad } from './$types';
 import { create } from '$lib/db';
 import { error, redirect } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({
+	locals
+}) => {
 	const user = locals.user;
 	if (!user) throw redirect(302, '/~/login');
 
@@ -18,5 +20,5 @@ export const load: PageServerLoad = async ({ locals }) => {
 		console.error('sync create error', err);
 		throw error(500, 'unable to create sync project');
 	}
-		redirect(302, `/~/sync/${id}`);
+	redirect(302, `/~/sync/${id}`);
 };

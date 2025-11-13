@@ -12,7 +12,7 @@ if (GEMINI) {
 	try {
 		const ai = new GoogleGenerativeAI(GEMINI);
 		model = ai.getGenerativeModel({
-			model: 'gemini-1.5-flash'
+			model: 'gemini-2.5-flash'
 		});
 	} catch (e) {
 		console.error(

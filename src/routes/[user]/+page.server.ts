@@ -36,8 +36,8 @@ export const load: PageServerLoad = async ({
 		show_gender: Boolean((user as any).o),
 		description: user.d,
 		socialLinks: user.x || [],
-	phones: user.b || [],
-	emails: user.k || [],
+		phones: user.b || [],
+		emails: user.k || [],
 		on: (user as any).on,
 		ic: (user as any).ic
 	};
@@ -78,8 +78,6 @@ export const load: PageServerLoad = async ({
 			direction: 'desc'
 		}
 	);
-
-	console.log('found items', items);
 
 	const user_posts = await search_by_payload<Post>(
 		{
@@ -124,9 +122,6 @@ export const load: PageServerLoad = async ({
 	return {
 		u: userInfo,
 		c: comparisonResult,
-		user: locals.user
-			? { i: locals.user.i, t: locals.user.t }
-			: null,
 		ld: local_description, // Pass local user's description
 		it: user_items,
 		p: user_posts_visible.length,

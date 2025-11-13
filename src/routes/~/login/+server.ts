@@ -146,9 +146,7 @@ export async function POST(event) {
 		);
 	}
 
-	const normalizedEmail = email
-		.trim()
-		.toLowerCase();
+	const normalizedEmail = email.trim().toLowerCase();
 
 	if (await find_user_by_email(normalizedEmail)) {
 		return new Response(
@@ -238,7 +236,9 @@ function validatePassword(
 	);
 }
 
-function validateEmail(email: unknown): email is string {
+function validateEmail(
+	email: unknown
+): email is string {
 	return (
 		typeof email === 'string' &&
 		email.length > 3 &&

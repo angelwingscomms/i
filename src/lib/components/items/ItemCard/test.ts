@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import {
+	render,
+	screen
+} from '@testing-library/svelte';
 import ItemCard from './ItemCard.svelte';
 
 describe('ItemCard', () => {
@@ -16,7 +19,9 @@ describe('ItemCard', () => {
 
 	it('renders item name and image', () => {
 		render(ItemCard, { props: { item } });
-		expect(screen.getByText('test item')).toBeInTheDocument();
+		expect(
+			screen.getByText('test item')
+		).toBeInTheDocument();
 		const img = screen.getByAltText('test item');
 		expect(img).toHaveAttribute('src', item.x[0]);
 	});
@@ -32,6 +37,8 @@ describe('ItemCard', () => {
 
 	it('displays match percent', () => {
 		render(ItemCard, { props: { item } });
-		expect(screen.getByText('87%')).toBeInTheDocument();
+		expect(
+			screen.getByText('87%')
+		).toBeInTheDocument();
 	});
 });

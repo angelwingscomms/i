@@ -3,11 +3,11 @@
 	import Navbar from '$lib/components/Navbar.svelte';
 	import MobileSidebar from '$lib/components/MobileSidebar.svelte';
 	import PushNotificationBanner from '$lib/components/PushNotificationBanner.svelte';
-import {
-	toasts,
-	toast,
-	removeToast
-} from '$lib/util/toast.svelte';
+	import {
+		toasts,
+		toast,
+		removeToast
+	} from '$lib/util/toast.svelte';
 	import { fade } from 'svelte/transition';
 	import { themeStore } from '$lib/stores/theme';
 	import { onMount } from 'svelte';

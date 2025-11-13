@@ -1,6 +1,9 @@
 <script lang="ts">
-import { ItemResultsList, ItemSearch } from '$lib/components/items';
-import Button from '$lib/components/Button.svelte';
+	import {
+		ItemResultsList,
+		ItemSearch
+	} from '$lib/components/items';
+	import Button from '$lib/components/Button.svelte';
 	import type { Item } from '$lib/types/item';
 	import type { PageProps } from './$types';
 	import { md } from '$lib/util/marked';
@@ -15,14 +18,13 @@ import Button from '$lib/components/Button.svelte';
 
 	let { data }: PageProps = $props();
 	console.log('d', data);
-let {
-	u: user,
-	c: comparison,
-	it: items,
-	p: posts_count,
-	m: itemSearchData
-} =
-	data as unknown as {
+	let {
+		u: user,
+		c: comparison,
+		it: items,
+		p: posts_count,
+		m: itemSearchData
+	} = data as unknown as {
 		u: {
 			i: string;
 			tag: string;
@@ -41,10 +43,14 @@ let {
 		m: Record<string, unknown>;
 	};
 
-const phone_numbers = $derived(user?.phones ?? []);
-const email_addresses = $derived(user?.emails ?? []);
+	const phone_numbers = $derived(user?.phones ?? []);
+	const email_addresses = $derived(
+		user?.emails ?? []
+	);
 
-const other_posts = $derived(Boolean(posts_count && posts_count > 0));
+	const other_posts = $derived(
+		Boolean(posts_count && posts_count > 0)
+	);
 
 	onMount(() => {
 		// Entrance animations
@@ -115,9 +121,17 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 			await navigator.clipboard.writeText(
 				`${window.location.origin}/${user?.tag ?? ''}`
 			);
-			toast.info('Link copied to clipboard!', 'info', 2000);
+			toast.info(
+				'Link copied to clipboard!',
+				'info',
+				2000
+			);
 		} catch {
-			toast.error('Failed to copy link', 'error', 3000);
+			toast.error(
+				'Failed to copy link',
+				'error',
+				3000
+			);
 		}
 	}
 	function getSocialMediaInfo(url: string): {
@@ -270,64 +284,80 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 				</div>
 
 				<!-- User Info -->
-		<div class="profile-info space-y-4">
-			<h1
-				class="text-4xl font-semibold sm:text-2xl"
-				style="color: var(--color-theme-4);"
-			>
-				{user.m || user.tag}
-			</h1>
-			<div class="flex items-center justify-center gap-2 text-sm lowercase text-white">
-				{page.url.origin}/{user.tag}
-				<button
-					onclick={async () => {
-						try {
-							await navigator.clipboard.writeText(
-								`${page.url.origin}/${user.tag}`
-							);
-							toast.info('Link copied to clipboard!', 'info', 2000);
-						} catch {
-							toast.error('Failed to copy link', 'error', 3000);
-						}
-					}}
-					class="text-white"
-					aria-label="copy profile link"
-				>
-					<i class="fas fa-copy"></i>
-				</button>
-			</div>
-	{#if user.socialLinks && user.socialLinks.length > 0}
-				<div class="flex flex-wrap items-center justify-center gap-3 text-sm lowercase text-white">
-					{#each user.socialLinks as link (link)}
-						{@const { name, faIcon } = getSocialMediaInfo(link)}
-						<a
-							href={link}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="flex items-center gap-1 transition hover:text-[var(--color-theme-4)]"
+				<div class="profile-info space-y-4">
+					<h1
+						class="text-4xl font-semibold sm:text-2xl"
+						style="color: var(--color-theme-4);"
+					>
+						{user.m || user.tag}
+					</h1>
+					<div
+						class="flex items-center justify-center gap-2 text-sm text-white lowercase"
+					>
+						{page.url.origin}/{user.tag}
+						<button
+							onclick={async () => {
+								try {
+									await navigator.clipboard.writeText(
+										`${page.url.origin}/${user.tag}`
+									);
+									toast.info(
+										'Link copied to clipboard!',
+										'info',
+										2000
+									);
+								} catch {
+									toast.error(
+										'Failed to copy link',
+										'error',
+										3000
+									);
+								}
+							}}
+							class="text-white"
+							aria-label="copy profile link"
 						>
-							{#if faIcon}
-								<i class="fas {faIcon} text-xs"></i>
-							{:else}
-								<i class="fas fa-external-link-alt text-xs"></i>
-							{/if}
-							{name.toLowerCase()}
-						</a>
-					{/each}
-				</div>
-			{/if}
-
-				<div
-					class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center"
-				>
-					{#if user.show_age}
-						<span
-							class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
-							style="background: var(--color-theme-1);"
+							<i class="fas fa-copy"></i>
+						</button>
+					</div>
+					{#if user.socialLinks && user.socialLinks.length > 0}
+						<div
+							class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
 						>
-							Age: {user.age ?? 'hidden'}
-						</span>
+							{#each user.socialLinks as link (link)}
+								{@const { name, faIcon } =
+									getSocialMediaInfo(link)}
+								<a
+									href={link}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="flex items-center gap-1 transition hover:text-[var(--color-theme-4)]"
+								>
+									{#if faIcon}
+										<i class="fas {faIcon} text-xs"
+										></i>
+									{:else}
+										<i
+											class="fas fa-external-link-alt text-xs"
+										></i>
+									{/if}
+									{name.toLowerCase()}
+								</a>
+							{/each}
+						</div>
 					{/if}
+
+					<div
+						class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center"
+					>
+						{#if user.show_age}
+							<span
+								class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
+								style="background: var(--color-theme-1);"
+							>
+								Age: {user.age ?? 'hidden'}
+							</span>
+						{/if}
 						<!-- <span
 							class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
 							style="background: var(--color-theme-2);"
@@ -346,14 +376,16 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 								>
 							</div>
 						</span> -->
-					{#if user.show_gender}
-						<span
-							class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
-							style="background: var(--color-theme-3);"
-						>
-							{user.gender === 0 ? 'Male' : 'Female'}
-						</span>
-					{/if}
+						{#if user.show_gender}
+							<span
+								class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
+								style="background: var(--color-theme-3);"
+							>
+								{user.gender === 0
+									? 'Male'
+									: 'Female'}
+							</span>
+						{/if}
 					</div>
 
 					{#if data.user?.i === user.i}
@@ -366,24 +398,26 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 								variant="primary"
 							/>
 						</div>
-				<div class="mt-4 flex flex-wrap items-center justify-center gap-3">
-					{#if itemSearchData.total > 0}
-						<Button
-							href={`/${user.tag}/i`}
-							text="view items"
-							icon="fa-bag-shopping"
-							variant="primary"
-						/>
-					{/if}
-					{#if other_posts}
-						<Button
-							href={`/${user.tag}/posts`}
-							text="view posts"
-							icon="fa-newspaper"
-							variant="primary"
-						/>
-					{/if}
-				</div>
+						<div
+							class="mt-4 flex flex-wrap items-center justify-center gap-3"
+						>
+							{#if itemSearchData.total > 0}
+								<Button
+									href={`/${user.tag}/i`}
+									text="view items"
+									icon="fa-bag-shopping"
+									variant="primary"
+								/>
+							{/if}
+							{#if other_posts}
+								<Button
+									href={`/${user.tag}/posts`}
+									text="view posts"
+									icon="fa-newspaper"
+									variant="primary"
+								/>
+							{/if}
+						</div>
 
 						{#if !user.description}
 							<div
@@ -465,7 +499,9 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 			</div>
 		</section>
 
-		<section class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8">
+		<section
+			class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8"
+		>
 			<h2
 				class="mb-8 text-3xl font-bold"
 				style="color: var(--color-theme-4);"
@@ -473,7 +509,10 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 				search {user.tag}'s items
 			</h2>
 			<ItemSearch
-				data={{ ...itemSearchData, userTag: user.tag }}
+				data={{
+					...itemSearchData,
+					userTag: user.tag
+				}}
 				showSort={true}
 			/>
 			{#if items.length > 0}
@@ -481,7 +520,9 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 					<ItemResultsList results={items} />
 				</div>
 			{:else}
-				<p class="text-center text-sm lowercase text-[var(--text-secondary)]">
+				<p
+					class="text-center text-sm text-[var(--text-secondary)] lowercase"
+				>
 					no items yet
 				</p>
 			{/if}
@@ -608,9 +649,13 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 	{/if}
 
 	{#if phone_numbers.length}
-		<div class="flex flex-wrap items-center justify-center gap-3 text-sm lowercase text-white">
+		<div
+			class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
+		>
 			{#each phone_numbers as phone (phone)}
-				<span class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2">
+				<span
+					class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2"
+				>
 					<i class="fas fa-phone text-xs"></i>
 					{phone}
 				</span>
@@ -619,9 +664,13 @@ const other_posts = $derived(Boolean(posts_count && posts_count > 0));
 	{/if}
 
 	{#if email_addresses.length}
-		<div class="flex flex-wrap items-center justify-center gap-3 text-sm lowercase text-white">
+		<div
+			class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
+		>
 			{#each email_addresses as address (address)}
-				<span class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2">
+				<span
+					class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2"
+				>
 					<i class="fas fa-envelope text-xs"></i>
 					{address}
 				</span>

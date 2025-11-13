@@ -63,4 +63,5 @@ export const POST: RequestHandler = async ({
 	return json({ t: '' });
 };
 
-export const _parseTimedTextToPlainText = parseTimedTextToPlainText;
+export const _parseTimedTextToPlainText =
+	parseTimedTextToPlainText;

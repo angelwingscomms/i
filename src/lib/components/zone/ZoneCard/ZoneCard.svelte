@@ -29,20 +29,28 @@
 >
 	<div class="flex items-start justify-between gap-4">
 		<div class="min-w-0 flex-1">
-			<h3 class="truncate text-lg font-bold text-[var(--color-theme-4)]">
+			<h3
+				class="truncate text-lg font-bold text-[var(--color-theme-4)]"
+			>
 				{zone.n?.trim() || 'untitled zone'}
 			</h3>
-			<div class="mt-2 grid gap-1 text-sm text-[var(--color-theme-3)]">
+			<div
+				class="mt-2 grid gap-1 text-sm text-[var(--color-theme-3)]"
+			>
 				<span>lat: {format_coord(zone.l)}</span>
 				<span>lon: {format_coord(zone.g)}</span>
 			</div>
 		</div>
-		<div class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-theme-6)]/10 text-sm font-semibold text-[var(--color-theme-1)]">
+		<div
+			class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-theme-6)]/10 text-sm font-semibold text-[var(--color-theme-1)]"
+		>
 			{child_count}
 		</div>
 	</div>
 	{#if zone.d}
-		<p class="mt-3 text-xs text-[var(--color-theme-3)]">
+		<p
+			class="mt-3 text-xs text-[var(--color-theme-3)]"
+		>
 			updated {new Date(zone.d).toLocaleDateString()}
 		</p>
 	{/if}

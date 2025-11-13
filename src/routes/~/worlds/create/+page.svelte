@@ -1,4 +1,3 @@
-
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
@@ -14,7 +13,9 @@
 </svelte:head>
 
 <div class="mx-auto w-full max-w-2xl px-4 py-8">
-	<h1 class="mb-6 text-2xl font-semibold text-[var(--color-theme-4)]">
+	<h1
+		class="mb-6 text-2xl font-semibold text-[var(--color-theme-4)]"
+	>
 		create world
 	</h1>
 
@@ -62,7 +63,9 @@
 	</form>
 
 	{#if $page?.form?.e}
-		<p class="mt-4 rounded-3xl border border-[var(--accent-alert)] px-4 py-3 text-sm text-[var(--accent-alert)]">
+		<p
+			class="mt-4 rounded-3xl border border-[var(--accent-alert)] px-4 py-3 text-sm text-[var(--accent-alert)]"
+		>
 			{$page.form.e}
 		</p>
 	{/if}

@@ -32,11 +32,11 @@ export default ts.config(
 		}
 	},
 	{
-		files: [
-			'**/*.svelte',
-			'**/*.svelte.ts',
-			'**/*.svelte.js'
-		],
+		files: ['**/*.svelte'],
+		rules: {
+			'svelte/no-navigation-without-resolve': 'off',
+			'svelte/no-at-html-tags': 'off'
+		},
 		languageOptions: {
 			parserOptions: {
 				projectService: true,

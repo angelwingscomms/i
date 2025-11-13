@@ -6,7 +6,9 @@
 
 	let name_value = data.w.n || '';
 	let about_value = data.w.a || '';
-	let meta_value = data.w.j ? JSON.stringify(data.w.j, null, 2) : '';
+	let meta_value = data.w.j
+		? JSON.stringify(data.w.j, null, 2)
+		: '';
 	let saving = false;
 	let error_text = '';
 	let success_text = '';
@@ -29,7 +31,11 @@
 		const res = await fetch(`/worlds/${data.w.i}`, {
 			method: 'PUT',
 			headers: { 'content-type': 'application/json' },
-			body: JSON.stringify({ n: name_value, a: about_value, j: meta })
+			body: JSON.stringify({
+				n: name_value,
+				a: about_value,
+				j: meta
+			})
 		});
 		if (!res.ok) {
 			try {
@@ -51,7 +57,9 @@
 </svelte:head>
 
 <div class="mx-auto w-full max-w-2xl px-4 py-8">
-	<h1 class="mb-6 text-2xl font-semibold text-[var(--color-theme-4)]">
+	<h1
+		class="mb-6 text-2xl font-semibold text-[var(--color-theme-4)]"
+	>
 		edit world
 	</h1>
 
@@ -97,12 +105,16 @@
 	</form>
 
 	{#if error_text}
-		<p class="mt-4 rounded-3xl border border-[var(--accent-alert)] px-4 py-3 text-sm text-[var(--accent-alert)]">
+		<p
+			class="mt-4 rounded-3xl border border-[var(--accent-alert)] px-4 py-3 text-sm text-[var(--accent-alert)]"
+		>
 			{error_text}
 		</p>
 	{/if}
 	{#if success_text}
-		<p class="mt-4 rounded-3xl border border-[var(--color-theme-1)] px-4 py-3 text-sm text-[var(--color-theme-1)]">
+		<p
+			class="mt-4 rounded-3xl border border-[var(--color-theme-1)] px-4 py-3 text-sm text-[var(--color-theme-1)]"
+		>
 			{success_text}
 		</p>
 	{/if}

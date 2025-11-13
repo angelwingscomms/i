@@ -45,7 +45,8 @@
 		role="dialog"
 		tabindex="-1"
 		use:outside_click
-		outside_click={() => closeOnBackdrop && handleClose()}
+		outside_click={() =>
+			closeOnBackdrop && handleClose()}
 		onkeydown={handleKeydown}
 		in:fade={{ duration: 200 }}
 		out:fade={{ duration: 150 }}

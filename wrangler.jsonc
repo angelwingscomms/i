@@ -21,9 +21,7 @@
 		"command": "npm run build"
 	},
 	"services": [{ "binding": "r", "service": "r" }],
-	"send_email": [
-		{ "name": "SEND_EMAIL" }
-	]
+	"send_email": [{ "name": "SEND_EMAIL" }]
 	// ,"durable_objects": {
 	// 	"bindings": [
 	// 		{

@@ -15,10 +15,35 @@ export const load: PageServerLoad = async ({
 	const user = locals.user;
 	if (!user) error(401, 'not authorized');
 
-	const selected_date = url.searchParams.get('date') || null;
+	const selected_date =
+		url.searchParams.get('date') || null;
+
+	console.log(
+		'usdf',
+		user.i,
+		'fetching diary for date',
+		selected_date
+	);
+
+	const filter_payload = diary_filter({
+		user: user.i,
+		...(selected_date ? { day: selected_date } : {})
+	});
+
+	console.log(
+		JSON.stringify(
+			{
+				diary_filter: {
+					payload: filter_payload
+				}
+			},
+			null,
+			2
+		)
+	);
 
 	const entries = await search_by_payload<DiaryEntry>(
-		diary_filter({ user: user.i, day: selected_date }),
+		filter_payload.must,
 		true,
 		30,
 		{ key: 'd', direction: 'desc' }

@@ -3,7 +3,9 @@ import type { PageServerLoad } from './$types';
 import { search_by_payload } from '$lib/db';
 import type { User } from '$lib/types';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({
+	params
+}) => {
 	const token = params.token;
 	if (!token) {
 		redirect(302, '/~/reset');
@@ -13,7 +15,9 @@ export const load: PageServerLoad = async ({ params }) => {
 		s: 'u',
 		pt: await hash(token)
 	});
-	const user = users.find((u) => u.pt && u.pe && u.pe > now);
+	const user = users.find(
+		(u) => u.pt && u.pe && u.pe > now
+	);
 	if (!user?.i || !user.e) {
 		redirect(302, '/~/reset/expired');
 	}
@@ -25,7 +29,10 @@ export const load: PageServerLoad = async ({ params }) => {
 
 async function hash(token: string) {
 	const data = new TextEncoder().encode(token);
-	const digest = await crypto.subtle.digest('SHA-256', data);
+	const digest = await crypto.subtle.digest(
+		'SHA-256',
+		data
+	);
 	if (typeof Buffer !== 'undefined') {
 		return Buffer.from(digest).toString('base64');
 	}

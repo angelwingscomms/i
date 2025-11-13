@@ -18,7 +18,8 @@ export const POST: RequestHandler = async ({
 		error(400, 'invalid json body');
 	}
 
-	const n = typeof body.n === 'string' ? body.n.trim() : '';
+	const n =
+		typeof body.n === 'string' ? body.n.trim() : '';
 	const l = Number(body.l);
 	const g = Number(body.g);
 

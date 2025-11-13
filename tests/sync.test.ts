@@ -1,4 +1,7 @@
-import { sanitize_markers, markers_to_segments } from '$lib/util/sync/markers';
+import {
+	sanitize_markers,
+	markers_to_segments
+} from '$lib/util/sync/markers';
 
 describe('sanitize_markers', () => {
 	it('drops invalid values and sorts ascending', () => {
@@ -14,17 +17,23 @@ describe('sanitize_markers', () => {
 	});
 
 	it('respects max duration and count', () => {
-		const result = sanitize_markers([0, 100, 200, 300, 400], {
-			max_duration: 250,
-			max_count: 3
-		});
+		const result = sanitize_markers(
+			[0, 100, 200, 300, 400],
+			{
+				max_duration: 250,
+				max_count: 3
+			}
+		);
 		expect(result).toEqual([0, 100, 200]);
 	});
 });
 
 describe('markers_to_segments', () => {
 	it('creates alternating segments ending at provided duration', () => {
-		const segments = markers_to_segments([1000, 2500], { end: 4000 });
+		const segments = markers_to_segments(
+			[1000, 2500],
+			{ end: 4000 }
+		);
 		expect(segments).toEqual([
 			{ start: 0, end: 1000, color: 'black' },
 			{ start: 1000, end: 2500, color: 'white' },
@@ -33,7 +42,11 @@ describe('markers_to_segments', () => {
 	});
 
 	it('handles empty markers gracefully', () => {
-		const segments = markers_to_segments([], { end: 1000 });
-		expect(segments).toEqual([{ start: 0, end: 1000, color: 'black' }]);
+		const segments = markers_to_segments([], {
+			end: 1000
+		});
+		expect(segments).toEqual([
+			{ start: 0, end: 1000, color: 'black' }
+		]);
 	});
 });

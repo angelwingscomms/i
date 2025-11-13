@@ -21,7 +21,7 @@ export const load: LayoutServerLoad = async ({
 	};
 
 	return {
-		user: locals.user,
-		seo: default_seo
+		seo: default_seo,
+		user: locals.user || null
 	};
 };

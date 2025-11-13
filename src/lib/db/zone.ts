@@ -1,4 +1,9 @@
-import { create, get, getfirst, qdrant } from './index';
+import {
+	create,
+	get,
+	getfirst,
+	qdrant
+} from './index';
 import { collection } from '$lib/constants';
 import { embed } from '$lib/util/embed';
 import type { Zone } from '$lib/types/zone';
@@ -28,7 +33,10 @@ export const find_zone_by_place = async (
 	place_id: string
 ): Promise<Zone | null> => {
 	if (!place_id) return null;
-	return await getfirst<Zone>({ s: 'z', p: place_id });
+	return await getfirst<Zone>({
+		s: 'z',
+		p: place_id
+	});
 };
 
 export const update_zone = async (

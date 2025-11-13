@@ -16,7 +16,9 @@ type ControllerConfig = {
 	get_sort: () => ItemSort;
 	set_sort: (value: ItemSort) => void;
 	get_timeout: () => NodeJS.Timeout | null;
-	set_timeout: (timeout: NodeJS.Timeout | null) => void;
+	set_timeout: (
+		timeout: NodeJS.Timeout | null
+	) => void;
 	onsearch?: () => void | Promise<void>;
 	wait?: number;
 };
@@ -30,7 +32,11 @@ export function persist_item_search_state(
 ): void {
 	storage.setItem(
 		STORAGE_KEY,
-		JSON.stringify({ q: state.q, k: state.k, s: state.s })
+		JSON.stringify({
+			q: state.q,
+			k: state.k,
+			s: state.s
+		})
 	);
 }
 
@@ -40,28 +46,40 @@ export function restore_item_search_state(
 	const raw = storage.getItem(STORAGE_KEY);
 	if (!raw) return null;
 	try {
-		const parsed = JSON.parse(raw) as Partial<ItemSearchState>;
+		const parsed = JSON.parse(
+			raw
+		) as Partial<ItemSearchState>;
 		return {
 			q: typeof parsed.q === 'string' ? parsed.q : '',
-			k: parsed.k === 0 || parsed.k === 1 ? parsed.k : undefined,
+			k:
+				parsed.k === 0 || parsed.k === 1
+					? parsed.k
+					: undefined,
 			s:
 				parsed.s === 'newest' || parsed.s === 'oldest'
 					? parsed.s
 					: 'relevance'
 		};
 	} catch (error) {
-		console.error('restore_item_search_state error', error);
+		console.error(
+			'restore_item_search_state error',
+			error
+		);
 		return null;
 	}
 }
 
-export function parse_item_kind(value: string): 0 | 1 | undefined {
+export function parse_item_kind(
+	value: string
+): 0 | 1 | undefined {
 	if (value === '0') return 0;
 	if (value === '1') return 1;
 	return undefined;
 }
 
-export function parse_item_sort(value: string): ItemSort {
+export function parse_item_sort(
+	value: string
+): ItemSort {
 	return value === 'newest' || value === 'oldest'
 		? value
 		: 'relevance';
@@ -122,7 +140,9 @@ type ExecutorConfig = {
 	get_query: () => string;
 	get_kind: () => 0 | 1 | undefined;
 	get_sort: () => ItemSort;
-	set_results: (items: (Item & { score?: number })[]) => void;
+	set_results: (
+		items: (Item & { score?: number })[]
+	) => void;
 	set_searching: (value: boolean) => void;
 };
 

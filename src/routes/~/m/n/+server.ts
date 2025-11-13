@@ -41,7 +41,7 @@ export const POST: RequestHandler = async ({
 		try {
 			const ai = new GoogleGenerativeAI(GEMINI);
 			const model = ai.getGenerativeModel({
-				model: 'gemini-1.5-flash'
+				model: 'gemini-2.5-flash'
 			});
 			const prompt = `Create an opinionated summary of this meme image. This summary will be embedded and used for search functionality.`;
 			const res = await model.generateContent({

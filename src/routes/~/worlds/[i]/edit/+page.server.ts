@@ -3,7 +3,10 @@ import { get } from '$lib/db';
 import type { World } from '$lib/types';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({
+	params,
+	locals
+}) => {
 	if (!locals.user) {
 		throw redirect(302, '/~/login');
 	}

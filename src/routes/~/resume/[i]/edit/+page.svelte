@@ -103,12 +103,13 @@
 		</div>
 	</div>
 	<div class="space-y-6">
-	<div class="space-y-2">
-		<label class="block text-sm font-medium" for="color-palette"
-			>color palette</label
-		>
-		<Color id="color-palette" />
-	</div>
+		<div class="space-y-2">
+			<label
+				class="block text-sm font-medium"
+				for="color-palette">color palette</label
+			>
+			<Color id="color-palette" />
+		</div>
 		<div class="space-y-2">
 			<DescriptionInput
 				bind:value={instructions}
@@ -128,13 +129,13 @@
 					: 'show preview'}
 				onclick={() => (show_preview = !show_preview)}
 			/>
-		<Modal bind:open={show_preview} title="preview">
-			<iframe
-				srcdoc={resume.h}
-				title="resume preview"
-				class="h-96 w-full rounded border border-gray-300"
-			></iframe>
-		</Modal>
+			<Modal bind:open={show_preview} title="preview">
+				<iframe
+					srcdoc={resume.h}
+					title="resume preview"
+					class="h-96 w-full rounded border border-gray-300"
+				></iframe>
+			</Modal>
 		</div>
 		<div class="space-y-2">
 			<Button

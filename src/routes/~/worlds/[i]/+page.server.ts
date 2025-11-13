@@ -11,9 +11,15 @@ import type {
 	Character,
 	Environment
 } from '$lib/types';
-import type { PageServerLoad, Actions } from './$types';
+import type {
+	PageServerLoad,
+	Actions
+} from './$types';
 
-const ensure_owner = (world: World, user_id?: string) => {
+const ensure_owner = (
+	world: World,
+	user_id?: string
+) => {
 	if (!user_id) {
 		throw redirect(302, '/~/login');
 	}
@@ -22,7 +28,9 @@ const ensure_owner = (world: World, user_id?: string) => {
 	}
 };
 
-const fetch_entities = async <T extends Record<string, unknown>>(
+const fetch_entities = async <
+	T extends Record<string, unknown>
+>(
 	filter: Record<string, unknown>
 ) => {
 	try {
@@ -33,7 +41,10 @@ const fetch_entities = async <T extends Record<string, unknown>>(
 			{ key: 'd', direction: 'desc' }
 		);
 	} catch (primary_error) {
-		console.error('world fetch failed, falling back', primary_error);
+		console.error(
+			'world fetch failed, falling back',
+			primary_error
+		);
 		try {
 			return await search_by_payload<T>(
 				filter,
@@ -41,13 +52,19 @@ const fetch_entities = async <T extends Record<string, unknown>>(
 				54
 			);
 		} catch (fallback_error) {
-			console.error('world fetch fallback failed', fallback_error);
+			console.error(
+				'world fetch fallback failed',
+				fallback_error
+			);
 			return [] as Array<T & { i: string }>;
 		}
 	}
 };
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({
+	params,
+	locals
+}) => {
 	const world = await get<World>(params.i);
 	if (!world || world.s !== 'w') {
 		throw error(404, 'world not found');
@@ -62,11 +79,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		u: user_id
 	});
 
-	const environments = await fetch_entities<Environment>({
-		s: 'we',
-		w: params.i,
-		u: user_id
-	});
+	const environments =
+		await fetch_entities<Environment>({
+			s: 'we',
+			w: params.i,
+			u: user_id
+		});
 
 	return {
 		w: { ...world, i: params.i },
@@ -76,7 +94,11 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-	create_character: async ({ request, params, locals }) => {
+	create_character: async ({
+		request,
+		params,
+		locals
+	}) => {
 		if (!locals.user) {
 			return fail(401, { e: 'not authenticated' });
 		}
@@ -88,9 +110,12 @@ export const actions: Actions = {
 			return fail(403, { e: 'not authorized' });
 		}
 		const form = await request.formData();
-		const name = (form.get('n') as string | null)?.trim() || '';
-		const about = (form.get('a') as string | null)?.trim() || '';
-		const meta_raw = (form.get('j') as string | null) || '';
+		const name =
+			(form.get('n') as string | null)?.trim() || '';
+		const about =
+			(form.get('a') as string | null)?.trim() || '';
+		const meta_raw =
+			(form.get('j') as string | null) || '';
 		if (!name) {
 			return fail(400, { e: 'name required' });
 		}
@@ -102,7 +127,13 @@ export const actions: Actions = {
 				return fail(400, { e: 'invalid json' });
 			}
 		}
-		await create_character(locals.user.i, params.i, name, about, meta);
+		await create_character(
+			locals.user.i,
+			params.i,
+			name,
+			about,
+			meta
+		);
 		return { ok: true };
 	},
 	generate_character: async ({ params, locals }) => {
@@ -116,15 +147,19 @@ export const actions: Actions = {
 		if (world.u !== locals.user.i) {
 			return fail(403, { e: 'not authorized' });
 		}
-		const existing = await search_by_payload<Character>(
-			{ s: 'wc', w: params.i, u: locals.user.i },
-			['n'],
-			30
-		);
+		const existing =
+			await search_by_payload<Character>(
+				{ s: 'wc', w: params.i, u: locals.user.i },
+				['n'],
+				30
+			);
 		const names = existing
 			.map((entry) => entry.n?.trim())
 			.filter(Boolean) as string[];
-		const generated = await generate_character(world.a || '', names);
+		const generated = await generate_character(
+			world.a || '',
+			names
+		);
 		await create_character(
 			locals.user.i,
 			params.i,
@@ -134,7 +169,10 @@ export const actions: Actions = {
 		);
 		return { ok: true };
 	},
-	generate_environment: async ({ params, locals }) => {
+	generate_environment: async ({
+		params,
+		locals
+	}) => {
 		if (!locals.user) {
 			return fail(401, { e: 'not authenticated' });
 		}
@@ -145,15 +183,19 @@ export const actions: Actions = {
 		if (world.u !== locals.user.i) {
 			return fail(403, { e: 'not authorized' });
 		}
-		const existing = await search_by_payload<Environment>(
-			{ s: 'we', w: params.i, u: locals.user.i },
-			['n'],
-			30
-		);
+		const existing =
+			await search_by_payload<Environment>(
+				{ s: 'we', w: params.i, u: locals.user.i },
+				['n'],
+				30
+			);
 		const names = existing
 			.map((entry) => entry.n?.trim())
 			.filter(Boolean) as string[];
-		const generated = await generate_environment(world.a || '', names);
+		const generated = await generate_environment(
+			world.a || '',
+			names
+		);
 		await create_environment(
 			locals.user.i,
 			params.i,

@@ -1,5 +1,16 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { addToast, removeToast, toasts, clearToasts } from '$lib/util/toast.svelte';
+import {
+	beforeEach,
+	describe,
+	expect,
+	it,
+	vi
+} from 'vitest';
+import {
+	addToast,
+	removeToast,
+	toasts,
+	clearToasts
+} from '$lib/util/toast.svelte';
 
 vi.useFakeTimers();
 
@@ -21,10 +32,14 @@ describe('toast module', () => {
 		expect(last?.id).toBeDefined();
 		if (!last) return;
 		removeToast(last.id);
-		expect(toasts.find((toast) => toast.id === last.id)).toBeUndefined();
+		expect(
+			toasts.find((toast) => toast.id === last.id)
+		).toBeUndefined();
 
 		addToast('auto', 'warning', 3000);
 		vi.runAllTimers();
-		expect(toasts.find((toast) => toast.message === 'auto')).toBeUndefined();
+		expect(
+			toasts.find((toast) => toast.message === 'auto')
+		).toBeUndefined();
 	});
 });

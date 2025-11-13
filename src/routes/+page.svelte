@@ -180,7 +180,9 @@
 				>anonymous chats</a
 			>
 			|
-			<a href="/~/r" class="feature-link mx-1">rooms</a>
+			<a href="/~/r" class="feature-link mx-1"
+				>rooms</a
+			>
 			|
 			<a href="/~/u" class="feature-link mx-1"
 				>find nearby</a

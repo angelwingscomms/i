@@ -36,8 +36,12 @@
 		{#each day_groups as [day, day_entries] (day)}
 			<section class="space-y-3">
 				<header class="flex items-center gap-2">
-					<h2 class="text-lg font-semibold [color:var(--color-theme-4)]">
-						{new Date(`${day}T00:00:00Z`).toLocaleDateString()}
+					<h2
+						class="text-lg font-semibold [color:var(--color-theme-4)]"
+					>
+						{new Date(
+							`${day}T00:00:00Z`
+						).toLocaleDateString()}
 					</h2>
 					<span class="text-xs text-gray-400">
 						{day_entries.length}
@@ -47,9 +51,11 @@
 					{#each day_entries as entry (entry.i || entry.d)}
 						<a
 							href={`/~/diary/${entry.i}/edit`}
-							class="block rounded-xl border-l border-[var(--color-theme-6)] bg-transparent p-4 transition hover:border-[var(--color-theme-1)] hover:-translate-y-0.5"
+							class="block rounded-xl border-l border-[var(--color-theme-6)] bg-transparent p-4 transition hover:-translate-y-0.5 hover:border-[var(--color-theme-1)]"
 						>
-							<div class="flex items-start justify-between gap-4">
+							<div
+								class="flex items-start justify-between gap-4"
+							>
 								<div class="min-w-0 flex-1">
 									<p class="text-sm text-gray-600">
 										{preview(entry.a)}

@@ -1,1 +1,4 @@
-export type ItemSort = 'relevance' | 'newest' | 'oldest';
+export type ItemSort =
+	| 'relevance'
+	| 'newest'
+	| 'oldest';

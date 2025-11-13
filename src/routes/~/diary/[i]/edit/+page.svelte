@@ -12,20 +12,23 @@
 	);
 
 	const formatted_updated = $derived(
-		entry.d
-			? new Date(entry.d).toLocaleString()
-			: ''
+		entry.d ? new Date(entry.d).toLocaleString() : ''
 	);
 </script>
 
 <svelte:head>
 	<title>edit diary entry - apexlinks</title>
-	<meta name="description" content="edit diary entry" />
+	<meta
+		name="description"
+		content="edit diary entry"
+	/>
 </svelte:head>
 
 <div class="mx-auto max-w-2xl space-y-6 px-4 py-6">
 	<header class="space-y-1">
-		<h1 class="text-2xl font-semibold [color:var(--color-theme-4)]">
+		<h1
+			class="text-2xl font-semibold [color:var(--color-theme-4)]"
+		>
 			edit diary entry
 		</h1>
 		{#if formatted_updated}
@@ -37,7 +40,9 @@
 
 	<form method="post" use:enhance class="space-y-4">
 		<div>
-			<label class="mb-2 block text-sm font-semibold [color:var(--color-theme-4)]">
+			<label
+				class="mb-2 block text-sm font-semibold [color:var(--color-theme-4)]"
+			>
 				date
 			</label>
 			<input
@@ -49,7 +54,9 @@
 		</div>
 
 		<div>
-			<label class="mb-2 block text-sm font-semibold [color:var(--color-theme-4)]">
+			<label
+				class="mb-2 block text-sm font-semibold [color:var(--color-theme-4)]"
+			>
 				entry
 			</label>
 			<textarea

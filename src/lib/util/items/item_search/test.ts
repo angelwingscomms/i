@@ -30,12 +30,22 @@ describe('item_search util', () => {
 		});
 		expect(storage.setItem).toHaveBeenCalledWith(
 			'item_search_query',
-			JSON.stringify({ q: 'query', k: 1, s: 'newest' })
+			JSON.stringify({
+				q: 'query',
+				k: 1,
+				s: 'newest'
+			})
 		);
 		vi.mocked(storage.getItem).mockReturnValue(
-			JSON.stringify({ q: 'saved', k: 0, s: 'oldest' })
+			JSON.stringify({
+				q: 'saved',
+				k: 0,
+				s: 'oldest'
+			})
 		);
-		expect(restore_item_search_state(storage)).toEqual({
+		expect(
+			restore_item_search_state(storage)
+		).toEqual({
 			q: 'saved',
 			k: 0,
 			s: 'oldest'
@@ -51,7 +61,9 @@ describe('item_search util', () => {
 			key: vi.fn(),
 			length: 0
 		};
-		expect(restore_item_search_state(storage)).toBeNull();
+		expect(
+			restore_item_search_state(storage)
+		).toBeNull();
 	});
 
 	it('parses kind correctly', () => {
@@ -63,7 +75,9 @@ describe('item_search util', () => {
 	it('parses sort correctly', () => {
 		expect(parse_item_sort('newest')).toBe('newest');
 		expect(parse_item_sort('oldest')).toBe('oldest');
-		expect(parse_item_sort('unknown')).toBe('relevance');
+		expect(parse_item_sort('unknown')).toBe(
+			'relevance'
+		);
 	});
 
 	it('schedules searches with controller', () => {
@@ -127,7 +141,10 @@ describe('item_search util', () => {
 			set_searching
 		});
 		await execute();
-		expect(set_searching).toHaveBeenNthCalledWith(1, true);
+		expect(set_searching).toHaveBeenNthCalledWith(
+			1,
+			true
+		);
 		expect(fetch_items).toHaveBeenCalledWith({
 			q: 'test',
 			k: 0,
@@ -137,6 +154,8 @@ describe('item_search util', () => {
 		expect(set_results).toHaveBeenCalledWith([
 			{ s: 'i', i: '1', n: 'one', u: 'u', c: 'usd' }
 		]);
-		expect(set_searching).toHaveBeenLastCalledWith(false);
+		expect(set_searching).toHaveBeenLastCalledWith(
+			false
+		);
 	});
 });

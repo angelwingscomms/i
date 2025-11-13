@@ -7,8 +7,12 @@ export const diary_day_key = (timestamp: number) => {
 };
 
 export const diary_day_range = (day: string) => {
-	const start = new Date(`${day}T00:00:00.000Z`).getTime();
-	const end = new Date(`${day}T23:59:59.999Z`).getTime();
+	const start = new Date(
+		`${day}T00:00:00.000Z`
+	).getTime();
+	const end = new Date(
+		`${day}T23:59:59.999Z`
+	).getTime();
 	return { start, end };
 };
 
@@ -58,8 +62,7 @@ export const diary_filter = ({
 
 export const recent_diary_sort = (
 	entries: DiaryEntry[]
-) =>
-	[...entries].sort((a, b) => b.d - a.d);
+) => [...entries].sort((a, b) => b.d - a.d);
 
 export const group_diary_by_day = (
 	entries: DiaryEntry[]

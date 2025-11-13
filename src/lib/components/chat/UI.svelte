@@ -145,26 +145,28 @@
 						>{display_room_name}</span
 					>
 				</h1>
-		{#if showIcons}
-			<button
-				class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
-				onclick={onShowRoomInfo}
-				aria-label="show room information"
-			><i class="fas fa-info-circle"
-			></i></button
-			>
-		<a
-			href={`${page.url}/live`}
-			class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
-			aria-haspopup="dialog"
-			aria-controls="live-modal"
-			onclick={onOpenLive}
-			aria-label="open video chat"
-		>
-			<span class="sr-only">open video chat</span>
-			<i class="fas fa-video"></i>
-		</a>
-		{/if}
+				{#if showIcons}
+					<button
+						class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+						onclick={onShowRoomInfo}
+						aria-label="show room information"
+						><i class="fas fa-info-circle"
+						></i></button
+					>
+					<a
+						href={`${page.url}/live`}
+						class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+						aria-haspopup="dialog"
+						aria-controls="live-modal"
+						onclick={onOpenLive}
+						aria-label="open video chat"
+					>
+						<span class="sr-only"
+							>open video chat</span
+						>
+						<i class="fas fa-video"></i>
+					</a>
+				{/if}
 			</div>
 		{:else if _ === '-'}
 			{#if a}
@@ -176,24 +178,26 @@
 					>
 						anon chat {n} with {display_room_name}
 					</h1>
-			<button
-				class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
-				onclick={onShowRoomInfo}
-				aria-label="show room information"
-			><i class="fas fa-info-circle"
-			></i></button
-			>
-		<a
-			href={`${page.url}/live`}
-			class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
-			aria-haspopup="dialog"
-			aria-controls="live-modal"
-			onclick={onOpenLive}
-			aria-label="open video chat"
-		>
-			<span class="sr-only">open video chat</span>
-			<i class="fas fa-video"></i>
-		</a>
+					<button
+						class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+						onclick={onShowRoomInfo}
+						aria-label="show room information"
+						><i class="fas fa-info-circle"
+						></i></button
+					>
+					<a
+						href={`${page.url}/live`}
+						class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+						aria-haspopup="dialog"
+						aria-controls="live-modal"
+						onclick={onOpenLive}
+						aria-label="open video chat"
+					>
+						<span class="sr-only"
+							>open video chat</span
+						>
+						<i class="fas fa-video"></i>
+					</a>
 				</div>
 			{:else}
 				<div
@@ -204,16 +208,16 @@
 					>
 						anonymous user
 					</h1>
-	{#if showIcons}
-		<a
-			href="{page.url}/live"
-			class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
-			aria-haspopup="dialog"
-			aria-controls="live-modal"
-			onclick={onOpenLive}
-		><i class="fas fa-video"></i></a
-		>
-	{/if}
+					{#if showIcons}
+						<a
+							href="{page.url}/live"
+							class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+							aria-haspopup="dialog"
+							aria-controls="live-modal"
+							onclick={onOpenLive}
+							><i class="fas fa-video"></i></a
+						>
+					{/if}
 				</div>
 			{/if}
 		{:else}
@@ -225,23 +229,23 @@
 				>
 					{display_room_name}
 				</h1>
-		{#if showIcons}
-			<button
-				class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
-				onclick={onShowRoomInfo}
-				aria-label="show room information"
-			><i class="fas fa-info-circle"
-			></i></button
-			>
-			<a
-				href="{page.url}/live"
-				class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
-				aria-haspopup="dialog"
-				aria-controls="live-modal"
-				onclick={onOpenLive}
-			><i class="fas fa-video"></i></a
-			>
-		{/if}
+				{#if showIcons}
+					<button
+						class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+						onclick={onShowRoomInfo}
+						aria-label="show room information"
+						><i class="fas fa-info-circle"
+						></i></button
+					>
+					<a
+						href="{page.url}/live"
+						class="ml-2 rounded p-0 align-middle text-gray-400 hover:text-white focus:outline-none"
+						aria-haspopup="dialog"
+						aria-controls="live-modal"
+						onclick={onOpenLive}
+						><i class="fas fa-video"></i></a
+					>
+				{/if}
 			</div>
 		{/if}
 	</div>
@@ -314,7 +318,7 @@
 					<button
 						class="remove-file flex h-5 w-5 items-center justify-center rounded border-none bg-none p-1 text-gray-500 hover:bg-red-100 hover:text-red-500"
 						onclick={() => (selectedFile = null)}
-				aria-label="remove file"
+						aria-label="remove file"
 						title="Remove file"
 					>
 						<i class="fas fa-times"></i>

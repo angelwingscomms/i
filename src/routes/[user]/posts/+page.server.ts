@@ -14,9 +14,6 @@ export const load: PageServerLoad = async ({
 		error(404, 'user not found');
 
 	return {
-		user: locals.user
-			? { i: locals.user.i, t: locals.user.t }
-			: null,
 		targetUser
 	};
 };

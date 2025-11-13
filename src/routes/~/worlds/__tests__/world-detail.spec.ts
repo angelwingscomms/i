@@ -1,11 +1,18 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+	beforeEach,
+	describe,
+	expect,
+	it,
+	vi
+} from 'vitest';
 
 const getMock = vi.fn();
 const searchMock = vi.fn();
 
 vi.mock('$lib/db', () => ({
 	get: (...args: any[]) => getMock(...args),
-	search_by_payload: (...args: any[]) => searchMock(...args)
+	search_by_payload: (...args: any[]) =>
+		searchMock(...args)
 }));
 
 vi.mock('$lib/db/character', () => ({
@@ -62,7 +69,9 @@ describe('worlds detail load', () => {
 				}
 			]);
 
-		const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+		const consoleSpy = vi
+			.spyOn(console, 'error')
+			.mockImplementation(() => {});
 
 		const result = await load({
 			params: { i: 'world-1' },
@@ -76,7 +85,9 @@ describe('worlds detail load', () => {
 			key: 'd',
 			direction: 'desc'
 		});
-		expect(searchMock.mock.calls[1][3]).toBeUndefined();
+		expect(
+			searchMock.mock.calls[1][3]
+		).toBeUndefined();
 		consoleSpy.mockRestore();
 	});
 
@@ -88,9 +99,13 @@ describe('worlds detail load', () => {
 			d: Date.now()
 		});
 
-		searchMock.mockRejectedValue(new Error('Forbidden'));
+		searchMock.mockRejectedValue(
+			new Error('Forbidden')
+		);
 
-		const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+		const consoleSpy = vi
+			.spyOn(console, 'error')
+			.mockImplementation(() => {});
 
 		const result = await load({
 			params: { i: 'world-1' },

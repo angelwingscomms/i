@@ -3,7 +3,9 @@
 
 	type SyncListItem = SyncProject & { i: string };
 
-	let { projects = [] } = $props<{ projects?: SyncListItem[] }>();
+	let { projects = [] } = $props<{
+		projects?: SyncListItem[];
+	}>();
 
 	const fallback = [
 		{
@@ -20,11 +22,15 @@
 {#if projects.length === 0}
 	<div class="grid gap-6 md:grid-cols-2">
 		{#each fallback as item}
-			<div class="rounded-3xl border border-dashed border-[var(--color-theme-6)] p-6 text-[var(--text-primary)]">
+			<div
+				class="rounded-3xl border border-dashed border-[var(--color-theme-6)] p-6 text-[var(--text-primary)]"
+			>
 				<h2 class="text-xl font-semibold">
 					{item.title}
 				</h2>
-				<p class="mt-2 text-sm text-[var(--text-muted)]">
+				<p
+					class="mt-2 text-sm text-[var(--text-muted)]"
+				>
 					{item.copy}
 				</p>
 			</div>
@@ -38,19 +44,36 @@
 					href={`/~/sync/${project.i}`}
 					class="group block rounded-3xl border border-[var(--color-theme-6)] px-6 py-5 no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--color-theme-1)]"
 				>
-					<div class="flex items-center justify-between gap-4">
+					<div
+						class="flex items-center justify-between gap-4"
+					>
 						<div class="min-w-0 flex-1">
-							<h2 class="truncate text-lg font-semibold text-[var(--color-theme-4)]">
+							<h2
+								class="truncate text-lg font-semibold text-[var(--color-theme-4)]"
+							>
 								{project.n ?? 'untitled sync'}
 							</h2>
-							<p class="mt-2 text-sm text-[var(--text-muted)]">
-								{project.t.length} marker{project.t.length === 1 ? '' : 's'}
+							<p
+								class="mt-2 text-sm text-[var(--text-muted)]"
+							>
+								{project.t.length} marker{project.t
+									.length === 1
+									? ''
+									: 's'}
 							</p>
 						</div>
-						<div class="flex flex-col items-end text-right text-sm text-[var(--text-muted)]">
-							<span>{new Date(project.d).toLocaleDateString()}</span>
+						<div
+							class="flex flex-col items-end text-right text-sm text-[var(--text-muted)]"
+						>
+							<span
+								>{new Date(
+									project.d
+								).toLocaleDateString()}</span
+							>
 							{#if project.g?.v}
-								<span class="mt-1 inline-flex items-center gap-1 rounded-full bg-[var(--color-theme-1)] px-3 py-1 text-xs font-bold text-white">
+								<span
+									class="mt-1 inline-flex items-center gap-1 rounded-full bg-[var(--color-theme-1)] px-3 py-1 text-xs font-bold text-white"
+								>
 									<i class="fa-solid fa-video"></i>
 									exported
 								</span>

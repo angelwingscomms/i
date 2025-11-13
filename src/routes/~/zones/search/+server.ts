@@ -6,10 +6,16 @@ export const POST = async ({ request }) => {
 	const { q, source } = await request.json();
 	if ((source as string) === 'osm') {
 		try {
-			const results = await search_openstreetmap(q ?? '', 8);
+			const results = await search_openstreetmap(
+				q ?? '',
+				8
+			);
 			return json(results);
 		} catch (error) {
-			console.error('openstreetmap search error', error);
+			console.error(
+				'openstreetmap search error',
+				error
+			);
 			return json([], { status: 500 });
 		}
 	}

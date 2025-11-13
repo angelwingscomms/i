@@ -1,6 +1,10 @@
-<main class="flex min-h-screen items-center justify-center px-4 py-12">
+<main
+	class="flex min-h-screen items-center justify-center px-4 py-12"
+>
 	<div class="w-full max-w-md text-center">
-		<h1 class="text-2xl font-bold tracking-tight text-purple-500">
+		<h1
+			class="text-2xl font-bold tracking-tight text-purple-500"
+		>
 			reset link expired
 		</h1>
 		<p class="mt-4 text-sm text-slate-600">

@@ -1,5 +1,8 @@
 import { error, redirect } from '@sveltejs/kit';
-import type { PageServerLoad, Actions } from './$types';
+import type {
+	PageServerLoad,
+	Actions
+} from './$types';
 import { get, edit_point } from '$lib/db';
 import { embed } from '$lib/util/embed';
 

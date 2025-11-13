@@ -18,7 +18,6 @@ export const load: PageServerLoad = async ({
 
 	return {
 		e: resumes,
-		user: locals.user,
 		targetUserId: userId
 	};
 };

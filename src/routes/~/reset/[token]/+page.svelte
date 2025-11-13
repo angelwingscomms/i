@@ -16,7 +16,8 @@
 	async function submit() {
 		message = '';
 		if (!validate_password(password)) {
-			message = 'password must be between 6 and 255 characters';
+			message =
+				'password must be between 6 and 255 characters';
 			return;
 		}
 		if (password !== confirm) {
@@ -27,7 +28,9 @@
 		try {
 			const response = await fetch('', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: {
+					'Content-Type': 'application/json'
+				},
 				body: JSON.stringify({ password })
 			});
 			const result = await response.json();
@@ -44,10 +47,14 @@
 	}
 </script>
 
-<main class="flex min-h-screen items-center justify-center px-4 py-12">
+<main
+	class="flex min-h-screen items-center justify-center px-4 py-12"
+>
 	<div class="w-full max-w-md">
 		<header class="mb-8 text-center">
-			<h1 class="text-2xl font-bold tracking-tight text-purple-500">
+			<h1
+				class="text-2xl font-bold tracking-tight text-purple-500"
+			>
 				set a new password
 			</h1>
 			<p class="mt-1 text-sm text-slate-600">
@@ -55,7 +62,9 @@
 			</p>
 		</header>
 
-		<div class="rounded-xl p-6 shadow-lg backdrop-blur">
+		<div
+			class="rounded-xl p-6 shadow-lg backdrop-blur"
+		>
 			<form
 				onsubmit={(e) => {
 					e.preventDefault();
@@ -94,7 +103,9 @@
 		</div>
 
 		{#if message}
-			<p class="mt-4 text-center text-sm text-slate-500">
+			<p
+				class="mt-4 text-center text-sm text-slate-500"
+			>
 				{message}
 			</p>
 		{/if}

@@ -1,8 +1,11 @@
 import { error } from '@sveltejs/kit';
 import { get_zone } from '$lib/db/zone';
 import type { Zone } from '$lib/types';
+import type { PageServerLoad } from './$types';
 
-export const load = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({
+	params
+}) => {
 	try {
 		if (!params.i)
 			throw error(400, 'Invalid zone id');
@@ -13,8 +16,7 @@ export const load = async ({ params, locals }) => {
 			throw error(404, 'This entity is not a zone');
 
 		return {
-			z,
-			user: locals.user
+			z
 		};
 	} catch (e) {
 		console.error('Error fetching zone:', e);

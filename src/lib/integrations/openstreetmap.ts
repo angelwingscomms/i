@@ -1,4 +1,5 @@
-const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
+const NOMINATIM_URL =
+	'https://nominatim.openstreetmap.org/search';
 
 type OSMResult = {
 	place_id: string;
@@ -27,7 +28,8 @@ export async function search_openstreetmap(
 	const response = await fetch(url.toString(), {
 		headers: {
 			Accept: 'application/json',
-			'User-Agent': 'angelwings/zones (contact@angelwings.com)'
+			'User-Agent':
+				'angelwings/zones (contact@angelwings.com)'
 		}
 	});
 	if (!response.ok) {

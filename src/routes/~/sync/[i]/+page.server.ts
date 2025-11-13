@@ -3,7 +3,10 @@ import { error } from '@sveltejs/kit';
 import { get } from '$lib/db';
 import type { SyncProject } from '$lib/types';
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({
+	params,
+	locals
+}) => {
 	const { i } = params;
 	if (!i) throw error(400, 'missing sync id');
 

@@ -19,10 +19,9 @@ export const load: PageServerLoad = async ({
 	let ownerWhatsapp: string | undefined;
 	let ownerDiscord: string | undefined;
 	if (item.u) {
-		const owner = await get<Pick<User, 't' | 'w' | 'x'>>(
-			item.u as string,
-			['t', 'w', 'x']
-		);
+		const owner = await get<
+			Pick<User, 't' | 'w' | 'x'>
+		>(item.u as string, ['t', 'w', 'x']);
 		if (owner) {
 			ownerTag = owner.t ?? ownerTag;
 			const contacts = get_contact_links({
@@ -35,9 +34,6 @@ export const load: PageServerLoad = async ({
 	}
 
 	return {
-		user: locals.user
-			? { i: locals.user.i, t: locals.user.t }
-			: null,
 		i: {
 			...(item as unknown as Item),
 			i,

@@ -6,7 +6,7 @@ export const summarize = async (
 ): Promise<string> => {
 	const genAI = new GoogleGenerativeAI(GEMINI);
 	const model = genAI.getGenerativeModel({
-		model: 'gemini-1.5-flash'
+		model: 'gemini-2.5-flash'
 	});
 	const prompt = `Summarize the following post body in 1-2 sentences:\n\n${body}`;
 	const result = await model.generateContent(prompt);

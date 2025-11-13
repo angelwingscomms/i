@@ -7,7 +7,9 @@
 	export let data: PageData;
 
 	let search_value = data.q;
-	let search_timeout: ReturnType<typeof setTimeout> | undefined;
+	let search_timeout:
+		| ReturnType<typeof setTimeout>
+		| undefined;
 
 	function on_search_input() {
 		if (search_timeout) clearTimeout(search_timeout);
@@ -29,8 +31,12 @@
 </svelte:head>
 
 <div class="mx-auto w-full max-w-3xl px-4 py-8">
-	<div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-		<h1 class="text-2xl font-semibold text-[var(--color-theme-4)]">
+	<div
+		class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+	>
+		<h1
+			class="text-2xl font-semibold text-[var(--color-theme-4)]"
+		>
 			worlds
 		</h1>
 		{#if $page.data.user}
@@ -59,23 +65,35 @@
 	{#if data.w.length > 0}
 		<ul class="space-y-4">
 			{#each data.w as world (world.i)}
-				<li class="rounded-3xl border border-[var(--border-primary)] bg-[var(--bg-card)] p-5 transition hover:border-[var(--color-theme-1)]">
+				<li
+					class="rounded-3xl border border-[var(--border-primary)] bg-[var(--bg-card)] p-5 transition hover:border-[var(--color-theme-1)]"
+				>
 					<a
 						href={`/worlds/${world.i}`}
 						class="block"
 					>
-						<div class="mb-2 flex items-center justify-between gap-3">
-							<p class="text-lg font-medium text-[var(--color-theme-4)]">
+						<div
+							class="mb-2 flex items-center justify-between gap-3"
+						>
+							<p
+								class="text-lg font-medium text-[var(--color-theme-4)]"
+							>
 								{world.n}
 							</p>
 							{#if world.d}
-								<span class="text-xs text-[var(--text-secondary)]">
-									{new Date(world.d).toLocaleDateString()}
+								<span
+									class="text-xs text-[var(--text-secondary)]"
+								>
+									{new Date(
+										world.d
+									).toLocaleDateString()}
 								</span>
 							{/if}
 						</div>
 						{#if world.a}
-							<p class="text-sm text-[var(--text-secondary)]">
+							<p
+								class="text-sm text-[var(--text-secondary)]"
+							>
 								{world.a}
 							</p>
 						{/if}
@@ -84,7 +102,9 @@
 			{/each}
 		</ul>
 	{:else}
-		<div class="rounded-3xl border border-dashed border-[var(--border-primary)] bg-[var(--bg-card)] px-6 py-12 text-center text-sm text-[var(--text-secondary)]">
+		<div
+			class="rounded-3xl border border-dashed border-[var(--border-primary)] bg-[var(--bg-card)] px-6 py-12 text-center text-sm text-[var(--text-secondary)]"
+		>
 			no worlds yet
 		</div>
 	{/if}

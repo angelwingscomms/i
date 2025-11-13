@@ -30,6 +30,7 @@ export interface User {
 	on?: number; // last online timestamp (ms)
 	ic?: boolean; // currently in call
 	r?: string[]; // rooms the user belongs to
+	ev?: string[]; // events the user joined
 	c?: string[]; // color palette hex without #
 	// c: Record<string, string>;
 	x?: string[]; // contact links,
@@ -198,3 +199,4 @@ export type {
 	SyncGenerated
 } from './sync';
 export type { DiaryEntry } from './diary';
+export type { Event } from './event';

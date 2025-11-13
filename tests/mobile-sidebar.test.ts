@@ -12,7 +12,9 @@ const page_value = {
 
 vi.mock('$app/state', () => ({
 	page: {
-		subscribe: (fn: (value: typeof page_value) => void) => {
+		subscribe: (
+			fn: (value: typeof page_value) => void
+		) => {
 			fn(page_value);
 			return () => {};
 		}
@@ -24,9 +26,15 @@ describe('MobileSidebar', () => {
 		const { container } = render(MobileSidebar, {
 			is_open: true
 		});
-		const nav = container.querySelector('.sidebar-nav');
+		const nav = container.querySelector(
+			'.sidebar-nav'
+		);
 		expect(nav).toBeTruthy();
-		expect(nav?.classList.contains('overflow-y-auto')).toBe(true);
-		expect(nav?.classList.contains('flex-1')).toBe(true);
+		expect(
+			nav?.classList.contains('overflow-y-auto')
+		).toBe(true);
+		expect(nav?.classList.contains('flex-1')).toBe(
+			true
+		);
 	});
 });
