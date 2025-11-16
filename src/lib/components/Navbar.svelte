@@ -159,15 +159,6 @@
 			</div>
 
 			<div class="flex items-center gap-3">
-				{#if !is_mobile}
-					<Button
-						text="install webapp"
-						onclick={handle_install_click}
-						variant="primary"
-						class="rounded-full bg-[var(--accent-primary)] px-6 py-2 text-xs font-semibold tracking-wide text-white uppercase shadow-[0_12px_30px_rgba(207,6,124,0.3)] transition-transform duration-200 hover:scale-[1.02]"
-					/>
-				{/if}
-
 				{#if navigating.to}
 					<span
 						class="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent-primary)] border-t-transparent"

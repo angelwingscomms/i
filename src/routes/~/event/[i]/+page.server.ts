@@ -14,6 +14,7 @@ import type {
 } from '$lib/types';
 import type { ChatMessage } from '$lib/types/index';
 import { embed } from '$lib/util/embed';
+import { compare_users } from '$lib/util/users/compare_users';
 
 export const load = async ({ params, locals }) => {
 	try {
@@ -226,7 +227,7 @@ export const load = async ({ params, locals }) => {
 
 		// Get user description state and similar users
 		let user_has_description = false;
-		let users: (User & { similarity?: number })[] =
+		let users: (User & { comparison?: string })[] =
 			[];
 		if (locals.user) {
 			try {
@@ -251,13 +252,19 @@ export const load = async ({ params, locals }) => {
 							with_payload: ['t', 'av', 'a', 'g', 'd']
 						});
 
-					// Convert similarity scores to percentages
-					users = searchResults.map((result) => ({
-						...result,
-						similarity: Math.round(
-							(result.score || 0) * 100
-						)
-					}));
+					// Get comparison for each user
+					users = await Promise.all(
+						searchResults.map(async (result) => {
+							const comparison = await compare_users(
+								locals.user!,
+								result
+							);
+							return {
+								...result,
+								comparison
+							};
+						})
+					);
 				}
 			} catch (e) {
 				console.error(

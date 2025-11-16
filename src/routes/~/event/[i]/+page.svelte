@@ -48,6 +48,25 @@
 	function editEvent() {
 		goto(`/~/event/${event.i}/edit`);
 	}
+
+	async function deleteEvent() {
+		if (
+			!confirm(
+				'Are you sure you want to delete this event?'
+			)
+		) {
+			return;
+		}
+
+		try {
+			await axios.delete(`/~/event/${event.i}`);
+			toast.success('Event deleted');
+			goto('/~/event');
+		} catch (e) {
+			console.error('Delete failed:', e);
+			toast.error('Failed to delete event');
+		}
+	}
 </script>
 
 <div class="page pad">
@@ -58,6 +77,7 @@
 		<div class="row">
 			{#if user && user.i === event.u}
 				<Button text="edit" onclick={editEvent} />
+				<Button text="delete" onclick={deleteEvent} />
 			{/if}
 			{#if user && !joined}
 				<Button
@@ -124,8 +144,22 @@
 					</a>
 				</div>
 			</div>
-		{:else if !user_has_description}
-			<!-- Logged in but no description -->
+		{:else if !joined}
+			<!-- Logged in but haven't joined event -->
+			<div class="prompt-card">
+				<div class="prompt-icon">🔒</div>
+				<div class="prompt-content">
+					<h3 class="prompt-title">
+						join this event to see users
+					</h3>
+					<p class="prompt-text">
+						join this event to see other users who are
+						attending
+					</p>
+				</div>
+			</div>
+		{:else if joined && !user_has_description}
+			<!-- Logged in, joined event, but no description -->
 			<div class="prompt-card">
 				<div class="prompt-icon">✏️</div>
 				<div class="prompt-content">
@@ -175,14 +209,9 @@
 									<div class="user-name">
 										{similarUser.t}
 									</div>
-									{#if similarUser.d}
-										<div class="user-desc">
-											{similarUser.d}
-										</div>
-									{/if}
-									{#if similarUser.similarity !== undefined}
-										<div class="similarity-badge">
-											{similarUser.similarity}% match
+									{#if similarUser.comparison}
+										<div class="user-comparison">
+											{similarUser.comparison}
 										</div>
 									{/if}
 								</div>
@@ -441,23 +470,14 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-	.user-desc {
+	.user-comparison {
 		font-size: 12px;
 		color: var(--text-secondary);
 		line-height: 1.4;
 		display: -webkit-box;
-		-webkit-line-clamp: 2;
+		-webkit-line-clamp: 3;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
-	}
-	.similarity-badge {
-		font-size: 11px;
-		font-weight: 600;
-		color: var(--accent-primary);
-		background: rgba(182, 55, 250, 0.1);
-		padding: 2px 6px;
-		border-radius: 4px;
-		align-self: flex-start;
-		margin-top: 4px;
+		white-space: pre-line;
 	}
 </style>

@@ -3,6 +3,7 @@
 	import Button from '$lib/components/Button.svelte';
 	// import UsernameInput from '$lib/components/ui/UsernameInput.svelte';
 	import axios from 'axios';
+	import { toast } from '$lib/util/toast.svelte';
 	import {
 		sanitize_email_list,
 		sanitize_phone_list,
@@ -187,11 +188,16 @@
 			);
 
 			if (response.data.success) {
+				toast.success(response.data.message);
 				form = {
 					success: true,
 					message: response.data.message
 				};
 			} else {
+				toast.error(
+					response.data.error ||
+						'Failed to update profile'
+				);
 				form = {
 					error:
 						response.data.error ||
@@ -200,17 +206,13 @@
 			}
 		} catch (error) {
 			console.error('Submission error:', error);
-			if (axios.isAxiosError(error)) {
-				form = {
-					error:
-						error.response?.data?.error ||
-						'An unexpected error occurred.'
-				};
-			} else {
-				form = {
-					error: 'An unexpected error occurred.'
-				};
-			}
+			const errorMessage = axios.isAxiosError(error)
+				? error.response?.data?.error ||
+					'An unexpected error occurred.'
+				: 'An unexpected error occurred.';
+
+			toast.error(errorMessage);
+			form = { error: errorMessage };
 		} finally {
 			isSubmitting = false;
 		}
@@ -552,6 +554,7 @@
 						<DescriptionInput
 							bind:value={description}
 							placeholder="describe yourself"
+							rows={4}
 						/>
 					</div>
 					<input
@@ -726,7 +729,7 @@
 				{/if}
 
 				{#if form?.success}
-					<div class="success-card rounded-full">
+					<div>
 						{form.message}
 					</div>
 				{/if}

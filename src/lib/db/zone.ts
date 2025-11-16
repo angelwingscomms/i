@@ -95,12 +95,14 @@ export const search_zones = async (
 	};
 	if (q) {
 		const query = await embed(q);
-		const results = (await qdrant.query(collection, {
-			query,
-			limit,
-			filter,
-			with_payload: true
-		})).points;
+		const results = (
+			await qdrant.query(collection, {
+				query,
+				limit,
+				filter,
+				with_payload: true
+			})
+		).points;
 		return results.map((r) => ({
 			...(r.payload as unknown as Zone),
 			i: r.id as string
