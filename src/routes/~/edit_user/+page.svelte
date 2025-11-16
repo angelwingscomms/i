@@ -135,7 +135,10 @@
 
 		const name_clean = name_value.trim();
 
-		if (!validate_email(primaryEmail)) {
+		if (
+			primaryEmail.trim() !== '' &&
+			!validate_email(primaryEmail)
+		) {
 			form = { error: 'email is not valid' };
 			return;
 		}
@@ -320,11 +323,20 @@
 					placeholder="enter email"
 					voice_typing={false}
 				/>
-				<input
-					type="hidden"
-					name="email"
-					value={primaryEmail}
-				/>
+				{#if primaryEmail.trim() !== ''}
+					<input
+						type="hidden"
+						name="email"
+						value={primaryEmail}
+					/>
+				{/if}
+				{#if primaryEmail.trim() === ''}
+					<p class="form-help" aria-live="polite">
+						Leaving email blank means you won't be
+						able to recover your account if you forget
+						your password.
+					</p>
+				{/if}
 			</div>
 
 			<div class="form-group">
