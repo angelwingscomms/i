@@ -19,6 +19,9 @@
 	let user_has_description = $state(
 		data.user_has_description || false
 	);
+	let show_all_users = $state(
+		data.show_all_users || false
+	);
 
 	async function joinEvent() {
 		if (!user) {
@@ -72,8 +75,11 @@
 <div class="page pad">
 	<div class="row space-between v-center mb-md">
 		<h1 class="title">
-			{event.t || 'Untitled Event'}
+			{event.n || 'Untitled Event'}
 		</h1>
+		{#if event.tag}
+			<div class="tag">#{event.tag}</div>
+		{/if}
 		<div class="row">
 			{#if user && user.i === event.u}
 				<Button text="edit" onclick={editEvent} />
@@ -94,7 +100,7 @@
 	{#if event.p}
 		<img
 			src={event.p}
-			alt={event.t}
+			alt={event.n}
 			class="event-image"
 		/>
 	{/if}
@@ -184,7 +190,9 @@
 			<div class="similar-users">
 				<div class="similar-users-header">
 					<h3 class="similar-users-title">
-						users in this zone similar to you
+						{show_all_users
+							? 'users in this event'
+							: 'users in this zone similar to you'}
 					</h3>
 				</div>
 				<div class="users-grid">
@@ -209,6 +217,12 @@
 									<div class="user-name">
 										{similarUser.t}
 									</div>
+									{#if similarUser.similarity_percentage !== undefined}
+										<div class="user-similarity">
+											{similarUser.similarity_percentage}%
+											similar
+										</div>
+									{/if}
 									{#if similarUser.comparison}
 										<div class="user-comparison">
 											{similarUser.comparison}
@@ -221,16 +235,15 @@
 				</div>
 			</div>
 		{:else}
-			<!-- No similar users found -->
+			<!-- No users found -->
 			<div class="prompt-card">
-				<div class="prompt-icon">🔍</div>
+				<div class="prompt-icon">👥</div>
 				<div class="prompt-content">
 					<h3 class="prompt-title">
-						no similar users found
+						no users in this event
 					</h3>
 					<p class="prompt-text">
-						no users in this event are similar to you
-						based on your profile description
+						no other users have joined this event yet
 					</p>
 				</div>
 			</div>
@@ -268,6 +281,13 @@
 	.title {
 		font-size: 22px;
 		font-weight: 700;
+		margin-bottom: 4px;
+	}
+	.tag {
+		font-size: 14px;
+		color: var(--accent-primary);
+		font-weight: 500;
+		margin-bottom: 16px;
 	}
 	.event-image {
 		width: 100%;
@@ -469,6 +489,12 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+	.user-similarity {
+		font-size: 12px;
+		font-weight: 600;
+		color: var(--accent-primary);
+		margin-bottom: 2px;
 	}
 	.user-comparison {
 		font-size: 12px;

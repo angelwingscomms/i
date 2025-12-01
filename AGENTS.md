@@ -1,9 +1,3 @@
-# General
-
-- always search the net when it might help
-- always follow the patterns in the example files perfectly
-- when a new pattern is decided, update the example files
-
 # Example Files
 
 - src/lib/components/resource/ResourceCard.svelte
@@ -19,6 +13,12 @@
 - src/routes/~/resource/[i]/+server.ts
 - src/routes/~/resource/create/+page.server.ts
 - src/routes/~/resource/+page.server.ts
+
+# General
+
+- always search the net when it might help
+- always follow the patterns in the example files perfectly
+- when a new pattern is decided, update the example files
 
 # Code Style
 

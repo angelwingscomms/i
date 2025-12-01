@@ -17,7 +17,6 @@
 	import { page } from '$app/state';
 
 	let { data }: PageProps = $props();
-	console.log('d', data);
 	let {
 		u: user,
 		c: comparison,
@@ -434,59 +433,104 @@
 						{/if}
 					{/if}
 					{#if data.user && data.user.i !== user.i}
-						<div class="mt-8 space-y-4">
-							<div class="flex justify-center">
-								<Button
-									href={`/${user.tag}/a`}
-									text={`chat w ${user.tag} anonymously`}
-									icon="fa-comments"
-									variant="primary"
-								/>
-							</div>
-							<div class="flex justify-center">
-								<Button
-									href={`/${user.tag}/c`}
-									text={`chat w ${user.tag}`}
-									icon="fa-comments"
-									variant="primary"
-								/>
-							</div>
-							<div class="flex justify-center">
-								<Button
-									href="/~/{user.tag}/c?call=video"
-									text="Video call"
-									icon="fa-video"
-									variant="primary"
-								/>
-							</div>
-							<div class="flex justify-center">
-								<Button
-									href={`/${user.tag}/posts`}
-									text="view posts"
-									icon="fa-newspaper"
-									variant="primary"
-								/>
-							</div>
-							<div class="flex justify-center">
-								<Button
-									href={`/${user.tag}/i`}
-									text="view items"
-									icon="fa-bag-shopping"
-									variant="primary"
-								/>
-							</div>
+						<div
+							class="mt-8 flex flex-wrap justify-center gap-3"
+						>
+							<Button
+								href={`/${user.tag}/a`}
+								text={`chat w ${user.tag} anonymously`}
+								icon="fa-comments"
+								variant="primary"
+							/>
+							<Button
+								href={`/${user.tag}/c`}
+								text={`chat w ${user.tag}`}
+								icon="fa-comments"
+								variant="primary"
+							/>
+							<Button
+								href="/~/{user.tag}/c?call=video"
+								text="Video call"
+								icon="fa-video"
+								variant="primary"
+							/>
+							<Button
+								href={`/${user.tag}/posts`}
+								text="view posts"
+								icon="fa-newspaper"
+								variant="primary"
+							/>
+							<Button
+								href={`/${user.tag}/i`}
+								text="view items"
+								icon="fa-bag-shopping"
+								variant="primary"
+							/>
 						</div>
 					{/if}
 				</div>
 			</div>
 		</section>
 
+		<!-- Compatibility & Actions Section -->
+		<section
+			class="mx-auto max-w-6xl px-4 py-8 sm:px-2 sm:py-6"
+		>
+			{#if data.user && data.user.i !== user.i}
+				{#if comparison}
+					<div class="mb-8 text-center">
+						<h3
+							class="mb-3 text-xl font-semibold"
+							style="color: var(--color-theme-4);"
+						>
+							what you have in common
+						</h3>
+						<div
+							class="prose prose-sm mx-auto max-w-3xl text-sm leading-relaxed"
+							style="color: var(--color-theme-4);"
+						>
+							{@html md(comparison)}
+						</div>
+					</div>
+				{:else if !user.description}
+					<div class="mb-8 text-center">
+						<p
+							class="text-sm text-gray-600 dark:text-gray-400"
+						>
+							this user doesn't have a description
+							yet. you'll be able to see similarities
+							with them when they add a description.
+						</p>
+					</div>
+				{/if}
+			{:else if data.user?.i === user.i}
+				<!-- No content for own profile in compatibility section -->
+			{:else}
+				<!-- Login Prompt -->
+				<div class="mb-8 text-center">
+					<p
+						class="mb-4 text-sm font-medium"
+						style="color: var(--color-theme-4);"
+					>
+						join our community to see compatibility
+						and start conversations!
+					</p>
+					<Button
+						href="/~/google"
+						text="sign in to connect"
+						icon="fa-sign-in-alt"
+						variant="primary"
+					/>
+				</div>
+			{/if}
+		</section>
+
 		{#if itemSearchData.total > 0}
 			<section
-				class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8"
+				class="mx-auto max-w-6xl px-4 py-8 sm:px-2 sm:py-6"
 			>
 				<h2
-					class="mb-8 text-3xl font-bold"
+					class="mb-6 text-2xl font-bold"
 					style="color: var(--color-theme-4);"
 				>
 					{itemSearchData.total > 1
@@ -503,80 +547,12 @@
 					/>
 				{/if}
 				{#if items.length > 0}
-					<div class="mt-8">
+					<div class="mt-6">
 						<ItemResultsList results={items} />
 					</div>
 				{/if}
 			</section>
 		{/if}
-
-		<!-- Compatibility & Actions Section -->
-		<section
-			class="mx-auto max-w-6xl px-4 py-16 sm:px-2 sm:py-8"
-		>
-			{#if data.user && data.user.i !== user.i}
-				{#if comparison}
-					<div
-						class="feature-card interactive-card mb-12 rounded-3xl p-8 shadow-2xl"
-						style=" border: 2px solid var(--color-theme-6);"
-					>
-						<h2
-							class="mb-6 text-3xl font-bold"
-							style="color: var(--color-theme-4);"
-						>
-							What You Have in Common
-						</h2>
-						<div
-							class="prose prose-lg max-w-none leading-relaxed"
-							style="color: var(--color-theme-4);"
-						>
-							{@html md(comparison)}
-						</div>
-					</div>
-				{:else if !user.description}
-					<div class="mb-12 p-8 text-center">
-						<p class="text-lg font-medium">
-							this user doesn't have a description
-							yet. you'll be able to see similarities
-							with them when they add a description.
-						</p>
-					</div>
-				{/if}
-			{:else if data.user?.i === user.i}
-				<!-- No content for own profile in compatibility section -->
-			{:else}
-				<!-- Login Prompt -->
-				<div
-					class="feature-card interactive-card mb-12 rounded-3xl p-8 text-center shadow-2xl"
-					style=" border: 2px solid var(--color-theme-6);"
-				>
-					<div class="mb-4 flex justify-center">
-						<div
-							class="rounded-full p-4"
-							style="background: var(--color-theme-6);"
-						>
-							<i
-								class="fas fa-user"
-								style="color: white; font-size: 1.5em;"
-							></i>
-						</div>
-					</div>
-					<p
-						class="mb-6 text-lg font-medium"
-						style="color: var(--color-theme-4);"
-					>
-						join our community to see compatibility
-						and start conversations!
-					</p>
-					<Button
-						href="/~/google"
-						text="sign in to connect"
-						icon="fa-sign-in-alt"
-						variant="primary"
-					/>
-				</div>
-			{/if}
-		</section>
 
 		<!-- Social Links Section removed per updated design -->
 	{:else}

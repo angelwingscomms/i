@@ -29,7 +29,7 @@
 		Array.from(files).forEach((f) =>
 			fd.append('files', f)
 		);
-		const res = await fetch('/items/upload', {
+		const res = await fetch('/~/items/upload', {
 			method: 'POST',
 			body: fd
 		});

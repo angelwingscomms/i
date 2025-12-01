@@ -1,7 +1,8 @@
 export interface Event {
 	s: 'ev'; // tenant for events
 	i?: string; // event id
-	t?: string; // title
+	n?: string; // name
+	tag?: string; // tag (formerly title)
 	b?: string; // body (markdown)
 	y?: string; // summary
 	p?: string; // image url

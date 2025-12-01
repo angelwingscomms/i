@@ -56,8 +56,12 @@ export const load: PageServerLoad = async ({
 		])) as { d?: string; t: string };
 		if (self) {
 			local_description = self.d; // Store local user's description
-			if (locals.user.i !== user.i) {
-				// Only compare if not viewing own profile
+			if (
+				locals.user.i !== user.i &&
+				self.d &&
+				user.d
+			) {
+				// Only compare if not viewing own profile AND both users have descriptions
 				comparisonResult = await compare_users(
 					self,
 					user

@@ -1,31 +1,34 @@
 import { GEMINI } from '$env/static/private';
 import type { User } from '$lib/types';
-import { google } from '@ai-sdk/google';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { generateText } from 'ai';
 
-const google_provider = GEMINI
-	? google({ apiKey: GEMINI })
-	: null;
+const google = createGoogleGenerativeAI({
+	apiKey: GEMINI
+});
+
+const ensure_google = () => {
+	if (!google)
+		throw new Error('missing gemini api key');
+	return google;
+};
 
 export const compare_users = async (
 	self: Partial<User>,
 	user: Partial<User>
 ) => {
 	if (!self.d || !user.d) return;
-	if (!google_provider) {
-		console.error('missing gemini api key');
-		return;
-	}
 
 	try {
+		const provider = ensure_google();
 		const { text } = await generateText({
-			model: google_provider('gemini-2.5-flash'),
+			model: google('gemini-flash-latest'),
 			prompt: `<context>
 				You are an AI assistant designed to compare two user profiles and identify their precise commonalities.
 			</context>
 
 			<task>
-				Identify shared interests, values, personality traits, and goals between the two users provided.
+				Identify things in common between the two users provided.
 				Return ONLY these commonalities.
 			</task>
 
@@ -42,7 +45,6 @@ export const compare_users = async (
 				- Be extremely concise and straight to the point.
 				- Refer to <user_self_name> as 'you'.
 				- Do not include any greetings or introductory phrases.
-				- Maintain a casual and friendly tone.
 				- Be exact: only list what is explicitly shared.
 				- Keep all other information private.
 			</output_format>`,
@@ -55,6 +57,7 @@ export const compare_users = async (
 			'Comparison error:',
 			comparisonError
 		);
-		// Continue without comparison if it fails
+		// Return fallback message if comparison fails
+		return 'Comparison temporarily unavailable';
 	}
 };

@@ -157,7 +157,7 @@ export const POST: RequestHandler = async ({
 		points: [{ id: i, vector }]
 	});
 
-	throw redirect(303, `/items/${i}`);
+	throw redirect(303, `/~/items/${i}`);
 };
 
 export const DELETE: RequestHandler = async ({

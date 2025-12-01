@@ -91,6 +91,9 @@
 		<div
 			role="listbox"
 			class="dropdown-panel dropdown-sm animate-fade-in w-full"
+			onclick={(e) => {
+				e.stopPropagation();
+			}}
 		>
 			{#each options as opt}
 				<button
@@ -100,6 +103,7 @@
 					class="dropdown-item flex items-center whitespace-nowrap"
 					onclick={(e) => {
 						e.stopPropagation();
+						e.preventDefault();
 						handle_select(opt.value);
 					}}
 				>

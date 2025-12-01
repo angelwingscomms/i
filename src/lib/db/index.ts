@@ -230,7 +230,8 @@ export async function search_by_vector<T>({
 	vector,
 	limit = 54,
 	with_payload,
-	filter
+	filter,
+	with_vector = false
 }: {
 	vector: number[];
 	with_payload?: string[];
@@ -239,12 +240,13 @@ export async function search_by_vector<T>({
 		must: Record<string, unknown>;
 		must_not?: Record<string, unknown>;
 	};
+	with_vector?: boolean;
 }): Promise<T[]> {
 	const searchParams: Record<string, unknown> = {
 		vector,
 		limit,
 		with_payload,
-		with_vector: false
+		with_vector
 	};
 
 	if (filter) {
@@ -266,11 +268,17 @@ export async function search_by_vector<T>({
 		}
 	);
 
-	return results.map((point) => ({
-		...(point.payload as T),
-		i: point.id,
-		score: point.score
-	}));
+	return results.map((point) => {
+		const result: any = {
+			...(point.payload as T),
+			i: point.id,
+			score: point.score
+		};
+		if (with_vector && point.vector) {
+			result.vector = point.vector;
+		}
+		return result;
+	});
 }
 
 export async function get<T>(

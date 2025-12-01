@@ -3,10 +3,11 @@ import {
 	search_by_payload,
 	get,
 	new_id,
-	search_by_vector,
-	count
+	count,
+	qdrant
 } from '$lib/db';
-import { realtime } from '$lib/util/realtime';
+import { collection } from '$lib/constants';
+// import { realtime } from '$lib/util/realtime';
 import type {
 	Event,
 	User,
@@ -14,7 +15,8 @@ import type {
 } from '$lib/types';
 import type { ChatMessage } from '$lib/types/index';
 import { embed } from '$lib/util/embed';
-import { compare_users } from '$lib/util/users/compare_users';
+
+import { cosine_similarity } from '$lib/util/vector/cosine_similarity';
 
 export const load = async ({ params, locals }) => {
 	try {
@@ -24,14 +26,9 @@ export const load = async ({ params, locals }) => {
 		// Get current user's events to check if joined
 		let j = 0;
 		if (locals.user) {
-			const user_events = await search_by_payload(
-				{ s: 'ev', u: locals.user.i },
-				['i'],
-				100
-			);
-			j = user_events.some((ue) => ue.i === params.i)
-				? 1
-				: 0;
+			const user = await get(locals.user.i, ['ev']);
+			const user_events = user?.ev || [];
+			j = user_events.includes(params.i) ? 1 : 0;
 		}
 
 		let event: Pick<
@@ -130,29 +127,29 @@ export const load = async ({ params, locals }) => {
 			);
 		}
 
-		let a: string;
-		try {
-			const realtime_res = await realtime.post(
-				`meetings/${event.r}/participants`,
-				{
-					name: locals.user?.t || 'Anonymous',
-					preset_name: 'group_call_participant',
-					custom_participant_id:
-						locals.user?.i || new_id()
-				}
-			);
-			a = realtime_res.data.data.token;
-		} catch (e) {
-			console.error(
-				'Error with realtime:',
-				await (e as { response?: { data?: unknown } })
-					.response?.data
-			);
-			throw error(
-				500,
-				'Failed to setup realtime communication'
-			);
-		}
+		// let a: string;
+		// try {
+		// 	const realtime_res = await realtime.post(
+		// 		`meetings/${event.r}/participants`,
+		// 		{
+		// 			name: locals.user?.t || 'Anonymous',
+		// 			preset_name: 'group_call_participant',
+		// 			custom_participant_id:
+		// 				locals.user?.i || new_id()
+		// 		}
+		// 	);
+		// 	a = realtime_res.data.data.token;
+		// } catch (e) {
+		// 	console.error(
+		// 		'Error with realtime:',
+		// 		await (e as { response?: { data?: unknown } })
+		// 			.response?.data
+		// 	);
+		// 	throw error(
+		// 		500,
+		// 		'Failed to setup realtime communication'
+		// 	);
+		// }
 
 		let messages: Message[],
 			userMap: Record<string, string>;
@@ -227,8 +224,10 @@ export const load = async ({ params, locals }) => {
 
 		// Get user description state and similar users
 		let user_has_description = false;
-		let users: (User & { comparison?: string })[] =
-			[];
+		let users: (User & {
+			similarity_percentage?: number;
+		})[] = [];
+		let show_all_users = false;
 		if (locals.user) {
 			try {
 				const user_desc = await get<string>(
@@ -238,33 +237,95 @@ export const load = async ({ params, locals }) => {
 				user_has_description = !!user_desc;
 				console.log('user_desc', user_desc);
 				if (user_desc) {
-					// Get user profile for embedding
+					// Get current user's vector for similarity calculation
+					const current_user_data = await get<{
+						vector: number[];
+					}>(locals.user.i, ['vector'], true);
 
 					// Find users who joined this event
-					const searchResults =
-						await search_by_vector({
+					const queryResults = await qdrant.query(
+						collection,
+						{
+							query: await embed(user_desc),
 							filter: {
-								must: { s: 'u', ev: params.i },
-								must_not: { i: locals.user.i }
+								must: [
+									{ key: 's', match: { value: 'u' } },
+									{
+										key: 'ev',
+										match: { value: params.i }
+									}
+								],
+								must_not: [
+									{ has_id: [locals.user.i] }
+								]
 							},
-							vector: await embed(user_desc || ''),
-							limit: 9,
-							with_payload: ['t', 'av', 'a', 'g', 'd']
-						});
+							limit: 9, 
+							with_payload: [
+								't',
+								'av',
+								'a',
+								'g',
+								'd'
+							],
+							with_vector: true
+						}
+					);
 
-					// Get comparison for each user
+					const searchResults = queryResults.map(
+						(point) => {
+							const result: any = {
+								...(point.payload as any),
+								i: point.id,
+								score: point.score
+							};
+							if (point.vector)
+								result.vector = point.vector;
+							return result;
+						}
+					);
+
+					// Get similarity for each user
 					users = await Promise.all(
 						searchResults.map(async (result) => {
-							const comparison = await compare_users(
-								locals.user!,
-								result
-							);
+							let similarity_percentage = 0;
+							if (
+								current_user_data?.vector &&
+								result.vector
+							) {
+								const similarity = cosine_similarity(
+									current_user_data.vector,
+									result.vector
+								);
+								// Convert to percentage (0-100%) and clamp between 0-100
+								similarity_percentage = Math.max(
+									0,
+									Math.min(
+										100,
+										Math.round(similarity * 100)
+									)
+								);
+							}
+
 							return {
 								...result,
-								comparison
+								similarity_percentage
 							};
 						})
 					);
+
+					// If no similar users found, show all users in the event
+					if (users.length === 0) {
+						show_all_users = true;
+						const allUsers = await search_by_payload(
+							{ s: 'u', ev: params.i },
+							['t', 'av', 'a', 'g', 'd'],
+							undefined,
+							{ limit: 20 }
+						);
+						users = allUsers.filter(
+							(u) => u.i !== locals.user.i
+						);
+					}
 				}
 			} catch (e) {
 				console.error(
@@ -283,12 +344,13 @@ export const load = async ({ params, locals }) => {
 			t: event.t,
 			pt,
 			_: '.',
-			a,
+			// a,
 			author,
 			j,
 			users,
 			total_user_count,
-			user_has_description
+			user_has_description,
+			show_all_users
 		};
 	} catch (e) {
 		console.error('Unexpected error:', e);

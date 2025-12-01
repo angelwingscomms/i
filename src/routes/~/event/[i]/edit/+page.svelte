@@ -10,12 +10,14 @@
 	let saving = $state(false);
 
 	const saveWithDelay = async () => {
-		event.t ??= '';
+		event.n ??= '';
+		event.tag ??= '';
 
 		saving = true;
 		try {
 			const formData = new FormData();
-			formData.append('t', event.t || '');
+			formData.append('n', event.n || '');
+			formData.append('tag', event.tag || '');
 			formData.append('b', event.b);
 			formData.append('v', event.v ? '.' : '');
 			formData.append('c', event.c ? '.' : '');
@@ -63,12 +65,21 @@
 	</div>
 
 	<div class="form">
-		<label for="title" class="label">title</label>
+		<label for="name" class="label">name</label>
 		<input
-			id="title"
+			id="name"
 			type="text"
-			bind:value={event.t}
-			placeholder="event title"
+			bind:value={event.n}
+			placeholder="event name"
+			class="input"
+		/>
+
+		<label for="tag" class="label">tag</label>
+		<input
+			id="tag"
+			type="text"
+			bind:value={event.tag}
+			placeholder="event tag"
 			class="input"
 		/>
 

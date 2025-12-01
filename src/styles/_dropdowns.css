@@ -34,13 +34,16 @@
 	min-width: 100%;
 	z-index: 60; /* above cards/nav content */
 	/* look */
-	background: transparent;
+	background: rgba(255, 255, 255, 0.05);
 	border: 2px solid var(--border-secondary);
 	border-radius: 12px;
-	backdrop-filter: blur(12px);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px); /* Safari support */
 	/* scroll */
 	max-height: 320px;
 	overflow-y: auto;
+	/* prevent click-through */
+	pointer-events: auto;
 }
 
 @utility dropdown-item {

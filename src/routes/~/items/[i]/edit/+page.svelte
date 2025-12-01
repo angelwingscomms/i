@@ -217,7 +217,7 @@
 			);
 			form.append('context', buildContext());
 			const { data } = await axios.post(
-				`/items/${item.i}/edit/voice`,
+				`/~/items/${item.i}/edit/voice`,
 				form
 			);
 			if (data?.data) {
@@ -247,7 +247,7 @@
 			form.append('image', file);
 			form.append('context', buildContext());
 			const { data } = await axios.post(
-				`/items/${item.i}/edit/vision`,
+				`/~/items/${item.i}/edit/vision`,
 				form
 			);
 			if (data?.data) {
@@ -308,7 +308,7 @@
 				);
 			}
 			const res = await axios.post(
-				`/items/${item.i}/edit`,
+				`/~/items/${item.i}/edit`,
 				formData,
 				{
 					headers: {
@@ -343,7 +343,7 @@
 		)
 			return;
 		try {
-			await axios.delete(`/items/${item.i}/edit`);
+			await axios.delete(`/~/items/${item.i}/edit`);
 			toast.success('item deleted');
 			goto('/~/find');
 		} catch (error) {
