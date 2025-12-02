@@ -278,13 +278,6 @@
 			{#if editable}
 				<div class="flex items-center gap-2">
 					{#if !isRecording && !isTranscribing}
-						{#if value}
-							<Button
-								onclick={() => (value = '')}
-								icon="fa-times"
-								type="button"
-							/>
-						{/if}
 						{#if voice_typing}
 							<Button
 								onclick={startRecording}

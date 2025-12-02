@@ -3,3 +3,5 @@ increase default button horizontal padding to avoid cramped layout
 
 
 event joined updates
+
+make combo.svelte width take up available width whereever it is used and nothing more

@@ -15,7 +15,7 @@
 - src/routes/~/resource/+page.server.ts
 
 # General
-
+- always code with extreme simplicity
 - always search the net when it might help
 - always follow the patterns in the example files perfectly
 - when a new pattern is decided, update the example files

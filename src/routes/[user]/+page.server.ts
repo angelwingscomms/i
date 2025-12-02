@@ -43,7 +43,7 @@ export const load: PageServerLoad = async ({
 	};
 
 	// If current user is logged in, compare descriptions
-	let comparisonResult = null;
+	let comparisonResult: string[] | null = null;
 	let local_description: string | undefined =
 		undefined; // New variable for local user's description
 	let user_items: Array<Item & { i: string }> = [];
@@ -110,7 +110,7 @@ export const load: PageServerLoad = async ({
 	> = [];
 	if (user.d) {
 		const vector = await embed(user.d);
-		results = await search_by_vector<
+		results = (await search_by_vector<
 			Pick<User, 't' | 'av' | 'a' | 'g'>
 		>({
 			vector,
@@ -120,7 +120,12 @@ export const load: PageServerLoad = async ({
 				must_not: { i: user.i }
 			},
 			limit: 20
-		});
+		})) as Array<
+			Pick<User, 't' | 'a' | 'g' | 'av'> & {
+				i: string;
+				score?: number;
+			}
+		>;
 	}
 
 	return {

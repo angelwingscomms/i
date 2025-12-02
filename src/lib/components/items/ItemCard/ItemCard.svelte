@@ -25,12 +25,12 @@
 						class="h-full w-full object-contain"
 					/>
 				{:else}
-					<div
-						class="flex h-full w-full items-center justify-center text-2xl font-bold text-[var(--text-primary)]"
-					>
-						{item.n?.charAt(0).toUpperCase() ?? '?'}
-					</div>
-				{/if}
+				<div
+					class="h-full w-full rounded"
+					style="border: 1px solid rgba(var(--color-theme-1-rgb, 139, 92, 246), 0.3); box-shadow: 0 0 8px rgba(var(--color-theme-1-rgb, 139, 92, 246), 0.2);"
+				>
+				</div>
+			{/if}
 			</div>
 			<div class="absolute -right-1 -bottom-1">
 				<span

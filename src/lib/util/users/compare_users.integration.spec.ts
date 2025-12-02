@@ -27,9 +27,9 @@ describe('compare_users integration', () => {
 		// For now, let's just test the logic flow
 		const result = await compare_users(user1, user2);
 
-		// The function should return a string when both have descriptions
-		// (though it might be a fallback message if API fails)
-		expect(typeof result).toBe('string');
+		// The function should return an array when both have descriptions
+		// (or an empty array if API fails)
+		expect(Array.isArray(result)).toBe(true);
 	});
 
 	it('should return undefined when one user has no description', async () => {

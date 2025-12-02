@@ -8,7 +8,7 @@
 	} from 'animejs';
 	import Button from '$lib/components/Button.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
-	import Select from '$lib/components/Select.svelte';
+	import Combo from '$lib/components/Combo.svelte';
 	import axios from 'axios';
 	import { ZoneSearch } from '$lib/components/zone';
 	import { goto } from '$app/navigation';
@@ -76,13 +76,11 @@
 
 	const handleImageSelection = (files: FileList) => {
 		const list = Array.from(files);
-		selectedFiles = list;
-		previewUrls.forEach((url) =>
-			URL.revokeObjectURL(url)
-		);
-		previewUrls = list.map((file) =>
+		selectedFiles = [...selectedFiles, ...list];
+		const newPreviews = list.map((file) =>
 			URL.createObjectURL(file)
 		);
+		previewUrls = [...previewUrls, ...newPreviews];
 		const first = list[0];
 		if (first) extractFromImage(first);
 	};
@@ -474,12 +472,13 @@
 							/>
 						</div>
 						<div class="w-24">
-							<Select
-								options={currencies}
-								bind:value={item.c}
-								placeholder="₦"
-							/>
-						</div>
+										<Combo
+											items={currencies}
+											bind:value={item.c}
+											placeholder="₦"
+											mic={false}
+										/>
+					</div>
 					</div>
 				</div>
 

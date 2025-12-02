@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ItemSearch } from '$lib/components/items';
+	import { ItemSearch, ItemResultsList } from '$lib/components/items';
 	import Button from '$lib/components/Button.svelte';
 
 	let { data } = $props();
@@ -49,5 +49,10 @@
 	<!-- Search Section -->
 	<div class="mx-auto max-w-4xl px-4 py-6">
 		<ItemSearch {data} />
+	</div>
+
+	<!-- Results Section -->
+	<div class="mx-auto max-w-7xl px-4 py-6">
+		<ItemResultsList results={data.results} />
 	</div>
 </div>

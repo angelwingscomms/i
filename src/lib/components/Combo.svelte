@@ -14,13 +14,15 @@
 		value = $bindable<string | undefined>(),
 		placeholder = 'Select...',
 		label = '',
-		filter: customFilter
+		filter: customFilter,
+		mic = true
 	} = $props<{
 		items: Item[];
 		value?: string | undefined;
 		placeholder?: string;
 		label?: string;
 		filter?: (query: string, items: Item[]) => Item[];
+		mic?: boolean;
 	}>();
 
 	let open = $state(false);
@@ -111,6 +113,7 @@
 			aria-haspopup="listbox"
 			aria-expanded={open}
 			buttons_below={false}
+			voice_typing={mic}
 		/>
 		{#if open}
 			<svg

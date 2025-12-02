@@ -6,7 +6,6 @@
 	import Button from '$lib/components/Button.svelte';
 	import type { Item } from '$lib/types/item';
 	import type { PageProps } from './$types';
-	import { md } from '$lib/util/marked';
 	import { onMount } from 'svelte';
 	import {
 		animate,
@@ -36,7 +35,7 @@
 			phones?: string[];
 			emails?: string[];
 		};
-		c: string;
+		c: string[];
 		it: Array<Item & { i: string }>;
 		p?: number;
 		m: Record<string, unknown>;
@@ -380,25 +379,23 @@
 							/>
 						</div>
 						<div
-							class="mt-4 flex flex-wrap items-center justify-center gap-3"
-						>
-							{#if itemSearchData.total > 0}
-								<Button
-									href={`/${user.tag}/i`}
-									text="view items"
-									icon="fa-bag-shopping"
-									variant="primary"
-								/>
-							{/if}
-							{#if other_posts}
-								<Button
-									href={`/${user.tag}/posts`}
-									text="view posts"
-									icon="fa-newspaper"
-									variant="primary"
-								/>
-							{/if}
-						</div>
+						class="mt-4 flex flex-wrap items-center justify-center gap-3"
+					>
+						<Button
+							href="/~/items/new"
+							text="create item"
+							icon="fa-plus"
+							variant="primary"
+						/>
+						{#if other_posts}
+							<Button
+								href={`/${user.tag}/posts`}
+								text="view posts"
+								icon="fa-newspaper"
+								variant="primary"
+							/>
+						{/if}
+					</div>
 
 						{#if !user.description}
 							<div
@@ -477,7 +474,7 @@
 			class="mx-auto max-w-6xl px-4 py-8 sm:px-2 sm:py-6"
 		>
 			{#if data.user && data.user.i !== user.i}
-				{#if comparison}
+				{#if comparison && comparison.length > 0}
 					<div class="mb-8 text-center">
 						<h3
 							class="mb-3 text-xl font-semibold"
@@ -486,11 +483,25 @@
 							what you have in common
 						</h3>
 						<div
-							class="prose prose-sm mx-auto max-w-3xl text-sm leading-relaxed"
-							style="color: var(--color-theme-4);"
+							class="mx-auto flex max-w-3xl flex-wrap justify-center gap-2"
 						>
-							{@html md(comparison)}
+							{#each comparison as commonality}
+								<span
+									class="rounded-full px-4 py-2 text-sm font-medium text-white shadow-md"
+									style="background: var(--color-theme-1);"
+								>
+									{commonality}
+								</span>
+							{/each}
 						</div>
+					</div>
+				{:else if comparison && comparison.length === 0}
+					<div class="mb-8 text-center">
+						<p
+							class="text-sm text-gray-600 dark:text-gray-400"
+						>
+							no similarity between users to show
+						</p>
 					</div>
 				{:else if !user.description}
 					<div class="mb-8 text-center">

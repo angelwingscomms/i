@@ -162,7 +162,7 @@ export async function ensurePushSubscribed(
 		// Save subscription
 		try {
 			const response = await axios.post(
-				'/api/notifications/subscribe',
+				'/~/api/notifications/subscribe',
 				sub,
 				{ timeout: 5000 }
 			);
@@ -349,7 +349,7 @@ export async function refresh_push_subscription() {
 		);
 		try {
 			const response = await axios.post(
-				'/api/notifications/subscribe',
+				'/~/api/notifications/subscribe',
 				sub,
 				{ timeout: 5000 }
 			);

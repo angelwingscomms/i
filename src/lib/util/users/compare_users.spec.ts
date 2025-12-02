@@ -65,7 +65,7 @@ describe('compare_users', () => {
 			self,
 			user
 		);
-		expect(result).toBeUndefined();
+		expect(result).toEqual([]);
 
 		// Restore env var
 		process.env.GEMINI = originalEnv;
