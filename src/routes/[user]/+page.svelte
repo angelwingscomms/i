@@ -300,6 +300,23 @@
 							<i class="fas fa-copy"></i>
 						</button>
 					</div>
+
+					{#if phone_numbers.length}
+						<div class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase">
+							{#each phone_numbers as phone (phone)}
+								<a
+									href="tel:{phone}"
+									class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:text-[var(--color-theme-4)] feature-link"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									<i class="fas fa-phone text-xs"></i>
+									{phone}
+								</a>
+							{/each}
+						</div>
+					{/if}
+
 					{#if user.socialLinks && user.socialLinks.length > 0}
 						<div
 							class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
@@ -311,10 +328,10 @@
 									href={link}
 									target="_blank"
 									rel="noopener noreferrer"
-									class="flex items-center gap-1 transition hover:text-[var(--color-theme-4)]"
+									class="flex gap-1 transition hover:text-[var(--color-theme-4)] capitalize feature-link"
 								>
 									{#if faIcon}
-										<i class="fas {faIcon} text-xs"
+										<i class="{faIcon} text-xs"
 										></i>
 									{:else}
 										<i
@@ -605,21 +622,6 @@
 					variant="primary"
 				/>
 			</div>
-		</div>
-	{/if}
-
-	{#if phone_numbers.length}
-		<div
-			class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
-		>
-			{#each phone_numbers as phone (phone)}
-				<span
-					class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2"
-				>
-					<i class="fas fa-phone text-xs"></i>
-					{phone}
-				</span>
-			{/each}
 		</div>
 	{/if}
 

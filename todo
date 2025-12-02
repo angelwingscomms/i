@@ -5,3 +5,15 @@ increase default button horizontal padding to avoid cramped layout
 event joined updates
 
 make combo.svelte width take up available width whereever it is used and nothing more
+
+type filter on user detail page not working, ideally on type option click, show loading indicator, then filtered results, same for sort by filter
+
+make buttons in description input half current size, remove border radius, border, and padding
+
+fix W
+
+---
+
+all profile details
+all item details
+user item search
