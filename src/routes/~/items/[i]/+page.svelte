@@ -4,6 +4,9 @@
 	import { fade } from 'svelte/transition';
 	import type { PageProps } from './$types';
 	import Button from '$lib/components/Button.svelte';
+	import { toast } from '$lib/util/toast.svelte';
+	import axios from 'axios';
+	import { goto } from '$app/navigation';
 
 	let { data }: PageProps = $props();
 	let { user, i: item } = data;
@@ -79,6 +82,18 @@
 				break;
 		}
 	}
+
+	const deleteItem = async () => {
+		if (!confirm('Are you sure you want to delete this item? This action cannot be undone.')) return;
+		try {
+			await axios.delete(`/~/items/${item.i}`);
+			toast.success('item deleted');
+			goto('/~/find');
+		} catch (error) {
+			console.error(error);
+			toast.error('failed to delete item');
+		}
+	};
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
@@ -274,6 +289,12 @@
 										icon="fa-edit"
 										text="edit"
 									/>
+									<Button
+										onclick={deleteItem}
+										variant="secondary"
+										icon="fa-trash"
+										text="delete"
+									/>
 								</div>
 							{/if}
 						</div>
@@ -451,6 +472,12 @@
 								variant="secondary"
 								icon="fa-edit"
 								text="edit"
+							/>
+							<Button
+								onclick={deleteItem}
+								variant="secondary"
+								icon="fa-trash"
+								text="delete"
 							/>
 						</div>
 					{/if}

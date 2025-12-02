@@ -341,7 +341,7 @@
 		)
 			return;
 		try {
-			await axios.delete(`/~/items/${item.i}/edit`);
+			await axios.delete(`/~/items/${item.i}`);
 			toast.success('item deleted');
 			goto('/~/find');
 		} catch (error) {

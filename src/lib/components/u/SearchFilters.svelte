@@ -136,9 +136,7 @@
 					</div>
 					<span
 						class="text-secondary ml-3 cursor-pointer text-sm font-medium"
-						>Filter by Age ({filter_by_age
-							? 'on'
-							: 'off'})</span
+						>age filter</span
 					>
 				</label>
 

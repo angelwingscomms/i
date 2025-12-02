@@ -5,13 +5,10 @@ make combo.svelte width take up available width whereever it is used and nothing
 type filter on user detail page not working, ideally on type option click, show loading indicator, then filtered results, same for sort by filter
 
 remove emails (and any other contact/user detail there) from bottom of user detail page
-
 make buttons in description input smaller (same size as the x and + buttons in social media links section in user edit page), remove border radius, border, and padding
-
 no border radius on select.svelte and combo.svelte
-
 delete button on item detail page
-
+let more filters be hidden by default on user search page
 item edit page
     remove zone input
 ---

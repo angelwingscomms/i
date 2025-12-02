@@ -181,6 +181,7 @@
 		bind:description
 		bind:loading
 		bind:sort
+		showAdvanced={false}
 		{search}
 	/>
 
