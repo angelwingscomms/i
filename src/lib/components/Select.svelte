@@ -37,7 +37,7 @@
 >
 	<button
 		type="button"
-		class="dropdown-trigger w-full justify-between border-t-0 border-r-0 border-b-0"
+		class="dropdown-trigger w-full justify-between border-t-0 border-r-0 border-b-0 rounded-none"
 		onclick={(e) => {
 			e.stopPropagation();
 			open = !open;
@@ -90,7 +90,7 @@
 	{#if open}
 		<div
 			role="listbox"
-			class="dropdown-panel dropdown-sm animate-fade-in w-full"
+			class="dropdown-panel dropdown-sm animate-fade-in w-full rounded-none"
 			onclick={(e) => {
 				e.stopPropagation();
 			}}

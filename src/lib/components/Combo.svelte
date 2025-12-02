@@ -137,7 +137,7 @@
 	{#if open && filteredItems.length > 0}
 		<div
 			role="listbox"
-			class="combo-panel animate-fade-in pointer-events-auto absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-300 bg-white/80 shadow-lg backdrop-blur-sm"
+			class="combo-panel animate-fade-in pointer-events-auto absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-none border border-gray-300 bg-white/80 shadow-lg backdrop-blur-sm"
 		>
 			{#each filteredItems as item}
 				<button
@@ -159,7 +159,7 @@
 		</div>
 	{:else if open && search && filteredItems.length === 0}
 		<div
-			class="combo-panel animate-fade-in pointer-events-auto absolute z-50 mt-1 w-full rounded-md border border-gray-300 bg-white/80 p-2 text-gray-500 shadow-lg backdrop-blur-sm"
+			class="combo-panel animate-fade-in pointer-events-auto absolute z-50 mt-1 w-full rounded-none border border-gray-300 bg-white/80 p-2 text-gray-500 shadow-lg backdrop-blur-sm"
 		>
 			No matching items
 		</div>

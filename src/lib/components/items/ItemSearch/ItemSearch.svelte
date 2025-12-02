@@ -158,9 +158,11 @@
 			</label>
 			<Select
 				options={[
-					{ value: '', label: 'relevance' },
-					{ value: 'name', label: 'name' },
-					{ value: 'price', label: 'price' }
+					{ value: 'relevance', label: 'relevance' },
+					{ value: 'newest', label: 'newest first' },
+					{ value: 'oldest', label: 'oldest first' },
+					{ value: 'name', label: 'name a-z' },
+					{ value: 'price', label: 'price low-high' }
 				]}
 				value={sort}
 				placeholder="select sort"

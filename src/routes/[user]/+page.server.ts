@@ -77,7 +77,7 @@ export const load: PageServerLoad = async ({
 			s: 'i',
 			u: user.i
 		},
-		['n', 'd', 'k', 'x', 'u', 'a', 'h', 'c'],
+		['n', 'd', 'k', 'x', 'u', 'a', 'h', 'c', 'p', 'm'],
 		32,
 		{
 			key: 'd',

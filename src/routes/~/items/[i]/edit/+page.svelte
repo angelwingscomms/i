@@ -10,11 +10,9 @@
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import Combo from '$lib/components/Combo.svelte';
 	import axios from 'axios';
-	import { ZoneSearch } from '$lib/components/zone';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { Item } from '$lib/types/item';
-	import type { Zone } from '$lib/types/zone';
 
 	let init: Item = page.data.i, // should not change
 		item: Item = $state(page.data.i),
@@ -23,18 +21,7 @@
 		saving = $state(false),
 		hidden: boolean = $state(!!init.h),
 		images_to_remove: string[] = $state([]),
-		currentZones: Zone[] = $state(init.z || []),
-		newZones: Zone[] = $state([]),
-		selectedPlaces: Zone[] = $state([]),
-		zonesToRemove: string[] = $state([]),
-		voice_recording = $state(false),
-		voice_loading = $state(false),
-		vision_loading = $state(false),
-		voice_supported = $state(false);
-
-	let media_recorder: MediaRecorder | null = null;
-	let recorded_chunks: BlobPart[] = [];
-	let suggestion: Item | null = $state(null);
+		suggestion: Item | null = $state(null);
 
 	let currencies = $state([
 		{ value: '₦', label: 'Naira (₦)' },
@@ -67,11 +54,7 @@
 			a: item.a,
 			p: item.p,
 			c: item.c,
-			k: item.k,
-			z: currentZones.map((z) => ({
-				i: z.i,
-				n: z.n
-			}))
+			k: item.k
 		});
 
 	const handleImageSelection = (files: FileList) => {
@@ -86,10 +69,6 @@
 	};
 
 	onMount(() => {
-		voice_supported =
-			typeof window !== 'undefined' &&
-			'MediaRecorder' in window;
-
 		// Page entrance animations
 		const timeline = createTimeline()
 			.add('.page-header', {
@@ -293,18 +272,6 @@
 				/* no files */
 			}
 
-			if (zonesToRemove.length > 0) {
-				formData.append(
-					'zr',
-					JSON.stringify(zonesToRemove)
-				);
-			}
-			if (newZones.length > 0) {
-				formData.append(
-					'z',
-					JSON.stringify(newZones.map((z) => z.i))
-				);
-			}
 			const res = await axios.post(
 				`/~/items/${item.i}/edit`,
 				formData,
@@ -428,7 +395,7 @@
 					</div>
 				</div>
 
-				Private Checkbox
+				<!-- Private Checkbox -->
 				<div class="form-field opacity-0">
 					<label
 						class="flex cursor-pointer items-center space-x-2"
@@ -602,117 +569,6 @@
 								No images currently
 							</p>
 						{/if}
-					</div>
-
-					<!-- Current Zones -->
-					<div class="form-field opacity-0">
-						<div
-							class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]"
-						>
-							Current Zones
-						</div>
-						{#if currentZones.length > 0}
-							<div
-								class="grid grid-cols-2 gap-4 md:grid-cols-3"
-							>
-								{#each currentZones as z (z.i)}
-									<div
-										class="relative rounded-lg border p-4"
-									>
-										<span class="block text-sm"
-											>{z.n}</span
-										>
-										<button
-											onclick={() => {
-												zonesToRemove.push(z.i);
-												currentZones =
-													currentZones.filter(
-														(zz) => zz.i !== z.i
-													);
-											}}
-											class="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-all hover:bg-red-600"
-											title="Remove zone"
-										>
-											×
-										</button>
-									</div>
-								{/each}
-							</div>
-						{:else}
-							<p class="text-sm text-gray-500">
-								No current zones
-							</p>
-						{/if}
-					</div>
-					p
-					<!-- New Zones -->
-					<div class="form-field opacity-0">
-						<div
-							class="mb-3 block text-lg font-bold text-[var(--color-theme-4)]"
-						>
-							New Zones
-						</div>
-						{#if newZones.length > 0}
-							<div
-								class="grid grid-cols-2 gap-4 md:grid-cols-3"
-							>
-								{#each newZones as z (z.i)}
-									<div
-										class="relative rounded-lg border p-4"
-									>
-										<span class="block text-sm"
-											>{z.n}</span
-										>
-										<button
-											onclick={() => {
-												newZones = newZones.filter(
-													(zz) => zz.i !== z.i
-												);
-												selectedPlaces =
-													selectedPlaces.filter(
-														(place) => place.i !== z.i
-													);
-											}}
-											class="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white transition-all hover:bg-red-600"
-											title="Remove new zone"
-										>
-											×
-										</button>
-									</div>
-								{/each}
-							</div>
-						{/if}
-					</div>
-
-					<!-- Zone Search -->
-					<div class="form-field opacity-0">
-						<div class="space-y-2">
-							<h2
-								class="text-lg font-semibold text-[var(--color-theme-4)]"
-							>
-								Add New Zones
-							</h2>
-							<ZoneSearch
-								onSelect={(z) => {
-									if (
-										!newZones.some(
-											(zz) => zz.i === z.i
-										)
-									) {
-										newZones.push(z);
-									}
-									if (
-										!selectedPlaces.some(
-											(place) => place.i === z.i
-										)
-									) {
-										selectedPlaces.push(z);
-									}
-								}}
-								source="osm"
-								hide_coords={true}
-							/>
-						</div>
 					</div>
 				</div>
 

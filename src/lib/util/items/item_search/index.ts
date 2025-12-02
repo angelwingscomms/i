@@ -55,10 +55,7 @@ export function restore_item_search_state(
 				parsed.k === 0 || parsed.k === 1
 					? parsed.k
 					: undefined,
-			s:
-				parsed.s === 'newest' || parsed.s === 'oldest'
-					? parsed.s
-					: 'relevance'
+			s: (['relevance', 'newest', 'oldest', 'name', 'price'] as const).includes(parsed.s as any) ? parsed.s as ItemSort : 'relevance'
 		};
 	} catch (error) {
 		console.error(
@@ -80,9 +77,10 @@ export function parse_item_kind(
 export function parse_item_sort(
 	value: string
 ): ItemSort {
-	return value === 'newest' || value === 'oldest'
-		? value
-		: 'relevance';
+	if (['relevance', 'newest', 'oldest', 'name', 'price'].includes(value)) {
+		return value as ItemSort;
+	}
+	return 'relevance';
 }
 
 export function create_item_search_controller(
@@ -112,12 +110,12 @@ export function create_item_search_controller(
 
 	const handle_kind_change = (value: string) => {
 		config.set_kind(parse_item_kind(value));
-		schedule();
+		trigger_search();
 	};
 
 	const handle_sort_change = (value: string) => {
 		config.set_sort(parse_item_sort(value));
-		schedule();
+		trigger_search();
 	};
 
 	const trigger_search = () => {

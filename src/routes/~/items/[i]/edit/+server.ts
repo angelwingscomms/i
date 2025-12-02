@@ -3,7 +3,6 @@ import { edit_point } from '$lib/db';
 import type { RequestHandler } from './$types';
 import { get } from '$lib/db';
 import type { Item } from '$lib/types/item';
-import type { Zone } from '$lib/types/zone';
 import { embed } from '$lib/util/embed';
 import { collection } from '$lib/constants';
 import { upload_image } from '$lib/integrations/r2_storage';
@@ -127,10 +126,6 @@ export const POST: RequestHandler = async ({
 	const new_x =
 		x.length > 0 ? [...kept_x, ...x] : kept_x;
 
-	const zones = data.get('z')
-		? JSON.parse(data.get('z') as string)
-		: item.z || [];
-
 	const payload = {
 		...item,
 		n,
@@ -139,14 +134,13 @@ export const POST: RequestHandler = async ({
 		p: price,
 		c,
 		h,
-		x: new_x,
-		z: zones
+		x: new_x
 	};
 
 	const embed_text =
 		`${payload.n} ${payload.a || ''} ${
 			price ? `price ${price}` : ''
-		} ${zones.map((z: Zone) => z.n).join(' ')}`.trim();
+		}`.trim();
 	const vector = await embed(embed_text);
 
 	await edit_point(i, payload);

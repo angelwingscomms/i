@@ -5,6 +5,7 @@
 	} from '$lib/components/items';
 	import Button from '$lib/components/Button.svelte';
 	import type { Item } from '$lib/types/item';
+	import type { ItemSort } from '$lib/util/items/types';
 	import type { PageProps } from './$types';
 	import { onMount } from 'svelte';
 	import {
@@ -14,6 +15,8 @@
 	} from 'animejs';
 	import { toast } from '$lib/util/toast.svelte';
 	import { page } from '$app/state';
+
+	type ItemWithId = Item & { i: string };
 
 	let { data }: PageProps = $props();
 	let {
@@ -28,12 +31,8 @@
 			tag: string;
 			m?: string;
 			avatar?: string;
-			age?: number;
-			gender?: number;
 			description?: string;
 			socialLinks: string[];
-			phones?: string[];
-			emails?: string[];
 		};
 		c: string[];
 		it: Array<Item & { i: string }>;
@@ -41,14 +40,21 @@
 		m: Record<string, unknown>;
 	};
 
-	const phone_numbers = $derived(user?.phones ?? []);
-	const primary_email = $derived(user?.primary_email ?? '');
-	const email_addresses = $derived(user?.emails ?? []);
-	const all_emails = $derived(primary_email ? [primary_email, ...email_addresses] : email_addresses);
-
 	const other_posts = $derived(
 		Boolean(posts_count && posts_count > 0)
 	);
+
+	let item_query = $state('');
+	let item_kind = $state<0 | 1 | undefined>(
+		undefined
+	);
+	let item_sort = $state<ItemSort>('relevance');
+	let item_searching = $state(false);
+	let filtered_items = $state<ItemWithId[]>([]);
+
+	$effect(() => {
+		filtered_items = [...items];
+	});
 
 	onMount(() => {
 		// Entrance animations
@@ -216,6 +222,43 @@
 			}; // Fallback to raw URL, generic icon
 		}
 	}
+
+	async function handle_item_search() {
+		item_searching = true;
+		await new Promise((resolve) =>
+			setTimeout(resolve, 400)
+		);
+		let res = items.filter((item: ItemWithId) => {
+			const matches_query =
+				!item_query ||
+				item.n
+					?.toLowerCase()
+					.includes(item_query.toLowerCase()) ||
+				item.a
+					?.toLowerCase()
+					.includes(item_query.toLowerCase());
+			const matches_kind =
+				item_kind === undefined ||
+				item.k === item_kind;
+			return matches_query && matches_kind;
+		});
+		res.sort((a: ItemWithId, b: ItemWithId) => {
+			switch (item_sort) {
+				case 'newest':
+					return Number(b.d || 0) - Number(a.d || 0);
+				case 'oldest':
+					return Number(a.d || 0) - Number(b.d || 0);
+				case 'name':
+					return (a.n || '').localeCompare(b.n || '');
+				case 'price':
+					return Number(a.p || 0) - Number(b.p || 0);
+				default:
+					return 0;
+			}
+		});
+		filtered_items = res;
+		item_searching = false;
+	}
 </script>
 
 <svelte:head>
@@ -301,40 +344,6 @@
 						</button>
 					</div>
 
-					{#if phone_numbers.length}
-						<div class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase">
-							{#each phone_numbers as phone (phone)}
-								<a
-									href="tel:{phone}"
-									class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:text-[var(--color-theme-4)] feature-link"
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									<i class="fas fa-phone text-xs"></i>
-									{phone}
-								</a>
-							{/each}
-						</div>
-					{/if}
-
-					{#if user.show_email && all_emails.length}
-					<div
-						class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
-					>
-						{#each all_emails as email (email)}
-							<a
-								href="mailto:{email}"
-								class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:text-[var(--color-theme-4)] feature-link"
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								<i class="fas fa-envelope text-xs"></i>
-								{email}
-							</a>
-						{/each}
-					</div>
-					{/if}
-
 					{#if user.socialLinks && user.socialLinks.length > 0}
 						<div
 							class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
@@ -346,11 +355,10 @@
 									href={link}
 									target="_blank"
 									rel="noopener noreferrer"
-									class="flex gap-1 transition hover:text-[var(--color-theme-4)] capitalize feature-link"
+									class="feature-link flex gap-1 capitalize transition hover:text-[var(--color-theme-4)]"
 								>
 									{#if faIcon}
-										<i class="{faIcon} text-xs"
-										></i>
+										<i class="{faIcon} text-xs"></i>
 									{:else}
 										<i
 											class="fas fa-external-link-alt text-xs"
@@ -361,47 +369,6 @@
 							{/each}
 						</div>
 					{/if}
-
-					<div
-						class="flex flex-wrap justify-center gap-4 sm:flex-col sm:items-center"
-					>
-						{#if user.show_age}
-							<span
-								class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
-								style="background: var(--color-theme-1);"
-							>
-								Age: {user.age ?? 'hidden'}
-							</span>
-						{/if}
-						<!-- <span
-							class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
-							style="background: var(--color-theme-2);"
-						>
-							<div
-								class="mt-2 flex items-center justify-center gap-3"
-							>
-								<span
-									class="badge"
-									title="online status"
-									>{data.u?.on &&
-									Date.now() - (data.u.on as any) <
-										60_000
-										? 'online'
-										: 'offline'}</span
-								>
-							</div>
-						</span> -->
-						{#if user.show_gender}
-							<span
-								class="interactive-card rounded-full px-6 py-3 font-semibold text-white shadow-lg"
-								style="background: var(--color-theme-3);"
-							>
-								{user.gender === 0
-									? 'Male'
-									: 'Female'}
-							</span>
-						{/if}
-					</div>
 
 					{#if data.user?.i === user.i}
 						<!-- Edit Profile Action -->
@@ -414,23 +381,23 @@
 							/>
 						</div>
 						<div
-						class="mt-4 flex flex-wrap items-center justify-center gap-3"
-					>
-						<Button
-							href="/~/items/new"
-							text="create item"
-							icon="fa-plus"
-							variant="primary"
-						/>
-						{#if other_posts}
+							class="mt-4 flex flex-wrap items-center justify-center gap-3"
+						>
 							<Button
-								href={`/${user.tag}/posts`}
-								text="view posts"
-								icon="fa-newspaper"
+								href="/~/items/new"
+								text="create item"
+								icon="fa-plus"
 								variant="primary"
 							/>
-						{/if}
-					</div>
+							{#if other_posts}
+								<Button
+									href={`/${user.tag}/posts`}
+									text="view posts"
+									icon="fa-newspaper"
+									variant="primary"
+								/>
+							{/if}
+						</div>
 
 						{#if !user.description}
 							<div
@@ -571,7 +538,7 @@
 			{/if}
 		</section>
 
-		{#if itemSearchData.total > 0}
+		{#if items && items.length > 0}
 			<section
 				class="mx-auto max-w-6xl px-4 py-8 sm:px-2 sm:py-6"
 			>
@@ -579,12 +546,9 @@
 					class="mb-6 text-2xl font-bold"
 					style="color: var(--color-theme-4);"
 				>
-					{itemSearchData.total > 1
-						? `search ${user.tag}'s items`
-						: `${user.tag}'s items`}
+					{`${user.tag}'s items`}
 				</h2>
-				{#if itemSearchData.total > 1}
-					<ItemSearch
+									<ItemSearch
 						data={{
 							...itemSearchData,
 							userTag: user.tag
@@ -592,10 +556,20 @@
 						showSort={true}
 					/>
 				{/if}
-				{#if items.length > 0}
-					<div class="mt-6">
-						<ItemResultsList results={items} />
-					</div>
+				{#if filtered_items.length > 0 || item_searching}
+					{#if item_searching}
+						<div class="flex justify-center py-12">
+							<div
+								class="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-[var(--color-theme-1)]"
+							></div>
+						</div>
+					{:else}
+						<div class="mt-6">
+							<ItemResultsList
+								results={filtered_items}
+							/>
+						</div>
+					{/if}
 				{/if}
 			</section>
 		{/if}
@@ -642,24 +616,6 @@
 			</div>
 		</div>
 	{/if}
-
-	{#if user.show_email && all_emails.length}
-	<div
-		class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
-	>
-		{#each all_emails as email (email)}
-			<a
-				href="mailto:{email}"
-				class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:text-[var(--color-theme-4)] feature-link"
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				<i class="fas fa-envelope text-xs"></i>
-				{email}
-			</a>
-		{/each}
-	</div>
-{/if}
 </div>
 
 <!-- Custom Styles for Animations -->

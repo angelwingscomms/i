@@ -56,6 +56,18 @@
 			maxAge = undefined;
 		}
 	});
+
+	// New state for gender filtering
+	let filter_by_gender = $state(false);
+	let _gender = $state<number | undefined>(undefined);
+
+	$effect(() => {
+		if (filter_by_gender) {
+			gender = _gender;
+		} else {
+			gender = undefined;
+		}
+	});
 </script>
 
 <div
@@ -92,13 +104,39 @@
 			{/if}
 
 			{#if showAdvanced}
-				<GenderSelection
+				<!-- <GenderSelection
 					onchange={(gender) => {
 						axios.post('/~/edit_user', { gender });
 					}}
 					head="Your Gender"
-				/>
-				<GenderSelection show_all bind:gender />
+				/> -->
+
+				<!-- Filter by Gender Toggle Switch -->
+				<label class="toggle-switch-container">
+					<input
+						type="checkbox"
+						class="toggle-switch-input"
+						bind:checked={filter_by_gender}
+					/>
+					<div
+						class="toggle-switch-track"
+						class:toggle-switch-track-checked={filter_by_gender}
+					>
+						<div
+							class="toggle-switch-thumb"
+							class:toggle-switch-thumb-checked={filter_by_gender}
+						></div>
+					</div>
+					<span
+						class="text-secondary ml-3 cursor-pointer text-sm font-medium"
+						>gender filter</span
+					>
+				</label>
+
+				{#if filter_by_gender}
+					<GenderSelection show_all bind:gender={_gender} />
+				{/if}
+
 				<div class="flex-1">
 					<label
 						for="age"

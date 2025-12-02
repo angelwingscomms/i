@@ -279,48 +279,58 @@
 				<div class="flex items-center gap-2">
 					{#if !isRecording && !isTranscribing}
 						{#if voice_typing}
-							<Button
+							<button
+								class="flex size-8 items-center justify-center rounded-none bg-transparent p-0 text-[var(--text-primary)] hover:bg-[var(--color-theme-6)/0.2] hover:text-[var(--color-theme-1)] transition-all active:scale-[0.95]"
 								onclick={startRecording}
-								icon="fa-microphone"
 								type="button"
-							/>
+								title="voice typing"
+							>
+								<i class="fas fa-microphone text-base"></i>
+							</button>
 						{/if}
 						{#if send}
-							<Button
+							<button
+								class="flex size-8 items-center justify-center rounded-none bg-transparent p-0 text-[var(--text-primary)] hover:bg-[var(--color-theme-6)/0.2] hover:text-[var(--color-theme-1)] transition-all active:scale-[0.95] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
 								onclick={() => send(value)}
-								icon={send_loading
-									? 'fa-spinner'
-									: 'fa-paper-plane'}
-								loading={send_loading}
 								disabled={send_loading}
 								type="button"
-							/>
+								title="send"
+							>
+								<i class={`fas ${send_loading ? 'fa-spinner fa-spin' : 'fa-paper-plane'} text-base`}></i>
+							</button>
 						{/if}
 					{:else if isRecording}
-						<Button
+						<button
+							class="flex size-8 items-center justify-center rounded-none bg-red-400/90 text-white p-0 hover:bg-red-500/90 hover:scale-[1.05] transition-all active:scale-[0.95]"
 							onclick={stopRecording}
-							icon="fa-circle"
 							type="button"
-						/>
+							title="stop recording"
+						>
+							<i class="fas fa-circle text-base"></i>
+						</button>
 					{:else}
-						<Button
-							icon="fa-spinner"
-							disabled={true}
-							loading={true}
+						<button
+							disabled
+							class="flex size-8 items-center justify-center rounded-none bg-transparent p-0 opacity-50"
 							type="button"
-						/>
+							title="transcribing..."
+						>
+							<i class="fas fa-spinner fa-spin text-base"></i>
+						</button>
 					{/if}
 				</div>
 				{#if buttons?.length}
-					<div class="flex items-center gap-2">
+					<div class="flex items-center gap-1">
 						{#each buttons as btn}
-							<Button
+							<button
+								class="flex size-8 items-center justify-center rounded-none bg-transparent p-0 text-[var(--text-primary)] hover:bg-[var(--color-theme-6)/0.2] hover:text-[var(--color-theme-1)] transition-all active:scale-[0.95] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
 								onclick={btn.send}
-								icon={btn.icon_classes}
-								loading={btn.loading}
 								disabled={btn.loading}
 								type="button"
-							/>
+								title="custom button"
+							>
+								<i class={`fas ${btn.icon_classes} text-base`}></i>
+							</button>
 						{/each}
 					</div>
 				{/if}
