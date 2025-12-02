@@ -1,7 +1,3 @@
-make it super easy to add new items
-increase default button horizontal padding to avoid cramped layout
-
-
 event joined updates
 
 make combo.svelte width take up available width whereever it is used and nothing more
@@ -10,12 +6,14 @@ type filter on user detail page not working, ideally on type option click, show 
 
 remove emails (and any other contact/user detail there) from bottom of user detail page
 
-
-fix W
-
 make buttons in description input smaller (same size as the x and + buttons in social media links section in user edit page), remove border radius, border, and padding
 
+no border radius on select.svelte and combo.svelte
 
+delete button on item detail page
+
+item edit page
+    remove zone input
 ---
 
 all user profile details
@@ -23,3 +21,6 @@ all item details
 user item search
     type
     sort by
+
+make it super easy to add new items
+increase default button horizontal padding to avoid cramped layout
