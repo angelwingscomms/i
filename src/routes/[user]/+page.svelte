@@ -42,9 +42,9 @@
 	};
 
 	const phone_numbers = $derived(user?.phones ?? []);
-	const email_addresses = $derived(
-		user?.emails ?? []
-	);
+	const primary_email = $derived(user?.primary_email ?? '');
+	const email_addresses = $derived(user?.emails ?? []);
+	const all_emails = $derived(primary_email ? [primary_email, ...email_addresses] : email_addresses);
 
 	const other_posts = $derived(
 		Boolean(posts_count && posts_count > 0)
@@ -315,6 +315,24 @@
 								</a>
 							{/each}
 						</div>
+					{/if}
+
+					{#if user.show_email && all_emails.length}
+					<div
+						class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
+					>
+						{#each all_emails as email (email)}
+							<a
+								href="mailto:{email}"
+								class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:text-[var(--color-theme-4)] feature-link"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<i class="fas fa-envelope text-xs"></i>
+								{email}
+							</a>
+						{/each}
+					</div>
 					{/if}
 
 					{#if user.socialLinks && user.socialLinks.length > 0}
@@ -625,20 +643,23 @@
 		</div>
 	{/if}
 
-	{#if email_addresses.length}
-		<div
-			class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
-		>
-			{#each email_addresses as address (address)}
-				<span
-					class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2"
-				>
-					<i class="fas fa-envelope text-xs"></i>
-					{address}
-				</span>
-			{/each}
-		</div>
-	{/if}
+	{#if user.show_email && all_emails.length}
+	<div
+		class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
+	>
+		{#each all_emails as email (email)}
+			<a
+				href="mailto:{email}"
+				class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:text-[var(--color-theme-4)] feature-link"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				<i class="fas fa-envelope text-xs"></i>
+				{email}
+			</a>
+		{/each}
+	</div>
+{/if}
 </div>
 
 <!-- Custom Styles for Animations -->

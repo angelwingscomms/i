@@ -26,7 +26,8 @@ export const load: PageServerLoad = async ({
 				'm',
 				'y',
 				'o',
-				'z'
+				'z',
+				'ke'
 			])),
 			i: locals.user.i
 		}

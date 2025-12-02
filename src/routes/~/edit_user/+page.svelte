@@ -46,8 +46,10 @@
 		),
 		show_age = $state(Boolean((data.u as any).y)),
 		show_gender = $state(Boolean((data.u as any).o)),
+		show_email = $state(Boolean((data.u as any).ke || false)),
+
 		fileInput: HTMLInputElement | null = null,
-		zone_query = $state(''),
+
 		phone_entry = $state(''),
 		email_entry = $state('');
 
@@ -183,7 +185,7 @@
 					k: uniqueEmails,
 					y: show_age,
 					o: show_gender,
-					z: zones
+					ke: show_email
 				}
 			);
 
@@ -228,77 +230,11 @@
 	<div class="container-narrow min-h-screen py-8">
 		<header class="mb-8 text-center">
 			<h1 class="hero-title mb-4">edit profile</h1>
-			<p class="hero-subtitle">
-				update your information to improve matching
-			</p>
+			
 		</header>
 
 		<div class="card-normal">
-			<div class="form-group">
-				<span class="form-label" id="zones-label"
-					>zones</span
-				>
-				{#if zones.length}
-					<ul
-						class="space-y-2"
-						aria-labelledby="zones-label"
-					>
-						{#each zones as zone_id (zone_id)}
-							<li
-								class="flex items-center justify-between rounded border border-[var(--border)] px-3 py-2 text-sm"
-							>
-								<span class="truncate">{zone_id}</span
-								>
-								<Button
-									text="remove"
-									variant="secondary"
-									onclick={() => {
-										zones = zones.filter(
-											(id) => id !== zone_id
-										);
-									}}
-								/>
-							</li>
-						{/each}
-					</ul>
-				{:else}
-					<p
-						class="text-sm text-[var(--text-secondary)]"
-						aria-live="polite"
-					>
-						no zones yet
-					</p>
-				{/if}
-				<div class="mt-3 grid gap-3">
-					<input
-						bind:value={zone_query}
-						placeholder="place id"
-						class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm text-[var(--text)]"
-						aria-describedby="zones-label"
-					/>
-					<div class="flex gap-2">
-						<Button
-							text="add"
-							variant="secondary"
-							onclick={() => {
-								const value = zone_query.trim();
-								if (!value || zones.includes(value))
-									return;
-								zones = [...zones, value];
-								zone_query = '';
-							}}
-						/>
-						<Button
-							text="clear"
-							variant="secondary"
-							onclick={() => {
-								zones = [];
-								zone_query = '';
-							}}
-						/>
-					</div>
-				</div>
-			</div>
+		
 
 			<div class="form-group">
 				<label for="name" class="form-label"
@@ -376,11 +312,10 @@
 					</p>
 				{/if}
 				<div class="mt-3 grid gap-3">
-					<input
+					<DescriptionInput
 						bind:value={phone_entry}
 						placeholder="enter phone number"
-						class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm text-[var(--text)]"
-						aria-describedby="phones-label"
+						voice_typing={false}
 					/>
 					<div class="flex gap-2">
 						<Button
@@ -446,15 +381,13 @@
 					</p>
 				{/if}
 				<div class="mt-3 grid gap-3">
-					<input
+					<DescriptionInput
 						bind:value={email_entry}
 						placeholder="enter email"
-						class="w-full rounded border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm text-[var(--text)]"
-						aria-describedby="emails-label"
+						voice_typing={false}
 					/>
 					<div class="flex gap-2">
-						<Button
-							<Button
+										<Button
 							text="add"
 							variant="secondary"
 							onclick={() => {
@@ -604,6 +537,14 @@
 								show_gender = !show_gender;
 							}}
 						/>
+						<Button
+							text={`show email: ${show_email ? 'on' : 'off'}`}
+							variant="secondary"
+							onclick={(e) => {
+								e.preventDefault();
+								show_email = !show_email;
+							}}
+						/>
 					</div>
 					<input
 						type="hidden"
@@ -614,6 +555,11 @@
 						type="hidden"
 						name="o"
 						value={show_gender ? '1' : ''}
+					/>
+					<input
+						type="hidden"
+						name="ke"
+						value={show_email ? '1' : ''}
 					/>
 				</div>
 
@@ -744,7 +690,6 @@
 					<Button
 						href={`/${data.u.t}`}
 						text="view profile"
-						target="_blank"
 						variant="secondary"
 					/>
 					<Button

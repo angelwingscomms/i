@@ -34,10 +34,12 @@ export const load: PageServerLoad = async ({
 		gender: user.g,
 		show_age: Boolean(user.y),
 		show_gender: Boolean(user.o),
+		show_email: Boolean(user.ke),
 		description: user.d,
 		socialLinks: user.x || [],
 		phones: user.b || [],
 		emails: user.k || [],
+		primary_email: user.e || '',
 		on: user.on,
 		ic: user.ic
 	};

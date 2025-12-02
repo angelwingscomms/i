@@ -39,6 +39,7 @@ export const POST: RequestHandler = async ({
 			m,
 			y,
 			o,
+			ke,
 			z
 		} = await request.json();
 
@@ -116,6 +117,10 @@ export const POST: RequestHandler = async ({
 
 		if (typeof o === 'boolean') {
 			updatedUser.o = o;
+		}
+
+		if (typeof ke === 'boolean') {
+			updatedUser.ke = ke;
 		}
 
 		if (

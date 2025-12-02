@@ -23,7 +23,8 @@ export interface User {
 	w?: string; // whatsapp link
 	y?: boolean; // show age on profile
 	o?: boolean; // show gender on profile
-	gid?: string; // google id
+	ke?: boolean; // show emails on profile
+	z?: string[]; // zones
 	p?: string; // password hash
 	i?: string; // user id
 	dc?: number; // date created
