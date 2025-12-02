@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ResourceSearch } from '$lib/components/resource_n';
+	import { ResourceSearch } from '$lib/components/resource';
 
 	let { data } = $props();
 </script>
