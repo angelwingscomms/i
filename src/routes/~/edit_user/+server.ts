@@ -272,3 +272,13 @@ export const POST: RequestHandler = async ({
 		);
 	}
 };
+
+export const DELETE: RequestHandler = async ({
+	locals
+}) => {
+	if (!locals.user || !locals.user.i) {
+		error(401, 'Unauthorized');
+	}
+	await qdrant.delete('i', {points: [locals.user.i]});
+	return new Response()
+}

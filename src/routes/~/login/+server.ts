@@ -8,6 +8,8 @@ import {
 	find_user_by_email
 } from '$lib/db';
 import { create_user } from '$lib/auth';
+import { realtime } from '$lib/util/realtime';
+import { error } from '@sveltejs/kit';
 
 export async function PUT(event) {
 	const { identifier, password } =
@@ -118,25 +120,6 @@ export async function POST(event) {
 	const { username, password, email } =
 		await event.request.json();
 
-	if (!validateUsername(username)) {
-		return new Response(
-			JSON.stringify({
-				error:
-					'Invalid username (min 3, max 31 characters, alphanumeric only)'
-			}),
-			{ status: 400 }
-		);
-	}
-	if (!validatePassword(password)) {
-		return new Response(
-			JSON.stringify({
-				error:
-					'Invalid password (min 6, max 255 characters)'
-			}),
-			{ status: 400 }
-		);
-	}
-
 	if (!validateEmail(email)) {
 		return new Response(
 			JSON.stringify({
@@ -167,9 +150,38 @@ export async function POST(event) {
 	const passwordHash = await hashPassword(password);
 
 	try {
+		
+
+		let createMeetingRes;
+		try {
+			createMeetingRes = await realtime.post(
+				'meetings',
+				{ title: username }
+			);
+			if (
+				!createMeetingRes ||
+				createMeetingRes?.statusText === 'OK'
+			)
+				throw new Error('Failed to create live room');
+			console.log(
+				'create_meeting_res',
+				createMeetingRes
+			);
+		} catch (err) {
+			console.error(
+				'create cloudflare realtime meeting error: ',
+				err
+			);
+			throw error(
+				500,
+				'Failed to create user live room due to an internal server error. Please try again.'
+			);
+		}
+
 		const userId = await create_user(username, {
 			p: passwordHash,
-			e: normalizedEmail
+			e: normalizedEmail,
+			q: createMeetingRes.data.data.id
 		});
 
 		const session = await auth.createSession(

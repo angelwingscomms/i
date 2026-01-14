@@ -1,10 +1,11 @@
 import { create } from '$lib/db';
 import type { User } from '$lib/types';
 import { realtime } from '$lib/util/realtime';
+import { string } from 'zod';
 
 export const create_user = async (
 	tag: string,
-	other: { p?: string; gid?: string; e?: string }
+	other: { p?: string; gid?: string; e?: string, q: string }
 ) => {
 	return await create<User>({
 		s: 'u',

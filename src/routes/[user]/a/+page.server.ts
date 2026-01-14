@@ -10,10 +10,10 @@ import { createRoom } from '$lib/room/create';
 
 export const load: PageServerLoad = async ({
 	locals,
+	parent,
 	params
 }) => {
-	const user = await find_user_by_tag(params.user);
-	if (!user) error(404, 'user not found');
+	const {user} = await parent();
 	if (user.s !== 'u') error(400, 'resource not user');
 	if (!locals.user) {
 		redirect(302, `/~/login?next=/${params.user}/a`);

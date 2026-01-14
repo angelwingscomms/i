@@ -182,7 +182,7 @@
 							>
 								{#each item.x as image, index}
 									<button
-										class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20 {selectedImageIndex ===
+										class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl border-2 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 {selectedImageIndex ===
 										index
 											? 'border-white shadow-lg shadow-purple-500/30'
 											: 'border-white/30 hover:border-white/50'}"
@@ -1019,7 +1019,7 @@
 					>
 						{#each item.x as image, index}
 							<button
-								class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all duration-300 hover:scale-105 {selectedImageIndex ===
+								class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all duration-300 {selectedImageIndex ===
 								index
 									? 'border-white shadow-lg shadow-white/20'
 									: 'border-white/30 hover:border-white/50'}"

@@ -389,7 +389,7 @@ export async function get_username_from_id(
 
 export const find_user_by_tag = async (t: string) => {
 	return (
-		await search_by_payload<User>({ s: 'u', t })
+		await search_by_payload<User>({ s: 'u', t }, ['q'])
 	)[0];
 };
 

@@ -13,12 +13,13 @@ import type { Item } from '$lib/types/item';
 
 export const load: PageServerLoad = async ({
 	locals,
+	parent,
 	params
 }) => {
 	const { user: tag } = params;
 
 	// Get the user by tag
-	const user = await find_user_by_tag(tag);
+	const {user} = await parent();
 
 	if (!user) {
 		throw error(404, 'User not found');

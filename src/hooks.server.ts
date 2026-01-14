@@ -10,7 +10,7 @@ import {
 	createSessionJWT
 } from '$lib/server/auth';
 
-import { get as getDb } from '$lib/db';
+import { find_user_by_tag, get as getDb } from '$lib/db';
 import type { User } from '$lib/types';
 import { dev } from '$app/environment';
 
@@ -26,6 +26,9 @@ export const handle: Handle = async ({
 	event,
 	resolve
 }) => {
+	if (event.params.user) {
+		const user  = await find_user_by_tag(event.params.user);
+	}
 	if (
 		event.url.pathname.includes('resource_name') &&
 		!dev

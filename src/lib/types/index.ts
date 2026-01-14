@@ -41,9 +41,11 @@ export interface User {
 	isAdmin?: boolean; // whether user is an admin
 	ps?: PushSubscription[]; // push subscription
 	e?: string; // email
+	q?: string, // cloudflare meeting live room id
 	pe?: number; // password reset expiry timestamp
 	pt?: string; // password reset token hash
 	pr?: number; // password reset request timestamp
+	v?: string; // gallery
 }
 
 export interface Group {

@@ -370,6 +370,15 @@
 						</div>
 					{/if}
 
+					<div class="mt-6 flex justify-center">
+							<Button
+								href="/{user.tag}/live"
+								text="view live stream"
+								icon="fa-edit"
+								variant="primary"
+							/>
+						</div>
+
 					{#if data.user?.i === user.i}
 						<!-- Edit Profile Action -->
 						<div class="mt-6 flex justify-center">
@@ -555,7 +564,6 @@
 						}}
 						showSort={true}
 					/>
-				{/if}
 				{#if filtered_items.length > 0 || item_searching}
 					{#if item_searching}
 						<div class="flex justify-center py-12">

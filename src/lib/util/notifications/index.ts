@@ -281,7 +281,7 @@ export async function unsubscribe_push() {
 		);
 		try {
 			const response = await axios.post(
-				'/api/notifications/unsubscribe',
+				'/~/api/notifications/unsubscribe',
 				sub
 			);
 			notif_debug(

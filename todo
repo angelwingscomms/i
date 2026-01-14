@@ -1,11 +1,12 @@
 event joined updates
-
 make combo.svelte width take up available width whereever it is used and nothing more
 
 type filter on user detail page not working, ideally on type option click, show loading indicator, then filtered results, same for sort by filter
 
 make buttons in description input smaller (same size as the x and + buttons in social media links section in user edit page), remove border radius, border, and padding
 remove right arrow from user search result
+
+item detail page, remove enlarge effect when hover over image thumbnail, keep other hover effects
 
 ---
 

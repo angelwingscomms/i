@@ -10,6 +10,7 @@
 		validate_email,
 		normalize_phone
 	} from '$lib/util/users/contact';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
 	let form: {
@@ -46,10 +47,10 @@
 		),
 		show_age = $state(Boolean((data.u as any).y)),
 		show_gender = $state(Boolean((data.u as any).o)),
-		show_email = $state(Boolean((data.u as any).ke || false)),
-
+		show_email = $state(
+			Boolean((data.u as any).ke || false)
+		),
 		fileInput: HTMLInputElement | null = null,
-
 		phone_entry = $state(''),
 		email_entry = $state('');
 
@@ -230,12 +231,9 @@
 	<div class="container-narrow min-h-screen py-8">
 		<header class="mb-8 text-center">
 			<h1 class="hero-title mb-4">edit profile</h1>
-			
 		</header>
 
 		<div class="card-normal">
-		
-
 			<div class="form-group">
 				<label for="name" class="form-label"
 					>name</label
@@ -387,7 +385,7 @@
 						voice_typing={false}
 					/>
 					<div class="flex gap-2">
-										<Button
+						<Button
 							text="add"
 							variant="secondary"
 							onclick={() => {
@@ -696,6 +694,16 @@
 						href="/~/"
 						text="cancel"
 						variant="secondary"
+						wide={true}
+					/>
+
+					<Button
+						onclick={async () => {
+							await axios.delete('/~/edit_user');
+							alert('deleted');
+							goto('/');
+						}}
+						text="delete user"
 						wide={true}
 					/>
 				</div>
