@@ -5,7 +5,7 @@ import {
 	QDRANT_URL
 } from '$env/static/private';
 import { QdrantClient } from '@qdrant/js-client-rest';
-import { collection } from '$lib/constants';
+import { collection, default_user_fields } from '$lib/constants';
 import type { User } from '$lib/types';
 import { embed } from '$lib/util/embed';
 import { new_id } from '$lib/util/new_id';
@@ -389,7 +389,7 @@ export async function get_username_from_id(
 
 export const find_user_by_tag = async (t: string) => {
 	return (
-		await search_by_payload<User>({ s: 'u', t }, ['q'])
+		await search_by_payload<User>({ s: 'u', t }, default_user_fields)
 	)[0];
 };
 
