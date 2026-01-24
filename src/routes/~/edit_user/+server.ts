@@ -31,6 +31,7 @@ export const POST: RequestHandler = async ({
 			latitude,
 			longitude,
 			whatsapp,
+			telegram,
 			socialLinks,
 			avatarDataUrl,
 			email,
@@ -150,9 +151,42 @@ export const POST: RequestHandler = async ({
 				(link) => typeof link === 'string'
 			)
 		) {
-			updatedUser.x = socialLinks
+			let filtered = socialLinks
 				.filter((link: string) => link.trim() !== '')
 				.map((link: string) => link.trim());
+			
+			// Handle dedicated whatsapp and telegram fields
+			if (
+				typeof whatsapp === 'string' &&
+				whatsapp.trim()
+			) {
+				updatedUser.wh = whatsapp.trim();
+				// Remove any existing whatsapp links from socialLinks
+				filtered = filtered.filter(
+					(link: string) =>
+						!link.includes('whatsapp.com') &&
+						!link.includes('wa.me')
+				);
+			} else {
+				updatedUser.wh = undefined;
+			}
+
+			if (
+				typeof telegram === 'string' &&
+				telegram.trim()
+			) {
+				updatedUser.tg = telegram.trim();
+				// Remove any existing telegram links from socialLinks
+				filtered = filtered.filter(
+					(link: string) =>
+						!link.includes('telegram.org') &&
+						!link.includes('t.me')
+				);
+			} else {
+				updatedUser.tg = undefined;
+			}
+
+			updatedUser.x = filtered;
 		}
 
 		if (

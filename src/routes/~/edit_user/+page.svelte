@@ -28,6 +28,8 @@
 		longitude = $state(data.u!.n || 0),
 		zones = $state<string[]>(data.u!.z || []),
 		socialLinks = $state<string[]>(data.u!.x || []),
+		whatsapp = $state((data.u as any)?.wh || ''),
+		telegram = $state((data.u as any)?.tg || ''),
 		phones = $state<string[]>(
 			Array.isArray((data.u as any).b)
 				? (data.u as any).b
@@ -179,6 +181,8 @@
 					gender: +gender,
 					latitude,
 					longitude,
+					whatsapp,
+					telegram,
 					socialLinks,
 					avatarDataUrl,
 					email: primaryEmail,
@@ -631,39 +635,88 @@
 				</div>
 
 				<div class="form-group">
-					<span class="form-label" id="social_label"
-						>contact/social media links</span
+					<span class="form-label" id="links_label"
+						>links</span
 					>
-					<div class="mb-3 flex items-center gap-2">
-						<Button
-							text="+"
-							variant="secondary"
-							onclick={() =>
-								(socialLinks = [...socialLinks, ''])}
-						/>
-						<small class="form-help"
-							>whatsapp, telegram or social media
-							links</small
-						>
-					</div>
-					{#each socialLinks as _, index (index)}
-						<div class="social-link-item">
+					<div class="space-y-4">
+						<!-- WhatsApp -->
+						<div class="space-y-2">
+							<label for="whatsapp" class="form-help"
+								><i class="fa-brands fa-whatsapp"></i>
+								whatsapp</label
+							>
 							<DescriptionInput
-								bind:value={socialLinks[index]}
+								bind:value={whatsapp}
+								id="whatsapp"
 								type="url"
-								placeholder="enter social media link"
+								placeholder="https://wa.me/1234567890 or https://whatsapp.com/..."
 								voice_typing={false}
 							/>
-							<Button
-								text="×"
-								variant="secondary"
-								onclick={() =>
-									(socialLinks = socialLinks.filter(
-										(_, i) => i !== index
-									))}
+						</div>
+
+						<!-- Telegram -->
+						<div class="space-y-2">
+							<label for="telegram" class="form-help"
+								><i class="fa-brands fa-telegram"></i>
+								telegram</label
+							>
+							<DescriptionInput
+								bind:value={telegram}
+								id="telegram"
+								type="url"
+								placeholder="https://t.me/username or https://telegram.org/..."
+								voice_typing={false}
 							/>
 						</div>
-					{/each}
+
+						<!-- Other Links -->
+						<div class="space-y-2">
+							<div
+								class="flex items-center justify-between"
+							>
+								<label
+									for="other-links"
+									class="form-help"
+									>other links</label
+								>
+								<Button
+									text="+"
+									variant="secondary"
+									onclick={() =>
+										(socialLinks = [
+											...socialLinks,
+											''
+										])}
+								/>
+							</div>
+							<small class="form-help"
+								>add other social media or contact
+								links</small
+							>
+							{#each socialLinks as _, index (index)}
+								<div class="social-link-item">
+									<DescriptionInput
+										bind:value={socialLinks[
+											index
+										]}
+										type="url"
+										placeholder="enter social media link"
+										voice_typing={false}
+									/>
+									<Button
+										text="×"
+										variant="secondary"
+										onclick={() =>
+											(socialLinks =
+												socialLinks.filter(
+													(_, i) =>
+														i !== index
+												))}
+									/>
+								</div>
+							{/each}
+						</div>
+					</div>
 				</div>
 
 				{#if form?.error}

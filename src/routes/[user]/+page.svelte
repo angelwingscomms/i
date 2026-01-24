@@ -32,6 +32,9 @@
 			m?: string;
 			avatar?: string;
 			description?: string;
+			wh?: string;
+			tg?: string;
+			x?: string[];
 			socialLinks: string[];
 		};
 		c: string[];
@@ -344,11 +347,42 @@
 						</button>
 					</div>
 
-					{#if user.socialLinks && user.socialLinks.length > 0}
-						<div
-							class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
-						>
-							{#each user.socialLinks as link (link)}
+{#if user.wh || user.tg || (user.x && user.x.length > 0)}
+					<div
+						class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
+					>
+						<!-- WhatsApp Link -->
+						{#if user.wh}
+							<a
+								href={user.wh}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="feature-link flex gap-1 capitalize transition hover:text-[var(--color-theme-4)]"
+							>
+								<i
+									class="fa-brands fa-whatsapp text-xs"
+								></i>
+								whatsapp
+							</a>
+						{/if}
+
+						<!-- Telegram Link -->
+						{#if user.tg}
+							<a
+								href={user.tg}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="feature-link flex gap-1 capitalize transition hover:text-[var(--color-theme-4)]"
+							>
+								<i
+									class="fa-brands fa-telegram text-xs"
+								></i>
+								telegram
+							</a>
+						{/if}
+
+						<!-- Other Social Links -->
+						{#each user.x || [] as link (link)}
 								{@const { name, faIcon } =
 									getSocialMediaInfo(link)}
 								<a

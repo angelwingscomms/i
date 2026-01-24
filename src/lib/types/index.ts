@@ -21,6 +21,8 @@ export interface User {
 	l?: number; // latitude
 	n?: number; // longitude
 	w?: string; // whatsapp link
+	wh?: string; // whatsapp link (dedicated field)
+	tg?: string; // telegram link (dedicated field)
 	y?: boolean; // show age on profile
 	o?: boolean; // show gender on profile
 	ke?: boolean; // show emails on profile

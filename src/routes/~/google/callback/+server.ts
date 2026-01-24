@@ -35,6 +35,7 @@ export async function GET(
 		GOOGLE_SECRET,
 		`${event.url.origin}/~/google/callback`
 	);
+	console.log('redirect URL:', `${event.url.origin}/~/google/callback`);
 	// console.log('code:', code);
 	// console.log('state:', state);
 	// console.log('storedState:', storedState);
@@ -61,13 +62,17 @@ export async function GET(
 			code,
 			codeVerifier
 		);
-	} catch {
+	} catch (error) {
 		// Invalid code or client credentials
 		console.error(
-			'Invalid code or client credentials',
-			code,
-			codeVerifier
+			'Invalid code or client credentials error:',
+			error instanceof Error ? error.message : error
 		);
+		console.error('Details:', {
+			code: code ? code.substring(0, 20) + '...' : 'null',
+			redirectUrl: `${event.url.origin}/~/google/callback`,
+			hasCodeVerifier: !!codeVerifier
+		});
 		redirect(302, '/~/google');
 	}
 	const res = decodeIdToken(tokens.idToken()) as {
