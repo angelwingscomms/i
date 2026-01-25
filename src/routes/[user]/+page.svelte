@@ -32,10 +32,7 @@
 			m?: string;
 			avatar?: string;
 			description?: string;
-			wh?: string;
-			tg?: string;
-			x?: string[];
-			socialLinks: string[];
+			x?: Record<string, string>;
 		};
 		c: string[];
 		it: Array<Item & { i: string }>;
@@ -347,62 +344,31 @@
 						</button>
 					</div>
 
-{#if user.wh || user.tg || (user.x && user.x.length > 0)}
+{#if user.x && Object.keys(user.x).length > 0}
 					<div
 						class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
 					>
-						<!-- WhatsApp Link -->
-						{#if user.wh}
+						{#each Object.entries(user.x) as [linkName, url] (linkName)}
+							{@const { name, faIcon } =
+								getSocialMediaInfo(url)}
 							<a
-								href={user.wh}
+								href={url}
 								target="_blank"
 								rel="noopener noreferrer"
 								class="feature-link flex gap-1 capitalize transition hover:text-[var(--color-theme-4)]"
 							>
-								<i
-									class="fa-brands fa-whatsapp text-xs"
-								></i>
-								whatsapp
+								{#if faIcon}
+									<i class="{faIcon} text-xs"></i>
+								{:else}
+									<i
+										class="fas fa-external-link-alt text-xs"
+									></i>
+								{/if}
+								{linkName.toLowerCase()}
 							</a>
-						{/if}
-
-						<!-- Telegram Link -->
-						{#if user.tg}
-							<a
-								href={user.tg}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="feature-link flex gap-1 capitalize transition hover:text-[var(--color-theme-4)]"
-							>
-								<i
-									class="fa-brands fa-telegram text-xs"
-								></i>
-								telegram
-							</a>
-						{/if}
-
-						<!-- Other Social Links -->
-						{#each user.x || [] as link (link)}
-								{@const { name, faIcon } =
-									getSocialMediaInfo(link)}
-								<a
-									href={link}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="feature-link flex gap-1 capitalize transition hover:text-[var(--color-theme-4)]"
-								>
-									{#if faIcon}
-										<i class="{faIcon} text-xs"></i>
-									{:else}
-										<i
-											class="fas fa-external-link-alt text-xs"
-										></i>
-									{/if}
-									{name.toLowerCase()}
-								</a>
-							{/each}
-						</div>
-					{/if}
+						{/each}
+					</div>
+				{/if}
 
 					<div class="mt-6 flex justify-center">
 							<Button

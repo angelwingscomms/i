@@ -12,7 +12,7 @@ describe('get_contact_links', () => {
 
 	it('returns discord link when one exists', () => {
 		const result = get_contact_links({
-			x: ['https://discord.gg/example']
+			x: { discord: 'https://discord.gg/example' }
 		});
 		expect(result.discord).toEqual(
 			'https://discord.gg/example'
@@ -21,10 +21,10 @@ describe('get_contact_links', () => {
 
 	it('prefers primary discord link when multiple present', () => {
 		const result = get_contact_links({
-			x: [
-				'https://twitter.com/test',
-				'https://discord.com/invite/hello'
-			]
+			x: {
+				x: 'https://twitter.com/test',
+				discord: 'https://discord.com/invite/hello'
+			}
 		});
 		expect(result.discord).toEqual(
 			'https://discord.com/invite/hello'

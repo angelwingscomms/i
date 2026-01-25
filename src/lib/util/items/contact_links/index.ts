@@ -1,6 +1,6 @@
 type ContactPayload = {
 	w?: string;
-	x?: string[];
+	x?: Record<string, string>;
 };
 
 const clean_whatsapp = (value?: string) => {
@@ -9,13 +9,18 @@ const clean_whatsapp = (value?: string) => {
 	return digits.length ? digits : undefined;
 };
 
-const find_discord = (links?: string[]) => {
-	if (!links?.length) return undefined;
-	return links.find(
-		(link) =>
-			typeof link === 'string' &&
-			link.toLowerCase().includes('discord')
-	);
+const find_discord = (links?: Record<string, string>) => {
+	if (!links) return undefined;
+	for (const [key, url] of Object.entries(links)) {
+		if (
+			key.toLowerCase().includes('discord') ||
+			(typeof url === 'string' &&
+				url.toLowerCase().includes('discord'))
+		) {
+			return url;
+		}
+	}
+	return undefined;
 };
 
 export const get_contact_links = (
