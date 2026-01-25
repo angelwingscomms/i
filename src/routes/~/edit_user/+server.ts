@@ -30,7 +30,9 @@ export const POST: RequestHandler = async ({
 			gender,
 			latitude,
 			longitude,
-			contactLinks,
+			whatsapp,
+			telegram,
+			x,
 			avatarDataUrl,
 			email,
 			b,
@@ -103,6 +105,13 @@ export const POST: RequestHandler = async ({
 			updatedUser.n = longitude;
 		}
 
+		if (
+			whatsapp !== undefined &&
+			typeof whatsapp === 'string'
+		) {
+			updatedUser.w = whatsapp.trim();
+		}
+
 		if (typeof y === 'boolean') {
 			updatedUser.y = y;
 		}
@@ -136,26 +145,42 @@ export const POST: RequestHandler = async ({
 		}
 
 		if (
-			contactLinks !== undefined &&
-			typeof contactLinks === 'object' &&
-			contactLinks !== null &&
-			!Array.isArray(contactLinks)
+			x !== undefined &&
+			typeof x === 'object' &&
+			x !== null &&
+			!Array.isArray(x)
 		) {
 			const filtered: Record<string, string> = {};
-			for (const [key, value] of Object.entries(
-				contactLinks
-			)) {
+			for (const [name, url] of Object.entries(x)) {
 				if (
-					typeof key === 'string' &&
-					typeof value === 'string'
+					typeof name === 'string' &&
+					typeof url === 'string' &&
+					name.trim() !== '' &&
+					url.trim() !== ''
 				) {
-					const trimmedKey = key.trim();
-					const trimmedValue = value.trim();
-					if (trimmedKey && trimmedValue) {
-						filtered[trimmedKey] = trimmedValue;
-					}
+					filtered[name.trim()] = url.trim();
 				}
 			}
+
+			// Handle dedicated whatsapp and telegram fields
+			if (
+				typeof whatsapp === 'string' &&
+				whatsapp.trim()
+			) {
+				updatedUser.wh = whatsapp.trim();
+			} else {
+				updatedUser.wh = undefined;
+			}
+
+			if (
+				typeof telegram === 'string' &&
+				telegram.trim()
+			) {
+				updatedUser.tg = telegram.trim();
+			} else {
+				updatedUser.tg = undefined;
+			}
+
 			updatedUser.x = filtered;
 		}
 

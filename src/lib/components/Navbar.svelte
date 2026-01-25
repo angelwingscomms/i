@@ -150,7 +150,7 @@
 		>
 			<div class="flex items-center">
 				<a
-					href="/~/"
+					href="/"
 					class="anta text-sm tracking-[0.4em] text-[var(--accent-light)] uppercase no-underline"
 					aria-label="home"
 				>

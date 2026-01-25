@@ -14,6 +14,7 @@
 		max,
 		step,
 		voice_typing = true,
+		required = false,
 		ontranscribe = () => {},
 		oninput,
 		onfocus,
@@ -45,6 +46,7 @@
 		max?: string | number;
 		step?: string | number;
 		voice_typing?: boolean;
+		required?: boolean;
 		ontranscribe?: (
 			value: string | undefined
 		) => void;
@@ -239,7 +241,7 @@
 					: 'flex-1'} appearance-none [::-webkit-clear-button]:hidden"
 				{placeholder}
 				{rows}
-				required
+				{required}
 				disabled={disabled ||
 					!editable ||
 					isTranscribing}
@@ -262,7 +264,7 @@
 					? ''
 					: 'flex-1'} appearance-none bg-transparent [::-webkit-clear-button]:hidden [::-webkit-search-cancel-button]:hidden"
 				{placeholder}
-				required
+				{required}
 				disabled={disabled ||
 					!editable ||
 					isTranscribing}

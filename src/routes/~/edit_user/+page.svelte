@@ -27,9 +27,10 @@
 		latitude = $state(data.u!.l || 0),
 		longitude = $state(data.u!.n || 0),
 		zones = $state<string[]>(data.u!.z || []),
-		contactLinks = $state<Record<string, string>>(
-			(data.u!.x as Record<string, string>) || {}
-		),
+		socialLinksObj = typeof (data.u as any).x === 'object' && !(Array.isArray((data.u as any).x)) ? (data.u as any).x || {} : {},
+		socialLinks = $state<Array<{name: string; url: string}>>(Object.entries(socialLinksObj).map(([k, v]) => ({name: k, url: v as string}))),
+		whatsapp = $state((data.u as any)?.wh || ''),
+		telegram = $state((data.u as any)?.tg || ''),
 		phones = $state<string[]>(
 			Array.isArray((data.u as any).b)
 				? (data.u as any).b
@@ -54,9 +55,7 @@
 		),
 		fileInput: HTMLInputElement | null = null,
 		phone_entry = $state(''),
-		email_entry = $state(''),
-		link_name = $state(''),
-		link_url = $state('');
+		email_entry = $state('');
 
 	function onAvatarChange(e: Event) {
 		const input = e.target as HTMLInputElement;
@@ -102,6 +101,29 @@
 			img.src = reader.result as string;
 		};
 		reader.readAsDataURL(file);
+	}
+
+	function getLinkNameFromUrl(url: string): string {
+		try {
+			const hostname = new URL(url).hostname;
+			if (hostname.includes('facebook.com')) return 'Facebook';
+			if (hostname.includes('twitter.com') || hostname.includes('x.com')) return 'X';
+			if (hostname.includes('instagram.com')) return 'Instagram';
+			if (hostname.includes('linkedin.com')) return 'LinkedIn';
+			if (hostname.includes('github.com')) return 'GitHub';
+			if (hostname.includes('youtube.com')) return 'YouTube';
+			if (hostname.includes('tiktok.com')) return 'TikTok';
+			if (hostname.includes('discord.gg')) return 'Discord';
+			if (hostname.includes('twitch.tv')) return 'Twitch';
+			if (hostname.includes('reddit.com')) return 'Reddit';
+			if (hostname.includes('pinterest.com')) return 'Pinterest';
+			if (hostname.includes('snapchat.com')) return 'Snapchat';
+			if (hostname.includes('bluesky.app')) return 'Bluesky';
+			if (hostname.includes('threads.net')) return 'Threads';
+		} catch {
+			return '';
+		}
+		return '';
 	}
 
 	async function getCurrentLocation() {
@@ -173,6 +195,21 @@
 		form = null; // Clear previous messages
 
 		try {
+			const socialLinksEntries = Object.entries(Object.fromEntries(socialLinks
+				.filter(link => link.url.trim() !== '')
+				.map(link => {
+					const name = link.name.trim() || getLinkNameFromUrl(link.url) || 'link';
+					return [name, link.url.trim()];
+				})));
+
+			if (whatsapp.trim() !== '') {
+				socialLinksEntries.push(['whatsapp', whatsapp.trim()]);
+			}
+
+			if (telegram.trim() !== '') {
+				socialLinksEntries.push(['telegram', telegram.trim()]);
+			}
+
 			const response = await axios.post(
 				'/~/edit_user',
 				{
@@ -183,7 +220,7 @@
 					gender: +gender,
 					latitude,
 					longitude,
-					contactLinks,
+					x: Object.fromEntries(socialLinksEntries),
 					avatarDataUrl,
 					email: primaryEmail,
 					b: uniquePhones,
@@ -636,73 +673,91 @@
 
 				<div class="form-group">
 					<span class="form-label" id="links_label"
-						>contact links</span
+						>links</span
 					>
 					<div class="space-y-4">
+						<!-- WhatsApp -->
+						<div class="space-y-2">
+							<label for="whatsapp" class="form-help"
+								><i class="fa-brands fa-whatsapp"></i>
+								whatsapp</label
+							>
+							<DescriptionInput
+								bind:value={whatsapp}
+								id="whatsapp"
+								type="url"
+								placeholder="https://wa.me/1234567890 or https://whatsapp.com/..."
+							voice_typing={false}
+							required={false}
+						/>
+						</div>
+
+						<!-- Telegram -->
+						<div class="space-y-2">
+							<label for="telegram" class="form-help"
+								><i class="fa-brands fa-telegram"></i>
+								telegram</label
+							>
+							<DescriptionInput
+								bind:value={telegram}
+								id="telegram"
+								type="url"
+								placeholder="https://t.me/username or https://telegram.org/..."
+							voice_typing={false}
+							required={false}
+						/>
+						</div>
+
+						<!-- Other Links -->
 						<div class="space-y-2">
 							<div
 								class="flex items-center justify-between"
 							>
 								<label
-									for="links-name"
+									for="other-links"
 									class="form-help"
-									>add contact link</label
+									>other links</label
 								>
 								<Button
 									text="+"
 									variant="secondary"
 									onclick={() => {
-										if (link_name.trim() && link_url.trim()) {
-											contactLinks[link_name.trim()] = link_url.trim();
-											contactLinks = contactLinks;
-											link_name = '';
-											link_url = '';
-										}
+										socialLinks = [...socialLinks, {name: '', url: ''}];
 									}}
 								/>
 							</div>
-							<div class="grid gap-2">
-								<DescriptionInput
-									bind:value={link_name}
-									id="links-name"
-									type="text"
-									placeholder="e.g., whatsapp, x, instagram"
-									voice_typing={false}
-								/>
-								<DescriptionInput
-									bind:value={link_url}
-									type="url"
-									placeholder="enter url"
-									voice_typing={false}
-								/>
-							</div>
+							<small class="form-help"
+								>add other social media or contact links. leave name blank to auto-detect from url.</small
+							>
+							{#each socialLinks as link, index}
+								<div class="flex gap-2">
+									<DescriptionInput
+										bind:value={link.url}
+										type="url"
+										placeholder="link url"
+										voice_typing={false}
+										oninput={() => {
+											if (!link.name.trim()) {
+												link.name = getLinkNameFromUrl(link.url);
+											}
+										}}
+									/>
+									<DescriptionInput
+										bind:value={link.name}
+										type="text"
+										placeholder="name (optional)"
+										voice_typing={false}
+									/>
+									<Button
+										text="×"
+										variant="secondary"
+										onclick={() => {
+											socialLinks = socialLinks.filter((_, i) => i !== index);
+										}}
+									/>
+								</div>
+							{/each}
 						</div>
-						{#if Object.keys(contactLinks).length > 0}
-							<div class="space-y-2">
-								<p class="form-help">saved links:</p>
-								<ul class="space-y-2">
-									{#each Object.entries(contactLinks) as [name, url]}
-										<li
-											class="flex items-center justify-between rounded border border-[var(--border)] px-3 py-2 text-sm"
-										>
-											<div class="min-w-0">
-												<span class="font-semibold">{name}</span>
-												<br />
-												<span class="text-xs text-[var(--text-secondary)]">{url}</span>
-											</div>
-											<Button
-												text="×"
-												variant="secondary"
-												onclick={() => {
-													delete contactLinks[name];
-													contactLinks = contactLinks;
-												}}
-											/>
-										</li>
-									{/each}
-								</ul>
-							</div>
-						{/if}
 					</div>
 				</div>
 

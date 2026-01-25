@@ -129,5 +129,5 @@ export async function GET(
 			headers: { Location: next }
 		});
 	}
-	redirect(302, '/~/');
+	redirect(302, '/');
 }

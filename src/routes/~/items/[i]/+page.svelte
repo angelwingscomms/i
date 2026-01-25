@@ -88,7 +88,7 @@
 		try {
 			await axios.delete(`/~/items/${item.i}`);
 			toast.success('item deleted');
-			goto('/~/find');
+			goto(`/${user.u}`);
 		} catch (error) {
 			console.error(error);
 			toast.error('failed to delete item');
@@ -303,12 +303,12 @@
 						<div
 							class="mt-6 justify-center gap-3 border-t border-white/10 pt-6"
 						>
-							<Button
+							<!-- <Button
 								href="/~/items/{item.i}/c"
 								variant="secondary"
 								icon="fa-robot"
 								text="Ask AI About This Item"
-							/>
+							/> -->
 							{#if item.ownerWhatsapp}
 								<a
 									href={`https://wa.me/${item.ownerWhatsapp.replace(/[^0-9]/g, '')}`}
@@ -487,12 +487,12 @@
 				<div
 					class="mt-8 flex flex-wrap justify-center gap-3 border-t border-white/10 pt-8"
 				>
-					<Button
+					<!-- <Button
 						href="/~/items/{item.i}/c"
 						variant="secondary"
 						icon="fa-robot"
 						text="Ask AI About This Item"
-					/>
+					/> -->
 					{#if item.ownerWhatsapp}
 						<a
 							href={`https://wa.me/${item.ownerWhatsapp.replace(/[^0-9]/g, '')}`}

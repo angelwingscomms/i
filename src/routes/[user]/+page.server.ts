@@ -25,6 +25,8 @@ export const load: PageServerLoad = async ({
 		throw error(404, 'User not found');
 	}
 
+	console.log('Loaded user:', user);
+
 	// Basic user info to return
 	const userInfo = {
 		i: user.i,
@@ -37,7 +39,8 @@ export const load: PageServerLoad = async ({
 		show_gender: Boolean(user.o),
 		show_email: Boolean(user.ke),
 		description: user.d,
-		x: user.x || {},
+		x: user.x,
+		socialLinks: user.x || [],
 		phones: user.b || [],
 		emails: user.k || [],
 		primary_email: user.e || '',

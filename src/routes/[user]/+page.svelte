@@ -32,6 +32,8 @@
 			m?: string;
 			avatar?: string;
 			description?: string;
+			wh?: string;
+			tg?: string;
 			x?: Record<string, string>;
 		};
 		c: string[];
@@ -39,6 +41,8 @@
 		p?: number;
 		m: Record<string, unknown>;
 	};
+
+	console.log('user data', data);
 
 	const other_posts = $derived(
 		Boolean(posts_count && posts_count > 0)
@@ -344,40 +348,43 @@
 						</button>
 					</div>
 
-{#if user.x && Object.keys(user.x).length > 0}
-					<div
-						class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
-					>
-						{#each Object.entries(user.x) as [linkName, url] (linkName)}
-							{@const { name, faIcon } =
-								getSocialMediaInfo(url)}
-							<a
-								href={url}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="feature-link flex gap-1 capitalize transition hover:text-[var(--color-theme-4)]"
-							>
-								{#if faIcon}
-									<i class="{faIcon} text-xs"></i>
-								{:else}
-									<i
-										class="fas fa-external-link-alt text-xs"
-									></i>
-								{/if}
-								{linkName.toLowerCase()}
-							</a>
-						{/each}
-					</div>
-				{/if}
+					{#if user.x && Object.keys(user.x).length > 0}
+						<div
+							class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
+						>
+							<!-- Social Links from x object -->
+							{#each Object.entries(user.x || {}) as [name, url]}
+								{@const {
+									name: displayName,
+									faIcon
+								} = getSocialMediaInfo(url as string)}
+								<a
+									href={url}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="feature-link flex gap-1 capitalize transition hover:text-[var(--color-theme-4)]"
+								>
+									{#if faIcon}
+										<i class="{faIcon} text-xs"></i>
+									{:else}
+										<i
+											class="fas fa-external-link-alt text-xs"
+										></i>
+									{/if}
+									{displayName.toLowerCase()}
+								</a>
+							{/each}
+						</div>
+					{/if}
 
 					<div class="mt-6 flex justify-center">
-							<Button
-								href="/{user.tag}/live"
-								text="view live stream"
-								icon="fa-edit"
-								variant="primary"
-							/>
-						</div>
+						<Button
+							href="/{user.tag}/live"
+							text="view live stream"
+							icon="fa-edit"
+							variant="primary"
+						/>
+					</div>
 
 					{#if data.user?.i === user.i}
 						<!-- Edit Profile Action -->
@@ -557,13 +564,13 @@
 				>
 					{`${user.tag}'s items`}
 				</h2>
-									<ItemSearch
-						data={{
-							...itemSearchData,
-							userTag: user.tag
-						}}
-						showSort={true}
-					/>
+				<ItemSearch
+					data={{
+						...itemSearchData,
+						userTag: user.tag
+					}}
+					showSort={true}
+				/>
 				{#if filtered_items.length > 0 || item_searching}
 					{#if item_searching}
 						<div class="flex justify-center py-12">
