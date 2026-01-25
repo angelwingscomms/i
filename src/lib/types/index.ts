@@ -21,8 +21,6 @@ export interface User {
 	l?: number; // latitude
 	n?: number; // longitude
 	w?: string; // whatsapp link
-	wh?: string; // whatsapp link (dedicated field)
-	tg?: string; // telegram link (dedicated field)
 	y?: boolean; // show age on profile
 	o?: boolean; // show gender on profile
 	ke?: boolean; // show emails on profile
@@ -36,7 +34,7 @@ export interface User {
 	ev?: string[]; // events the user joined
 	c?: string[]; // color palette hex without #
 	// c: Record<string, string>;
-	x?: string[]; // contact links,
+	x?: Record<string, string>; // contact links (name -> link map)
 	b?: string[]; // phone numbers
 	k?: string[]; // emails
 	rt?: string; // realtime room token

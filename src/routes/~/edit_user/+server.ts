@@ -30,9 +30,7 @@ export const POST: RequestHandler = async ({
 			gender,
 			latitude,
 			longitude,
-			whatsapp,
-			telegram,
-			socialLinks,
+			contactLinks,
 			avatarDataUrl,
 			email,
 			b,
@@ -105,13 +103,6 @@ export const POST: RequestHandler = async ({
 			updatedUser.n = longitude;
 		}
 
-		if (
-			whatsapp !== undefined &&
-			typeof whatsapp === 'string'
-		) {
-			updatedUser.w = whatsapp.trim();
-		}
-
 		if (typeof y === 'boolean') {
 			updatedUser.y = y;
 		}
@@ -145,47 +136,26 @@ export const POST: RequestHandler = async ({
 		}
 
 		if (
-			socialLinks !== undefined &&
-			Array.isArray(socialLinks) &&
-			socialLinks.every(
-				(link) => typeof link === 'string'
-			)
+			contactLinks !== undefined &&
+			typeof contactLinks === 'object' &&
+			contactLinks !== null &&
+			!Array.isArray(contactLinks)
 		) {
-			let filtered = socialLinks
-				.filter((link: string) => link.trim() !== '')
-				.map((link: string) => link.trim());
-			
-			// Handle dedicated whatsapp and telegram fields
-			if (
-				typeof whatsapp === 'string' &&
-				whatsapp.trim()
-			) {
-				updatedUser.wh = whatsapp.trim();
-				// Remove any existing whatsapp links from socialLinks
-				filtered = filtered.filter(
-					(link: string) =>
-						!link.includes('whatsapp.com') &&
-						!link.includes('wa.me')
-				);
-			} else {
-				updatedUser.wh = undefined;
+			const filtered: Record<string, string> = {};
+			for (const [key, value] of Object.entries(
+				contactLinks
+			)) {
+				if (
+					typeof key === 'string' &&
+					typeof value === 'string'
+				) {
+					const trimmedKey = key.trim();
+					const trimmedValue = value.trim();
+					if (trimmedKey && trimmedValue) {
+						filtered[trimmedKey] = trimmedValue;
+					}
+				}
 			}
-
-			if (
-				typeof telegram === 'string' &&
-				telegram.trim()
-			) {
-				updatedUser.tg = telegram.trim();
-				// Remove any existing telegram links from socialLinks
-				filtered = filtered.filter(
-					(link: string) =>
-						!link.includes('telegram.org') &&
-						!link.includes('t.me')
-				);
-			} else {
-				updatedUser.tg = undefined;
-			}
-
 			updatedUser.x = filtered;
 		}
 

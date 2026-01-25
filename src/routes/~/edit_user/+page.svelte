@@ -27,9 +27,9 @@
 		latitude = $state(data.u!.l || 0),
 		longitude = $state(data.u!.n || 0),
 		zones = $state<string[]>(data.u!.z || []),
-		socialLinks = $state<string[]>(data.u!.x || []),
-		whatsapp = $state((data.u as any)?.wh || ''),
-		telegram = $state((data.u as any)?.tg || ''),
+		contactLinks = $state<Record<string, string>>(
+			(data.u!.x as Record<string, string>) || {}
+		),
 		phones = $state<string[]>(
 			Array.isArray((data.u as any).b)
 				? (data.u as any).b
@@ -54,7 +54,9 @@
 		),
 		fileInput: HTMLInputElement | null = null,
 		phone_entry = $state(''),
-		email_entry = $state('');
+		email_entry = $state(''),
+		link_name = $state(''),
+		link_url = $state('');
 
 	function onAvatarChange(e: Event) {
 		const input = e.target as HTMLInputElement;
@@ -181,9 +183,7 @@
 					gender: +gender,
 					latitude,
 					longitude,
-					whatsapp,
-					telegram,
-					socialLinks,
+					contactLinks,
 					avatarDataUrl,
 					email: primaryEmail,
 					b: uniquePhones,
@@ -636,86 +636,73 @@
 
 				<div class="form-group">
 					<span class="form-label" id="links_label"
-						>links</span
+						>contact links</span
 					>
 					<div class="space-y-4">
-						<!-- WhatsApp -->
-						<div class="space-y-2">
-							<label for="whatsapp" class="form-help"
-								><i class="fa-brands fa-whatsapp"></i>
-								whatsapp</label
-							>
-							<DescriptionInput
-								bind:value={whatsapp}
-								id="whatsapp"
-								type="url"
-								placeholder="https://wa.me/1234567890 or https://whatsapp.com/..."
-								voice_typing={false}
-							/>
-						</div>
-
-						<!-- Telegram -->
-						<div class="space-y-2">
-							<label for="telegram" class="form-help"
-								><i class="fa-brands fa-telegram"></i>
-								telegram</label
-							>
-							<DescriptionInput
-								bind:value={telegram}
-								id="telegram"
-								type="url"
-								placeholder="https://t.me/username or https://telegram.org/..."
-								voice_typing={false}
-							/>
-						</div>
-
-						<!-- Other Links -->
 						<div class="space-y-2">
 							<div
 								class="flex items-center justify-between"
 							>
 								<label
-									for="other-links"
+									for="links-name"
 									class="form-help"
-									>other links</label
+									>add contact link</label
 								>
 								<Button
 									text="+"
 									variant="secondary"
-									onclick={() =>
-										(socialLinks = [
-											...socialLinks,
-											''
-										])}
+									onclick={() => {
+										if (link_name.trim() && link_url.trim()) {
+											contactLinks[link_name.trim()] = link_url.trim();
+											contactLinks = contactLinks;
+											link_name = '';
+											link_url = '';
+										}
+									}}
 								/>
 							</div>
-							<small class="form-help"
-								>add other social media or contact
-								links</small
-							>
-							{#each socialLinks as _, index (index)}
-								<div class="social-link-item">
-									<DescriptionInput
-										bind:value={socialLinks[
-											index
-										]}
-										type="url"
-										placeholder="enter social media link"
-										voice_typing={false}
-									/>
-									<Button
-										text="×"
-										variant="secondary"
-										onclick={() =>
-											(socialLinks =
-												socialLinks.filter(
-													(_, i) =>
-														i !== index
-												))}
-									/>
-								</div>
-							{/each}
+							<div class="grid gap-2">
+								<DescriptionInput
+									bind:value={link_name}
+									id="links-name"
+									type="text"
+									placeholder="e.g., whatsapp, x, instagram"
+									voice_typing={false}
+								/>
+								<DescriptionInput
+									bind:value={link_url}
+									type="url"
+									placeholder="enter url"
+									voice_typing={false}
+								/>
+							</div>
 						</div>
+						{#if Object.keys(contactLinks).length > 0}
+							<div class="space-y-2">
+								<p class="form-help">saved links:</p>
+								<ul class="space-y-2">
+									{#each Object.entries(contactLinks) as [name, url]}
+										<li
+											class="flex items-center justify-between rounded border border-[var(--border)] px-3 py-2 text-sm"
+										>
+											<div class="min-w-0">
+												<span class="font-semibold">{name}</span>
+												<br />
+												<span class="text-xs text-[var(--text-secondary)]">{url}</span>
+											</div>
+											<Button
+												text="×"
+												variant="secondary"
+												onclick={() => {
+													delete contactLinks[name];
+													contactLinks = contactLinks;
+												}}
+											/>
+										</li>
+									{/each}
+								</ul>
+							</div>
+						{/if}
 					</div>
 				</div>
 
