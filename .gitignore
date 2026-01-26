@@ -30,8 +30,6 @@ vite.config.ts.timestamp-*
 # SQLite
 *.db
 
-*storybook.log
-storybook-static
 qdrant_storage
 
 #cuz something about picomatch missing from package-lock.json in cloudflare build

@@ -350,7 +350,7 @@
 
 					{#if user.x && Object.keys(user.x).length > 0}
 						<div
-							class="flex flex-wrap items-center justify-center gap-3 text-sm text-white lowercase"
+							class="flex flex-col items-center justify-center gap-3 text-sm text-white lowercase"
 						>
 							<!-- Social Links from x object -->
 							{#each Object.entries(user.x || {}) as [name, url]}
@@ -541,8 +541,8 @@
 						class="mb-4 text-sm font-medium"
 						style="color: var(--color-theme-4);"
 					>
-						join our community to see compatibility
-						and start conversations!
+						login to see what you have in common with
+						this user
 					</p>
 					<Button
 						href="/~/google"

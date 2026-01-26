@@ -119,7 +119,7 @@ test.describe('User Profile Similarity Feature', () => {
 
 		// Check for login prompt
 		const loginPrompt = page.locator(
-			'text=/Join our community to see compatibility/'
+			'text=/login to see what you have in common with this user/'
 		);
 		await expect(loginPrompt).toBeVisible();
 

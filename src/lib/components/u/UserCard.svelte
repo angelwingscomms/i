@@ -1,5 +1,7 @@
 <script lang="ts">
-	type Result = {
+	import type { SocialLink } from '$lib/types';
+
+type Result = {
 		i: string;
 		t: string;
 		a?: number;
@@ -8,6 +10,8 @@
 		score?: number;
 		on?: number;
 		ic?: boolean;
+		x?: SocialLink[]; // social links with favicons
+		xo?: SocialLink[]; // legacy social links
 	};
 
 	let { u } = $props<{ u: Result }>();
@@ -16,6 +20,53 @@
 		if (typeof score !== 'number') return null;
 		const pct = Math.max(0, Math.min(1, score)) * 100;
 		return Math.round(pct);
+	}
+
+	function getPlatformIcon(url: string): string | null {
+		try {
+			const hostname = new URL(url).hostname;
+			if (hostname.includes('facebook.com')) return 'fa-facebook';
+			if (hostname.includes('twitter.com') || hostname.includes('x.com')) return 'fa-x-twitter';
+			if (hostname.includes('instagram.com')) return 'fa-instagram';
+			if (hostname.includes('linkedin.com')) return 'fa-linkedin';
+			if (hostname.includes('github.com')) return 'fa-github';
+			if (hostname.includes('youtube.com')) return 'fa-youtube';
+			if (hostname.includes('tiktok.com')) return 'fa-tiktok';
+			if (hostname.includes('discord.gg')) return 'fa-discord';
+			if (hostname.includes('twitch.tv')) return 'fa-twitch';
+			if (hostname.includes('reddit.com')) return 'fa-reddit';
+			if (hostname.includes('pinterest.com')) return 'fa-pinterest';
+			if (hostname.includes('snapchat.com')) return 'fa-snapchat';
+			if (hostname.includes('telegram.org')) return 'fa-telegram';
+			if (hostname.includes('whatsapp.com')) return 'fa-whatsapp';
+			if (hostname.includes('signal.org')) return 'fa-signal';
+			return null;
+		} catch {
+			return null;
+		}
+	}
+
+	function getLinkNameFromUrl(url: string): string {
+		try {
+			const hostname = new URL(url).hostname;
+			if (hostname.includes('facebook.com')) return 'Facebook';
+			if (hostname.includes('twitter.com') || hostname.includes('x.com')) return 'X';
+			if (hostname.includes('instagram.com')) return 'Instagram';
+			if (hostname.includes('linkedin.com')) return 'LinkedIn';
+			if (hostname.includes('github.com')) return 'GitHub';
+			if (hostname.includes('youtube.com')) return 'YouTube';
+			if (hostname.includes('tiktok.com')) return 'TikTok';
+			if (hostname.includes('discord.gg')) return 'Discord';
+			if (hostname.includes('twitch.tv')) return 'Twitch';
+			if (hostname.includes('reddit.com')) return 'Reddit';
+			if (hostname.includes('pinterest.com')) return 'Pinterest';
+			if (hostname.includes('snapchat.com')) return 'Snapchat';
+			if (hostname.includes('bluesky.app')) return 'Bluesky';
+			if (hostname.includes('threads.net')) return 'Threads';
+			return hostname;
+		} catch {
+			return 'Link';
+		}
 	}
 
 	const p = matchPercent(u.score);
@@ -99,6 +150,60 @@
 							: 'Other'}
 				</span>
 			</div>
+		</div>
+
+			<!-- Social Links -->
+			{#if u.x || u.xo}
+				<div class="mt-2 flex flex-wrap gap-2">
+					{#each u.x || [] as link}
+						<a
+							href={link.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="flex items-center gap-1 rounded-full px-2 py-1 text-xs transition-all hover:bg-[var(--color-theme-6)]"
+							style="background: transparent; border: 1px solid var(--color-theme-6);"
+						>
+							{#if link.ico}
+								<img
+									src={link.ico}
+									alt={link.name}
+									class="h-3 w-3 rounded-full"
+									onerror={() => {
+										// Fallback to platform icon if favicon fails to load
+										const target = e.target as HTMLImageElement;
+										target.style.display = 'none';
+									}}
+								/>
+							{:else}
+								<i
+									class={`fas ${getPlatformIcon(link.url) || 'fa-link'}`}
+									style="color: var(--color-theme-6); font-size: 0.65rem;"
+								/>
+							{/if}
+							<span style="color: var(--color-theme-6);">
+								{link.name}
+							</span>
+						</a>
+					{/each}
+					{#each u.xo || [] as link}
+						<a
+							href={link.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="flex items-center gap-1 rounded-full px-2 py-1 text-xs transition-all hover:bg-[var(--color-theme-6)]"
+							style="background: transparent; border: 1px solid var(--color-theme-6);"
+						>
+							<i
+								class={`fas ${getPlatformIcon(link.url) || 'fa-link'}`}
+								style="color: var(--color-theme-6); font-size: 0.65rem;"
+							/>
+							<span style="color: var(--color-theme-6);">
+								{getLinkNameFromUrl(link.url)}
+							</span>
+						</a>
+					{/each}
+				</div>
+			{/if}
 		</div>
 
 		<!-- Arrow -->
