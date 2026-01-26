@@ -15,10 +15,7 @@
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run && npm run test:e2e",
-		"test:e2e": "playwright test",
-		"db:push": "drizzle-kit push",
-		"db:migrate": "drizzle-kit migrate",
-		"db:studio": "drizzle-kit studio"
+		"test:e2e": "playwright test"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20260124.0",
@@ -40,7 +37,6 @@
 		"@types/uuid": "^10.0.0",
 		"@types/web-push": "^3.6.4",
 		"@vitest/browser": "^4.0.18",
-		"drizzle-kit": "^0.31.8",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.14.0",
