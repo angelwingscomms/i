@@ -28,7 +28,7 @@
 		longitude = $state(data.u!.n || 0),
 		zones = $state<string[]>(data.u!.z || []),
 		socialLinksObj = typeof (data.u as any).x === 'object' && !(Array.isArray((data.u as any).x)) ? (data.u as any).x || {} : {},
-		socialLinks = $state<Array<{name: string; url: string; ico?: string}>>(Object.entries(socialLinksObj).map(([k, v]) => ({name: k, url: v as string}))),
+		socialLinks = $state<Array<{name: string; url: string}>>(Object.entries(socialLinksObj).map(([k, v]) => ({name: k, url: v as string}))),
 		whatsapp = $state((data.u as any)?.wh || ''),
 		telegram = $state((data.u as any)?.tg || ''),
 		phones = $state<string[]>(
@@ -126,20 +126,6 @@
 		return '';
 	}
 
-	async function fetchFaviconForLink(link: {url: string; ico?: string}) {
-		if (!link.url.trim()) return;
-		
-		try {
-			const response = await axios.post('/~/api/fetch-favicon', { url: link.url });
-			if (response.data.success) {
-				link.ico = response.data.url;
-			}
-		} catch (error) {
-			console.error('Failed to fetch favicon:', error);
-			// Silently fail - favicon is optional
-		}
-	}
-
 	async function getCurrentLocation() {
 		if (!navigator.geolocation) {
 			alert(
@@ -213,10 +199,7 @@
 				.filter(link => link.url.trim() !== '')
 				.map(link => {
 					const name = link.name.trim() || getLinkNameFromUrl(link.url) || 'link';
-					return [name, {
-						url: link.url.trim(),
-						ico: link.ico
-					}];
+					return [name, link.url.trim()];
 				})));
 
 			if (whatsapp.trim() !== '') {
@@ -756,10 +739,6 @@
 										oninput={() => {
 											if (!link.name.trim()) {
 												link.name = getLinkNameFromUrl(link.url);
-											}
-											// Fetch favicon when URL is entered
-											if (link.url.trim() && !link.ico) {
-												fetchFaviconForLink(link);
 											}
 										}}
 									/>

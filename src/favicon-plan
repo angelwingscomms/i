@@ -1,0 +1,2 @@
+
+user edit page: when a link is added, make request to link origin's favicon.ico, if successful response, set link_object.ico to link_origin/favicon.ico. so in user detail page, use the link_object.ico as the link, if .ico not available,use the link's hardcoded icon, if no set hardcoded icon, use generic default icon

@@ -1,11 +1,5 @@
 import type { PushSubscription } from 'web-push';
 
-export interface SocialLink {
-	name: string;
-	url: string;
-	ico?: string; // favicon URL
-}
-
 export interface LocalsUser {
 	t: string;
 	i: string;
@@ -42,8 +36,7 @@ export interface User {
 	ev?: string[]; // events the user joined
 	c?: string[]; // color palette hex without #
 	// c: Record<string, string>;
-	x?: string[]; // contact links (legacy format)
-	xo?: SocialLink[]; // contact links with optional favicon URLs
+	x?: string[]; // contact links,
 	b?: string[]; // phone numbers
 	k?: string[]; // emails
 	rt?: string; // realtime room token
