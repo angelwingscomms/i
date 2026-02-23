@@ -72,7 +72,7 @@
 				text="add item"
 			/>
 			<Button
-				href="/~/i"
+				href="/~/items"
 				variant="secondary"
 				text="find items"
 			/>

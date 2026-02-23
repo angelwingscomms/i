@@ -1,55 +1,23 @@
 import type { PageServerLoad } from './$types';
-import { qdrant } from '$lib/db';
-import { collection } from '$lib/constants';
-
-type SearchItem = {
-	i: string;
-	n?: string;
-	d?: string;
-	k?: number;
-	a?: number;
-	q?: string;
-	x?: string[];
-	score?: number;
-};
+import { search_by_payload } from '$lib/db';
+import type { Item } from '$lib/types';
 
 export const load: PageServerLoad = async ({
 	locals
 }) => {
-	const user = locals.user;
-
-	let candidates: SearchItem[] = [];
-
-	try {
-		const scrollResults = await qdrant.scroll(
-			collection,
-			{
-				filter: {
-					must: [{ key: 's', match: { value: 'i' } }],
-					must_not: {
-						is_null: { key: 'n' }
-					}
-				},
-				with_payload: ['n', 'd', 'k', 'a', 'q', 'x'],
-				limit: 100
-			}
-		);
-
-		candidates =
-			scrollResults.points?.map((p) => ({
-				i: p.id as string,
-				...p.payload
-			})) || [];
-	} catch {
-		candidates = [];
+	if (!locals.user) {
+		return { results: [] };
 	}
 
-	candidates.sort((a, b) => (b.a || 0) - (a.a || 0));
-
-	const results = candidates.slice(0, 50);
+	const filter = { s: 'i', u: locals.user.i };
+	const results = await search_by_payload<Item>(
+		filter,
+		['n', 'd', 'k', 'a', 'q', 'x'],
+		50,
+		{ key: 'a', direction: 'desc' }
+	);
 
 	return {
-		user,
 		results
 	};
 };
