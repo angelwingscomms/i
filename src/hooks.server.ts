@@ -26,11 +26,9 @@ export const handle: Handle = async ({
 	event,
 	resolve
 }) => {
-	if (event.params.user) {
-		const user  = await find_user_by_tag(event.params.user);
-	}
+	event.cookies.set('next', event.url.pathname + event.url.search, {path: '/'});
 	if (
-		event.url.pathname.includes('resource_name') &&
+		event.url.pathname.startsWith('/~/resource') &&
 		!dev
 	) {
 		throw error(404, 'Not found');

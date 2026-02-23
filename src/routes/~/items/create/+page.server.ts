@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({
 	locals
 }) => {
 	if (!locals.user)
-		redirect(302, '/~/google?next=/items/create');
+		redirect(302, '/~/login?next=/items/create');
 
 	let i;
 	try {

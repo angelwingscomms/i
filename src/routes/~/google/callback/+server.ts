@@ -35,7 +35,10 @@ export async function GET(
 		GOOGLE_SECRET,
 		`${event.url.origin}/~/google/callback`
 	);
-	console.log('redirect URL:', `${event.url.origin}/~/google/callback`);
+	console.log(
+		'redirect URL:',
+		`${event.url.origin}/~/google/callback`
+	);
 	// console.log('code:', code);
 	// console.log('state:', state);
 	// console.log('storedState:', storedState);
@@ -69,7 +72,9 @@ export async function GET(
 			error instanceof Error ? error.message : error
 		);
 		console.error('Details:', {
-			code: code ? code.substring(0, 20) + '...' : 'null',
+			code: code
+				? code.substring(0, 20) + '...'
+				: 'null',
 			redirectUrl: `${event.url.origin}/~/google/callback`,
 			hasCodeVerifier: !!codeVerifier
 		});
@@ -98,7 +103,7 @@ export async function GET(
 	} else {
 		user_id = await create_user(
 			res.email.replace('@gmail.com', ''),
-			{ gid: res.sub, e: res.email.toLowerCase() }
+			{ gid: res.sub, e: res.email.toLowerCase(), q: 'user' }
 		);
 	}
 
@@ -124,10 +129,7 @@ export async function GET(
 	// Redirect to saved next path or fallback
 	const next = event.cookies.get('login_next');
 	if (next && next.startsWith('/')) {
-		return new Response(null, {
-			status: 302,
-			headers: { Location: next }
-		});
+		redirect(302, next);
 	}
 	redirect(302, '/');
 }

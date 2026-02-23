@@ -67,6 +67,11 @@
 			class="flex flex-col justify-center gap-4 sm:flex-row"
 		>
 			<Button
+				href="/~/items/create"
+				variant="primary"
+				text="add item"
+			/>
+			<Button
 				href="/~/i"
 				variant="secondary"
 				text="find items"
