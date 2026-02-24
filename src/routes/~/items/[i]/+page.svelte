@@ -610,7 +610,7 @@
 									>
 										<span
 											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
-											>Type</span
+											>type</span
 										>
 										<span
 											class="rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 text-xs font-bold text-white shadow-lg shadow-purple-500/30"

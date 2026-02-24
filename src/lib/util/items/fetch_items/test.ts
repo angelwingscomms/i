@@ -26,8 +26,12 @@ describe('fetch_items', () => {
 		await expect(
 			fetch_items({ q: 'test' })
 		).resolves.toEqual(mock_items);
-		expect(axios.post).toHaveBeenCalledWith('/i', {
-			q: 'test'
+		expect(axios.post).toHaveBeenCalledWith('/~/items', {
+			q: 'test',
+			k: undefined,
+			s: undefined,
+			l: undefined,
+			u: undefined
 		});
 	});
 });

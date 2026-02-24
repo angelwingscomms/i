@@ -4,58 +4,85 @@
 	import Select from '$lib/components/Select.svelte';
 	import DescriptionInput from '$lib/components/ui/DescriptionInput.svelte';
 	import {
-		create_item_search_controller,
 		persist_item_search_state,
-		restore_item_search_state
+		restore_item_search_state,
+		parse_item_kind,
+		parse_item_sort
 	} from '$lib/util/items/item_search';
+	import type { ItemSort } from '$lib/util/items/types';
+	import { fetch_items } from '$lib/util/items/fetch_items';
 	import { noop } from '$lib/util/items/noop';
-
-	type ItemSort = 'relevance' | 'newest' | 'oldest';
+	import type { Item } from '$lib/types/item';
 
 	interface Props {
 		query?: string;
 		kind?: 0 | 1 | undefined;
 		sort?: ItemSort;
-		searching?: boolean;
+		results?: (Item & { score?: number })[];
 		showKind?: boolean;
 		showSort?: boolean;
-		onsearch?: () => void;
 	}
 
 	let {
 		query = $bindable(''),
 		kind = $bindable<0 | 1 | undefined>(undefined),
 		sort = $bindable<ItemSort>('relevance'),
-		searching = $bindable(false),
+		results = $bindable<(Item & { score?: number })[]>([]),
 		showKind = true,
-		showSort = true,
-		onsearch
+		showSort = true
 	}: Props = $props();
 
-	let search_timeout = $state<NodeJS.Timeout | null>(
-		null
-	);
+	let search_timeout = $state<NodeJS.Timeout | null>(null);
+	let searching = $state(false);
 
-	const controller = create_item_search_controller({
-		get_query: () => query,
-		set_query: (value) => (query = value),
-		get_kind: () => kind,
-		set_kind: (value) => (kind = value),
-		get_sort: () => sort,
-		set_sort: (value) => (sort = value),
-		get_timeout: () => search_timeout,
-		set_timeout: (timeout) =>
-			(search_timeout = timeout),
-		onsearch
-	});
+	const execute_search = async () => {
+		searching = true;
+		try {
+			const items = await fetch_items({
+				q: query.trim() || undefined,
+				k: kind,
+				s: sort,
+				l: 50
+			});
+			results = items;
+		} catch (error) {
+			console.error('item search error', error);
+			results = [];
+		} finally {
+			searching = false;
+		}
+	};
 
-	const {
-		clear_search,
-		handle_search,
-		handle_kind_change,
-		handle_sort_change,
-		trigger_search
-	} = controller;
+	const debounce_search = () => {
+		if (search_timeout) clearTimeout(search_timeout);
+		if (!query) return;
+		search_timeout = setTimeout(() => {
+			execute_search();
+		}, 2160);
+	};
+
+	const immediate_search = () => {
+		if (search_timeout) clearTimeout(search_timeout);
+		execute_search();
+	};
+
+	const clear_search = () => {
+		query = '';
+		if (search_timeout) clearTimeout(search_timeout);
+		search_timeout = null;
+	};
+
+	const handle_search = () => debounce_search();
+
+	const handle_kind_change = (value: string) => {
+		kind = parse_item_kind(value);
+		immediate_search();
+	};
+
+	const handle_sort_change = (value: string) => {
+		sort = parse_item_sort(value);
+		immediate_search();
+	};
 
 	$effect(() => {
 		if (browser) {
@@ -75,7 +102,7 @@
 		query = restored.q ?? '';
 		kind = restored.k;
 		sort = restored.s;
-		trigger_search();
+		immediate_search();
 	});
 </script>
 
@@ -88,15 +115,15 @@
 			search
 		</label>
 		<div class="relative">
-			<DescriptionInput
-				bind:value={query}
-				placeholder="search for items..."
-				send={handle_search}
-				send_loading={searching}
-				label=""
-				voice_typing={true}
-				ontranscribe={noop}
-			/>
+		<DescriptionInput
+			bind:value={query}
+			placeholder="search for items..."
+			send={handle_search}
+			send_loading={searching}
+			label=""
+			voice_typing={true}
+			ontranscribe={noop}
+		/>
 			{#if query}
 				<button
 					onclick={clear_search}

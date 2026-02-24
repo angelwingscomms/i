@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { ItemSearch, ItemResultsList } from '$lib/components/items';
-	import Button from '$lib/components/Button.svelte';
+	import { Items } from '$lib/components/items';
 
 	let { data } = $props();
 </script>
@@ -13,46 +12,4 @@
 	/>
 </svelte:head>
 
-<div
-	class="i-page from-background to-surface min-h-screen bg-gradient-to-br"
->
-	<!-- Header -->
-	<div
-		class="from-theme-1 to-theme-2 bg-gradient-to-r text-white"
-	>
-		<div class="mx-auto max-w-4xl px-4 py-8">
-			<div class="flex items-center justify-between">
-				<div>
-					<h1
-						class="mb-2 flex items-center gap-3 text-4xl font-bold"
-					>
-						<i
-							class="fa-solid fa-bag-shopping text-[1.5em] text-white"
-						></i>
-						search items
-					</h1>
-					<p class="text-white/80">
-						find products and services
-					</p>
-				</div>
-				{#if data.user}
-					<Button
-						href="/~/items/create"
-						text="create item"
-						icon="fa-plus"
-					/>
-				{/if}
-			</div>
-		</div>
-	</div>
-
-	<!-- Search Section -->
-	<div class="mx-auto max-w-4xl px-4 py-6">
-		<ItemSearch {data} />
-	</div>
-
-	<!-- Results Section -->
-	<div class="mx-auto max-w-7xl px-4 py-6">
-		<ItemResultsList results={data.results} />
-	</div>
-</div>
+<Items />

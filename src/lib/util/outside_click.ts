@@ -1,9 +1,10 @@
 export const outside_click = (
 	node: HTMLElement,
-	callback: () => void
+	callback?: () => void
 ) => {
 	const handleClick = (event: Event) => {
 		if (
+			callback &&
 			node &&
 			!node.contains(event.target as Node) &&
 			!event.defaultPrevented

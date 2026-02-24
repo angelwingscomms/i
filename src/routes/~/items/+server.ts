@@ -5,24 +5,27 @@ import { qdrant } from '$lib/db';
 import { collection } from '$lib/constants';
 
 export const POST: RequestHandler = async ({
-	request
+	request,
+	locals
 }) => {
 	const {
 		q,
-		kind,
-		limit = 50,
-		sort = 'relevance'
+		k,
+		l = 50,
+		s = 'relevance',
+		u
 	} = (await request.json()) as {
 		q?: string;
-		kind?: 0 | 1;
-		limit?: number;
-		sort?: 'relevance' | 'newest' | 'oldest';
+		k?: 0 | 1;
+		l?: number;
+		s?: 'relevance' | 'newest' | 'oldest';
+		u?: string;
 	};
 
 	if (
-		typeof limit !== 'number' ||
-		limit < 1 ||
-		limit > 200
+		typeof l !== 'number' ||
+		l < 1 ||
+		l > 200
 	) {
 		throw error(400, 'invalid limit (1-200)');
 	}
@@ -44,8 +47,9 @@ export const POST: RequestHandler = async ({
 			filter: {
 				must: [
 					{ key: 's', match: { value: 'i' } },
-					...(kind !== undefined
-						? [{ key: 'k', match: { value: kind } }]
+					...(u ? [{ key: 'u', match: { value: u } }] : []),
+					...(k !== undefined
+						? [{ key: 'k', match: { value: k } }]
 						: [])
 				],
 				must_not: {
@@ -53,7 +57,7 @@ export const POST: RequestHandler = async ({
 				}
 			},
 			with_payload: ['t', 'd', 'k', 'a', 'q', 'x'],
-			limit: Math.min(500, limit * 2)
+			limit: Math.min(500, l * 2)
 		});
 		candidates =
 			results.points?.map((p) => ({
@@ -66,8 +70,9 @@ export const POST: RequestHandler = async ({
 			filter: {
 				must: [
 					{ key: 's', match: { value: 'i' } },
-					...(kind !== undefined
-						? [{ key: 'k', match: { value: kind } }]
+					...(u ? [{ key: 'u', match: { value: u } }] : []),
+					...(k !== undefined
+						? [{ key: 'k', match: { value: k } }]
 						: [])
 				],
 				must_not: {
@@ -75,7 +80,7 @@ export const POST: RequestHandler = async ({
 				}
 			},
 			with_payload: ['t', 'd', 'k', 'a', 'q', 'x'],
-			limit: Math.min(500, limit * 2)
+			limit: Math.min(500, l * 2)
 		});
 		candidates =
 			results.points?.map((p) => ({
@@ -87,7 +92,7 @@ export const POST: RequestHandler = async ({
 	console.log('candidates', candidates);
 
 	// Sort results based on criteria
-	switch (sort) {
+	switch (s) {
 		case 'newest':
 			candidates.sort(
 				(a, b) => (b.a || 0) - (a.a || 0)
@@ -111,7 +116,7 @@ export const POST: RequestHandler = async ({
 	}
 
 	// Limit results
-	const results = candidates.slice(0, limit);
+	const results = candidates.slice(0, l);
 
 	return json(results);
 };

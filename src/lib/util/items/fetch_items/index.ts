@@ -6,12 +6,19 @@ export type ItemFetchPayload = {
 	q?: string;
 	k?: 0 | 1;
 	s?: ItemSort;
-	limit?: number;
+	l?: number;
+	u?: string;
 };
 
 export async function fetch_items(
 	payload: ItemFetchPayload
 ): Promise<Item[]> {
-	const response = await axios.post('/~/i', payload);
+	const response = await axios.post('/~/items', {
+		q: payload.q,
+		k: payload.k,
+		s: payload.s,
+		l: payload.l,
+		u: payload.u
+	});
 	return response.data as Item[];
 }
