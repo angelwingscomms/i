@@ -9,9 +9,8 @@ export const load: PageServerLoad = async ({
 		return { results: [] };
 	}
 
-	const filter = { s: 'i', u: locals.user.i };
 	const results = await search_by_payload<Item>(
-		filter,
+		{ s: 'i' },
 		['n', 'd', 'k', 'a', 'q', 'x'],
 		50,
 		{ key: 'a', direction: 'desc' }

@@ -14,11 +14,11 @@ export async function fetch_items(
 	payload: ItemFetchPayload
 ): Promise<Item[]> {
 	const response = await axios.post('/~/items', {
-		q: payload.q,
-		k: payload.k,
-		s: payload.s,
-		l: payload.l,
-		u: payload.u
+		...(payload.q && { q: payload.q }),
+		...(payload.k && { k: Number(payload.k )}),
+		...(payload.s && { s: payload.s }),
+		...(payload.l && { l: payload.l }),
+		...(payload.u && { u: payload.u })
 	});
 	return response.data as Item[];
 }

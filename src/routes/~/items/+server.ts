@@ -1,8 +1,9 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { embed } from '$lib/util/embed';
-import { qdrant } from '$lib/db';
+import { qdrant, search_by_payload, search_by_vector } from '$lib/db';
 import { collection } from '$lib/constants';
+import type { Item } from '$lib/types/item';
 
 export const POST: RequestHandler = async ({
 	request,
@@ -22,101 +23,43 @@ export const POST: RequestHandler = async ({
 		u?: string;
 	};
 
-	if (
-		typeof l !== 'number' ||
-		l < 1 ||
-		l > 200
-	) {
+	if (typeof l !== 'number' || l < 1 || l > 200) {
 		throw error(400, 'invalid limit (1-200)');
 	}
 
-	let candidates: Array<{
-		i: string;
-		t?: string;
-		d?: string;
-		k?: number;
-		a?: number;
-		q?: string;
-		x?: string[];
-	}> = [];
+	let results: Array<Item> = [];
 
 	if (q && q.trim()) {
 		const vector = await embed(q);
-		const results = await qdrant.query(collection, {
-			query: vector,
-			filter: {
-				must: [
-					{ key: 's', match: { value: 'i' } },
-					...(u ? [{ key: 'u', match: { value: u } }] : []),
-					...(k !== undefined
-						? [{ key: 'k', match: { value: k } }]
-						: [])
-				],
-				must_not: {
-					is_null: { key: 't' }
-				}
-			},
+		const results = await search_by_vector<Item>({
+			vector,
+			filter:{must: {
+				s: 'i',
+				...(u ? { u } : {}),
+				...(k !== undefined ? { k } : {})
+			}, must_not: { is_null: { key: 't' } }},
 			with_payload: ['t', 'd', 'k', 'a', 'q', 'x'],
-			limit: Math.min(500, l * 2)
+			limit: Math.min(54, l * 2)
 		});
-		candidates =
-			results.points?.map((p) => ({
-				i: p.id as string,
-				...p.payload
-			})) || [];
 	} else {
 		// No query - return all items with basic filtering
-		const results = await qdrant.scroll(collection, {
-			filter: {
-				must: [
-					{ key: 's', match: { value: 'i' } },
-					...(u ? [{ key: 'u', match: { value: u } }] : []),
-					...(k !== undefined
-						? [{ key: 'k', match: { value: k } }]
-						: [])
-				],
-				must_not: {
-					is_null: { key: 't' }
-				}
+		results = await search_by_payload<Item>(
+			{
+				s: 'i',
+				...(u ? { u } : {}),
+				...(k !== undefined ? { k } : {})
 			},
-			with_payload: ['t', 'd', 'k', 'a', 'q', 'x'],
-			limit: Math.min(500, l * 2)
-		});
-		candidates =
-			results.points?.map((p) => ({
-				i: p.id as string,
-				...p.payload
-			})) || [];
-	}
-
-	console.log('candidates', candidates);
-
-	// Sort results based on criteria
-	switch (s) {
-		case 'newest':
-			candidates.sort(
-				(a, b) => (b.a || 0) - (a.a || 0)
-			);
-			break;
-		case 'oldest':
-			candidates.sort(
-				(a, b) => (a.a || 0) - (b.a || 0)
-			);
-			break;
-		case 'relevance':
-		default:
-			// For vector search, results are already sorted by relevance (score)
-			// For payload search, maintain insertion order or sort by newest
-			if (!q || !q.trim()) {
-				candidates.sort(
-					(a, b) => (b.a || 0) - (a.a || 0)
-				);
+			['n', 'd', 'k', 'a', 'q', 'x', 't'],
+			Math.min(54, l * 2),
+			{
+				key: 'a',
+				direction: s === 'oldest' ? 'asc' : 'desc'
 			}
-			break;
+		);
+
 	}
 
-	// Limit results
-	const results = candidates.slice(0, l);
+	console.log('results', results);
 
 	return json(results);
 };
