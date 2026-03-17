@@ -115,8 +115,9 @@ export const load: PageServerLoad = async ({
 			score?: number;
 		}
 	> = [];
-	if (user.d) {
-		const vector = await embed(user.d);
+	if (user.d || user.h) {
+		const textToEmbed = [user.h || '', user.d || ''].filter(t => t).join('. ');
+		const vector = await embed(textToEmbed);
 		results = (await search_by_vector<
 			Pick<User, 't' | 'av' | 'a' | 'g'>
 		>({

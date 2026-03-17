@@ -526,9 +526,8 @@
 					>
 					<DescriptionInput
 						bind:value={headline}
-						placeholder="short public headline (max 200 characters)"
+						placeholder="short public headline"
 						voice_typing={false}
-						maxlength={200}
 					/>
 					<input
 						type="hidden"
