@@ -132,6 +132,18 @@
 		<div
 			class="rounded-xl p-6 shadow-lg backdrop-blur"
 		>
+			<div class="mb-5">
+				<Button
+					href="/~/google"
+					text="continue with google"
+					variant="primary"
+					wide
+					icon="fab fa-google"
+				/>
+			</div>
+
+			<div class="mb-4 border-b border-slate-200"></div>
+
 			<form
 				onsubmit={(e) => e.preventDefault()}
 				class="space-y-5"
@@ -226,16 +238,6 @@
 					/>
 				</div>
 			</form>
-		</div>
-
-		<div class="mt-4 text-center">
-			<Button
-				href="/~/google"
-				text="continue with google"
-				variant="primary"
-				wide
-				icon="fab fa-google"
-			/>
 		</div>
 	</div>
 </main>

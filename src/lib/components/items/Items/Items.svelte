@@ -18,9 +18,10 @@
 
 	interface Props {
 		user?: string;
+		show_filters?: boolean;
 	}
 
-	let { user }: Props = $props();
+	let { user, show_filters = true }: Props = $props();
 
 	let query = $state('');
 	let kind = $state<0 | 1 | undefined>(undefined);
@@ -30,6 +31,7 @@
 	let searching = $state(false);
 
 	const execute_search = async () => {
+		console.log('Executing search with:', { query, kind, sort, user });
 		searching = true;
 		try {
 			const items = await fetch_items({
@@ -125,28 +127,29 @@
 	</div>
 
 	<!-- Search Section -->
-	<div class="mx-auto max-w-4xl px-4 py-6">
-		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-			<div class="md:col-span-2">
-				<label for="query" class="text-theme-4 mb-2 block text-sm font-medium">
-					search
-				</label>
-				<div class="relative">
-					<DescriptionInput
-						bind:value={query}
-						placeholder="search for items..."
-						send={handle_search}
-						send_loading={searching}
-						label=""
-						voice_typing={true}
-						ontranscribe={noop}
-					/>
-					{#if query}
-						<button
-							onclick={clear_search}
-							class="absolute top-2 right-2 z-10 rounded border-t border-r border-[var(--color-theme-1)] text-gray-400 hover:text-gray-600"
-							aria-label="clear search"
-						>
+	{#if show_filters}
+		<div class="mx-auto max-w-4xl px-4 py-6">
+			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+				<div class="md:col-span-2">
+					<label for="query" class="text-theme-4 mb-2 block text-sm font-medium">
+						search
+					</label>
+					<div class="relative">
+						<DescriptionInput
+							bind:value={query}
+							placeholder="search for items..."
+							send={handle_search}
+							send_loading={searching}
+							label=""
+							voice_typing={true}
+							ontranscribe={noop}
+						/>
+						{#if query}
+							<button
+								onclick={clear_search}
+								class="absolute top-2 right-2 z-10 rounded border-t border-r border-[var(--color-theme-1)] text-gray-400 hover:text-gray-600"
+								aria-label="clear search"
+							>
 							<svg
 								width="20"
 								height="20"
@@ -206,6 +209,7 @@
 			</div>
 		</div>
 	</div>
+	{/if}
 
 	<!-- Results Section -->
 	<div class="mx-auto max-w-7xl px-4 py-6">

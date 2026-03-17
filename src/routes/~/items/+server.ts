@@ -29,6 +29,14 @@ export const POST: RequestHandler = async ({
 
 	let results: Array<Item> = [];
 
+	console.log('Search request:', {
+		q,
+		k,
+		l,
+		s,
+		u
+	});
+
 	if (q && q.trim()) {
 		const vector = await embed(q);
 		const results = await search_by_vector<Item>({

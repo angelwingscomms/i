@@ -255,7 +255,7 @@
 
 						<!-- Action Buttons -->
 						<div
-							class="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start"
+							class="flex flex-col justify-center gap-4 md:flex-row lg:justify-start"
 						>
 							{#if item.u}
 								<div
@@ -268,7 +268,7 @@
 										variant="primary"
 									/>
 									<Button
-										href="/~/{item.ownerTag}"
+										href="/{item.ownerTag}"
 										variant="secondary"
 										icon="fa-user"
 										text="View Owner Profile"
@@ -439,9 +439,9 @@
 				{/if}
 
 				<div
-					class="mx-auto flex max-w-2xl flex-col justify-center gap-4 sm:flex-row"
+					class="mx-auto flex max-w-2xl flex-col justify-center gap-4 md:flex-row"
 				>
-					<div class="flex-1 sm:flex-none">
+					<div class="flex-1 md:flex-none">
 						<Button
 							href="/~/{item.ownerTag}/c"
 							text="Chat with Owner"
@@ -450,10 +450,10 @@
 						/>
 					</div>
 					<div
-						class="flex flex-1 flex-col gap-3 sm:flex-none sm:flex-row"
+						class="flex flex-1 flex-col gap-3 md:flex-none md:flex-row"
 					>
 						<Button
-							href="/~/{item.ownerTag}"
+							href="/{item.ownerTag}"
 							variant="secondary"
 							icon="fa-user"
 							text="View Owner Profile"
@@ -552,18 +552,7 @@
 			>
 				<!-- Left Column - Description -->
 				<div class="space-y-8 lg:col-span-2">
-					<div class="card-normal group">
-						<div
-							class="mb-8 flex items-center justify-between"
-						>
-							<h2
-								class="text-2xl font-bold lg:text-3xl"
-								style="color: var(--color-theme-4);"
-							>
-								description
-							</h2>
-						</div>
-
+					<div>
 						{#if item.d}
 							<div
 								class="prose prose-lg max-w-none leading-relaxed text-gray-700 dark:text-gray-300"
@@ -588,69 +577,14 @@
 					</div>
 
 					<!-- Additional Information -->
-					<div class="card-normal group">
-						<div
-							class="mb-8 flex items-center justify-between"
-						>
-							<h2
-								class="text-2xl font-bold lg:text-3xl"
-								style="color: var(--color-theme-4);"
-							>
-								details
-							</h2>
-						</div>
-
+					<div>
 						<div class="grid gap-8 md:grid-cols-2">
 							<div class="space-y-6">
 								<div
-									class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
+									class="group/item rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 dark:from-gray-800/50 dark:to-gray-700/30"
 								>
 									<div
-										class="flex items-center justify-between"
-									>
-										<span
-											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
-											>type</span
-										>
-										<span
-											class="rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 text-xs font-bold text-white shadow-lg shadow-purple-500/30"
-										>
-											{item.k === 0
-												? 'product'
-												: 'service'}
-										</span>
-									</div>
-								</div>
-
-								<div
-									class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
-								>
-									<div
-										class="flex items-center justify-between"
-									>
-										<span
-											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
-										>
-											price
-										</span>
-										<span
-											class="font-bold text-gray-900 dark:text-gray-100"
-										>
-											{#if item.p !== undefined}
-												₦{item.p.toLocaleString()}
-												<!-- {item.c ?? ''} {item.p.toLocaleString()} -->
-											{:else}
-												not provided
-											{/if}
-										</span>
-									</div>
-								</div>
-
-								<div
-									class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
-								>
-									<div
-										class="flex items-center justify-between"
+										class="flex flex-col"
 									>
 										<span
 											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"
@@ -701,10 +635,10 @@
 								{/if}
 
 								<div
-									class="group/item rounded-2xl border border-gray-200/50 bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 hover:border-purple-500/30 dark:border-gray-700/50 dark:from-gray-800/50 dark:to-gray-700/30"
+									class="group/item rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100/50 p-4 transition-all duration-300 dark:from-gray-800/50 dark:to-gray-700/30"
 								>
 									<div
-										class="flex items-center justify-between"
+										class="flex flex-col"
 									>
 										<span
 											class="text-sm font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400"

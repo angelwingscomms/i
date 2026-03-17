@@ -21,6 +21,7 @@
 
 	let tag = $state(data.u!.t || ''),
 		name_value = $state(data.u!.m || ''),
+		headline = $state((data.u as any)?.h || ''),
 		description = $state(data.u!.d || ''),
 		ageStr = $state<string>(String(data.u!.a || 18)),
 		gender = $state<0 | 1>((data.u!.g ?? 0) as 0 | 1),
@@ -215,6 +216,7 @@
 				{
 					tag,
 					m: name_clean,
+					headline,
 					description,
 					age: parseInt(ageStr) || 18,
 					gender: +gender,
@@ -519,6 +521,23 @@
 				</div>
 
 				<div class="form-group">
+					<label for="headline" class="form-label"
+						>public profile headline</label
+					>
+					<DescriptionInput
+						bind:value={headline}
+						placeholder="short public headline (max 200 characters)"
+						voice_typing={false}
+						maxlength={200}
+					/>
+					<input
+						type="hidden"
+						name="headline"
+						value={headline}
+					/>
+				</div>
+
+				<div class="form-group">
 					<label for="description" class="form-label"
 						>description</label
 					>
@@ -773,7 +792,7 @@
 					</div>
 				{/if}
 
-				<div class="flex justify-center gap-4 pt-4">
+				<div class="flex flex-col justify-center gap-4 pt-4">
 					<Button
 						text="save changes"
 						loading={isSubmitting}

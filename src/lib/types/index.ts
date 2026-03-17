@@ -15,6 +15,7 @@ export interface User {
 	t: string; // tag
 	av?: string; // avatar data url or external url
 	d?: string; // description
+	h?: string; // headline/public profile description
 	m?: string; // name
 	a?: number; // age
 	g?: number; // gender, 0 is male, 1 is female

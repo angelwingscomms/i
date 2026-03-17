@@ -15,7 +15,7 @@ export async function fetch_items(
 ): Promise<Item[]> {
 	const response = await axios.post('/~/items', {
 		...(payload.q && { q: payload.q }),
-		...(payload.k && { k: Number(payload.k )}),
+		...(payload.k && { k: payload.k }),
 		...(payload.s && { s: payload.s }),
 		...(payload.l && { l: payload.l }),
 		...(payload.u && { u: payload.u })

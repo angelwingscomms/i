@@ -31,6 +31,7 @@
 			tag: string;
 			m?: string;
 			avatar?: string;
+			h?: string;
 			description?: string;
 			wh?: string;
 			tg?: string;
@@ -318,6 +319,11 @@
 					>
 						{user.m || user.tag}
 					</h1>
+					{#if user.h}
+						<p class="text-lg text-white/80">
+							{user.h}
+						</p>
+					{/if}
 					<div
 						class="flex items-center justify-center gap-2 text-sm text-white lowercase"
 					>
@@ -377,15 +383,6 @@
 						</div>
 					{/if}
 
-					<div class="mt-6 flex justify-center">
-						<Button
-							href="/{user.tag}/live"
-							text="view live stream"
-							icon="fa-edit"
-							variant="primary"
-						/>
-					</div>
-
 					{#if data.user?.i === user.i}
 						<!-- Edit Profile Action -->
 						<div class="mt-6 flex justify-center">
@@ -400,7 +397,7 @@
 							class="mt-4 flex flex-wrap items-center justify-center gap-3"
 						>
 							<Button
-								href="/~/items/new"
+								href="/~/items/create"
 								text="create item"
 								icon="fa-plus"
 								variant="primary"
@@ -569,6 +566,7 @@
 						...itemSearchData,
 						userTag: user.tag
 					}}
+					show_filters={false}
 					showSort={true}
 				/>
 				{#if filtered_items.length > 0 || item_searching}

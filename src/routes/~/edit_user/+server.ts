@@ -26,6 +26,7 @@ export const POST: RequestHandler = async ({
 		const {
 			tag,
 			description,
+			headline,
 			age,
 			gender,
 			latitude,
@@ -68,6 +69,14 @@ export const POST: RequestHandler = async ({
 			description.trim().length > 0
 		) {
 			updatedUser.d = description.trim();
+		}
+
+		if (
+			headline !== undefined &&
+			typeof headline === 'string' &&
+			headline.trim().length > 0
+		) {
+			updatedUser.h = headline.trim().slice(0, 200);
 		}
 
 		if (
@@ -267,9 +276,14 @@ export const POST: RequestHandler = async ({
 		});
 
 		let vector;
-		if (updatedUser.d) {
-			// Only embed if description is provided
-			vector = await embed(updatedUser.d as string);
+		if (updatedUser.d || updatedUser.h) {
+			// Only embed if description or headline is provided
+			const textToEmbed = [
+				updatedUser.h || '',
+				updatedUser.d || ''
+			].filter(t => t.trim()).join('. ');
+			
+			vector = await embed(textToEmbed);
 
 			if (!vector) {
 				console.error(

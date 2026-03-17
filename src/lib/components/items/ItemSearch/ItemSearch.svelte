@@ -21,6 +21,7 @@
 		results?: (Item & { score?: number })[];
 		showKind?: boolean;
 		showSort?: boolean;
+		show_filters?: boolean;
 	}
 
 	let {
@@ -29,7 +30,8 @@
 		sort = $bindable<ItemSort>('relevance'),
 		results = $bindable<(Item & { score?: number })[]>([]),
 		showKind = true,
-		showSort = true
+		showSort = true,
+		show_filters = true
 	}: Props = $props();
 
 	let search_timeout = $state<NodeJS.Timeout | null>(null);
@@ -107,94 +109,96 @@
 </script>
 
 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-	<div class="md:col-span-2">
-		<label
-			for="query"
-			class="text-theme-4 mb-2 block text-sm font-medium"
-		>
-			search
-		</label>
-		<div class="relative">
-		<DescriptionInput
-			bind:value={query}
-			placeholder="search for items..."
-			send={handle_search}
-			send_loading={searching}
-			label=""
-			voice_typing={true}
-			ontranscribe={noop}
-		/>
-			{#if query}
-				<button
-					onclick={clear_search}
-					class="absolute top-2 right-2 z-10 rounded border-t border-r border-[var(--color-theme-1)] text-gray-400 hover:text-gray-600"
-					aria-label="clear search"
-				>
-					<svg
-						width="20"
-						height="20"
-						viewBox="0 0 24 24"
-						fill="currentColor"
-						aria-hidden="true"
+	{#if show_filters}
+		<div class="md:col-span-2">
+			<label
+				for="query"
+				class="text-theme-4 mb-2 block text-sm font-medium"
+			>
+				search
+			</label>
+			<div class="relative">
+			<DescriptionInput
+				bind:value={query}
+				placeholder="search for items..."
+				send={handle_search}
+				send_loading={searching}
+				label=""
+				voice_typing={true}
+				ontranscribe={noop}
+			/>
+				{#if query}
+					<button
+						onclick={clear_search}
+						class="absolute top-2 right-2 z-10 rounded border-t border-r border-[var(--color-theme-1)] text-gray-400 hover:text-gray-600"
+						aria-label="clear search"
 					>
-						<path
-							d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-						/>
-					</svg>
-				</button>
-			{/if}
+						<svg
+							width="20"
+							height="20"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							aria-hidden="true"
+						>
+							<path
+								d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+							/>
+						</svg>
+					</button>
+				{/if}
+			</div>
 		</div>
-	</div>
 
-	{#if showKind}
-		<div>
-			<label
-				for="kind"
-				class="text-theme-4 mb-2 block text-sm font-medium"
-			>
-				type
-			</label>
-			<Select
-				options={[
-					{ value: '', label: 'all items' },
-					{
-						value: '0',
-						label: 'products',
-						icon: 'fa-shopping-bag'
-					},
-					{
-						value: '1',
-						label: 'services',
-						icon: 'fa-wrench'
-					}
-				]}
-				value={kind === undefined ? '' : String(kind)}
-				placeholder="select type"
-				onclick={handle_kind_change}
-			/>
-		</div>
-	{/if}
+		{#if showKind}
+			<div>
+				<label
+					for="kind"
+					class="text-theme-4 mb-2 block text-sm font-medium"
+				>
+					type
+				</label>
+				<Select
+					options={[
+						{ value: '', label: 'all items' },
+						{
+							value: '0',
+							label: 'products',
+							icon: 'fa-shopping-bag'
+						},
+						{
+							value: '1',
+							label: 'services',
+							icon: 'fa-wrench'
+						}
+					]}
+					value={kind === undefined ? '' : String(kind)}
+					placeholder="select type"
+					onclick={handle_kind_change}
+				/>
+			</div>
+		{/if}
 
-	{#if showSort}
-		<div>
-			<label
-				for="sort"
-				class="text-theme-4 mb-2 block text-sm font-medium"
-			>
-				sort by
-			</label>
-			<Select
-				options={[
-					{ value: 'relevance', label: 'relevance' },
-					{ value: 'newest', label: 'newest first' },
-					{ value: 'oldest', label: 'oldest first' },
-					{ value: 'name', label: 'name a-z' },
-					{ value: 'price', label: 'price low-high' }
-				]}
-				value={sort}
-				placeholder="select sort"
-				onclick={handle_sort_change}
-			/>
-		</div>
+		{#if showSort}
+			<div>
+				<label
+					for="sort"
+					class="text-theme-4 mb-2 block text-sm font-medium"
+				>
+					sort by
+				</label>
+				<Select
+					options={[
+						{ value: 'relevance', label: 'relevance' },
+						{ value: 'newest', label: 'newest first' },
+						{ value: 'oldest', label: 'oldest first' },
+						{ value: 'name', label: 'name a-z' },
+						{ value: 'price', label: 'price low-high' }
+					]}
+					value={sort}
+					placeholder="select sort"
+					onclick={handle_sort_change}
+				/>
+			</div>
+		{/if}
 	{/if}
 </div>
