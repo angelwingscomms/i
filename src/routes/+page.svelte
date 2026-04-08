@@ -7,6 +7,7 @@
 	import Chatrooms from '$lib/images/chat.png';
 	import VideoChat from '$lib/images/video.png';
 	import BuildProfile from '$lib/images/users.png';
+	import { themeStore } from '$lib/stores/theme';
 </script>
 
 <svelte:head>
@@ -84,12 +85,14 @@
 		</div>
 	</div>
 	<!-- static background orbs -->
-	<div
-		class="hero-background-orb fixed top-20 left-10 h-64 w-64 bg-[var(--color-theme-6)] opacity-20"
-	></div>
-	<div
-		class="hero-background-orb fixed right-10 bottom-20 h-48 w-48 bg-[var(--color-theme-2)] opacity-10"
-	></div>
+	{#if $themeStore === 'dark'}
+		<div
+			class="hero-background-orb fixed top-20 left-10 h-64 w-64 bg-[var(--color-theme-6)] opacity-20"
+		></div>
+		<div
+			class="hero-background-orb fixed right-10 bottom-20 h-48 w-48 bg-[var(--color-theme-2)] opacity-10"
+		></div>
+	{/if}
 </section>
 
 <section class="features-grid py-16">

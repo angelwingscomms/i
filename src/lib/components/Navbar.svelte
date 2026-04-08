@@ -5,6 +5,7 @@
 	import { addToast } from '$lib/util/toast.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { logout } from '$lib/util/logout.js';
+	import { themeStore } from '$lib/stores/theme';
 
 	let {
 		user = null,
@@ -182,6 +183,41 @@
 						class="rounded-full border border-[var(--accent-primary)] px-5 py-2 text-xs font-semibold tracking-wide text-[var(--accent-primary)] uppercase transition-all hover:bg-[var(--accent-primary)] hover:text-white"
 					/>
 				{/if}
+
+				<button
+					class="btn-icon flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border-primary)] bg-[var(--bg-elevated)] text-[var(--text-primary)] transition-all hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]"
+					onclick={() => themeStore.toggle()}
+					aria-label="toggle theme"
+				>
+					{#if $themeStore === 'dark'}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+							class="h-6 w-6"
+						>
+							<circle cx="12" cy="12" r="4" />
+							<path
+								d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+							/>
+						</svg>
+					{:else}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+							class="h-6 w-6"
+						>
+							<path
+								d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+							/>
+						</svg>
+					{/if}
+				</button>
 
 				<button
 					class="btn-icon flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border-primary)] bg-[var(--bg-elevated)] text-[var(--text-primary)] transition-all hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]"
